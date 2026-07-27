@@ -111,7 +111,7 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                     className="w-60 p-2 rounded-xl"
-                    align="center">
+                    align="start">
                     <DropdownMenuItem
                         className="flex items-start gap-2 cursor-pointer p-2 rounded-xl"
                         onClick={handleNewDoc}
