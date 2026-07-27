@@ -10,14 +10,11 @@
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
 
   <p>
-    <a href="#-demo">Demo</a> •
     <a href="#-features">Features</a> •
     <a href="#-quick-start">Quick Start</a> •
     <a href="#-documentation">Documentation</a>
   </p>
 </div>
-
----
 
 ---
 
@@ -66,8 +63,6 @@
 - 🔄 **GraphQL subscriptions**
 - 💨 **Optimistic updates**
 - 📦 **Code splitting**
-
-    
 
     </tr>
   </table>
