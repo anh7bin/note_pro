@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
-import { Folder, FileText } from 'lucide-react';
-import Link from 'next/link';
+import { NewDocumentIcon } from 'components/shared/icons/NewDocumentIcon';
+import { NewFolderIcon } from 'components/shared/icons/NewFolderIcon';
 import { cn } from 'lib/utils';
 import Image from 'next/image';
+import Link from 'next/link';
 import { SearchItemType } from 'types/app';
 
 interface SearchItemProps {
@@ -30,9 +30,9 @@ export function SearchItem({
     const getIcon = () => {
         switch (type) {
             case 'folder':
-                return <Folder className="h-5 w-5 text-muted-foreground" />;
+                return <NewFolderIcon />;
             default:
-                return <FileText className="h-5 w-5 text-muted-foreground" />;
+                return <NewDocumentIcon />;
         }
     };
 
@@ -45,12 +45,12 @@ export function SearchItem({
             )}
             onClick={onClick}>
             <div className="flex-shrink-0 relative">
-                <div className="p-1.5">{getIcon()}</div>
+                {getIcon()}
                 {avatarUrl && (
                     <Image
                         src={avatarUrl}
                         alt="User avatar"
-                        className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background object-cover"
+                        className="absolute -bottom-1 -right-0 w-4 h-4 rounded-full border-2 border-background object-cover"
                         width={16}
                         height={16}
                     />

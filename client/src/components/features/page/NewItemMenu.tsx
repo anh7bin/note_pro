@@ -117,7 +117,7 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                         onClick={handleNewDoc}
                         disabled={!canCreate || isCreating}>
                         <div className="w-12 h-12 flex-shrink-0">
-                            <NewDocumentIcon />
+                            <NewDocumentIcon size={48} />
                         </div>
                         <div className="flex flex-col justify-center gap-1">
                             <span className="font-medium">New Doc</span>
@@ -130,7 +130,7 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                         className="flex items-start gap-2 cursor-pointer p-2 rounded-xl"
                         onClick={handleNewFolder}>
                         <div className="w-12 h-12 flex-shrink-0">
-                            <NewFolderIcon />
+                            <NewFolderIcon size={48} />
                         </div>
                         <div className="flex flex-col gap-1">
                             <span className="font-medium">New Folder</span>

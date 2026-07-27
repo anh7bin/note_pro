@@ -1,4 +1,8 @@
-export const InsertBlockBelowIcon = ({ size = 16 }: { size?: number }) => {
+interface Props {
+    size?: number;
+}
+
+export const InsertBlockBelowIcon = ({ size = 16 }: Props) => {
     return (
         <svg
             width={size}

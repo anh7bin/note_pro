@@ -1,12 +1,14 @@
-import React from 'react';
+interface Props {
+    size?: number;
+}
 
-export const NewFolderIcon = () => {
+export const NewFolderIcon = ({ size = 32 }: Props) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
-            width="48px"
-            height="48px"
+            width={size}
+            height={size}
             viewBox="0 0 48 48"
             version="1.1">
             <title>new-folder</title>
