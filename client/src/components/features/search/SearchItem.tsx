@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Folder, FileText, CheckCircle } from 'lucide-react';
+import { Folder, FileText } from 'lucide-react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn } from 'lib/utils';
 import Image from 'next/image';
-import { SearchItemType } from '@/types/app';
+import { SearchItemType } from 'types/app';
 
 interface SearchItemProps {
     type: SearchItemType;
@@ -31,10 +31,6 @@ export function SearchItem({
         switch (type) {
             case 'folder':
                 return <Folder className="h-5 w-5 text-muted-foreground" />;
-            case 'document':
-                return <FileText className="h-5 w-5 text-primary" />;
-            case 'task':
-                return <CheckCircle className="w-5 h-5 text-primary" />;
             default:
                 return <FileText className="h-5 w-5 text-muted-foreground" />;
         }
@@ -44,14 +40,12 @@ export function SearchItem({
         <Link
             href={href}
             className={cn(
-                'flex items-center gap-3 py-2.5 px-3 rounded-md hover:bg-background-soft dark:hover:bg-background-soft transition-colors cursor-pointer group',
+                'flex items-center gap-3 p-1 rounded-md hover:bg-background-soft dark:hover:bg-background-soft transition-colors cursor-pointer group',
                 className
             )}
             onClick={onClick}>
             <div className="flex-shrink-0 relative">
-                <div className="p-1.5 rounded-md bg-background-soft dark:bg-background-soft group-hover:bg-background dark:group-hover:bg-background transition-colors">
-                    {getIcon()}
-                </div>
+                <div className="p-1.5">{getIcon()}</div>
                 {avatarUrl && (
                     <Image
                         src={avatarUrl}

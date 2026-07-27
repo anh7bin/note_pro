@@ -1,13 +1,13 @@
 'use client';
 
-import { SearchInputField } from '@/components/features/search/SearchInputField';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { TopLoadingBar } from '@/components/ui/TopLoadingBar';
-import { HEADER_HEIGHT } from '@/lib/constants';
-import { useDocumentAccess } from '@/contexts/DocumentAccessContext';
-import { useLoading } from '@/contexts/LoadingContext';
-import { useSidebar } from '@/contexts/SidebarContext';
-import { ROUTES } from '@/lib/routes';
+import { SearchInputField } from 'components/features/search/SearchInputField';
+import { ThemeToggle } from 'components/ui/theme-toggle';
+import { TopLoadingBar } from 'components/ui/TopLoadingBar';
+import { HEADER_HEIGHT } from 'lib/constants';
+import { useDocumentAccess } from 'contexts/DocumentAccessContext';
+import { useLoading } from 'contexts/LoadingContext';
+import { useSidebar } from 'contexts/SidebarContext';
+import { ROUTES } from 'lib/routes';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -60,7 +60,7 @@ export default function Header({ workspaceSlug, isEditorPage }: Props) {
                         />
                     </div>
                     <div className="min-w-[480px]">
-                        <SearchInputField placeholder="Search..." />
+                        <SearchInputField />
                     </div>
                     <div className="flex items-center gap-2">
                         {isEditorPage && documentId && (

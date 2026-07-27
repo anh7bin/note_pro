@@ -10,7 +10,7 @@ export type SearchAllQueryVariables = Types.Exact<{
 }>;
 
 
-export type SearchAllQuery = { __typename?: 'query_root', folders: Array<{ __typename?: 'folders', id: string, name: string, user?: { __typename?: 'users', id: string, avatar_url?: string | null } | null, workspace?: { __typename?: 'workspaces', id: string, name?: string | null } | null }>, documents: Array<{ __typename?: 'blocks', id: string, content?: any | null, user?: { __typename?: 'users', id: string, avatar_url?: string | null } | null, workspace?: { __typename?: 'workspaces', id: string, name?: string | null } | null }>, sharedDocuments: Array<{ __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, user?: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } | null }>, tasks: Array<{ __typename?: 'tasks', id: string, user?: { __typename?: 'users', id: string, avatar_url?: string | null } | null, block?: { __typename?: 'blocks', id: string, content?: any | null } | null }> };
+export type SearchAllQuery = { __typename?: 'query_root', folders: Array<{ __typename?: 'folders', id: string, name: string, user?: { __typename?: 'users', id: string, avatar_url?: string | null } | null, workspace?: { __typename?: 'workspaces', id: string, name?: string | null } | null }>, documents: Array<{ __typename?: 'blocks', id: string, content?: any | null, user?: { __typename?: 'users', id: string, avatar_url?: string | null } | null, workspace?: { __typename?: 'workspaces', id: string, name?: string | null } | null }>, sharedDocuments: Array<{ __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, user?: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } | null }> };
 
 
 export const SearchAllDocument = gql`
@@ -59,21 +59,6 @@ export const SearchAllDocument = gql`
       id
       name
       avatar_url
-    }
-  }
-  tasks(
-    where: {block: {workspace_id: {_eq: $workspaceId}, content: {_cast: {String: {_ilike: $searchTerm}}}}}
-    limit: 20
-    order_by: {created_at: desc}
-  ) {
-    id
-    user {
-      id
-      avatar_url
-    }
-    block {
-      id
-      content
     }
   }
 }

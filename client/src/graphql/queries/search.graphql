@@ -66,25 +66,4 @@ query SearchAll($workspaceId: uuid!, $searchTerm: String!, $userId: uuid!) {
             avatar_url
         }
     }
-
-    tasks(
-        where: {
-            block: {
-                workspace_id: { _eq: $workspaceId }
-                content: { _cast: { String: { _ilike: $searchTerm } } }
-            }
-        }
-        limit: 20
-        order_by: { created_at: desc }
-    ) {
-        id
-        user {
-            id
-            avatar_url
-        }
-        block {
-            id
-            content
-        }
-    }
 }

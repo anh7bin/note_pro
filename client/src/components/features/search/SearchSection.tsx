@@ -1,20 +1,26 @@
 import React from 'react';
-import { SearchSectionHeader } from './SearchSectionHeader';
-import { getPlainText } from '@/components/features/page/CardDocument';
+import { getPlainText } from 'components/features/page/CardDocument';
 import { SearchItem } from './SearchItem';
-import { SearchItemType } from '@/types/app';
+import { SearchItemType } from 'types/app';
+import { SearchAllQuery } from 'graphql/queries/__generated__/search.generated';
 
-interface Props {
+type SearchDocument = SearchAllQuery['documents'][number];
+type SearchFolder = SearchAllQuery['folders'][number];
+type SearchSharedDocument = SearchAllQuery['sharedDocuments'][number];
+
+type SearchItemUnion = SearchDocument | SearchFolder | SearchSharedDocument;
+
+interface Props<T extends SearchItemUnion = SearchItemUnion> {
     title: string;
-    items: any[];
+    items: T[];
     type: SearchItemType;
     workspaceId?: string;
     onResultClick: () => void;
-    renderSubtitle: (item: any) => string;
-    getWorkspaceId?: (item: any) => string;
+    renderSubtitle: (item: T) => string;
+    getWorkspaceId?: (item: T) => string;
 }
 
-export const SearchSection = ({
+export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
     title,
     items,
     type,
@@ -22,14 +28,30 @@ export const SearchSection = ({
     onResultClick,
     renderSubtitle,
     getWorkspaceId,
-}: Props) => {
+}: Props<T>) => {
     if (items.length === 0) {
         return null;
     }
 
+    const isDocument = (item: SearchItemUnion): item is SearchDocument => {
+        return type === 'document';
+    };
+
+    const isSharedDocument = (
+        item: SearchItemUnion
+    ): item is SearchSharedDocument => {
+        return type === 'sharedDocument';
+    };
+
+    const isFolder = (item: SearchItemUnion): item is SearchFolder => {
+        return type === 'folder';
+    };
+
     return (
-        <div className="mb-4">
-            <SearchSectionHeader title={title} count={items.length} />
+        <div>
+            <div className="text-xs text-muted-foreground font-semibold p-1">
+                {title}
+            </div>
             <div className="space-y-1">
                 {items.map((item) => {
                     let href = '';
@@ -41,18 +63,20 @@ export const SearchSection = ({
                         ? getWorkspaceId(item)
                         : (workspaceId ?? '');
 
-                    if (type === 'document' || type === 'sharedDocument') {
+                    if (isDocument(item) || isSharedDocument(item)) {
                         href = `/editor/d/${itemWorkspaceId}/${item.id}`;
                         itemTitle = getPlainText(item.content.title);
                         subtitle = renderSubtitle?.(item) ?? '';
-                    } else if (type === 'task') {
-                        href = `/s/${itemWorkspaceId}/tasks`;
-                        itemTitle = item.block?.content?.text ?? '';
-                    } else if (type === 'folder') {
+                    } else if (isFolder(item)) {
                         href = `/s/${itemWorkspaceId}/f/${item.id}`;
                         itemTitle = item.name;
                         subtitle = `In ${item.workspace?.name ?? ''}`;
                     }
+
+                    const avatarUrl =
+                        isDocument(item) || isSharedDocument(item)
+                            ? (item.user?.avatar_url ?? '')
+                            : '';
 
                     return (
                         <SearchItem
@@ -63,7 +87,7 @@ export const SearchSection = ({
                             subtitle={subtitle}
                             href={href}
                             onClick={onResultClick}
-                            avatarUrl={item.user?.avatar_url ?? ''}
+                            avatarUrl={avatarUrl}
                         />
                     );
                 })}

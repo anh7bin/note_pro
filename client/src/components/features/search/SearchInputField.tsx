@@ -2,20 +2,16 @@
 
 import React from 'react';
 import { Search } from 'lucide-react';
-import { InputField } from '@/components/ui/input-field';
+import { InputField } from 'components/ui/input-field';
 import { SearchResults } from './SearchResults';
-import { useSearch } from '@/hooks/useSearch';
-import { cn } from '@/lib/utils';
+import { useSearch } from 'hooks/useSearch';
+import { cn } from 'lib/utils';
 
-interface SearchInputFieldProps {
-    placeholder?: string;
+interface Props {
     onResultClick?: () => void;
 }
 
-export function SearchInputField({
-    placeholder,
-    onResultClick,
-}: SearchInputFieldProps) {
+export function SearchInputField({ onResultClick }: Props) {
     const { searchTerm, setSearchTerm, results } = useSearch();
 
     const handleResultClickInternal = () => {
@@ -35,7 +31,7 @@ export function SearchInputField({
         <InputField
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={placeholder}
+            placeholder="Open"
             className={cn('w-full bg-card h-8')}
             icon={<Search className="h-4 w-4" />}
             iconPosition="left"
