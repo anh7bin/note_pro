@@ -19,15 +19,6 @@
 
 ---
 
-## 🎥 Demo (There are still a few incomplete features and some bugs. I’ll continue developing and updating them. Thanks!)
-
-<!-- Upload your demo video here -->
-
-> **📹 Video Demo**: 
-
-[Demo.webm](https://github.com/user-attachments/assets/a6d77c18-41f2-4006-8660-c2460c5c1f39)
-
-
 ---
 
 ## ✨ Features
