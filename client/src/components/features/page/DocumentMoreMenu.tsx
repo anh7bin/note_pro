@@ -9,20 +9,29 @@ import { useUserId } from '@/hooks/useAuth';
 import showToast from '@/lib/toast';
 import type { Reference } from '@apollo/client';
 import React, { useState } from 'react';
-import { RiDeleteBin6Line, RiFolderTransferLine } from 'react-icons/ri';
+import {
+    RiDeleteBin6Line,
+    RiFolderTransferLine,
+    RiFileCopyLine,
+} from 'react-icons/ri';
 import { MdOutlineExitToApp } from 'react-icons/md';
 import { ContextDropdownMenu } from './ContextDropdownMenu';
 import { MoveToDialog } from './MoveToDialog';
 import { Separator } from '@/components/ui/separator';
+import { ROUTES } from '@/lib/routes';
 
 interface Props {
     documentId: string;
+    workspaceId?: string;
+    folderId?: string;
     isOwner?: boolean;
     children?: React.ReactNode;
 }
 
 export const DocumentMoreMenu = ({
     documentId,
+    workspaceId,
+    folderId,
     isOwner = true,
     children,
 }: Props) => {
@@ -147,6 +156,29 @@ export const DocumentMoreMenu = ({
         setIsMoveDialogOpen(true);
     };
 
+    const handleCopyLink = async (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        try {
+            if (!workspaceId) {
+                showToast.error('Workspace not found');
+                return;
+            }
+            const path = folderId
+                ? ROUTES.WORKSPACE_DOCUMENT_FOLDER(
+                      workspaceId,
+                      folderId,
+                      documentId
+                  )
+                : ROUTES.WORKSPACE_DOCUMENT(workspaceId, documentId);
+            const url = `${window.location.origin}${path}`;
+            await navigator.clipboard.writeText(url);
+            showToast.success('Link copied to clipboard');
+        } catch (error) {
+            console.error('Error copying link:', error);
+            showToast.error('Failed to copy link. Please try again.');
+        }
+    };
+
     const menuContent = isOwner ? (
         <>
             <RiDeleteBin6Line size={16} />
@@ -171,13 +203,21 @@ export const DocumentMoreMenu = ({
             <ContextDropdownMenu
                 menuContent={
                     <div className="flex flex-col gap-1">
+                        <MenuItem
+                            className="flex items-center gap-2 cursor-pointer rounded-md"
+                            onClick={handleCopyLink}>
+                            <RiFileCopyLine size={16} />
+                            Copy Link
+                        </MenuItem>
                         {isOwner && (
-                            <MenuItem
-                                className="flex items-center gap-2 cursor-pointer rounded-md"
-                                onClick={handleOpenMoveDialog}>
-                                <RiFolderTransferLine size={16} />
-                                Move to
-                            </MenuItem>
+                            <>
+                                <MenuItem
+                                    className="flex items-center gap-2 cursor-pointer rounded-md"
+                                    onClick={handleOpenMoveDialog}>
+                                    <RiFolderTransferLine size={16} />
+                                    Move to
+                                </MenuItem>
+                            </>
                         )}
                         <Separator />
                         <MenuItem

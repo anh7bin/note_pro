@@ -76,7 +76,11 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
     };
 
     return (
-        <DocumentMoreMenu documentId={document.id} isOwner={isOwner}>
+        <DocumentMoreMenu
+            documentId={document.id}
+            workspaceId={workspaceId}
+            folderId={document.folder?.id}
+            isOwner={isOwner}>
             <Card
                 key={document.id}
                 className="group relative cursor-pointer transition-all duration-200 h-[304px] w-full rounded-md border-[rgb(223,228,231)] hover:border-primary dark:border-border dark:hover:border-primary flex flex-col"
@@ -108,6 +112,8 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
                         </div>
                         <DocumentMoreMenu
                             documentId={document.id}
+                            workspaceId={workspaceId}
+                            folderId={document.folder?.id}
                             isOwner={isOwner}
                         />
                     </div>
