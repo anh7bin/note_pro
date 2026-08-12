@@ -6,12 +6,14 @@ import {
     RiDeleteBin6Line,
     RiFolderTransferLine,
     RiFileCopyLine,
+    RiExternalLinkLine,
 } from 'react-icons/ri';
 import { MdOutlineExitToApp } from 'react-icons/md';
 
 interface MenuItemsProps {
     isOwner: boolean;
     hasChildren: boolean;
+    onOpenInNewTab: (e: React.MouseEvent<HTMLDivElement>) => void;
     onCopyLink: (e: React.MouseEvent<HTMLDivElement>) => void;
     onMove: (e: React.MouseEvent<HTMLDivElement>) => void;
     onDeleteOrRemove: (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -20,6 +22,7 @@ interface MenuItemsProps {
 export const MenuItems = ({
     isOwner,
     hasChildren,
+    onOpenInNewTab,
     onCopyLink,
     onMove,
     onDeleteOrRemove,
@@ -34,11 +37,17 @@ export const MenuItems = ({
         <div className="flex flex-col gap-1">
             <MenuItem
                 className="flex items-center gap-2 cursor-pointer rounded-md"
+                onClick={onOpenInNewTab}>
+                <RiExternalLinkLine size={16} />
+                Open in New Tab
+            </MenuItem>
+            <Separator />
+            <MenuItem
+                className="flex items-center gap-2 cursor-pointer rounded-md"
                 onClick={onCopyLink}>
                 <RiFileCopyLine size={16} />
                 Copy Link
             </MenuItem>
-
             {isOwner && (
                 <MenuItem
                     className="flex items-center gap-2 cursor-pointer rounded-md"

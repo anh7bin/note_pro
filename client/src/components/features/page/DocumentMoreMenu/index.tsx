@@ -4,6 +4,7 @@ import { MoveToDialog } from '../MoveToDialog';
 import { MenuItems } from './MenuItems';
 import { useDocumentActions } from './hooks/useDocumentActions';
 import { useCopyDocumentLink } from './hooks/useCopyDocumentLink';
+import { ROUTES } from '@/lib/routes';
 
 interface DocumentMoreMenuProps {
     documentId: string;
@@ -33,6 +34,24 @@ export const DocumentMoreMenu = ({
         [copyLink]
     );
 
+    const handleOpenInNewTab = useCallback(
+        (e: React.MouseEvent<HTMLDivElement>) => {
+            e.stopPropagation();
+            if (!workspaceId) return;
+
+            const path = folderId
+                ? ROUTES.WORKSPACE_DOCUMENT_FOLDER(
+                      workspaceId,
+                      folderId,
+                      documentId
+                  )
+                : ROUTES.WORKSPACE_DOCUMENT(workspaceId, documentId);
+
+            window.open(path, '_blank');
+        },
+        [documentId, workspaceId, folderId]
+    );
+
     const handleOpenMoveDialog = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
             e.stopPropagation();
@@ -60,6 +79,7 @@ export const DocumentMoreMenu = ({
                     <MenuItems
                         isOwner={isOwner}
                         hasChildren={!!children}
+                        onOpenInNewTab={handleOpenInNewTab}
                         onCopyLink={handleCopyLink}
                         onMove={handleOpenMoveDialog}
                         onDeleteOrRemove={handleDeleteOrRemove}
