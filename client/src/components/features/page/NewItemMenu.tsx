@@ -110,10 +110,10 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                    className="w-60 p-2 rounded-xl"
+                    className="w-60 p-2 rounded-md"
                     align="start">
                     <DropdownMenuItem
-                        className="flex items-start gap-2 cursor-pointer p-2 rounded-xl"
+                        className="flex items-start gap-2 cursor-pointer p-2 rounded-md"
                         onClick={handleNewDoc}
                         disabled={!canCreate || isCreating}>
                         <div className="w-12 h-12 flex-shrink-0">
@@ -127,7 +127,7 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                         </div>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                        className="flex items-start gap-2 cursor-pointer p-2 rounded-xl"
+                        className="flex items-start gap-2 cursor-pointer p-2 rounded-md"
                         onClick={handleNewFolder}>
                         <div className="w-12 h-12 flex-shrink-0">
                             <NewFolderIcon size={48} />

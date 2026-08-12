@@ -39,16 +39,16 @@ export function SidebarTabs({
             defaultValue="contents"
             className="flex h-full flex-1 flex-col overflow-hidden">
             <TabsList className="grid grid-cols-4 rounded-xl shrink-0">
-                <TabsTrigger value="contents" className="rounded-xl">
+                <TabsTrigger value="contents" className="rounded-md">
                     <Menu className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="tasks" className="rounded-xl">
+                <TabsTrigger value="tasks" className="rounded-md">
                     <CheckCircle className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="attachments" className="rounded-xl">
+                <TabsTrigger value="attachments" className="rounded-md">
                     <Paperclip className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="find" className="rounded-xl">
+                <TabsTrigger value="find" className="rounded-md">
                     <Search className="h-4 w-4" />
                 </TabsTrigger>
             </TabsList>
