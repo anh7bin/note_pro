@@ -80,3 +80,17 @@ mutation UpdateBlocksPositions($updates: [blocks_updates!]!) {
         }
     }
 }
+
+mutation MoveDocumentToFolder($id: uuid!, $folderId: uuid) {
+    update_blocks_by_pk(
+        pk_columns: { id: $id }
+        _set: { folder_id: $folderId }
+    ) {
+        id
+        folder_id
+        folder {
+            id
+            name
+        }
+    }
+}

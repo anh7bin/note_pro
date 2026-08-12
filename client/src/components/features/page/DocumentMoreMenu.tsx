@@ -1,14 +1,18 @@
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { ContextMenuItem } from '@/components/ui/context-menu';
-import { useSoftDeleteDocumentMutation } from '@/graphql/mutations/__generated__/document.generated';
+import {
+    useSoftDeleteDocumentMutation,
+    useMoveDocumentToFolderMutation,
+} from '@/graphql/mutations/__generated__/document.generated';
 import { useRemoveDocumentAccessMutation } from '@/graphql/mutations/__generated__/document-share.generated';
 import { useUserId } from '@/hooks/useAuth';
 import showToast from '@/lib/toast';
 import type { Reference } from '@apollo/client';
-import React from 'react';
-import { RiDeleteBin6Line } from 'react-icons/ri';
+import React, { useState } from 'react';
+import { RiDeleteBin6Line, RiFolderTransferLine } from 'react-icons/ri';
 import { MdOutlineExitToApp } from 'react-icons/md';
 import { ContextDropdownMenu } from './ContextDropdownMenu';
+import { MoveToDialog } from './MoveToDialog';
 
 interface Props {
     documentId: string;
@@ -24,6 +28,8 @@ export const DocumentMoreMenu = ({
     const userId = useUserId();
     const [softDeleteDocument] = useSoftDeleteDocumentMutation();
     const [removeDocumentAccess] = useRemoveDocumentAccessMutation();
+    const [moveDocumentToFolder] = useMoveDocumentToFolderMutation();
+    const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
 
     const handleDeleteDocument = async (
         e: React.MouseEvent<HTMLDivElement>
@@ -120,6 +126,26 @@ export const DocumentMoreMenu = ({
         }
     };
 
+    const handleMoveToFolder = async (folderId: string | null) => {
+        try {
+            await moveDocumentToFolder({
+                variables: {
+                    id: documentId,
+                    folderId: folderId,
+                },
+            });
+            showToast.success('Document moved successfully');
+        } catch (error) {
+            console.error('Error moving document:', error);
+            showToast.error('Failed to move document. Please try again.');
+        }
+    };
+
+    const handleOpenMoveDialog = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        setIsMoveDialogOpen(true);
+    };
+
     const menuContent = isOwner ? (
         <>
             <RiDeleteBin6Line size={16} />
@@ -140,13 +166,33 @@ export const DocumentMoreMenu = ({
     const MenuItem = children ? ContextMenuItem : DropdownMenuItem;
 
     return (
-        <ContextDropdownMenu
-            menuContent={
-                <MenuItem className={menuClassName} onClick={menuAction}>
-                    {menuContent}
-                </MenuItem>
-            }>
-            {children}
-        </ContextDropdownMenu>
+        <>
+            <ContextDropdownMenu
+                menuContent={
+                    <div className="flex flex-col gap-1">
+                        {isOwner && (
+                            <MenuItem
+                                className="flex items-center gap-2 cursor-pointer rounded-xl"
+                                onClick={handleOpenMoveDialog}>
+                                <RiFolderTransferLine size={16} />
+                                Move to
+                            </MenuItem>
+                        )}
+                        <MenuItem
+                            className={menuClassName}
+                            onClick={menuAction}>
+                            {menuContent}
+                        </MenuItem>
+                    </div>
+                }>
+                {children}
+            </ContextDropdownMenu>
+
+            <MoveToDialog
+                open={isMoveDialogOpen}
+                onOpenChange={setIsMoveDialogOpen}
+                onSelect={handleMoveToFolder}
+            />
+        </>
     );
 };

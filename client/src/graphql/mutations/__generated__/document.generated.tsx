@@ -51,6 +51,14 @@ export type UpdateBlocksPositionsMutationVariables = Types.Exact<{
 
 export type UpdateBlocksPositionsMutation = { __typename?: 'mutation_root', update_blocks_many?: Array<{ __typename?: 'blocks_mutation_response', returning: Array<{ __typename?: 'blocks', id: string, position?: number | null, updated_at?: string | null }> } | null> | null };
 
+export type MoveDocumentToFolderMutationVariables = Types.Exact<{
+  id: Types.Scalars['uuid']['input'];
+  folderId?: Types.InputMaybe<Types.Scalars['uuid']['input']>;
+}>;
+
+
+export type MoveDocumentToFolderMutation = { __typename?: 'mutation_root', update_blocks_by_pk?: { __typename?: 'blocks', id: string, folder_id?: string | null, folder?: { __typename?: 'folders', id: string, name: string } | null } | null };
+
 
 export const SoftDeleteDocumentDocument = gql`
     mutation SoftDeleteDocument($id: uuid!) {
@@ -285,3 +293,42 @@ export function useUpdateBlocksPositionsMutation(baseOptions?: Apollo.MutationHo
 export type UpdateBlocksPositionsMutationHookResult = ReturnType<typeof useUpdateBlocksPositionsMutation>;
 export type UpdateBlocksPositionsMutationResult = Apollo.MutationResult<UpdateBlocksPositionsMutation>;
 export type UpdateBlocksPositionsMutationOptions = Apollo.BaseMutationOptions<UpdateBlocksPositionsMutation, UpdateBlocksPositionsMutationVariables>;
+export const MoveDocumentToFolderDocument = gql`
+    mutation MoveDocumentToFolder($id: uuid!, $folderId: uuid) {
+  update_blocks_by_pk(pk_columns: {id: $id}, _set: {folder_id: $folderId}) {
+    id
+    folder_id
+    folder {
+      id
+      name
+    }
+  }
+}
+    `;
+export type MoveDocumentToFolderMutationFn = Apollo.MutationFunction<MoveDocumentToFolderMutation, MoveDocumentToFolderMutationVariables>;
+
+/**
+ * __useMoveDocumentToFolderMutation__
+ *
+ * To run a mutation, you first call `useMoveDocumentToFolderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMoveDocumentToFolderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [moveDocumentToFolderMutation, { data, loading, error }] = useMoveDocumentToFolderMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      folderId: // value for 'folderId'
+ *   },
+ * });
+ */
+export function useMoveDocumentToFolderMutation(baseOptions?: Apollo.MutationHookOptions<MoveDocumentToFolderMutation, MoveDocumentToFolderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MoveDocumentToFolderMutation, MoveDocumentToFolderMutationVariables>(MoveDocumentToFolderDocument, options);
+      }
+export type MoveDocumentToFolderMutationHookResult = ReturnType<typeof useMoveDocumentToFolderMutation>;
+export type MoveDocumentToFolderMutationResult = Apollo.MutationResult<MoveDocumentToFolderMutation>;
+export type MoveDocumentToFolderMutationOptions = Apollo.BaseMutationOptions<MoveDocumentToFolderMutation, MoveDocumentToFolderMutationVariables>;
