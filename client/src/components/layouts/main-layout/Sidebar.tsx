@@ -69,13 +69,16 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                             : docsCount?.blocks_aggregate?.aggregate?.count ||
                               0,
                     }).map((item) => {
+                        const isActive =
+                            pathname === item.href ||
+                            pathname.startsWith(item.href + '/');
                         return (
                             <SidebarButton
                                 key={item.href}
                                 icon={<item.icon className="w-4 h-4" />}
                                 label={item.label}
                                 href={item.href}
-                                isActive={pathname === item.href}
+                                isActive={isActive}
                                 count={item.count}
                                 action={
                                     item.modalType && item.action

@@ -8,10 +8,6 @@ const inter = Inter({
 });
 
 export const metadata = {
-    title: {
-        default: 'Bin Craft',
-        template: '%s',
-    },
     description: 'Bin Craft - Note Taking App',
 };
 

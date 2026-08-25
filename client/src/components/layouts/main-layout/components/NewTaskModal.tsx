@@ -1,6 +1,7 @@
 'use client';
 
 import { getPlainText } from '@/components/features/page/CardDocument';
+import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
 import {
@@ -21,12 +22,12 @@ import { useCreateTaskMutation } from '@/graphql/mutations/__generated__/task.ge
 import { useGetAllDocsLazyQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
+import { TASK_STATUS } from '@/lib/constants';
 import { showToast } from '@/lib/toast';
 import React, { useRef, useState } from 'react';
-import { FaInbox } from 'react-icons/fa';
-import { FiChevronDown, FiFileText, FiSearch } from 'react-icons/fi';
 import { CiFlag1 } from 'react-icons/ci';
-import { TASK_STATUS } from '@/lib/constants';
+import { FaInbox } from 'react-icons/fa';
+import { FiChevronDown, FiSearch } from 'react-icons/fi';
 interface NewTaskModalProps {
     children: React.ReactNode;
 }
@@ -274,7 +275,9 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                                                             );
                                                             setSearchTerm('');
                                                         }}>
-                                                        <FiFileText className="w-4 h-4 text-muted-foreground" />
+                                                        <NewDocumentIcon
+                                                            size={24}
+                                                        />
                                                         <div className="flex-1 min-w-0">
                                                             <div className="text-sm font-medium truncate">
                                                                 {getPlainText(

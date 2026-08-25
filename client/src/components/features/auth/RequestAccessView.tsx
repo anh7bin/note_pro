@@ -1,7 +1,6 @@
 'use client';
 
 import { useLogout } from '@/hooks';
-import { useBinCraftTitle } from '@/hooks/useBinCraftTitle';
 import { LogOut } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { FiLock, FiClock, FiXCircle } from 'react-icons/fi';
@@ -40,10 +39,6 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
 
     const [createAccessRequest] = useCreateAccessRequestMutation();
     const [createNotification] = useCreateNotificationMutation();
-
-    useBinCraftTitle({
-        dynamicTitle: 'Bin Craft Document',
-    });
 
     const existingRequest = accessRequestData?.access_requests?.[0];
     const requestStatus = existingRequest?.status;

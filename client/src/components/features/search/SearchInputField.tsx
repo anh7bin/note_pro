@@ -31,7 +31,7 @@ export function SearchInputField({ onResultClick }: Props) {
         <InputField
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Open"
+            placeholder="Search"
             className={cn('w-full bg-card h-8')}
             icon={<Search className="h-4 w-4" />}
             iconPosition="left"
