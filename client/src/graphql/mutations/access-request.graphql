@@ -30,5 +30,8 @@ mutation UpdateAccessRequestStatus(
         id
         status
         updated_at
+        requester_id
+        document_id
+        permission_type
     }
 }

@@ -34,7 +34,6 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
             requesterId: userId || '',
         },
         skip: !documentId || !userId,
-        fetchPolicy: 'cache-and-network',
     });
 
     const [createAccessRequest] = useCreateAccessRequestMutation();
@@ -42,6 +41,12 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
 
     const existingRequest = accessRequestData?.access_requests?.[0];
     const requestStatus = existingRequest?.status;
+    const document =
+        accessRequestData?.blocks_by_pk ?? existingRequest?.document;
+    const rawTitle = (document?.content as { title?: string })?.title;
+    const documentTitle = rawTitle
+        ? rawTitle.replace(/<[^>]*>/g, '')
+        : 'Untitled Document';
 
     const handleRequestAccess = async (permissionType: PermissionType) => {
         if (!userId || isRequesting) return;
@@ -69,14 +74,17 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                         input: {
                             user_id: accessRequest.owner_id,
                             type: 'access_request',
-                            title: 'New access request',
-                            message: `${session?.user?.email} requested ${permissionType} access to your document`,
+                            title: 'View document',
+                            message: `${session?.user?.name ?? session?.user?.email} wants to view the document`,
                             data: {
                                 request_id: accessRequest.id,
                                 document_id: documentId,
                                 requester_id: userId,
                                 requester_email: session?.user?.email,
+                                requester_name: session?.user?.name,
+                                requester_avatar: session?.user?.image ?? null,
                                 permission_type: permissionType,
+                                document_title: documentTitle,
                             },
                         },
                     },

@@ -37,5 +37,18 @@ query GetAccessRequestByDocument($documentId: uuid!, $requesterId: uuid!) {
         status
         permission_type
         created_at
+        owner_id
+        document {
+            id
+            type
+            content
+            user_id
+        }
+    }
+    blocks_by_pk(id: $documentId) {
+        id
+        user_id
+        type
+        content
     }
 }

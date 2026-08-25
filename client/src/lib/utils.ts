@@ -44,3 +44,10 @@ export function formatDate(
 
     return format(parsed, 'MMM d, yyyy');
 }
+export function stripHtmlTags(html: string | undefined | null): string {
+    if (!html) return 'Untitled Document';
+    const text = html.replace(/<[^>]*>/g, '');
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value || 'Untitled Document';
+}

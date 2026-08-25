@@ -16,17 +16,19 @@ import { NotificationButton } from './components/NotificationButton';
 import { RequestEditButton } from './components/RequestEditButton';
 import { SettingButton } from './components/SettingButton';
 import { ShareExportButton } from './components/ShareExportButton';
+import { useDocumentPermission } from '@/hooks/useDocumentPermission';
 
 interface Props {
     workspaceSlug: string;
-    isEditorPage: boolean;
 }
 
-export default function Header({ workspaceSlug, isEditorPage }: Props) {
+export default function Header({ workspaceSlug }: Props) {
     const { toggle } = useSidebar();
     const { documentId } = useDocumentAccess();
     const { isLoading, startLoading } = useLoading();
     const pathname = usePathname();
+
+    const { permissionType } = useDocumentPermission(documentId || '');
 
     const handleLogoClick = () => {
         const allDocsPath = ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug);
@@ -63,7 +65,7 @@ export default function Header({ workspaceSlug, isEditorPage }: Props) {
                         <SearchInputField />
                     </div>
                     <div className="flex items-center gap-2">
-                        {isEditorPage && documentId && (
+                        {documentId && permissionType && (
                             <>
                                 <RequestEditButton documentId={documentId} />
                                 <ShareExportButton documentId={documentId} />

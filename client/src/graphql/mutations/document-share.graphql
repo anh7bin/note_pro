@@ -78,14 +78,57 @@ query GetDocumentSharedUsers($documentId: uuid!) {
             avatar_url
         }
     }
+
+    pending_requests: access_requests(
+        where: { document_id: { _eq: $documentId }, status: { _eq: "pending" } }
+        order_by: { created_at: desc }
+    ) {
+        id
+        requester_id
+        permission_type
+        created_at
+        requester {
+            id
+            email
+            name
+            avatar_url
+        }
+    }
+
     blocks_by_pk(id: $documentId) {
         id
         user_id
+        content
         user {
             id
             email
             name
             avatar_url
         }
+    }
+}
+
+mutation ApproveAccessRequest($requestId: uuid!) {
+    update_access_requests_by_pk(
+        pk_columns: { id: $requestId }
+        _set: { status: "approved", updated_at: "now()" }
+    ) {
+        id
+        status
+        requester_id
+        document_id
+        permission_type
+    }
+}
+
+mutation DeclineAccessRequest($requestId: uuid!) {
+    update_access_requests_by_pk(
+        pk_columns: { id: $requestId }
+        _set: { status: "rejected", updated_at: "now()" }
+    ) {
+        id
+        status
+        requester_id
+        document_id
     }
 }

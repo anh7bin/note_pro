@@ -1,3 +1,4 @@
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -6,27 +7,25 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useUpdateAccessRequestStatusMutation } from '@/graphql/mutations/__generated__/access-request.generated';
 import {
-    useCreateNotificationMutation,
     useMarkAllNotificationsAsReadMutation,
     useMarkNotificationAsReadMutation,
 } from '@/graphql/mutations/__generated__/notification.generated';
 import { useNotificationSubscriptionSubscription } from '@/graphql/queries/__generated__/notification.generated';
 import { useUserId } from '@/hooks/useAuth';
-import { showToast } from '@/lib/toast';
+import { useWorkspace } from '@/hooks/useWorkspace';
+import { ROUTES } from '@/lib/routes';
 import { Notification } from '@/types/app';
-import { AccessRequestStatus } from '@/types/types';
 import { formatDistanceToNow } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import { FaRegBell } from 'react-icons/fa6';
-import { FiCheck, FiX } from 'react-icons/fi';
+import { stripHtmlTags } from '@/lib/utils';
 
 export const NotificationButton = () => {
     const userId = useUserId();
-    const [processingRequestId, setProcessingRequestId] = useState<
-        string | null
-    >(null);
+    const router = useRouter();
+    const { workspace } = useWorkspace();
 
     const { data: notificationsData, loading } =
         useNotificationSubscriptionSubscription({
@@ -38,12 +37,6 @@ export const NotificationButton = () => {
 
     const [markAsRead] = useMarkNotificationAsReadMutation();
     const [markAllAsRead] = useMarkAllNotificationsAsReadMutation();
-    const [updateAccessRequest] = useUpdateAccessRequestStatusMutation({
-        // Refetch access request queries to update UI across all components
-        refetchQueries: ['GetAccessRequestByDocument'],
-        awaitRefetchQueries: true,
-    });
-    const [createNotification] = useCreateNotificationMutation();
 
     const notifications = useMemo(
         () => notificationsData?.notifications || [],
@@ -63,6 +56,24 @@ export const NotificationButton = () => {
                 variables: { id: notification.id },
             });
         }
+
+        const isAccessRequest = notification.type === 'access_request';
+        const isAccessGranted = notification.type === 'access_granted';
+        const data = notification.data;
+
+        if (isAccessRequest && data?.document_id && workspace) {
+            // Open document with share dialog
+            router.push(
+                `${ROUTES.WORKSPACE_DOCUMENT(workspace.id, data.document_id)}?openShare=true`
+            );
+        } else if (isAccessGranted && data?.document_id && workspace) {
+            // Open document in new tab
+            const url = ROUTES.WORKSPACE_DOCUMENT(
+                workspace.id,
+                data.document_id
+            );
+            window.open(url, '_blank');
+        }
     };
 
     const handleMarkAllAsRead = async () => {
@@ -70,100 +81,6 @@ export const NotificationButton = () => {
         await markAllAsRead({
             variables: { userId },
         });
-    };
-
-    const handleApprove = async (notification: Notification) => {
-        const data = notification.data;
-        if (!data?.document_id || !data?.requester_id) return;
-
-        setProcessingRequestId(notification.id);
-        try {
-            const requestId = data.request_id || data.access_request_id;
-
-            if (requestId) {
-                await updateAccessRequest({
-                    variables: {
-                        id: requestId,
-                        status: AccessRequestStatus.APPROVED,
-                        updated_at: new Date().toISOString(),
-                    },
-                });
-            }
-
-            await createNotification({
-                variables: {
-                    input: {
-                        user_id: data.requester_id,
-                        type: 'access_granted',
-                        title: 'Access granted',
-                        message: `Your access request to "${
-                            data.document_title || 'document'
-                        }" has been approved`,
-                        data: {
-                            document_id: data.document_id,
-                        },
-                    },
-                },
-            });
-
-            await markAsRead({
-                variables: { id: notification.id },
-            });
-
-            showToast.success('Access request approved');
-        } catch (error) {
-            console.error('Failed to approve:', error);
-            showToast.error('Failed to approve request');
-        } finally {
-            setProcessingRequestId(null);
-        }
-    };
-
-    const handleReject = async (notification: (typeof notifications)[0]) => {
-        const data = notification.data as any;
-        if (!data?.document_id || !data?.requester_id) return;
-
-        setProcessingRequestId(notification.id);
-        try {
-            const requestId = data.request_id || data.access_request_id;
-
-            if (requestId) {
-                await updateAccessRequest({
-                    variables: {
-                        id: requestId,
-                        status: AccessRequestStatus.REJECTED,
-                        updated_at: new Date().toISOString(),
-                    },
-                });
-            }
-
-            await createNotification({
-                variables: {
-                    input: {
-                        user_id: data.requester_id,
-                        type: 'access_denied',
-                        title: 'Access denied',
-                        message: `Your access request to "${
-                            data.document_title || 'document'
-                        }" has been denied`,
-                        data: {
-                            document_id: data.document_id,
-                        },
-                    },
-                },
-            });
-
-            await markAsRead({
-                variables: { id: notification.id },
-            });
-
-            showToast.success('Access request rejected');
-        } catch (error) {
-            console.error('Failed to reject:', error);
-            showToast.error('Failed to reject request');
-        } finally {
-            setProcessingRequestId(null);
-        }
     };
 
     if (loading && !notificationsData) {
@@ -224,96 +141,110 @@ export const NotificationButton = () => {
                             {notifications.map((notification) => {
                                 const isAccessRequest =
                                     notification.type === 'access_request';
+                                const isAccessGranted =
+                                    notification.type === 'access_granted';
                                 const data = notification.data;
-                                const isProcessing =
-                                    processingRequestId === notification.id;
 
                                 return (
                                     <div
                                         key={notification.id}
-                                        className={`p-3 rounded-lg ${
+                                        className={`p-3 rounded-lg cursor-pointer hover:bg-accent transition-colors ${
                                             !notification.is_read
                                                 ? 'bg-blue-50 dark:bg-blue-950/20'
                                                 : ''
-                                        }`}>
-                                        <div
-                                            className={`flex items-start justify-between gap-2 ${
-                                                !isAccessRequest
-                                                    ? 'cursor-pointer hover:opacity-80'
-                                                    : ''
-                                            }`}
-                                            onClick={() =>
-                                                !isAccessRequest &&
-                                                handleNotificationClick(
-                                                    notification
-                                                )
-                                            }>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium text-foreground truncate">
-                                                    {notification.title}
-                                                </p>
-                                                {notification.message && (
-                                                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                                        {notification.message}
-                                                    </p>
-                                                )}
-                                                {isAccessRequest && data && (
-                                                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 font-medium">
-                                                        Permission:{' '}
-                                                        {data.permission_type ||
-                                                            'read'}
-                                                    </p>
-                                                )}
-                                                <p className="text-xs text-muted-foreground mt-1">
-                                                    {notification.created_at &&
-                                                        formatDistanceToNow(
-                                                            new Date(
-                                                                notification.created_at
-                                                            ),
-                                                            {
-                                                                addSuffix: true,
-                                                            }
+                                        }`}
+                                        onClick={() =>
+                                            handleNotificationClick(
+                                                notification
+                                            )
+                                        }>
+                                        <div className="flex items-center gap-3">
+                                            {(isAccessRequest ||
+                                                isAccessGranted) &&
+                                            data ? (
+                                                <>
+                                                    <div className="relative flex-shrink-0">
+                                                        <Avatar className="h-10 w-10">
+                                                            <AvatarImage
+                                                                src={
+                                                                    isAccessRequest
+                                                                        ? data.requester_avatar
+                                                                        : data.owner_avatar
+                                                                }
+                                                                alt={
+                                                                    isAccessRequest
+                                                                        ? data.requester_email
+                                                                        : data.owner_email
+                                                                }
+                                                            />
+                                                        </Avatar>
+                                                        {!notification.is_read && (
+                                                            <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-blue-500 rounded-full border-2 border-background" />
                                                         )}
-                                                </p>
-                                            </div>
-                                            {!notification.is_read &&
-                                                !isAccessRequest && (
-                                                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-1 flex-shrink-0" />
-                                                )}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-sm text-foreground">
+                                                            {stripHtmlTags(
+                                                                data.document_title
+                                                            )}
+                                                        </p>
+                                                        <p className="text-xs text-muted-foreground mt-0.5">
+                                                            {
+                                                                notification.message
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                    <div className="text-xs text-muted-foreground flex-shrink-0">
+                                                        {notification.created_at &&
+                                                            formatDistanceToNow(
+                                                                new Date(
+                                                                    notification.created_at
+                                                                ),
+                                                                {
+                                                                    addSuffix: false,
+                                                                }
+                                                            )
+                                                                .replace(
+                                                                    'about ',
+                                                                    ''
+                                                                )
+                                                                .replace(
+                                                                    ' ago',
+                                                                    ''
+                                                                )}
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-sm font-medium text-foreground">
+                                                            {notification.title}
+                                                        </p>
+                                                        {notification.message && (
+                                                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                                                {
+                                                                    notification.message
+                                                                }
+                                                            </p>
+                                                        )}
+                                                        <p className="text-xs text-muted-foreground mt-1">
+                                                            {notification.created_at &&
+                                                                formatDistanceToNow(
+                                                                    new Date(
+                                                                        notification.created_at
+                                                                    ),
+                                                                    {
+                                                                        addSuffix: true,
+                                                                    }
+                                                                )}
+                                                        </p>
+                                                    </div>
+                                                    {!notification.is_read && (
+                                                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-1 flex-shrink-0" />
+                                                    )}
+                                                </>
+                                            )}
                                         </div>
-
-                                        {isAccessRequest && data && (
-                                            <div className="flex gap-2 mt-3 pt-3 border-t">
-                                                <Button
-                                                    variant="default"
-                                                    size="sm"
-                                                    className="gap-2 flex-1"
-                                                    onClick={() =>
-                                                        handleApprove(
-                                                            notification
-                                                        )
-                                                    }
-                                                    disabled={isProcessing}>
-                                                    <FiCheck className="h-4 w-4" />
-                                                    {isProcessing
-                                                        ? 'Processing...'
-                                                        : 'Approve'}
-                                                </Button>
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    className="gap-2 flex-1"
-                                                    onClick={() =>
-                                                        handleReject(
-                                                            notification
-                                                        )
-                                                    }
-                                                    disabled={isProcessing}>
-                                                    <FiX className="h-4 w-4" />
-                                                    Reject
-                                                </Button>
-                                            </div>
-                                        )}
                                     </div>
                                 );
                             })}

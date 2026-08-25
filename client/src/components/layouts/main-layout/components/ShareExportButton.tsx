@@ -10,14 +10,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FiShare2 } from 'react-icons/fi';
 import { ShareTab } from '@/components/features/page/share/ShareTab';
 import { ExportTab } from '@/components/features/page/share/ExportTab';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface ShareExportButtonProps {
     documentId: string;
 }
 
 export function ShareExportButton({ documentId }: ShareExportButtonProps) {
+    const searchParams = useSearchParams();
+    const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        const openShare = searchParams.get('openShare');
+        if (openShare === 'true') {
+            setOpen(true);
+            const url = new URL(window.location.href);
+            url.searchParams.delete('openShare');
+            window.history.replaceState({}, '', url.toString());
+        }
+    }, [searchParams]);
+
     return (
-        <DropdownMenu>
+        <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="outline"

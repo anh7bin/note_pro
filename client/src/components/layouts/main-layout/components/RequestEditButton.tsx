@@ -10,7 +10,7 @@ import { showToast } from '@/lib/toast';
 import { AccessRequestStatus, BlockType, PermissionType } from '@/types/types';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { FiEdit } from 'react-icons/fi';
+import { stripHtmlTags } from '@/lib/utils';
 
 export function RequestEditButton({ documentId }: { documentId: string }) {
     const userId = useUserId();
@@ -76,6 +76,8 @@ export function RequestEditButton({ documentId }: { documentId: string }) {
         }
 
         const ownerId = rootBlock.user_id;
+        const rawTitle = (rootBlock?.content as { title?: string })?.title;
+        const documentTitle = stripHtmlTags(rawTitle);
 
         try {
             setIsRequesting(true);
@@ -102,14 +104,17 @@ export function RequestEditButton({ documentId }: { documentId: string }) {
                     input: {
                         user_id: ownerId,
                         type: 'access_request',
-                        title: 'Edit access request',
-                        message: `${session?.user?.email} requested edit access`,
+                        title: documentTitle,
+                        message: `${session?.user?.name} wants to edit the "${documentTitle}"`,
                         data: {
                             request_id: requestId,
                             document_id: documentId,
                             requester_id: userId,
                             requester_email: session?.user?.email,
+                            requester_name: session?.user?.email,
+                            requester_avatar: session?.user?.image,
                             permission_type: PermissionType.WRITE,
+                            document_title: documentTitle,
                         },
                     },
                 },

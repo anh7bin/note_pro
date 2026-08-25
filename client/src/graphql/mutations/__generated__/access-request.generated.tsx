@@ -17,7 +17,7 @@ export type UpdateAccessRequestStatusMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateAccessRequestStatusMutation = { __typename?: 'mutation_root', update_access_requests_by_pk?: { __typename?: 'access_requests', id: string, status?: string | null, updated_at?: string | null } | null };
+export type UpdateAccessRequestStatusMutation = { __typename?: 'mutation_root', update_access_requests_by_pk?: { __typename?: 'access_requests', id: string, status?: string | null, updated_at?: string | null, requester_id: string, document_id: string, permission_type?: string | null } | null };
 
 
 export const CreateAccessRequestDocument = gql`
@@ -73,6 +73,9 @@ export const UpdateAccessRequestStatusDocument = gql`
     id
     status
     updated_at
+    requester_id
+    document_id
+    permission_type
   }
 }
     `;

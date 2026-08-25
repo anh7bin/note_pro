@@ -35,7 +35,21 @@ export type GetDocumentSharedUsersQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetDocumentSharedUsersQuery = { __typename?: 'query_root', access_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, blocks_by_pk?: { __typename?: 'blocks', id: string, user_id?: string | null, user?: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } | null } | null };
+export type GetDocumentSharedUsersQuery = { __typename?: 'query_root', access_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, pending_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, blocks_by_pk?: { __typename?: 'blocks', id: string, user_id?: string | null, content?: any | null, user?: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } | null } | null };
+
+export type ApproveAccessRequestMutationVariables = Types.Exact<{
+  requestId: Types.Scalars['uuid']['input'];
+}>;
+
+
+export type ApproveAccessRequestMutation = { __typename?: 'mutation_root', update_access_requests_by_pk?: { __typename?: 'access_requests', id: string, status?: string | null, requester_id: string, document_id: string, permission_type?: string | null } | null };
+
+export type DeclineAccessRequestMutationVariables = Types.Exact<{
+  requestId: Types.Scalars['uuid']['input'];
+}>;
+
+
+export type DeclineAccessRequestMutation = { __typename?: 'mutation_root', update_access_requests_by_pk?: { __typename?: 'access_requests', id: string, status?: string | null, requester_id: string, document_id: string } | null };
 
 
 export const ShareDocumentWithUserDocument = gql`
@@ -179,9 +193,25 @@ export const GetDocumentSharedUsersDocument = gql`
       avatar_url
     }
   }
+  pending_requests: access_requests(
+    where: {document_id: {_eq: $documentId}, status: {_eq: "pending"}}
+    order_by: {created_at: desc}
+  ) {
+    id
+    requester_id
+    permission_type
+    created_at
+    requester {
+      id
+      email
+      name
+      avatar_url
+    }
+  }
   blocks_by_pk(id: $documentId) {
     id
     user_id
+    content
     user {
       id
       email
@@ -224,3 +254,82 @@ export type GetDocumentSharedUsersQueryHookResult = ReturnType<typeof useGetDocu
 export type GetDocumentSharedUsersLazyQueryHookResult = ReturnType<typeof useGetDocumentSharedUsersLazyQuery>;
 export type GetDocumentSharedUsersSuspenseQueryHookResult = ReturnType<typeof useGetDocumentSharedUsersSuspenseQuery>;
 export type GetDocumentSharedUsersQueryResult = Apollo.QueryResult<GetDocumentSharedUsersQuery, GetDocumentSharedUsersQueryVariables>;
+export const ApproveAccessRequestDocument = gql`
+    mutation ApproveAccessRequest($requestId: uuid!) {
+  update_access_requests_by_pk(
+    pk_columns: {id: $requestId}
+    _set: {status: "approved", updated_at: "now()"}
+  ) {
+    id
+    status
+    requester_id
+    document_id
+    permission_type
+  }
+}
+    `;
+export type ApproveAccessRequestMutationFn = Apollo.MutationFunction<ApproveAccessRequestMutation, ApproveAccessRequestMutationVariables>;
+
+/**
+ * __useApproveAccessRequestMutation__
+ *
+ * To run a mutation, you first call `useApproveAccessRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useApproveAccessRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [approveAccessRequestMutation, { data, loading, error }] = useApproveAccessRequestMutation({
+ *   variables: {
+ *      requestId: // value for 'requestId'
+ *   },
+ * });
+ */
+export function useApproveAccessRequestMutation(baseOptions?: Apollo.MutationHookOptions<ApproveAccessRequestMutation, ApproveAccessRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ApproveAccessRequestMutation, ApproveAccessRequestMutationVariables>(ApproveAccessRequestDocument, options);
+      }
+export type ApproveAccessRequestMutationHookResult = ReturnType<typeof useApproveAccessRequestMutation>;
+export type ApproveAccessRequestMutationResult = Apollo.MutationResult<ApproveAccessRequestMutation>;
+export type ApproveAccessRequestMutationOptions = Apollo.BaseMutationOptions<ApproveAccessRequestMutation, ApproveAccessRequestMutationVariables>;
+export const DeclineAccessRequestDocument = gql`
+    mutation DeclineAccessRequest($requestId: uuid!) {
+  update_access_requests_by_pk(
+    pk_columns: {id: $requestId}
+    _set: {status: "rejected", updated_at: "now()"}
+  ) {
+    id
+    status
+    requester_id
+    document_id
+  }
+}
+    `;
+export type DeclineAccessRequestMutationFn = Apollo.MutationFunction<DeclineAccessRequestMutation, DeclineAccessRequestMutationVariables>;
+
+/**
+ * __useDeclineAccessRequestMutation__
+ *
+ * To run a mutation, you first call `useDeclineAccessRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeclineAccessRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [declineAccessRequestMutation, { data, loading, error }] = useDeclineAccessRequestMutation({
+ *   variables: {
+ *      requestId: // value for 'requestId'
+ *   },
+ * });
+ */
+export function useDeclineAccessRequestMutation(baseOptions?: Apollo.MutationHookOptions<DeclineAccessRequestMutation, DeclineAccessRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeclineAccessRequestMutation, DeclineAccessRequestMutationVariables>(DeclineAccessRequestDocument, options);
+      }
+export type DeclineAccessRequestMutationHookResult = ReturnType<typeof useDeclineAccessRequestMutation>;
+export type DeclineAccessRequestMutationResult = Apollo.MutationResult<DeclineAccessRequestMutation>;
+export type DeclineAccessRequestMutationOptions = Apollo.BaseMutationOptions<DeclineAccessRequestMutation, DeclineAccessRequestMutationVariables>;
