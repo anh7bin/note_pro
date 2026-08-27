@@ -99,6 +99,10 @@ export function DocumentAccessGuard({
     useEffect(() => {
         setHasAccess(hasAccess);
         setDocumentId(documentId);
+
+        return () => {
+            setDocumentId(null);
+        };
     }, [hasAccess, setHasAccess, documentId, setDocumentId]);
 
     if (loading || accessRequestLoading) {

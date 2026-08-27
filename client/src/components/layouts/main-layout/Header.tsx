@@ -28,7 +28,12 @@ export default function Header({ workspaceSlug }: Props) {
     const { isLoading, startLoading } = useLoading();
     const pathname = usePathname();
 
-    const { permissionType } = useDocumentPermission(documentId || '');
+    // Check if we're on a document/editor page
+    const isDocumentPage = pathname.startsWith('/editor/');
+
+    const { permissionType } = useDocumentPermission(
+        isDocumentPage ? documentId || '' : ''
+    );
 
     const handleLogoClick = () => {
         const allDocsPath = ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug);
@@ -65,7 +70,7 @@ export default function Header({ workspaceSlug }: Props) {
                         <SearchInputField />
                     </div>
                     <div className="flex items-center gap-2">
-                        {documentId && permissionType && (
+                        {isDocumentPage && documentId && permissionType && (
                             <>
                                 <RequestEditButton documentId={documentId} />
                                 <ShareExportButton documentId={documentId} />
