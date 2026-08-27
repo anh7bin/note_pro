@@ -1,16 +1,20 @@
 'use client';
 
 import { DocumentGrid } from '@/components/features/page/DocumentGrid';
+import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import { PageLoading } from '@/components/ui/loading';
+import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useGetSharedWithMeDocsQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { Document } from '@/types/app';
-import { useMemo } from 'react';
+import { pluralize } from '@/lib/bulk-actions';
+import { useMemo, useEffect } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { IoShareOutline } from 'react-icons/io5';
 
 export default function SharedWithMePage() {
     const userId = useUserId();
+    const { setMode, clearSelection } = useDocumentSelection();
 
     const { loading, data } = useGetSharedWithMeDocsQuery({
         variables: { userId: userId || '' },
@@ -20,6 +24,12 @@ export default function SharedWithMePage() {
     });
 
     const sharedDocs: Document[] = useMemo(() => data?.blocks || [], [data]);
+
+    useEffect(() => {
+        clearSelection();
+        setMode('shared');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [setMode]);
 
     return loading && sharedDocs.length === 0 ? (
         <PageLoading />
@@ -31,10 +41,13 @@ export default function SharedWithMePage() {
                         <IoShareOutline className="w-6 h-6 text-muted-foreground" />
                         <h1 className="text-xl font-medium">Shared With Me</h1>
                     </div>
-                    <span className="text-sm text-muted-foreground">
-                        {sharedDocs.length}{' '}
-                        {sharedDocs.length <= 1 ? 'document' : 'documents'}
-                    </span>
+                    <div className="flex items-center gap-3">
+                        <SelectionActionBar mode="shared" />
+                        <span className="text-sm text-muted-foreground">
+                            {sharedDocs.length}{' '}
+                            {pluralize(sharedDocs.length, 'document')}
+                        </span>
+                    </div>
                 </div>
 
                 {sharedDocs.length === 0 ? (

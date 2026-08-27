@@ -35,3 +35,27 @@ mutation UpdateAccessRequestStatus(
         permission_type
     }
 }
+
+mutation DeleteAccessRequest($id: uuid!) {
+    delete_access_requests_by_pk(id: $id) {
+        id
+    }
+}
+
+mutation BulkDeleteAccessRequests(
+    $document_ids: [uuid!]!
+    $requester_id: uuid!
+) {
+    delete_access_requests(
+        where: {
+            document_id: { _in: $document_ids }
+            requester_id: { _eq: $requester_id }
+        }
+    ) {
+        affected_rows
+        returning {
+            id
+            document_id
+        }
+    }
+}

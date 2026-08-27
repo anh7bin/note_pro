@@ -66,21 +66,20 @@ export function SidebarButton({
         }
     };
 
-    const left = (
+    const displayText = isLoading && loadingText ? loadingText : label;
+
+    const leftContent = (
         <div className="flex items-center gap-1 min-w-0 flex-1">
             <div className="w-5 h-5 flex items-center justify-center shrink-0 transition-all duration-200">
                 {icon}
             </div>
-            <TruncatedTooltip
-                text={isLoading && loadingText ? loadingText : label}>
-                <span className="truncate">
-                    {isLoading && loadingText ? loadingText : label}
-                </span>
+            <TruncatedTooltip text={displayText}>
+                <span className="truncate">{displayText}</span>
             </TruncatedTooltip>
         </div>
     );
 
-    const right = (
+    const rightContent = (
         <>
             {typeof count === 'number' && (
                 <span className="opacity-0 group-hover:opacity-100 text-muted-foreground text-xs pr-1 transition-opacity duration-200">
@@ -100,13 +99,6 @@ export function SidebarButton({
         </>
     );
 
-    const content = (
-        <div className="flex items-center justify-between w-full">
-            {left}
-            {right}
-        </div>
-    );
-
     if (href && !onClick) {
         return (
             <div className={cn(baseClasses, 'group')}>
@@ -114,27 +106,9 @@ export function SidebarButton({
                     href={href}
                     className="flex items-center justify-between w-full"
                     onClick={handleLinkClick}>
-                    {left}
+                    {leftContent}
                 </Link>
-                {(count !== undefined || action) && (
-                    <div className="flex items-center">
-                        {typeof count === 'number' && (
-                            <span className="opacity-0 group-hover:opacity-100 text-muted-foreground text-xs pr-1 transition-opacity duration-200">
-                                {count}
-                            </span>
-                        )}
-                        {action && (
-                            <div
-                                className="opacity-0 group-hover:opacity-100 text-muted-foreground transition-opacity duration-200"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                }}>
-                                {action}
-                            </div>
-                        )}
-                    </div>
-                )}
+                {rightContent}
             </div>
         );
     }
@@ -143,8 +117,9 @@ export function SidebarButton({
         <button
             onClick={onClick}
             disabled={disabled || isLoading}
-            className={baseClasses}>
-            {content}
+            className={cn(baseClasses, 'group')}>
+            {leftContent}
+            {rightContent}
         </button>
     );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { ContextDropdownMenu } from '../ContextDropdownMenu';
 import { MoveToDialog } from '../MoveToDialog';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { MenuItems } from './MenuItems';
 import { useDocumentActions } from './hooks/useDocumentActions';
 import { useCopyDocumentLink } from './hooks/useCopyDocumentLink';
@@ -22,6 +23,7 @@ export const DocumentMoreMenu = ({
     children,
 }: DocumentMoreMenuProps) => {
     const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const { handleDelete, handleRemoveAccess, handleMove } =
         useDocumentActions(documentId);
     const copyLink = useCopyDocumentLink(documentId, workspaceId, folderId);
@@ -60,17 +62,21 @@ export const DocumentMoreMenu = ({
         []
     );
 
-    const handleDeleteOrRemove = useCallback(
-        async (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleOpenDeleteDialog = useCallback(
+        (e: React.MouseEvent<HTMLDivElement>) => {
             e.stopPropagation();
-            if (isOwner) {
-                await handleDelete();
-            } else {
-                await handleRemoveAccess();
-            }
+            setIsDeleteDialogOpen(true);
         },
-        [isOwner, handleDelete, handleRemoveAccess]
+        []
     );
+
+    const handleConfirmDelete = useCallback(async () => {
+        if (isOwner) {
+            await handleDelete();
+        } else {
+            await handleRemoveAccess();
+        }
+    }, [isOwner, handleDelete, handleRemoveAccess]);
 
     return (
         <>
@@ -82,7 +88,7 @@ export const DocumentMoreMenu = ({
                         onOpenInNewTab={handleOpenInNewTab}
                         onCopyLink={handleCopyLink}
                         onMove={handleOpenMoveDialog}
-                        onDeleteOrRemove={handleDeleteOrRemove}
+                        onDeleteOrRemove={handleOpenDeleteDialog}
                     />
                 }>
                 {children}
@@ -92,6 +98,25 @@ export const DocumentMoreMenu = ({
                 open={isMoveDialogOpen}
                 onOpenChange={setIsMoveDialogOpen}
                 onSelect={handleMove}
+            />
+
+            <ConfirmDialog
+                open={isDeleteDialogOpen}
+                onOpenChange={setIsDeleteDialogOpen}
+                title={
+                    isOwner
+                        ? 'Move 1 item to Recently Deleted'
+                        : 'Remove document access'
+                }
+                description={
+                    isOwner
+                        ? 'This item will be moved to Recently Deleted.'
+                        : 'Are you sure you want to remove your access to this document?'
+                }
+                confirmText={isOwner ? 'Delete' : 'Remove'}
+                cancelText="Cancel"
+                variant="destructive"
+                onConfirm={handleConfirmDelete}
             />
         </>
     );

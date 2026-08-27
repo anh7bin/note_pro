@@ -112,19 +112,11 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                         </Button>
                     </div>
                 </div>
-                <div
-                    className={cn(
-                        'transition-all duration-300 ease-in-out',
-                        isFoldersCollapsed
-                            ? 'h-0 overflow-hidden'
-                            : 'flex-1 min-h-0'
-                    )}
-                    style={{
-                        overflowY: isFoldersCollapsed ? 'hidden' : 'auto',
-                        overscrollBehavior: 'contain',
-                    }}>
-                    <FolderMenu />
-                </div>
+                {!isFoldersCollapsed && (
+                    <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+                        <FolderMenu />
+                    </div>
+                )}
             </div>
         </aside>
     );

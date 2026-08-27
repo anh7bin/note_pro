@@ -94,3 +94,26 @@ mutation MoveDocumentToFolder($id: uuid!, $folderId: uuid) {
         }
     }
 }
+
+mutation BulkMoveDocumentsToFolder($ids: [uuid!]!, $folderId: uuid) {
+    update_blocks(
+        where: { id: { _in: $ids } }
+        _set: { folder_id: $folderId }
+    ) {
+        affected_rows
+        returning {
+            id
+            folder_id
+        }
+    }
+}
+
+mutation BulkDeleteDocuments($ids: [uuid!]!) {
+    update_blocks(where: { id: { _in: $ids } }, _set: { deleted_at: "now()" }) {
+        affected_rows
+        returning {
+            id
+            deleted_at
+        }
+    }
+}

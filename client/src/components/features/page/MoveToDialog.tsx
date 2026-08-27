@@ -29,7 +29,7 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
 
     const { data } = useGetFoldersQuery({
         variables: { workspaceId: workspaceId || '' },
-        skip: !workspaceId,
+        skip: !workspaceId || !open,
     });
 
     const handleSelect = async () => {
