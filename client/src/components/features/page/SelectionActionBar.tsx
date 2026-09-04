@@ -41,6 +41,7 @@ export function SelectionActionBar({
             'GetAllDocs',
             'GetWorkspaceFolderDocuments',
             'GetFolderById',
+            'GetDocsCount',
         ],
     });
 
@@ -115,7 +116,7 @@ export function SelectionActionBar({
 
     return (
         <>
-            <div className="flex items-center gap-2 rounded-lg py-0.5 px-1 bg-accent">
+            <div className="flex items-center gap-2 rounded-lg bg-accent">
                 <Button
                     variant="ghost"
                     size="icon"
