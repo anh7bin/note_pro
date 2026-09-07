@@ -74,6 +74,14 @@ export type BulkDeleteDocumentsMutationVariables = Types.Exact<{
 
 export type BulkDeleteDocumentsMutation = { __typename?: 'mutation_root', update_blocks?: { __typename?: 'blocks_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'blocks', id: string, deleted_at?: string | null }> } | null };
 
+export type BulkDeleteDocumentsAndFoldersMutationVariables = Types.Exact<{
+  documentIds: Array<Types.Scalars['uuid']['input']> | Types.Scalars['uuid']['input'];
+  folderIds: Array<Types.Scalars['uuid']['input']> | Types.Scalars['uuid']['input'];
+}>;
+
+
+export type BulkDeleteDocumentsAndFoldersMutation = { __typename?: 'mutation_root', delete_documents?: { __typename?: 'blocks_mutation_response', affected_rows: number } | null, delete_folders?: { __typename?: 'folders_mutation_response', affected_rows: number } | null };
+
 
 export const SoftDeleteDocumentDocument = gql`
     mutation SoftDeleteDocument($id: uuid!) {
@@ -422,3 +430,43 @@ export function useBulkDeleteDocumentsMutation(baseOptions?: Apollo.MutationHook
 export type BulkDeleteDocumentsMutationHookResult = ReturnType<typeof useBulkDeleteDocumentsMutation>;
 export type BulkDeleteDocumentsMutationResult = Apollo.MutationResult<BulkDeleteDocumentsMutation>;
 export type BulkDeleteDocumentsMutationOptions = Apollo.BaseMutationOptions<BulkDeleteDocumentsMutation, BulkDeleteDocumentsMutationVariables>;
+export const BulkDeleteDocumentsAndFoldersDocument = gql`
+    mutation BulkDeleteDocumentsAndFolders($documentIds: [uuid!]!, $folderIds: [uuid!]!) {
+  delete_documents: update_blocks(
+    where: {id: {_in: $documentIds}}
+    _set: {deleted_at: "now()"}
+  ) {
+    affected_rows
+  }
+  delete_folders: delete_folders(where: {id: {_in: $folderIds}}) {
+    affected_rows
+  }
+}
+    `;
+export type BulkDeleteDocumentsAndFoldersMutationFn = Apollo.MutationFunction<BulkDeleteDocumentsAndFoldersMutation, BulkDeleteDocumentsAndFoldersMutationVariables>;
+
+/**
+ * __useBulkDeleteDocumentsAndFoldersMutation__
+ *
+ * To run a mutation, you first call `useBulkDeleteDocumentsAndFoldersMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBulkDeleteDocumentsAndFoldersMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bulkDeleteDocumentsAndFoldersMutation, { data, loading, error }] = useBulkDeleteDocumentsAndFoldersMutation({
+ *   variables: {
+ *      documentIds: // value for 'documentIds'
+ *      folderIds: // value for 'folderIds'
+ *   },
+ * });
+ */
+export function useBulkDeleteDocumentsAndFoldersMutation(baseOptions?: Apollo.MutationHookOptions<BulkDeleteDocumentsAndFoldersMutation, BulkDeleteDocumentsAndFoldersMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BulkDeleteDocumentsAndFoldersMutation, BulkDeleteDocumentsAndFoldersMutationVariables>(BulkDeleteDocumentsAndFoldersDocument, options);
+      }
+export type BulkDeleteDocumentsAndFoldersMutationHookResult = ReturnType<typeof useBulkDeleteDocumentsAndFoldersMutation>;
+export type BulkDeleteDocumentsAndFoldersMutationResult = Apollo.MutationResult<BulkDeleteDocumentsAndFoldersMutation>;
+export type BulkDeleteDocumentsAndFoldersMutationOptions = Apollo.BaseMutationOptions<BulkDeleteDocumentsAndFoldersMutation, BulkDeleteDocumentsAndFoldersMutationVariables>;

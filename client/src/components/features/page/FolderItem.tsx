@@ -29,7 +29,8 @@ const hasActiveDescendant = (
 export const FolderItem: React.FC<{
     folder: FolderNode;
     workspaceSlug: string | null;
-}> = ({ folder, workspaceSlug }) => {
+    shouldExpandAll?: boolean;
+}> = ({ folder, workspaceSlug, shouldExpandAll }) => {
     const pathname = usePathname();
     const hasChildren = folder.children && folder.children.length > 0;
 
@@ -38,6 +39,7 @@ export const FolderItem: React.FC<{
 
     const [expanded, setExpanded] = useState(shouldAutoExpand);
     const [isHovered, setIsHovered] = useState(false);
+    const [hasBeenManuallyToggled, setHasBeenManuallyToggled] = useState(false);
 
     useEffect(() => {
         if (shouldAutoExpand) {
@@ -45,11 +47,18 @@ export const FolderItem: React.FC<{
         }
     }, [shouldAutoExpand]);
 
+    useEffect(() => {
+        if (shouldExpandAll && !hasBeenManuallyToggled) {
+            setExpanded(true);
+        }
+    }, [shouldExpandAll, hasBeenManuallyToggled]);
+
     const handleToggle = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         if (hasChildren) {
             setExpanded(!expanded);
+            setHasBeenManuallyToggled(true);
         }
     };
 
@@ -112,6 +121,7 @@ export const FolderItem: React.FC<{
                             key={child.id}
                             folder={child}
                             workspaceSlug={workspaceSlug}
+                            shouldExpandAll={expanded}
                         />
                     ))}
                 </div>

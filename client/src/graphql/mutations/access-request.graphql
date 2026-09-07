@@ -18,30 +18,6 @@ mutation CreateAccessRequest($input: access_requests_insert_input!) {
     }
 }
 
-mutation UpdateAccessRequestStatus(
-    $id: uuid!
-    $status: String!
-    $updated_at: timestamptz!
-) {
-    update_access_requests_by_pk(
-        pk_columns: { id: $id }
-        _set: { status: $status, updated_at: $updated_at }
-    ) {
-        id
-        status
-        updated_at
-        requester_id
-        document_id
-        permission_type
-    }
-}
-
-mutation DeleteAccessRequest($id: uuid!) {
-    delete_access_requests_by_pk(id: $id) {
-        id
-    }
-}
-
 mutation BulkDeleteAccessRequests(
     $document_ids: [uuid!]!
     $requester_id: uuid!

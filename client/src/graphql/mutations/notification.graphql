@@ -29,9 +29,3 @@ mutation MarkAllNotificationsAsRead($userId: uuid!) {
         affected_rows
     }
 }
-
-mutation DeleteNotification($id: uuid!) {
-    delete_notifications_by_pk(id: $id) {
-        id
-    }
-}

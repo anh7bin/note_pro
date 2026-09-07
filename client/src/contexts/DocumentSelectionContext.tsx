@@ -4,7 +4,9 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 
 interface DocumentSelectionContextType {
     selectedDocuments: Set<string>;
+    selectedFolders: Set<string>;
     toggleDocument: (id: string) => void;
+    toggleFolder: (id: string) => void;
     clearSelection: () => void;
     selectAll: (documentIds: string[]) => void;
     isSelected: (id: string) => boolean;
@@ -24,6 +26,9 @@ export function DocumentSelectionProvider({
     const [selectedDocuments, setSelectedDocuments] = useState<Set<string>>(
         new Set()
     );
+    const [selectedFolders, setSelectedFolders] = useState<Set<string>>(
+        new Set()
+    );
     const [mode, setMode] = useState<'default' | 'shared'>('default');
 
     const toggleDocument = useCallback((id: string) => {
@@ -36,23 +41,49 @@ export function DocumentSelectionProvider({
             }
             return next;
         });
+        setSelectedFolders((prev) => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+        });
+    }, []);
+
+    const toggleFolder = useCallback((id: string) => {
+        setSelectedFolders((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) {
+                next.delete(id);
+            } else {
+                next.add(id);
+            }
+            return next;
+        });
+        setSelectedDocuments((prev) => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+        });
     }, []);
 
     const clearSelection = useCallback(() => {
         setSelectedDocuments(new Set());
+        setSelectedFolders(new Set());
     }, []);
 
     const selectAll = useCallback((documentIds: string[]) => {
         setSelectedDocuments(new Set(documentIds));
     }, []);
 
-    const isSelected = (id: string) => selectedDocuments.has(id);
+    const isSelected = (id: string) =>
+        selectedDocuments.has(id) || selectedFolders.has(id);
 
     return (
         <DocumentSelectionContext.Provider
             value={{
                 selectedDocuments,
+                selectedFolders,
                 toggleDocument,
+                toggleFolder,
                 clearSelection,
                 selectAll,
                 isSelected,

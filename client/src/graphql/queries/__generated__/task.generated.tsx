@@ -3,14 +3,6 @@ import * as Types from '@/types/generated/graphql';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {"ignoreResults":true} as const;
-export type GetIncompleteTasksQueryVariables = Types.Exact<{
-  workspaceId: Types.Scalars['uuid']['input'];
-  includeScheduled?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
-}>;
-
-
-export type GetIncompleteTasksQuery = { __typename?: 'query_root', all_tasks?: Array<{ __typename?: 'tasks', id: string, block_id?: string | null, user_id?: string | null, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, created_at?: string | null, updated_at?: string | null, block?: { __typename?: 'blocks', id: string, content?: any | null, type: string } | null }>, unscheduled_tasks?: Array<{ __typename?: 'tasks', id: string, block_id?: string | null, user_id?: string | null, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, created_at?: string | null, updated_at?: string | null, block?: { __typename?: 'blocks', id: string, content?: any | null, type: string } | null }> };
-
 export type GetAllTasksQueryVariables = Types.Exact<{
   workspaceId: Types.Scalars['uuid']['input'];
 }>;
@@ -24,13 +16,6 @@ export type GetCompletedTasksQueryVariables = Types.Exact<{
 
 
 export type GetCompletedTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: string, block_id?: string | null, user_id?: string | null, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, created_at?: string | null, updated_at?: string | null, block?: { __typename?: 'blocks', id: string, content?: any | null, type: string } | null }> };
-
-export type GetScheduledTasksQueryVariables = Types.Exact<{
-  workspaceId: Types.Scalars['uuid']['input'];
-}>;
-
-
-export type GetScheduledTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: string, block_id?: string | null, user_id?: string | null, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, created_at?: string | null, updated_at?: string | null, block?: { __typename?: 'blocks', id: string, content?: any | null, type: string } | null }> };
 
 export type GetAllScheduledTasksQueryVariables = Types.Exact<{
   workspaceId: Types.Scalars['uuid']['input'];
@@ -47,13 +32,6 @@ export type GetTodayTasksQueryVariables = Types.Exact<{
 
 export type GetTodayTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: string, block_id?: string | null, user_id?: string | null, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, created_at?: string | null, updated_at?: string | null, block?: { __typename?: 'blocks', id: string, content?: any | null, type: string } | null }> };
 
-export type GetTaskByIdQueryVariables = Types.Exact<{
-  id: Types.Scalars['uuid']['input'];
-}>;
-
-
-export type GetTaskByIdQuery = { __typename?: 'query_root', tasks_by_pk?: { __typename?: 'tasks', id: string, block_id?: string | null, user_id?: string | null, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, created_at?: string | null, updated_at?: string | null, block?: { __typename?: 'blocks', id: string, content?: any | null, type: string } | null } | null };
-
 export type GetTodoTasksQueryVariables = Types.Exact<{
   workspaceId: Types.Scalars['uuid']['input'];
 }>;
@@ -69,82 +47,6 @@ export type GetTasksQueryVariables = Types.Exact<{
 export type GetTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: string, block_id?: string | null, user_id?: string | null, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, created_at?: string | null, updated_at?: string | null, block?: { __typename?: 'blocks', id: string, content?: any | null, type: string } | null }> };
 
 
-export const GetIncompleteTasksDocument = gql`
-    query GetIncompleteTasks($workspaceId: uuid!, $includeScheduled: Boolean = true) {
-  all_tasks: tasks(
-    where: {block: {workspace_id: {_eq: $workspaceId}, page_id: {_is_null: true}}, status: {_neq: "completed"}}
-    order_by: {created_at: desc}
-  ) @include(if: $includeScheduled) {
-    id
-    block_id
-    user_id
-    status
-    deadline_date
-    schedule_date
-    priority
-    created_at
-    updated_at
-    block {
-      id
-      content
-      type
-    }
-  }
-  unscheduled_tasks: tasks(
-    where: {block: {workspace_id: {_eq: $workspaceId}, page_id: {_is_null: true}}, status: {_neq: "completed"}, schedule_date: {_is_null: true}}
-    order_by: {created_at: desc}
-  ) @skip(if: $includeScheduled) {
-    id
-    block_id
-    user_id
-    status
-    deadline_date
-    schedule_date
-    priority
-    created_at
-    updated_at
-    block {
-      id
-      content
-      type
-    }
-  }
-}
-    `;
-
-/**
- * __useGetIncompleteTasksQuery__
- *
- * To run a query within a React component, call `useGetIncompleteTasksQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetIncompleteTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetIncompleteTasksQuery({
- *   variables: {
- *      workspaceId: // value for 'workspaceId'
- *      includeScheduled: // value for 'includeScheduled'
- *   },
- * });
- */
-export function useGetIncompleteTasksQuery(baseOptions: Apollo.QueryHookOptions<GetIncompleteTasksQuery, GetIncompleteTasksQueryVariables> & ({ variables: GetIncompleteTasksQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetIncompleteTasksQuery, GetIncompleteTasksQueryVariables>(GetIncompleteTasksDocument, options);
-      }
-export function useGetIncompleteTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIncompleteTasksQuery, GetIncompleteTasksQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetIncompleteTasksQuery, GetIncompleteTasksQueryVariables>(GetIncompleteTasksDocument, options);
-        }
-export function useGetIncompleteTasksSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetIncompleteTasksQuery, GetIncompleteTasksQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetIncompleteTasksQuery, GetIncompleteTasksQueryVariables>(GetIncompleteTasksDocument, options);
-        }
-export type GetIncompleteTasksQueryHookResult = ReturnType<typeof useGetIncompleteTasksQuery>;
-export type GetIncompleteTasksLazyQueryHookResult = ReturnType<typeof useGetIncompleteTasksLazyQuery>;
-export type GetIncompleteTasksSuspenseQueryHookResult = ReturnType<typeof useGetIncompleteTasksSuspenseQuery>;
-export type GetIncompleteTasksQueryResult = Apollo.QueryResult<GetIncompleteTasksQuery, GetIncompleteTasksQueryVariables>;
 export const GetAllTasksDocument = gql`
     query GetAllTasks($workspaceId: uuid!) {
   tasks(
@@ -257,62 +159,6 @@ export type GetCompletedTasksQueryHookResult = ReturnType<typeof useGetCompleted
 export type GetCompletedTasksLazyQueryHookResult = ReturnType<typeof useGetCompletedTasksLazyQuery>;
 export type GetCompletedTasksSuspenseQueryHookResult = ReturnType<typeof useGetCompletedTasksSuspenseQuery>;
 export type GetCompletedTasksQueryResult = Apollo.QueryResult<GetCompletedTasksQuery, GetCompletedTasksQueryVariables>;
-export const GetScheduledTasksDocument = gql`
-    query GetScheduledTasks($workspaceId: uuid!) {
-  tasks(
-    where: {block: {workspace_id: {_eq: $workspaceId}, page_id: {_is_null: true}}, schedule_date: {_is_null: false}, status: {_neq: "completed"}}
-    order_by: {schedule_date: asc}
-  ) {
-    id
-    block_id
-    user_id
-    status
-    deadline_date
-    schedule_date
-    priority
-    created_at
-    updated_at
-    block {
-      id
-      content
-      type
-    }
-  }
-}
-    `;
-
-/**
- * __useGetScheduledTasksQuery__
- *
- * To run a query within a React component, call `useGetScheduledTasksQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetScheduledTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetScheduledTasksQuery({
- *   variables: {
- *      workspaceId: // value for 'workspaceId'
- *   },
- * });
- */
-export function useGetScheduledTasksQuery(baseOptions: Apollo.QueryHookOptions<GetScheduledTasksQuery, GetScheduledTasksQueryVariables> & ({ variables: GetScheduledTasksQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetScheduledTasksQuery, GetScheduledTasksQueryVariables>(GetScheduledTasksDocument, options);
-      }
-export function useGetScheduledTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetScheduledTasksQuery, GetScheduledTasksQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetScheduledTasksQuery, GetScheduledTasksQueryVariables>(GetScheduledTasksDocument, options);
-        }
-export function useGetScheduledTasksSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetScheduledTasksQuery, GetScheduledTasksQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetScheduledTasksQuery, GetScheduledTasksQueryVariables>(GetScheduledTasksDocument, options);
-        }
-export type GetScheduledTasksQueryHookResult = ReturnType<typeof useGetScheduledTasksQuery>;
-export type GetScheduledTasksLazyQueryHookResult = ReturnType<typeof useGetScheduledTasksLazyQuery>;
-export type GetScheduledTasksSuspenseQueryHookResult = ReturnType<typeof useGetScheduledTasksSuspenseQuery>;
-export type GetScheduledTasksQueryResult = Apollo.QueryResult<GetScheduledTasksQuery, GetScheduledTasksQueryVariables>;
 export const GetAllScheduledTasksDocument = gql`
     query GetAllScheduledTasks($workspaceId: uuid!) {
   tasks(
@@ -431,59 +277,6 @@ export type GetTodayTasksQueryHookResult = ReturnType<typeof useGetTodayTasksQue
 export type GetTodayTasksLazyQueryHookResult = ReturnType<typeof useGetTodayTasksLazyQuery>;
 export type GetTodayTasksSuspenseQueryHookResult = ReturnType<typeof useGetTodayTasksSuspenseQuery>;
 export type GetTodayTasksQueryResult = Apollo.QueryResult<GetTodayTasksQuery, GetTodayTasksQueryVariables>;
-export const GetTaskByIdDocument = gql`
-    query GetTaskById($id: uuid!) {
-  tasks_by_pk(id: $id) {
-    id
-    block_id
-    user_id
-    status
-    deadline_date
-    schedule_date
-    priority
-    created_at
-    updated_at
-    block {
-      id
-      content
-      type
-    }
-  }
-}
-    `;
-
-/**
- * __useGetTaskByIdQuery__
- *
- * To run a query within a React component, call `useGetTaskByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTaskByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTaskByIdQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetTaskByIdQuery(baseOptions: Apollo.QueryHookOptions<GetTaskByIdQuery, GetTaskByIdQueryVariables> & ({ variables: GetTaskByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTaskByIdQuery, GetTaskByIdQueryVariables>(GetTaskByIdDocument, options);
-      }
-export function useGetTaskByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTaskByIdQuery, GetTaskByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTaskByIdQuery, GetTaskByIdQueryVariables>(GetTaskByIdDocument, options);
-        }
-export function useGetTaskByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTaskByIdQuery, GetTaskByIdQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetTaskByIdQuery, GetTaskByIdQueryVariables>(GetTaskByIdDocument, options);
-        }
-export type GetTaskByIdQueryHookResult = ReturnType<typeof useGetTaskByIdQuery>;
-export type GetTaskByIdLazyQueryHookResult = ReturnType<typeof useGetTaskByIdLazyQuery>;
-export type GetTaskByIdSuspenseQueryHookResult = ReturnType<typeof useGetTaskByIdSuspenseQuery>;
-export type GetTaskByIdQueryResult = Apollo.QueryResult<GetTaskByIdQuery, GetTaskByIdQueryVariables>;
 export const GetTodoTasksDocument = gql`
     query GetTodoTasks($workspaceId: uuid!) {
   tasks(

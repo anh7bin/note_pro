@@ -1,61 +1,3 @@
-query GetIncompleteTasks(
-    $workspaceId: uuid!
-    $includeScheduled: Boolean = true
-) {
-    all_tasks: tasks(
-        where: {
-            block: {
-                workspace_id: { _eq: $workspaceId }
-                page_id: { _is_null: true }
-            }
-            status: { _neq: "completed" }
-        }
-        order_by: { created_at: desc }
-    ) @include(if: $includeScheduled) {
-        id
-        block_id
-        user_id
-        status
-        deadline_date
-        schedule_date
-        priority
-        created_at
-        updated_at
-        block {
-            id
-            content
-            type
-        }
-    }
-
-    unscheduled_tasks: tasks(
-        where: {
-            block: {
-                workspace_id: { _eq: $workspaceId }
-                page_id: { _is_null: true }
-            }
-            status: { _neq: "completed" }
-            schedule_date: { _is_null: true }
-        }
-        order_by: { created_at: desc }
-    ) @skip(if: $includeScheduled) {
-        id
-        block_id
-        user_id
-        status
-        deadline_date
-        schedule_date
-        priority
-        created_at
-        updated_at
-        block {
-            id
-            content
-            type
-        }
-    }
-}
-
 query GetAllTasks($workspaceId: uuid!) {
     tasks(
         where: {
@@ -94,35 +36,6 @@ query GetCompletedTasks($workspaceId: uuid!) {
             status: { _eq: "completed" }
         }
         order_by: { updated_at: desc }
-    ) {
-        id
-        block_id
-        user_id
-        status
-        deadline_date
-        schedule_date
-        priority
-        created_at
-        updated_at
-        block {
-            id
-            content
-            type
-        }
-    }
-}
-
-query GetScheduledTasks($workspaceId: uuid!) {
-    tasks(
-        where: {
-            block: {
-                workspace_id: { _eq: $workspaceId }
-                page_id: { _is_null: true }
-            }
-            schedule_date: { _is_null: false }
-            status: { _neq: "completed" }
-        }
-        order_by: { schedule_date: asc }
     ) {
         id
         block_id
@@ -184,25 +97,6 @@ query GetTodayTasks($workspaceId: uuid!, $today: date!) {
         }
         order_by: { created_at: desc }
     ) {
-        id
-        block_id
-        user_id
-        status
-        deadline_date
-        schedule_date
-        priority
-        created_at
-        updated_at
-        block {
-            id
-            content
-            type
-        }
-    }
-}
-
-query GetTaskById($id: uuid!) {
-    tasks_by_pk(id: $id) {
         id
         block_id
         user_id

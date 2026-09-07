@@ -25,9 +25,3 @@ mutation UpdateTask($id: uuid!, $input: tasks_set_input!) {
         updated_at
     }
 }
-
-mutation DeleteTask($id: uuid!) {
-    delete_tasks_by_pk(id: $id) {
-        id
-    }
-}

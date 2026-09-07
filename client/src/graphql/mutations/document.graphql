@@ -117,3 +117,18 @@ mutation BulkDeleteDocuments($ids: [uuid!]!) {
         }
     }
 }
+
+mutation BulkDeleteDocumentsAndFolders(
+    $documentIds: [uuid!]!
+    $folderIds: [uuid!]!
+) {
+    delete_documents: update_blocks(
+        where: { id: { _in: $documentIds } }
+        _set: { deleted_at: "now()" }
+    ) {
+        affected_rows
+    }
+    delete_folders: delete_folders(where: { id: { _in: $folderIds } }) {
+        affected_rows
+    }
+}

@@ -4,30 +4,38 @@ import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import {
-    useBulkDeleteDocumentsMutation,
+    useBulkDeleteDocumentsAndFoldersMutation,
     useBulkMoveDocumentsToFolderMutation,
 } from '@/graphql/mutations/__generated__/document.generated';
 import { useBulkDeleteAccessRequestsMutation } from '@/graphql/mutations/__generated__/access-request.generated';
 import { useUserId } from '@/hooks/useAuth';
-import { toast } from '@/hooks/useToast';
 import {
-    handleBulkDeleteDocuments,
+    handleBulkDeleteDocumentsAndFolders,
     handleBulkRemoveShared,
     pluralize,
 } from '@/lib/bulk-actions';
 import { FolderInput, MinusCircle, Trash2 } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { MoveToDialog } from './MoveToDialog';
 
 interface SelectionActionBarProps {
     mode?: 'default' | 'shared';
 }
 
+const REFETCH_QUERIES = [
+    'GetFolders',
+    'GetAllDocs',
+    'GetWorkspaceFolderDocuments',
+    'GetFolderById',
+    'GetDocsCount',
+];
+
 export function SelectionActionBar({
     mode: propMode,
 }: SelectionActionBarProps) {
     const {
         selectedDocuments,
+        selectedFolders,
         clearSelection,
         mode: contextMode,
     } = useDocumentSelection();
@@ -36,21 +44,23 @@ export function SelectionActionBar({
     const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    const [bulkDeleteDocuments] = useBulkDeleteDocumentsMutation({
-        refetchQueries: [
-            'GetAllDocs',
-            'GetWorkspaceFolderDocuments',
-            'GetFolderById',
-            'GetDocsCount',
-        ],
-    });
+    const totalSelected = selectedDocuments.size + selectedFolders.size;
+    const selectedDocIds = useMemo(
+        () => Array.from(selectedDocuments),
+        [selectedDocuments]
+    );
+    const selectedFolderIds = useMemo(
+        () => Array.from(selectedFolders),
+        [selectedFolders]
+    );
+
+    const [bulkDeleteDocumentsAndFolders] =
+        useBulkDeleteDocumentsAndFoldersMutation({
+            refetchQueries: REFETCH_QUERIES,
+        });
 
     const [bulkMoveDocuments] = useBulkMoveDocumentsToFolderMutation({
-        refetchQueries: [
-            'GetAllDocs',
-            'GetWorkspaceFolderDocuments',
-            'GetFolderById',
-        ],
+        refetchQueries: REFETCH_QUERIES,
     });
 
     const [bulkDeleteAccessRequests] = useBulkDeleteAccessRequestsMutation({
@@ -69,50 +79,41 @@ export function SelectionActionBar({
                 userId,
                 clearSelection
             );
-        } else {
-            await handleBulkDeleteDocuments(
-                selectedDocuments,
-                bulkDeleteDocuments,
-                clearSelection
-            );
+            return;
         }
+
+        await handleBulkDeleteDocumentsAndFolders(
+            selectedDocIds,
+            selectedFolderIds,
+            bulkDeleteDocumentsAndFolders,
+            clearSelection
+        );
     }, [
+        mode,
         selectedDocuments,
-        bulkDeleteDocuments,
+        selectedDocIds,
+        selectedFolderIds,
+        bulkDeleteDocumentsAndFolders,
         bulkDeleteAccessRequests,
         clearSelection,
-        mode,
         userId,
     ]);
 
     const handleMove = useCallback(
         async (folderId: string | null) => {
-            try {
-                await bulkMoveDocuments({
-                    variables: {
-                        ids: Array.from(selectedDocuments),
-                        folderId: folderId,
-                    },
-                });
-
-                toast({
-                    title: 'Success',
-                    description: `Moved ${selectedDocuments.size} ${pluralize(selectedDocuments.size, 'document')} successfully`,
-                });
-                setIsMoveDialogOpen(false);
-                clearSelection();
-            } catch {
-                toast({
-                    title: 'Error',
-                    description: 'Failed to move documents',
-                    variant: 'destructive',
-                });
-            }
+            await bulkMoveDocuments({
+                variables: {
+                    ids: selectedDocIds,
+                    folderId,
+                },
+            });
+            setIsMoveDialogOpen(false);
+            clearSelection();
         },
-        [selectedDocuments, bulkMoveDocuments, clearSelection]
+        [selectedDocIds, bulkMoveDocuments, clearSelection]
     );
 
-    if (selectedDocuments.size === 0) return null;
+    if (totalSelected === 0) return null;
 
     return (
         <>
@@ -126,7 +127,7 @@ export function SelectionActionBar({
                 </Button>
 
                 <span className="text-sm text-muted-foreground">
-                    {selectedDocuments.size} selected
+                    {totalSelected} selected
                 </span>
 
                 {mode !== 'shared' && (
@@ -163,8 +164,8 @@ export function SelectionActionBar({
                 onOpenChange={setIsDeleteDialogOpen}
                 title={
                     mode === 'shared'
-                        ? `Remove ${selectedDocuments.size} ${pluralize(selectedDocuments.size, 'item')} from Shared`
-                        : `Move ${selectedDocuments.size} ${pluralize(selectedDocuments.size, 'item')} to Recently Deleted`
+                        ? `Remove ${totalSelected} ${pluralize(totalSelected, 'item')} from Shared`
+                        : `Move ${totalSelected} ${pluralize(totalSelected, 'item')} to Recently Deleted`
                 }
                 description={
                     mode === 'shared'

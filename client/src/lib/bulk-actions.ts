@@ -1,4 +1,4 @@
-import { toast } from '@/hooks/useToast';
+import type { ApolloCache } from '@apollo/client';
 
 export const pluralize = (
     count: number,
@@ -12,40 +12,47 @@ type BulkDeleteDocumentsFunction = (options: {
     variables: { ids: string[] };
 }) => Promise<unknown>;
 
+type BulkDeleteDocumentsAndFoldersFunction = (options: {
+    variables: { documentIds: string[]; folderIds: string[] };
+    update?: (cache: ApolloCache<unknown>) => void;
+}) => Promise<unknown>;
+
 type BulkDeleteAccessRequestsFunction = (options: {
     variables: { document_ids: string[]; requester_id: string };
-}) => Promise<{
-    data?: {
-        delete_access_requests?: {
-            affected_rows: number;
-        } | null;
-    } | null;
-}>;
+}) => Promise<unknown>;
 
 export const handleBulkDeleteDocuments = async (
     selectedDocuments: Set<string>,
     bulkDeleteDocuments: BulkDeleteDocumentsFunction,
     clearSelection: () => void
 ): Promise<void> => {
-    const count = selectedDocuments.size;
+    await bulkDeleteDocuments({
+        variables: { ids: Array.from(selectedDocuments) },
+    });
+    clearSelection();
+};
 
-    try {
-        await bulkDeleteDocuments({
-            variables: { ids: Array.from(selectedDocuments) },
-        });
-
-        toast({
-            title: 'Success',
-            description: `Deleted ${count} ${pluralize(count, 'document')} successfully`,
-        });
-        clearSelection();
-    } catch {
-        toast({
-            title: 'Error',
-            description: 'Failed to delete documents',
-            variant: 'destructive',
-        });
-    }
+export const handleBulkDeleteDocumentsAndFolders = async (
+    documentIds: string[],
+    folderIds: string[],
+    bulkDeleteDocumentsAndFolders: BulkDeleteDocumentsAndFoldersFunction,
+    clearSelection: () => void
+): Promise<void> => {
+    await bulkDeleteDocumentsAndFolders({
+        variables: { documentIds, folderIds },
+        update: (cache) => {
+            folderIds.forEach((id) => {
+                cache.evict({
+                    id: cache.identify({
+                        __typename: 'folders',
+                        id,
+                    }),
+                });
+            });
+            cache.gc();
+        },
+    });
+    clearSelection();
 };
 
 export const handleBulkRemoveShared = async (
@@ -54,37 +61,13 @@ export const handleBulkRemoveShared = async (
     userId: string | null,
     clearSelection: () => void
 ): Promise<void> => {
-    if (!userId) {
-        toast({
-            title: 'Error',
-            description: 'User ID not found',
-            variant: 'destructive',
-        });
-        return;
-    }
+    if (!userId) return;
 
-    try {
-        const result = await bulkDeleteAccessRequests({
-            variables: {
-                document_ids: Array.from(selectedDocuments),
-                requester_id: userId,
-            },
-        });
-
-        const affectedRows =
-            result.data?.delete_access_requests?.affected_rows || 0;
-
-        toast({
-            title: 'Success',
-            description: `Removed ${affectedRows} ${pluralize(affectedRows, 'document')} from shared`,
-        });
-        clearSelection();
-    } catch (error) {
-        console.error('Error removing shared documents:', error);
-        toast({
-            title: 'Error',
-            description: 'Failed to remove documents from shared',
-            variant: 'destructive',
-        });
-    }
+    await bulkDeleteAccessRequests({
+        variables: {
+            document_ids: Array.from(selectedDocuments),
+            requester_id: userId,
+        },
+    });
+    clearSelection();
 };
