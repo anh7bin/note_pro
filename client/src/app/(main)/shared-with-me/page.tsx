@@ -28,8 +28,7 @@ export default function SharedWithMePage() {
     useEffect(() => {
         clearSelection();
         setMode('shared');
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [setMode]);
+    }, [clearSelection, setMode]);
 
     return loading && sharedDocs.length === 0 ? (
         <PageLoading />

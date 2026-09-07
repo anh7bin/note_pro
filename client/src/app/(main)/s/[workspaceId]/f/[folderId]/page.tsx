@@ -30,8 +30,7 @@ export default function FolderPage() {
     useEffect(() => {
         clearSelection();
         setMode('default');
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [folderId, setMode]);
+    }, [folderId, clearSelection, setMode]);
 
     if (loading && !folder) {
         return <PageLoading />;

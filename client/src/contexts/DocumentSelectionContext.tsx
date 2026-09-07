@@ -41,11 +41,6 @@ export function DocumentSelectionProvider({
             }
             return next;
         });
-        setSelectedFolders((prev) => {
-            const next = new Set(prev);
-            next.delete(id);
-            return next;
-        });
     }, []);
 
     const toggleFolder = useCallback((id: string) => {
@@ -56,11 +51,6 @@ export function DocumentSelectionProvider({
             } else {
                 next.add(id);
             }
-            return next;
-        });
-        setSelectedDocuments((prev) => {
-            const next = new Set(prev);
-            next.delete(id);
             return next;
         });
     }, []);
@@ -74,8 +64,10 @@ export function DocumentSelectionProvider({
         setSelectedDocuments(new Set(documentIds));
     }, []);
 
-    const isSelected = (id: string) =>
-        selectedDocuments.has(id) || selectedFolders.has(id);
+    const isSelected = useCallback(
+        (id: string) => selectedDocuments.has(id) || selectedFolders.has(id),
+        [selectedDocuments, selectedFolders]
+    );
 
     return (
         <DocumentSelectionContext.Provider

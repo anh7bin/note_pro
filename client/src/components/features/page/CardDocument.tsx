@@ -92,7 +92,7 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
             className={`group relative cursor-pointer transition-all duration-200 h-[304px] w-full rounded-md flex flex-col ${
                 selected
                     ? 'border-2 border-primary'
-                    : 'border border-[rgb(223,228,231)] hover:border-primary dark:border-border dark:hover:border-primary'
+                    : 'border-2 border-[rgb(223,228,231)] hover:border-primary dark:border-border dark:hover:border-primary'
             }`}
             onClick={handleClick}>
             <div className="absolute top-3 right-3 z-10">

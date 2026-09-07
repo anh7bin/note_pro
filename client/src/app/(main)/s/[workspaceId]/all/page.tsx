@@ -27,8 +27,7 @@ export default function AllDocsPage() {
     useEffect(() => {
         clearSelection();
         setMode('default');
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [setMode]);
+    }, [clearSelection, setMode]);
 
     return loading && allDocs.length === 0 ? (
         <PageLoading />

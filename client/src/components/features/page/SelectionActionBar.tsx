@@ -15,7 +15,7 @@ import {
     pluralize,
 } from '@/lib/bulk-actions';
 import { FolderInput, MinusCircle, Trash2 } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { MoveToDialog } from './MoveToDialog';
 
 interface SelectionActionBarProps {
@@ -45,14 +45,6 @@ export function SelectionActionBar({
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     const totalSelected = selectedDocuments.size + selectedFolders.size;
-    const selectedDocIds = useMemo(
-        () => Array.from(selectedDocuments),
-        [selectedDocuments]
-    );
-    const selectedFolderIds = useMemo(
-        () => Array.from(selectedFolders),
-        [selectedFolders]
-    );
 
     const [bulkDeleteDocumentsAndFolders] =
         useBulkDeleteDocumentsAndFoldersMutation({
@@ -83,16 +75,15 @@ export function SelectionActionBar({
         }
 
         await handleBulkDeleteDocumentsAndFolders(
-            selectedDocIds,
-            selectedFolderIds,
+            Array.from(selectedDocuments),
+            Array.from(selectedFolders),
             bulkDeleteDocumentsAndFolders,
             clearSelection
         );
     }, [
         mode,
         selectedDocuments,
-        selectedDocIds,
-        selectedFolderIds,
+        selectedFolders,
         bulkDeleteDocumentsAndFolders,
         bulkDeleteAccessRequests,
         clearSelection,
@@ -103,14 +94,14 @@ export function SelectionActionBar({
         async (folderId: string | null) => {
             await bulkMoveDocuments({
                 variables: {
-                    ids: selectedDocIds,
+                    ids: Array.from(selectedDocuments),
                     folderId,
                 },
             });
             setIsMoveDialogOpen(false);
             clearSelection();
         },
-        [selectedDocIds, bulkMoveDocuments, clearSelection]
+        [selectedDocuments, bulkMoveDocuments, clearSelection]
     );
 
     if (totalSelected === 0) return null;

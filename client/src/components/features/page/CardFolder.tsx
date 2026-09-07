@@ -67,7 +67,7 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
                 className={`group relative cursor-pointer transition-all duration-200 h-[140px] w-full rounded-md bg-primary/5 flex flex-col ${
                     selected
                         ? 'border-2 border-primary'
-                        : 'border border-[rgb(223,228,231)] hover:border-primary dark:border-border dark:hover:border-primary'
+                        : 'border-2 border-[rgb(223,228,231)] hover:border-primary dark:border-border dark:hover:border-primary'
                 }`}
                 onClick={handleClick}>
                 <CardHeader className="flex flex-col p-4 flex-1">
