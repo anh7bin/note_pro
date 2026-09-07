@@ -15,7 +15,7 @@ import { NewTaskModal } from './components/NewTaskModal';
 import { SidebarButton } from './components/SidebarButton';
 import { WorkspaceButton } from './components/WorkspaceButton';
 import { useState } from 'react';
-import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
+import { FiChevronRight } from 'react-icons/fi';
 import { Button } from '@/components/ui/button';
 interface Props {
     workspaceSlug: string;
@@ -104,11 +104,14 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                             onClick={() =>
                                 setIsFoldersCollapsed(!isFoldersCollapsed)
                             }>
-                            {isFoldersCollapsed ? (
-                                <FiChevronRight className="w-4 h-4" />
-                            ) : (
-                                <FiChevronDown className="w-4 h-4" />
-                            )}
+                            <FiChevronRight
+                                className={cn(
+                                    'w-4 h-4 transition-transform duration-200',
+                                    isFoldersCollapsed
+                                        ? 'rotate-0'
+                                        : 'rotate-90'
+                                )}
+                            />
                         </Button>
                     </div>
                 </div>

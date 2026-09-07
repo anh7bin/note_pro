@@ -4,7 +4,7 @@ import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
+import { FiChevronRight } from 'react-icons/fi';
 import { FolderMoreMenu } from './FolderMoreMenu';
 
 const hasActiveDescendant = (
@@ -88,11 +88,14 @@ export const FolderItem: React.FC<{
                                                 ? 'opacity-100 scale-100'
                                                 : 'opacity-0 scale-75 pointer-events-none'
                                         )}>
-                                        {expanded ? (
-                                            <FiChevronDown className="w-4 h-4" />
-                                        ) : (
-                                            <FiChevronRight className="w-4 h-4" />
-                                        )}
+                                        <FiChevronRight
+                                            className={cn(
+                                                'w-4 h-4 transition-transform duration-200',
+                                                expanded
+                                                    ? 'rotate-0'
+                                                    : 'rotate-90'
+                                            )}
+                                        />
                                     </button>
                                 )}
                             </div>
