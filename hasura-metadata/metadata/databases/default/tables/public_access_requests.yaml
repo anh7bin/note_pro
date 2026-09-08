@@ -16,10 +16,19 @@ insert_permissions:
     permission:
       check:
         _or:
-          - requester_id:
-              _eq: X-Hasura-User-Id
-          - owner_id:
-              _eq: X-Hasura-User-Id
+          - _and:
+              - requester_id:
+                  _eq: X-Hasura-User-Id
+              - status:
+                  _eq: pending
+          - _and:
+              - owner_id:
+                  _eq: X-Hasura-User-Id
+              - status:
+                  _eq: approved
+              - document:
+                  user_id:
+                    _eq: X-Hasura-User-Id
       columns:
         - document_id
         - requester_id
@@ -45,8 +54,9 @@ select_permissions:
         _or:
           - requester_id:
               _eq: X-Hasura-User-Id
-          - owner_id:
-              _eq: X-Hasura-User-Id
+          - document:
+              user_id:
+                _eq: X-Hasura-User-Id
 update_permissions:
   - role: user
     permission:
@@ -57,11 +67,26 @@ update_permissions:
         - message
       filter:
         _or:
-          - owner_id:
-              _eq: X-Hasura-User-Id
+          - document:
+              user_id:
+                _eq: X-Hasura-User-Id
           - requester_id:
               _eq: X-Hasura-User-Id
-      check: null
+      check:
+        _or:
+          - _and:
+              - document:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+              - status:
+                  _in:
+                    - approved
+                    - rejected
+          - _and:
+              - requester_id:
+                  _eq: X-Hasura-User-Id
+              - status:
+                  _eq: pending
 delete_permissions:
   - role: user
     permission:
@@ -69,5 +94,6 @@ delete_permissions:
         _or:
           - requester_id:
               _eq: X-Hasura-User-Id
-          - owner_id:
-              _eq: X-Hasura-User-Id
+          - document:
+              user_id:
+                _eq: X-Hasura-User-Id

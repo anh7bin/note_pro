@@ -1,115 +1,28 @@
 'use client';
 
-import { useLogout } from '@/hooks';
 import { LogOut } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 import { FiLock, FiClock, FiXCircle } from 'react-icons/fi';
 import { Button } from '@/components/ui/button';
-import { useUserId } from '@/hooks/useAuth';
-import { useGetAccessRequestByDocumentQuery } from '@/graphql/queries/__generated__/access-request.generated';
-import { useCreateAccessRequestMutation } from '@/graphql/mutations/__generated__/access-request.generated';
-import { useCreateNotificationMutation } from '@/graphql/mutations/__generated__/notification.generated';
-import { useState } from 'react';
-import { showToast } from '@/lib/toast';
-import { AccessRequestStatus, PermissionType } from '@/types/types';
+import { AccessRequestStatus } from '@/types/types';
 import { Loading } from '@/components/ui/loading';
+import { useRequestAccess } from './hooks/useRequestAccess';
 
 interface RequestAccessViewProps {
     documentId: string;
 }
 
 export function RequestAccessView({ documentId }: RequestAccessViewProps) {
-    const { logout, isLoggingOut } = useLogout();
-    const { data: session } = useSession();
-    const userId = useUserId();
-    const [isRequesting, setIsRequesting] = useState(false);
-
     const {
-        data: accessRequestData,
-        loading: accessRequestLoading,
-        refetch,
-    } = useGetAccessRequestByDocumentQuery({
-        variables: {
-            documentId: documentId || '',
-            requesterId: userId || '',
-        },
-        skip: !documentId || !userId,
-    });
+        requestStatus,
+        isLoading,
+        isRequesting,
+        userEmail,
+        logout,
+        isLoggingOut,
+        requestReadAccess,
+    } = useRequestAccess(documentId);
 
-    const [createAccessRequest] = useCreateAccessRequestMutation();
-    const [createNotification] = useCreateNotificationMutation();
-
-    const existingRequest = accessRequestData?.access_requests?.[0];
-    const requestStatus = existingRequest?.status;
-    const document =
-        accessRequestData?.blocks_by_pk ?? existingRequest?.document;
-    const rawTitle = (document?.content as { title?: string })?.title;
-    const documentTitle = rawTitle
-        ? rawTitle.replace(/<[^>]*>/g, '')
-        : 'Untitled Document';
-
-    const handleRequestAccess = async (permissionType: PermissionType) => {
-        if (!userId || isRequesting) return;
-
-        try {
-            setIsRequesting(true);
-
-            const result = await createAccessRequest({
-                variables: {
-                    input: {
-                        document_id: documentId,
-                        requester_id: userId,
-                        message: `${session?.user?.email} requested ${permissionType} access`,
-                        permission_type: permissionType,
-                        status: AccessRequestStatus.PENDING,
-                    },
-                },
-            });
-
-            const accessRequest = result.data?.insert_access_requests_one;
-
-            if (accessRequest?.owner_id) {
-                await createNotification({
-                    variables: {
-                        input: {
-                            user_id: accessRequest.owner_id,
-                            type: 'access_request',
-                            title: 'View document',
-                            message: `${session?.user?.name ?? session?.user?.email} wants to view the document`,
-                            data: {
-                                request_id: accessRequest.id,
-                                document_id: documentId,
-                                requester_id: userId,
-                                requester_email: session?.user?.email,
-                                requester_name: session?.user?.name,
-                                requester_avatar: session?.user?.image ?? null,
-                                permission_type: permissionType,
-                                document_title: documentTitle,
-                            },
-                        },
-                    },
-                });
-            }
-
-            showToast.success('Access request sent successfully');
-            await refetch();
-        } catch (error) {
-            const errorMessage =
-                error instanceof Error ? error.message : String(error);
-            if (errorMessage.includes('Uniqueness violation')) {
-                showToast.error(
-                    'You have already requested access to this document'
-                );
-            } else {
-                console.error('Failed to send access request:', error);
-                showToast.error('Failed to send access request');
-            }
-        } finally {
-            setIsRequesting(false);
-        }
-    };
-
-    return accessRequestLoading ? (
+    return isLoading ? (
         <div className="flex items-center justify-center min-h-screen">
             <Loading />
         </div>
@@ -156,7 +69,7 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                         variant="default"
                         size="sm"
                         className="gap-2 text-xs rounded-lg w-full"
-                        onClick={() => handleRequestAccess(PermissionType.READ)}
+                        onClick={requestReadAccess}
                         disabled={isRequesting}>
                         <FiLock />
                         {isRequesting ? 'Sending request...' : 'Request Access'}
@@ -188,9 +101,7 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                 <div className="text-sm text-gray-500 dark:text-gray-400 space-y-2">
                     <p>
                         You are logged in as{' '}
-                        <span className="font-medium">
-                            {session?.user?.email}
-                        </span>
+                        <span className="font-medium">{userEmail}</span>
                     </p>
                     <Button
                         variant="outline"

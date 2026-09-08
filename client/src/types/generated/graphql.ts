@@ -2747,6 +2747,7 @@ export type Notifications = {
   __typename?: 'notifications';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   data?: Maybe<Scalars['jsonb']['output']>;
+  event_key?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   is_read?: Maybe<Scalars['Boolean']['output']>;
   message?: Maybe<Scalars['String']['output']>;
@@ -2798,6 +2799,7 @@ export type NotificationsBoolExp = {
   _or?: InputMaybe<Array<NotificationsBoolExp>>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
   data?: InputMaybe<JsonbComparisonExp>;
+  event_key?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   is_read?: InputMaybe<BooleanComparisonExp>;
   message?: InputMaybe<StringComparisonExp>;
@@ -2810,6 +2812,8 @@ export type NotificationsBoolExp = {
 
 /** unique or primary key constraints on table "notifications" */
 export enum NotificationsConstraint {
+  /** unique or primary key constraint on columns "event_key" */
+  IdxNotificationsEventKey = 'idx_notifications_event_key',
   /** unique or primary key constraint on columns "id" */
   NotificationsPkey = 'notifications_pkey'
 }
@@ -2833,6 +2837,7 @@ export type NotificationsDeleteKeyInput = {
 export type NotificationsInsertInput = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   data?: InputMaybe<Scalars['jsonb']['input']>;
+  event_key?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   is_read?: InputMaybe<Scalars['Boolean']['input']>;
   message?: InputMaybe<Scalars['String']['input']>;
@@ -2847,6 +2852,7 @@ export type NotificationsInsertInput = {
 export type NotificationsMaxFields = {
   __typename?: 'notifications_max_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  event_key?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   message?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
@@ -2859,6 +2865,7 @@ export type NotificationsMaxFields = {
 export type NotificationsMinFields = {
   __typename?: 'notifications_min_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  event_key?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   message?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
@@ -2887,6 +2894,7 @@ export type NotificationsOnConflict = {
 export type NotificationsOrderBy = {
   created_at?: InputMaybe<OrderBy>;
   data?: InputMaybe<OrderBy>;
+  event_key?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   is_read?: InputMaybe<OrderBy>;
   message?: InputMaybe<OrderBy>;
@@ -2914,6 +2922,8 @@ export enum NotificationsSelectColumn {
   /** column name */
   Data = 'data',
   /** column name */
+  EventKey = 'event_key',
+  /** column name */
   Id = 'id',
   /** column name */
   IsRead = 'is_read',
@@ -2933,6 +2943,7 @@ export enum NotificationsSelectColumn {
 export type NotificationsSetInput = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   data?: InputMaybe<Scalars['jsonb']['input']>;
+  event_key?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   is_read?: InputMaybe<Scalars['Boolean']['input']>;
   message?: InputMaybe<Scalars['String']['input']>;
@@ -2954,6 +2965,7 @@ export type NotificationsStreamCursorInput = {
 export type NotificationsStreamCursorValueInput = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   data?: InputMaybe<Scalars['jsonb']['input']>;
+  event_key?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   is_read?: InputMaybe<Scalars['Boolean']['input']>;
   message?: InputMaybe<Scalars['String']['input']>;
@@ -2969,6 +2981,8 @@ export enum NotificationsUpdateColumn {
   CreatedAt = 'created_at',
   /** column name */
   Data = 'data',
+  /** column name */
+  EventKey = 'event_key',
   /** column name */
   Id = 'id',
   /** column name */

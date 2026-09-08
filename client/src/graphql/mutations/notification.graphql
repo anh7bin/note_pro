@@ -1,16 +1,3 @@
-mutation CreateNotification($input: notifications_insert_input!) {
-    insert_notifications_one(object: $input) {
-        id
-        user_id
-        type
-        title
-        message
-        data
-        is_read
-        created_at
-    }
-}
-
 mutation MarkNotificationAsRead($id: uuid!) {
     update_notifications_by_pk(
         pk_columns: { id: $id }

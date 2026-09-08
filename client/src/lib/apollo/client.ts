@@ -45,13 +45,10 @@ const wsLink =
                       }
                       return {};
                   },
-                  on: {
-                      connected: () => {},
-                      error: (error) => {},
-                      closed: () => {},
-                  },
                   shouldRetry: () => true,
-                  retryAttempts: 5,
+                  retryAttempts: Infinity,
+                  connectionAckWaitTimeout: 10000,
+                  keepAlive: 15000,
                   retryWait: (retries) => {
                       return new Promise((resolve) => {
                           setTimeout(

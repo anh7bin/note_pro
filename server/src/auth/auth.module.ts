@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
     WorkspaceModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '7d' },
     }),
   ],
   controllers: [AuthController],

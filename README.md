@@ -149,6 +149,7 @@ Create `.env` files for client and server:
 ```env
 NEXT_PUBLIC_GRAPHQL_URL=http://localhost:8080/v1/graphql
 NEXT_PUBLIC_SERVER_URL=http://localhost:3001
+INTERNAL_AUTH_SECRET=replace_with_a_long_random_secret
 ```
 
 **Server** (`server/.env`):
@@ -158,6 +159,7 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
 HASURA_GRAPHQL_ENDPOINT=http://localhost:8080/v1/graphql
 HASURA_ADMIN_SECRET=notepro_super_admin_secret
 JWT_SECRET=SYohOxXyhqTUdbswC9GP+jWZ4ppwLTkzRY2AgJZKr5E=
+INTERNAL_AUTH_SECRET=replace_with_the_same_long_random_secret
 ```
 
 #### 3️⃣ Start Services
@@ -287,6 +289,9 @@ NEXT_PUBLIC_GRAPHQL_URL=http://localhost:8080/v1/graphql
 # Backend API URL
 NEXT_PUBLIC_SERVER_URL=http://localhost:3001
 
+# Server-side only; must match server/.env
+INTERNAL_AUTH_SECRET=replace_with_a_long_random_secret
+
 # Optional: Hasura Admin Secret (for admin operations)
 NEXT_PUBLIC_HASURA_ADMIN_SECRET=notepro_super_admin_secret
 ```
@@ -312,6 +317,7 @@ HASURA_ADMIN_SECRET=notepro_super_admin_secret
 # JWT Configuration
 JWT_SECRET=SYohOxXyhqTUdbswC9GP+jWZ4ppwLTkzRY2AgJZKr5E=
 JWT_EXPIRATION=7d
+INTERNAL_AUTH_SECRET=replace_with_the_same_long_random_secret
 
 # CORS Configuration
 CORS_ORIGIN=http://localhost:3000

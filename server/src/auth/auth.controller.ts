@@ -1,4 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  Post,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserDTO } from '../user/user.dto';
 import { AuthService } from './auth.service';
 
@@ -7,9 +13,18 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('google')
-  async googleAuth(@Body() body: UserDTO): Promise<{
+  async googleAuth(
+    @Body() body: UserDTO,
+    @Headers('x-internal-auth-secret') internalAuthSecret?: string,
+  ): Promise<{
     token: string;
   }> {
+    const expectedSecret = process.env.INTERNAL_AUTH_SECRET;
+
+    if (!expectedSecret || internalAuthSecret !== expectedSecret) {
+      throw new UnauthorizedException('Invalid internal authentication');
+    }
+
     try {
       return await this.authService.handleGoogleAuth(body);
     } catch (error) {
