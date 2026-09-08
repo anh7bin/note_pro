@@ -6,7 +6,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Bell, CircleAlert } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
 import { NotificationMenuProps } from './notification.types';
 import { NOTIFICATION_LIMIT } from './notification.utils';
@@ -17,7 +17,6 @@ export const NotificationMenu = ({
     unreadCount,
     isInitialLoading,
     isMarkingAll,
-    hasConnectionError,
     onNotificationSelect,
     onMarkAllAsRead,
 }: NotificationMenuProps) => {
@@ -38,20 +37,14 @@ export const NotificationMenu = ({
         <DropdownMenu modal={false}>
             <SimpleTooltip title="Notifications">
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                        <Bell className="h-4 w-4" />
+                    <Button variant="ghost" size="icon" className="relative">
+                        <Bell />
                         {unreadCount > 0 && (
                             <span
                                 aria-hidden="true"
                                 className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground">
                                 {unreadCount > 9 ? '9+' : unreadCount}
                             </span>
-                        )}
-                        {hasConnectionError && (
-                            <span
-                                className="absolute bottom-0 right-0 h-2 w-2 rounded-full border border-background bg-warning"
-                                aria-hidden="true"
-                            />
                         )}
                     </Button>
                 </DropdownMenuTrigger>
@@ -86,14 +79,6 @@ export const NotificationMenu = ({
                 </DropdownMenuLabel>
 
                 <DropdownMenuSeparator className="m-0" />
-
-                {hasConnectionError && (
-                    <div className="flex items-center gap-2 border-b bg-warning-subtle px-3 py-2 text-xs text-warning-foreground">
-                        <CircleAlert className="h-4 w-4 shrink-0" />
-                        Live updates are reconnecting. Recent items may be
-                        delayed.
-                    </div>
-                )}
 
                 <div className="max-h-[28rem] overflow-y-auto p-2">
                     {notifications.length === 0 ? (

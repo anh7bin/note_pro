@@ -20,11 +20,7 @@ export const SettingButton = () => {
         <div className="relative">
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        aria-label="Open account menu">
+                    <Button type="button" variant="ghost" size="icon">
                         <UserAvatar
                             avatarUrl={session?.user?.image}
                             name={session?.user?.name}

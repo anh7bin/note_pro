@@ -20,16 +20,13 @@ export function useNotifications(): NotificationMenuProps {
     const router = useRouter();
     const { workspace } = useWorkspace();
 
-    const {
-        data: notificationsData,
-        loading,
-        error,
-    } = useNotificationSubscriptionSubscription({
-        variables: { userId: userId || '' },
-        skip: !userId,
-        fetchPolicy: 'network-only',
-        ignoreResults: false,
-    });
+    const { data: notificationsData, loading } =
+        useNotificationSubscriptionSubscription({
+            variables: { userId: userId || '' },
+            skip: !userId,
+            fetchPolicy: 'network-only',
+            ignoreResults: false,
+        });
 
     const [markAsRead] = useMarkNotificationAsReadMutation({
         ignoreResults: false,
@@ -105,7 +102,6 @@ export function useNotifications(): NotificationMenuProps {
         unreadCount,
         isInitialLoading: loading && !notificationsData,
         isMarkingAll,
-        hasConnectionError: Boolean(error),
         onNotificationSelect,
         onMarkAllAsRead,
     };

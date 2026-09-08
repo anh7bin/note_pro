@@ -18,7 +18,6 @@ export type NotificationMenuProps = {
     unreadCount: number;
     isInitialLoading: boolean;
     isMarkingAll: boolean;
-    hasConnectionError: boolean;
     onNotificationSelect: (notification: Notification) => void;
     onMarkAllAsRead: () => Promise<void>;
 };
