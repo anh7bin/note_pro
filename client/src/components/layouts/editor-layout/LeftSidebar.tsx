@@ -166,11 +166,12 @@ export const LeftSidebar = ({ pageId }: Props) => {
     );
 
     return (
-        <div className="h-screen flex flex-col overflow-hidden">
+        <div className="flex h-full min-h-0 flex-col overflow-hidden">
             <div className="h-full flex flex-col overflow-hidden">
-                <div className="flex flex-row items-center gap-2 mb-3 shrink-0 py-4 px-4 bg-background sticky top-0 z-10">
+                <div className="sticky top-0 z-10 flex shrink-0 flex-row items-center gap-3 border-b border-border-subtle bg-background px-4 py-3">
                     <div
-                        className="border rounded-sm overflow-hidden shrink-0 relative p-2"
+                        aria-hidden="true"
+                        className="relative shrink-0 overflow-hidden rounded-sm border border-border-subtle bg-card p-2"
                         style={{ width: 24, height: 32 }}>
                         <div
                             className="absolute inset-0.5 overflow-hidden"
@@ -213,7 +214,7 @@ export const LeftSidebar = ({ pageId }: Props) => {
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-hidden px-4">
+                <div className="flex-1 overflow-hidden px-4 pt-3">
                     <SidebarTabs
                         sections={sectionItems}
                         tasks={tasks}

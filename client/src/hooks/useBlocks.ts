@@ -13,8 +13,10 @@ import {
 import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { useState } from 'react';
+import type { Reference, StoreObject } from '@apollo/client';
 
 export type Block = GetDocumentBlocksQuery['blocks'][number];
+type CachedBlock = Reference | (StoreObject & { id?: string });
 
 export interface CreateBlockInput {
     type: string;
@@ -62,9 +64,12 @@ export function useBlocks() {
 
                     cache.modify({
                         fields: {
-                            blocks(existingBlocks = []) {
-                                return existingBlocks.map((block: any) => {
-                                    if (block.id === id) {
+                            blocks(
+                                existingBlocks: readonly CachedBlock[] = [],
+                                { readField }
+                            ) {
+                                return existingBlocks.map((block) => {
+                                    if (readField<string>('id', block) === id) {
                                         return {
                                             ...block,
                                             content: updatedBlock.content,
@@ -116,7 +121,8 @@ export function useBlocks() {
                         fields: {
                             blocks(existingRefs = [], { readField }) {
                                 return existingRefs.filter(
-                                    (ref: any) => readField('id', ref) !== id
+                                    (ref: Reference | StoreObject) =>
+                                        readField('id', ref) !== id
                                 );
                             },
                         },
@@ -318,7 +324,7 @@ export function useBlocks() {
                 updated_at: result.updated_at || new Date().toISOString(),
                 tasks: [],
             };
-        } catch (error) {
+        } catch {
             return null;
         } finally {
             setIsLoading(false);

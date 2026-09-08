@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 export function useWorkspace() {
     const { userId, isLoading: authLoading } = useAuth();
 
-    const { data, loading } = useGetWorkspaceByUserIdQuery({
+    const { data, loading, error, refetch } = useGetWorkspaceByUserIdQuery({
         variables: { userId: userId! },
         skip: !userId,
         fetchPolicy: 'cache-first',
@@ -21,7 +21,9 @@ export function useWorkspace() {
     return {
         workspace,
         workspaceSlug,
-        loading: authLoading || loading,
+        loading: authLoading || (!!userId && loading),
+        error,
+        refetch,
         hasWorkspace: !!workspace,
     };
 }

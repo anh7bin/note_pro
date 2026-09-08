@@ -1,10 +1,8 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Calendar, Check } from 'lucide-react';
+import { Calendar, Check, Flag, MoreHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { CiFlag1 } from 'react-icons/ci';
-import { FiMoreHorizontal } from 'react-icons/fi';
 import { Button } from '@/components/ui/button';
 import { isToday, isTomorrow, format } from 'date-fns';
 
@@ -56,10 +54,6 @@ export const TaskItem = ({
         }, 300);
     };
 
-    const handleItemClick = () => {
-        onItemClick?.(id);
-    };
-
     const formatDate = (dateString?: string) => {
         if (!dateString) return null;
         const date = new Date(dateString);
@@ -75,62 +69,90 @@ export const TaskItem = ({
 
     return (
         <div
-            onClick={handleItemClick}
             className={cn(
-                'flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md group transition-colors',
+                'group flex min-h-10 items-center gap-2 rounded-md transition-colors hover:bg-accent/70',
                 variant === 'compact' ? 'px-2 py-1' : 'px-3 py-2',
-                onItemClick && 'cursor-pointer',
-                isActive ? 'border-border bg-muted/60' : 'border-transparent',
+                isActive && 'bg-accent text-accent-foreground',
                 className
             )}>
             <button
+                type="button"
                 onClick={handleToggleComplete}
                 disabled={isAnimating}
-                className={cn(
-                    'w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-200 flex-shrink-0',
+                aria-label={
                     tempCompleted
-                        ? 'bg-primary border-primary text-white'
-                        : 'border-gray-300 hover:border-gray-400',
-                    isAnimating && 'cursor-not-allowed'
+                        ? `Mark “${title}” as incomplete`
+                        : `Mark “${title}” as complete`
+                }
+                aria-pressed={tempCompleted}
+                className={cn(
+                    'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                    tempCompleted
+                        ? 'text-primary'
+                        : 'text-muted-foreground hover:text-foreground',
+                    isAnimating && 'cursor-not-allowed opacity-60'
                 )}>
-                {tempCompleted && <Check className="w-3 h-3" />}
+                <span
+                    aria-hidden="true"
+                    className={cn(
+                        'flex h-4 w-4 items-center justify-center rounded-sm border transition-colors',
+                        tempCompleted
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : 'border-border-strong bg-background'
+                    )}>
+                    {tempCompleted && <Check className="h-3 w-3" />}
+                </span>
             </button>
 
-            <div className="flex-1 min-w-0 flex items-center">
-                <div className="flex items-center gap-1.5">
-                    {scheduleDate && (
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
-                            <Calendar className="w-3 h-3" />
-                            <span>{formatDate(scheduleDate)}</span>
-                        </div>
-                    )}
+            <div className="flex min-w-0 flex-1 items-center gap-2">
+                {scheduleDate && (
+                    <span className="flex flex-shrink-0 items-center gap-1 text-xs text-muted-foreground">
+                        <Calendar aria-hidden="true" className="h-3 w-3" />
+                        <span>{formatDate(scheduleDate)}</span>
+                    </span>
+                )}
 
-                    <div
+                {onItemClick ? (
+                    <button
+                        type="button"
                         className={cn(
-                            variant === 'compact' ? 'text-xs' : 'text-sm',
-                            'font-medium truncate transition-all duration-200 flex-1 min-w-0',
+                            'min-w-0 flex-1 truncate rounded-sm text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                             tempCompleted &&
-                                'line-through text-muted-foreground'
+                                'text-muted-foreground line-through'
+                        )}
+                        onClick={() => onItemClick(id)}>
+                        {title}
+                    </button>
+                ) : (
+                    <span
+                        className={cn(
+                            'min-w-0 flex-1 truncate text-sm font-medium transition-colors',
+                            tempCompleted &&
+                                'text-muted-foreground line-through'
                         )}>
                         {title}
-                    </div>
+                    </span>
+                )}
 
-                    {deadlineDate && (
-                        <div className="flex items-center gap-1 text-xs text-red-500 flex-shrink-0">
-                            <CiFlag1 className="w-3 h-3" />
-                            <span>{formatDate(deadlineDate)}</span>
-                        </div>
-                    )}
-                </div>
+                {deadlineDate && (
+                    <span className="flex flex-shrink-0 items-center gap-1 text-xs text-destructive">
+                        <Flag aria-hidden="true" className="h-3 w-3" />
+                        <span>{formatDate(deadlineDate)}</span>
+                    </span>
+                )}
             </div>
 
             {onMoreClick && (
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
-                    onClick={() => onMoreClick(id)}>
-                    <FiMoreHorizontal className="w-4 h-4" />
+                    className="h-8 w-8 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                    aria-label={`More options for “${title}”`}
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        onMoreClick(id);
+                    }}>
+                    <MoreHorizontal className="h-4 w-4" />
                 </Button>
             )}
         </div>

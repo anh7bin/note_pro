@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { DialogTrigger } from '@/components/ui/dialog';
 import {
     FolderDialog,
     FolderMode,
@@ -9,7 +8,7 @@ import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import showToast from '@/lib/toast';
 import React, { useState } from 'react';
-import { FiPlus } from 'react-icons/fi';
+import { Plus } from 'lucide-react';
 
 export const NewFolderButton = () => {
     const userId = useUserId();
@@ -59,9 +58,10 @@ export const NewFolderButton = () => {
             <Button
                 variant="ghost"
                 size="icon"
-                className="w-5 h-5"
+                className="h-8 w-8"
+                aria-label="Create folder"
                 onClick={() => setIsOpen(true)}>
-                <FiPlus className="w-4 h-4" />
+                <Plus className="h-4 w-4" />
             </Button>
             <FolderDialog
                 open={isOpen}

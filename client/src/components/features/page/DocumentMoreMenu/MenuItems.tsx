@@ -3,12 +3,12 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { ContextMenuItem } from '@/components/ui/context-menu';
 import { Separator } from '@/components/ui/separator';
 import {
-    RiDeleteBin6Line,
-    RiFolderTransferLine,
-    RiFileCopyLine,
-    RiExternalLinkLine,
-} from 'react-icons/ri';
-import { MdOutlineExitToApp } from 'react-icons/md';
+    Clipboard,
+    ExternalLink,
+    FolderInput,
+    LogOut,
+    Trash2,
+} from 'lucide-react';
 
 interface MenuItemsProps {
     isOwner: boolean;
@@ -30,29 +30,23 @@ export const MenuItems = ({
     const MenuItem = hasChildren ? ContextMenuItem : DropdownMenuItem;
 
     const deleteMenuClassName = isOwner
-        ? 'flex items-center gap-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950 focus:bg-red-100 dark:focus:bg-red-900 focus:text-red-700 dark:focus:text-red-300 cursor-pointer rounded-md'
-        : 'flex items-center gap-2 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950 focus:bg-orange-100 dark:focus:bg-orange-900 focus:text-orange-700 dark:focus:text-orange-300 cursor-pointer rounded-md';
+        ? 'cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive'
+        : 'cursor-pointer text-warning-foreground focus:bg-warning-subtle focus:text-warning-foreground';
 
     return (
-        <div className="flex flex-col gap-1">
-            <MenuItem
-                className="flex items-center gap-2 cursor-pointer rounded-md"
-                onClick={onOpenInNewTab}>
-                <RiExternalLinkLine size={16} />
-                Open in New Tab
+        <div className="flex flex-col">
+            <MenuItem className="cursor-pointer" onClick={onOpenInNewTab}>
+                <ExternalLink />
+                Open in new tab
             </MenuItem>
             <Separator />
-            <MenuItem
-                className="flex items-center gap-2 cursor-pointer rounded-md"
-                onClick={onCopyLink}>
-                <RiFileCopyLine size={16} />
-                Copy Link
+            <MenuItem className="cursor-pointer" onClick={onCopyLink}>
+                <Clipboard />
+                Copy link
             </MenuItem>
             {isOwner && (
-                <MenuItem
-                    className="flex items-center gap-2 cursor-pointer rounded-md"
-                    onClick={onMove}>
-                    <RiFolderTransferLine size={16} />
+                <MenuItem className="cursor-pointer" onClick={onMove}>
+                    <FolderInput />
                     Move to
                 </MenuItem>
             )}
@@ -64,12 +58,12 @@ export const MenuItems = ({
                 onClick={onDeleteOrRemove}>
                 {isOwner ? (
                     <>
-                        <RiDeleteBin6Line size={16} />
+                        <Trash2 />
                         Delete
                     </>
                 ) : (
                     <>
-                        <MdOutlineExitToApp size={16} />
+                        <LogOut />
                         Remove
                     </>
                 )}

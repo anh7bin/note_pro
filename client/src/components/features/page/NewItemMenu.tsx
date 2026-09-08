@@ -104,8 +104,8 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                 <DropdownMenuTrigger asChild>
                     <Button
                         variant="outline"
-                        size="sm"
-                        className="w-8 h-8 rounded-full">
+                        size="icon"
+                        aria-label="Create document or folder">
                         <PlusIcon className="w-5 h-5" />
                     </Button>
                 </DropdownMenuTrigger>

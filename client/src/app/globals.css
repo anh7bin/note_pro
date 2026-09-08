@@ -2,6 +2,7 @@
 @import '../styles/table.css';
 @import '../styles/toast.css';
 @import '../styles/auth.css';
+@import '../styles/calendar.css';
 
 @tailwind base;
 @tailwind components;
@@ -9,9 +10,31 @@
 
 @layer base {
     :root {
-        /* Base colors */
-        --background: 0 0% 99.2%;
-        --foreground: 240 10% 3.9%;
+        /* Typography */
+        --font-sans:
+            var(--font-inter, Inter), -apple-system, BlinkMacSystemFont,
+            sans-serif;
+
+        /* Layout */
+        --header-height: 3rem;
+        --sidebar-width: 18rem;
+        --page-max-width: 80rem;
+        --reading-max-width: 46rem;
+        --page-padding: 1.5rem;
+
+        /* Spacing: compact product rhythm built on a 4px base */
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+
+        /* Base surfaces */
+        --background: 240 20% 99%;
+        --foreground: 240 10% 10%;
+        --surface: 0 0% 100%;
+        --surface-hover: 240 20% 97%;
 
         /* Primary brand color: #494bcb */
         --primary: 239 56% 54%;
@@ -19,48 +42,60 @@
         --primary-hover: 239 56% 48%;
         --primary-light: 239 56% 64%;
 
-        /* Background soft: #eff1fb */
-        --background-soft: 235 60% 97%;
-        --border-soft: 240 10% 94%;
+        --background-soft: 238 40% 97%;
 
         /* Card */
         --card: 0 0% 100%;
-        --card-foreground: 240 10% 3.9%;
-        --card-document: 235 60% 97%;
+        --card-foreground: 240 10% 10%;
+        --card-document: 238 40% 97%;
 
         /* Popover */
         --popover: 0 0% 100%;
-        --popover-foreground: 240 10% 3.9%;
+        --popover-foreground: 240 10% 10%;
 
         /* Modal */
-        --modal-input: 235 60% 97%;
-        --modal-foreground: 240 10% 3.9%;
-        --modal-muted: 240 5% 64.9%;
-        --modal-border: 235 50% 92%;
+        --modal-input: 238 40% 97%;
+        --modal-foreground: 240 10% 10%;
+        --modal-muted: 240 5% 42%;
+        --modal-border: 240 10% 90%;
 
         /* Button - using primary color */
         --button-primary: 239 56% 54%;
         --button-primary-hover: 239 56% 48%;
 
         /* Secondary */
-        --secondary: 235 60% 97%;
-        --secondary-foreground: 240 10% 3.9%;
+        --secondary: 238 40% 96%;
+        --secondary-foreground: 240 10% 10%;
 
         /* Muted */
-        --muted: 235 60% 97%;
-        --muted-foreground: 240 5% 64.9%;
+        --muted: 240 20% 96%;
+        --muted-foreground: 240 5% 42%;
 
         /* Accent */
-        --accent: 235 60% 97%;
+        --accent: 238 48% 95%;
         --accent-foreground: 239 56% 54%;
 
         /* Destructive */
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 0 0% 100%;
 
+        /* Semantic feedback */
+        --success: 145 63% 34%;
+        --success-foreground: 0 0% 100%;
+        --success-subtle: 142 52% 94%;
+        --warning: 36 92% 40%;
+        --warning-foreground: 24 95% 10%;
+        --warning-subtle: 45 92% 94%;
+        --info: 217 84% 52%;
+        --info-foreground: 0 0% 100%;
+        --info-subtle: 214 95% 94%;
+
         /* Border & Input */
-        --border: 240 10% 93%;
-        --input: 240 10% 93%;
+        --border: 240 10% 90%;
+        --border-soft: 240 10% 94%;
+        --border-subtle: 240 10% 94%;
+        --border-strong: 240 8% 75%;
+        --input: 240 10% 86%;
         --ring: 239 56% 54%;
 
         /* Border radius */
@@ -68,6 +103,16 @@
         --radius-md: 6px;
         --radius-lg: 8px;
         --radius: 6px;
+
+        /* Elevation */
+        --shadow-sm: 0 1px 2px hsl(240 10% 4% / 0.06);
+        --shadow-md: 0 8px 24px hsl(240 10% 4% / 0.1);
+        --shadow-lg: 0 20px 48px hsl(240 10% 4% / 0.16);
+
+        /* Motion */
+        --motion-fast: 120ms;
+        --motion-normal: 180ms;
+        --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 
         /* Charts */
         --chart-1: 12 76% 61%;
@@ -77,15 +122,17 @@
         --chart-5: 27 87% 67%;
 
         /* Scrollbar */
-        --scrollbar-track: 0 0% 99.2%;
-        --scrollbar-thumb: 0 0% 87%;
-        --scrollbar-thumb-hover: 0 0% 75%;
+        --scrollbar-track: 240 20% 99%;
+        --scrollbar-thumb: 240 8% 82%;
+        --scrollbar-thumb-hover: 240 6% 65%;
     }
 
     .dark {
         /* Base colors */
-        --background: 210 51% 11%;
+        --background: 210 36% 10%;
         --foreground: 0 0% 98%;
+        --surface: 210 32% 13%;
+        --surface-hover: 210 28% 17%;
 
         /* Primary brand color: lighter in dark mode */
         --primary: 239 56% 64%;
@@ -94,48 +141,64 @@
         --primary-light: 239 56% 74%;
 
         /* Background soft: darker variant */
-        --background-soft: 210 45% 14%;
-        --border-soft: 210 40% 22%;
+        --background-soft: 210 28% 16%;
 
         /* Card */
-        --card: 210 48% 13%;
+        --card: 210 32% 13%;
         --card-foreground: 0 0% 98%;
-        --card-document: 210 45% 14%;
+        --card-document: 210 28% 16%;
 
         /* Popover */
-        --popover: 210 48% 13%;
+        --popover: 210 32% 13%;
         --popover-foreground: 0 0% 98%;
 
         /* Modal */
-        --modal-input: 210 48% 13%;
+        --modal-input: 210 28% 16%;
         --modal-foreground: 0 0% 98%;
-        --modal-muted: 210 20% 65%;
-        --modal-border: 210 40% 22%;
+        --modal-muted: 210 15% 68%;
+        --modal-border: 210 22% 25%;
 
         /* Button - using primary color */
         --button-primary: 239 56% 64%;
         --button-primary-hover: 239 56% 70%;
 
         /* Secondary */
-        --secondary: 210 45% 16%;
+        --secondary: 210 28% 17%;
         --secondary-foreground: 0 0% 98%;
 
         /* Muted */
-        --muted: 210 45% 16%;
-        --muted-foreground: 210 20% 65%;
+        --muted: 210 28% 17%;
+        --muted-foreground: 210 15% 68%;
 
         /* Accent */
-        --accent: 210 45% 16%;
+        --accent: 232 30% 20%;
         --accent-foreground: 239 56% 64%;
 
         /* Destructive */
         --destructive: 0 62.8% 50%;
         --destructive-foreground: 0 0% 98%;
 
+        --success: 142 60% 45%;
+        --success-foreground: 210 36% 8%;
+        --success-subtle: 142 38% 16%;
+        --warning: 42 90% 58%;
+        --warning-foreground: 30 80% 8%;
+        --warning-subtle: 38 42% 17%;
+        --info: 217 91% 65%;
+        --info-foreground: 210 36% 8%;
+        --info-subtle: 217 42% 18%;
+
         /* Border & Input */
-        --border: 210 40% 22%;
-        --input: 210 40% 22%;
+        --border: 210 22% 25%;
+        --border-soft: 210 22% 20%;
+        --border-subtle: 210 22% 20%;
+        --border-strong: 210 16% 40%;
+        --input: 210 20% 30%;
         --ring: 239 56% 64%;
+
+        --shadow-sm: 0 1px 2px hsl(210 60% 2% / 0.35);
+        --shadow-md: 0 8px 24px hsl(210 60% 2% / 0.42);
+        --shadow-lg: 0 20px 48px hsl(210 60% 2% / 0.55);
 
         /* Charts */
         --chart-1: 220 70% 50%;
@@ -153,32 +216,35 @@
 
 @layer utilities {
     .shadow-y {
-        box-shadow:
-            0 -4px 6px -1px rgba(0, 0, 0, 0.1),
-            0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    .dark .shadow-y {
-        box-shadow:
-            0 -4px 6px -1px rgba(255, 255, 255, 0.1),
-            0 4px 6px -1px rgba(255, 255, 255, 0.1);
+        box-shadow: var(--shadow-md);
     }
 }
 
 @layer base {
     * {
         @apply border-border;
-        scrollbar-width: auto;
+        scrollbar-width: thin;
         scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
     }
+    html {
+        font-family: var(--font-sans);
+        scroll-padding-top: calc(var(--header-height) + var(--space-md));
+    }
     body {
-        @apply bg-background text-foreground;
+        @apply min-h-dvh bg-background text-foreground antialiased;
+        font-size: 1rem;
+        line-height: 1.5;
+        text-rendering: optimizeLegibility;
+    }
+    ::selection {
+        background: hsl(var(--primary) / 0.22);
+        color: hsl(var(--foreground));
     }
 }
 
 ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -224,9 +290,28 @@ a {
     text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-    html {
-        color-scheme: dark;
+html.light {
+    color-scheme: light;
+}
+
+html.dark {
+    color-scheme: dark;
+}
+
+@media (max-width: 640px) {
+    :root {
+        --page-padding: 1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
 

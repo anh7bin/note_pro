@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface Props {
     onSubmit: (url: string) => void;
@@ -12,30 +14,38 @@ export const LinkInput = ({ onSubmit, onCancel }: Props) => {
     const [url, setUrl] = useState('');
 
     return (
-        <div className="flex items-center gap-1">
-            <input
-                type="text"
+        <form
+            className="flex items-center gap-1"
+            onSubmit={(event) => {
+                event.preventDefault();
+                onSubmit(url);
+            }}>
+            <Input
+                type="url"
+                aria-label="Link URL"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://"
-                className="text-sm border px-1 rounded"
+                className="h-8 w-52 text-sm"
                 autoFocus
                 onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        onSubmit(url);
-                    } else if (e.key === 'Escape') {
+                    if (e.key === 'Escape') {
                         onCancel();
                     }
                 }}
             />
-            <button
-                onClick={() => onSubmit(url)}
-                className="text-blue-600 text-sm">
+            <Button type="submit" size="sm" className="h-8 px-2">
                 OK
-            </button>
-            <button onClick={onCancel} className="text-gray-500">
-                <X className="w-3 h-3" />
-            </button>
-        </div>
+            </Button>
+            <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                aria-label="Cancel link editing"
+                onClick={onCancel}>
+                <X />
+            </Button>
+        </form>
     );
 };

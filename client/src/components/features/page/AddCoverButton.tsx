@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { FiImage } from 'react-icons/fi';
+import { ImagePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface AddCoverButtonProps {
@@ -33,11 +33,11 @@ export function AddCoverButton({
         <>
             <Button
                 size="sm"
-                className="gap-1 text-xs rounded-lg bg-primary-button hover:bg-primary-buttonHover"
                 onClick={handleClick}
+                aria-busy={isUploading}
                 disabled={isUploading}>
-                <FiImage className="w-4 h-4" />
-                {isUploading ? 'Uploading...' : 'Add cover'}
+                <ImagePlus />
+                {isUploading ? 'Uploading…' : 'Add cover'}
             </Button>
             <input
                 ref={fileInputRef}
@@ -45,6 +45,7 @@ export function AddCoverButton({
                 accept="image/*"
                 onChange={handleFileChange}
                 className="hidden"
+                aria-label="Choose a document cover image"
             />
         </>
     );

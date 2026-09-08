@@ -1,4 +1,5 @@
 import { toast } from 'sonner';
+import { TOAST_DURATION } from './constants';
 
 // Toast types
 export type ToastType = 'success' | 'error' | 'info' | 'warning' | 'loading';
@@ -11,7 +12,7 @@ export const showToast = {
     ) => {
         return toast.success(message, {
             description: options?.description,
-            duration: options?.duration ?? 1000,
+            duration: options?.duration ?? 3000,
         });
     },
 
@@ -21,7 +22,7 @@ export const showToast = {
     ) => {
         return toast.error(message, {
             description: options?.description,
-            duration: options?.duration ?? 1500,
+            duration: options?.duration ?? TOAST_DURATION,
         });
     },
 
@@ -31,7 +32,7 @@ export const showToast = {
     ) => {
         return toast.info(message, {
             description: options?.description,
-            duration: options?.duration ?? 1000,
+            duration: options?.duration ?? 4000,
         });
     },
 
@@ -41,7 +42,7 @@ export const showToast = {
     ) => {
         return toast.warning(message, {
             description: options?.description,
-            duration: options?.duration ?? 1000,
+            duration: options?.duration ?? 4000,
         });
     },
 

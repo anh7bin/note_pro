@@ -5,14 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { ROUTES } from '@/lib/routes';
-import { PlusIcon } from 'lucide-react';
+import { Inbox, ListTodo, Plus, Sun } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { FiInbox } from 'react-icons/fi';
-import { HiOutlineClipboardList } from 'react-icons/hi';
-import { PiSunHorizonBold } from 'react-icons/pi';
 import { Setting } from './Setting';
 import { TaskSettingsProvider } from '@/contexts/TaskSettingsProvider';
 import { useLoading } from '@/contexts/LoadingContext';
+import {
+    PageContent,
+    PageHeader,
+    PageShell,
+    PageTitle,
+} from '@/components/shared';
 
 interface TasksLayoutProps {
     children: React.ReactNode;
@@ -28,21 +31,21 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
         {
             id: 'inbox',
             label: 'Inbox',
-            icon: FiInbox,
+            icon: Inbox,
             href: ROUTES.WORKSPACE_TASKS_INBOX(workspaceSlug || ''),
             active: pathname.includes('/inbox'),
         },
         {
             id: 'today',
             label: 'Today',
-            icon: PiSunHorizonBold,
+            icon: Sun,
             href: ROUTES.WORKSPACE_TASKS_TODAY(workspaceSlug || ''),
             active: pathname.includes('/today'),
         },
         {
             id: 'all',
             label: 'All Tasks',
-            icon: HiOutlineClipboardList,
+            icon: ListTodo,
             href: ROUTES.WORKSPACE_TASKS_ALL(workspaceSlug || ''),
             active: pathname.includes('/all'),
         },
@@ -57,47 +60,50 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
 
     return (
         <TaskSettingsProvider>
-            <div className="p-0 w-full h-full">
-                <div className="flex flex-col items-start justify-start mx-auto w-full h-full min-h-0 max-w-screen-2xl gap-6">
-                    <div className="w-full pt-4 px-6 flex items-center justify-between">
-                        <div className="flex items-center gap-2 h-full">
-                            <NewTaskModal>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="w-8 h-8 rounded-full">
-                                    <PlusIcon className="w-5 h-5" />
-                                </Button>
-                            </NewTaskModal>
-                            <Separator orientation="vertical" />
-                            <h1 className="text-xl font-medium">Tasks</h1>
-                        </div>
-                        <Setting />
+            <PageShell>
+                <PageHeader>
+                    <div className="flex items-center gap-2">
+                        <NewTaskModal>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                aria-label="Create task">
+                                <Plus className="h-5 w-5" />
+                            </Button>
+                        </NewTaskModal>
+                        <Separator orientation="vertical" />
+                        <PageTitle>Tasks</PageTitle>
                     </div>
+                    <Setting />
+                </PageHeader>
 
-                    <div className="w-full px-6">
-                        <div className="flex items-center gap-2">
-                            {NAV_ITEMS.map(
-                                ({ id, label, icon: Icon, href, active }) => (
-                                    <Button
-                                        key={id}
-                                        variant={active ? 'default' : 'outline'}
-                                        size="sm"
-                                        className="gap-2 text-xs rounded-xl"
-                                        onClick={() => navigateTo(href)}>
-                                        <Icon className="w-4 h-4" />
-                                        {label}
-                                    </Button>
-                                )
-                            )}
-                        </div>
-                    </div>
+                <nav
+                    aria-label="Task views"
+                    className="flex w-full gap-1 overflow-x-auto rounded-md bg-muted p-1">
+                    {NAV_ITEMS.map(
+                        ({ id, label, icon: Icon, href, active }) => (
+                            <Button
+                                key={id}
+                                variant={active ? 'secondary' : 'ghost'}
+                                size="sm"
+                                aria-current={active ? 'page' : undefined}
+                                className={
+                                    active
+                                        ? 'shrink-0 bg-background shadow-sm hover:bg-background'
+                                        : 'shrink-0'
+                                }
+                                onClick={() => navigateTo(href)}>
+                                <Icon className="h-4 w-4" />
+                                {label}
+                            </Button>
+                        )
+                    )}
+                </nav>
 
-                    <div className="flex-1 w-full px-6 overflow-hidden">
-                        {children}
-                    </div>
-                </div>
-            </div>
+                <PageContent className="overflow-hidden">
+                    {children}
+                </PageContent>
+            </PageShell>
         </TaskSettingsProvider>
     );
 }

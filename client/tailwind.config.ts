@@ -10,6 +10,9 @@ const config: Config = {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['var(--font-sans)'],
+            },
             colors: {
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
@@ -17,6 +20,10 @@ const config: Config = {
                 background: {
                     DEFAULT: 'hsl(var(--background))',
                     soft: 'hsl(var(--background-soft))',
+                },
+                surface: {
+                    DEFAULT: 'hsl(var(--surface))',
+                    hover: 'hsl(var(--surface-hover))',
                 },
                 foreground: 'hsl(var(--foreground))',
                 primary: {
@@ -34,6 +41,21 @@ const config: Config = {
                 destructive: {
                     DEFAULT: 'hsl(var(--destructive))',
                     foreground: 'hsl(var(--destructive-foreground))',
+                },
+                success: {
+                    DEFAULT: 'hsl(var(--success))',
+                    foreground: 'hsl(var(--success-foreground))',
+                    subtle: 'hsl(var(--success-subtle))',
+                },
+                warning: {
+                    DEFAULT: 'hsl(var(--warning))',
+                    foreground: 'hsl(var(--warning-foreground))',
+                    subtle: 'hsl(var(--warning-subtle))',
+                },
+                info: {
+                    DEFAULT: 'hsl(var(--info))',
+                    foreground: 'hsl(var(--info-foreground))',
+                    subtle: 'hsl(var(--info-subtle))',
                 },
                 muted: {
                     DEFAULT: 'hsl(var(--muted))',
@@ -61,12 +83,23 @@ const config: Config = {
                 soft: {
                     border: 'hsl(var(--border-soft))',
                 },
+                'border-subtle': 'hsl(var(--border-subtle))',
+                'border-strong': 'hsl(var(--border-strong))',
             },
             borderRadius: {
                 sm: 'var(--radius-sm)',
                 md: 'var(--radius-md)',
                 lg: 'var(--radius-lg)',
                 DEFAULT: 'var(--radius)',
+            },
+            boxShadow: {
+                sm: 'var(--shadow-sm)',
+                md: 'var(--shadow-md)',
+                lg: 'var(--shadow-lg)',
+            },
+            maxWidth: {
+                page: 'var(--page-max-width)',
+                reading: 'var(--reading-max-width)',
             },
         },
     },

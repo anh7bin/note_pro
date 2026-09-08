@@ -8,6 +8,12 @@ import { useGetAllScheduledTasksQuery } from '@/graphql/queries/__generated__/ta
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { SchedulerAppointment } from '@/types/app';
 import { useMemo } from 'react';
+import {
+    PageContent,
+    PageHeader,
+    PageShell,
+    PageTitle,
+} from '@/components/shared';
 
 export default function CalendarPage() {
     const { workspace } = useWorkspace();
@@ -56,15 +62,13 @@ export default function CalendarPage() {
     return loading && tasks.length === 0 ? (
         <PageLoading />
     ) : (
-        <div className="p-0 w-full h-full">
-            <div className="flex flex-col items-start justify-start mx-auto w-full h-full min-h-0 max-w-screen-2xl gap-6">
-                <div className="w-full pt-4 px-6 flex items-center justify-between">
-                    <h1 className="text-xl font-medium">Calendar</h1>
-                </div>
-                <div className="h-[calc(100%-5rem)] w-full px-6">
-                    <Calendar appointments={appointments} />
-                </div>
-            </div>
-        </div>
+        <PageShell>
+            <PageHeader>
+                <PageTitle>Calendar</PageTitle>
+            </PageHeader>
+            <PageContent className="overflow-hidden rounded-lg border border-border-subtle bg-card p-2 sm:p-3">
+                <Calendar appointments={appointments} />
+            </PageContent>
+        </PageShell>
     );
 }

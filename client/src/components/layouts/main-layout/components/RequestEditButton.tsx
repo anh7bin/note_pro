@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { useRequestEdit } from './hooks/useRequestEdit';
+import { MessageSquarePlus } from 'lucide-react';
 
 export function RequestEditButton({ documentId }: { documentId: string }) {
     const { isVisible, isRequesting, requestEdit } = useRequestEdit(documentId);
@@ -12,10 +13,13 @@ export function RequestEditButton({ documentId }: { documentId: string }) {
         <Button
             variant="outline"
             size="sm"
-            className="gap-2 rounded-lg"
+            aria-label={isRequesting ? 'Edit request sent' : 'Ask to edit'}
             onClick={requestEdit}
             disabled={isRequesting}>
-            {isRequesting ? 'Request Sent' : 'Ask to Edit'}
+            <MessageSquarePlus className="h-4 w-4" />
+            <span className="hidden lg:inline">
+                {isRequesting ? 'Request Sent' : 'Ask to Edit'}
+            </span>
         </Button>
     );
 }

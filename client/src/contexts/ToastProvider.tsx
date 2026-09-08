@@ -14,7 +14,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 position="bottom-right"
                 expand={true}
                 richColors
-                closeButton={false}
+                closeButton
                 toastOptions={{
                     style: {
                         background: 'hsl(var(--background))',

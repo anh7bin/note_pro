@@ -24,7 +24,7 @@ export const NotificationItem = ({
         <button
             type="button"
             className={`relative flex w-full gap-3 rounded-lg p-3 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                notification.is_read ? '' : 'bg-blue-50/70 dark:bg-blue-950/20'
+                notification.is_read ? '' : 'bg-info-subtle'
             }`}
             onClick={() => onSelect(notification)}>
             {presentation.avatar ? (
@@ -44,7 +44,7 @@ export const NotificationItem = ({
                     <span className="truncate text-sm font-medium text-foreground">
                         {getNotificationTitle(notification)}
                     </span>
-                    <span className="shrink-0 text-[11px] text-muted-foreground">
+                    <span className="shrink-0 text-xs text-muted-foreground">
                         {getNotificationTime(notification.created_at)}
                     </span>
                 </span>
@@ -57,7 +57,7 @@ export const NotificationItem = ({
 
             {!notification.is_read && (
                 <span
-                    className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-blue-500"
+                    className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-info"
                     aria-label="Unread"
                 />
             )}

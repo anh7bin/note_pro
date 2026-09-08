@@ -31,12 +31,15 @@ export function SearchInputField({ onResultClick }: Props) {
         <InputField
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search"
-            className={cn('w-full bg-card h-8')}
+            type="search"
+            aria-label="Search documents and folders"
+            placeholder="Search documents and folders"
+            className={cn('h-9 w-full bg-background')}
             icon={<Search className="h-4 w-4" />}
             iconPosition="left"
             popoverHeight="auto"
-            popoverClassName="max-w-3xl max-h-[60vh] overflow-hidden"
+            popoverLabel="Search results"
+            popoverClassName="max-h-[60vh] max-w-3xl overflow-hidden"
             popoverContent={popoverContent}
         />
     );

@@ -6,8 +6,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { FaRegBell } from 'react-icons/fa6';
-import { FiAlertCircle } from 'react-icons/fi';
+import { Bell, CircleAlert } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
 import { NotificationMenuProps } from './notification.types';
 import { NOTIFICATION_LIMIT } from './notification.utils';
@@ -29,7 +28,7 @@ export const NotificationMenu = ({
                 className="h-8 w-8"
                 aria-label="Loading notifications"
                 disabled>
-                <FaRegBell className="h-4 w-4 animate-pulse" />
+                <Bell className="h-4 w-4 animate-pulse" />
             </Button>
         );
     }
@@ -40,21 +39,22 @@ export const NotificationMenu = ({
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="relative h-8 w-8"
                     aria-label={
                         unreadCount > 0
                             ? `${unreadCount} unread notifications`
                             : 'Notifications'
                     }>
-                    <FaRegBell className="h-4 w-4" />
+                    <Bell className="h-4 w-4" />
                     {unreadCount > 0 && (
-                        <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">
+                        <span
+                            aria-hidden="true"
+                            className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground">
                             {unreadCount > 9 ? '9+' : unreadCount}
                         </span>
                     )}
                     {hasConnectionError && (
                         <span
-                            className="absolute bottom-0 right-0 h-2 w-2 rounded-full border border-background bg-amber-500"
+                            className="absolute bottom-0 right-0 h-2 w-2 rounded-full border border-background bg-warning"
                             aria-hidden="true"
                         />
                     )}
@@ -92,8 +92,8 @@ export const NotificationMenu = ({
                 <DropdownMenuSeparator className="m-0" />
 
                 {hasConnectionError && (
-                    <div className="flex items-center gap-2 border-b bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
-                        <FiAlertCircle className="h-4 w-4 shrink-0" />
+                    <div className="flex items-center gap-2 border-b bg-warning-subtle px-3 py-2 text-xs text-warning-foreground">
+                        <CircleAlert className="h-4 w-4 shrink-0" />
                         Live updates are reconnecting. Recent items may be
                         delayed.
                     </div>
@@ -102,7 +102,7 @@ export const NotificationMenu = ({
                 <div className="max-h-[28rem] overflow-y-auto p-2">
                     {notifications.length === 0 ? (
                         <div className="px-4 py-10 text-center">
-                            <FaRegBell className="mx-auto mb-3 h-6 w-6 text-muted-foreground" />
+                            <Bell className="mx-auto mb-3 h-6 w-6 text-muted-foreground" />
                             <p className="text-sm font-medium">
                                 No notifications
                             </p>
@@ -124,7 +124,7 @@ export const NotificationMenu = ({
                 </div>
 
                 {notifications.length === NOTIFICATION_LIMIT && (
-                    <div className="border-t px-3 py-2 text-center text-[11px] text-muted-foreground">
+                    <div className="border-t px-3 py-2 text-center text-xs text-muted-foreground">
                         Showing the {NOTIFICATION_LIMIT} most recent
                         notifications
                     </div>

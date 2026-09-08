@@ -28,8 +28,8 @@ const Separator = React.forwardRef<
         ref
     ) => {
         const thicknessClasses = {
-            thin: orientation === 'horizontal' ? 'h-[1px]' : 'w-[1px]',
-            medium: orientation === 'horizontal' ? 'h-[2px]' : 'w-[2px]',
+            thin: orientation === 'horizontal' ? 'h-px' : 'w-px',
+            medium: orientation === 'horizontal' ? 'h-0.5' : 'w-0.5',
             thick: orientation === 'horizontal' ? 'h-[3px]' : 'w-[3px]',
         };
 
@@ -39,20 +39,15 @@ const Separator = React.forwardRef<
             accent: 'bg-primary/20',
         };
 
-        const orientationClasses = {
-            horizontal: 'w-full',
-            vertical: 'h-full',
-        };
-
         return (
             <SeparatorPrimitive.Root
                 ref={ref}
                 decorative={decorative}
                 orientation={orientation}
                 className={cn(
-                    'shrink-0 self-stretch',
+                    'shrink-0',
+                    orientation === 'horizontal' ? 'w-full' : 'self-stretch',
                     thicknessClasses[thickness],
-                    orientationClasses[orientation],
                     colorClasses[color],
                     className
                 )}

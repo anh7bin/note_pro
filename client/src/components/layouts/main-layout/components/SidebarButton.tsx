@@ -48,8 +48,8 @@ export function SidebarButton({
     };
 
     const baseClasses = cn(
-        'flex items-center gap-1 rounded-md px-2 py-1.5 text-xs w-full whitespace-nowrap',
-        'hover:bg-accent hover:text-accent-foreground',
+        'flex min-h-9 w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm whitespace-nowrap transition-colors',
+        'hover:bg-accent hover:text-accent-foreground focus-within:bg-accent focus-within:text-accent-foreground',
         isActive && 'bg-accent text-accent-foreground',
         disabled && 'opacity-50 cursor-not-allowed',
         variantClasses[variant],
@@ -69,7 +69,7 @@ export function SidebarButton({
     const displayText = isLoading && loadingText ? loadingText : label;
 
     const leftContent = (
-        <div className="flex items-center gap-1 min-w-0 flex-1">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
             <div className="w-5 h-5 flex items-center justify-center shrink-0 transition-all duration-200">
                 {icon}
             </div>
@@ -82,13 +82,13 @@ export function SidebarButton({
     const rightContent = (
         <>
             {typeof count === 'number' && (
-                <span className="opacity-0 group-hover:opacity-100 text-muted-foreground text-xs pr-1 transition-opacity duration-200">
+                <span className="pr-1 text-xs tabular-nums text-muted-foreground">
                     {count}
                 </span>
             )}
             {action && (
                 <div
-                    className="opacity-0 group-hover:opacity-100 text-muted-foreground transition-opacity duration-200"
+                    className="text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -104,7 +104,7 @@ export function SidebarButton({
             <div className={cn(baseClasses, 'group')}>
                 <Link
                     href={href}
-                    className="flex items-center justify-between w-full"
+                    className="flex min-w-0 flex-1 items-center justify-between rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                     onClick={handleLinkClick}>
                     {leftContent}
                 </Link>

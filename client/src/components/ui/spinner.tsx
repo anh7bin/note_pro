@@ -15,6 +15,7 @@ const sizeVariants = {
 export function Spinner({ size = 'md', className }: SpinnerProps) {
     return (
         <Loader2
+            aria-hidden="true"
             className={cn(
                 'animate-spin text-muted-foreground',
                 sizeVariants[size],

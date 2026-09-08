@@ -3,11 +3,12 @@
 import { Separator } from '@/components/ui/separator';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useGetDocsCountQuery } from '@/graphql/queries/__generated__/document.generated';
-import { MENU_ITEMS, ModalType, SIDEBAR_WIDTH } from '@/lib/constants';
+import { MENU_ITEMS, ModalType } from '@/lib/constants';
 import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
-import { IoShareOutline } from 'react-icons/io5';
+import { ChevronRight } from 'lucide-react';
+import { RiUserVoiceLine } from 'react-icons/ri';
 import { FolderMenu } from './components/FolderMenu';
 import NewDocumentButton from './components/NewDocumentButton';
 import { NewFolderButton } from './components/NewFolderButton';
@@ -15,7 +16,6 @@ import { NewTaskModal } from './components/NewTaskModal';
 import { SidebarButton } from './components/SidebarButton';
 import { WorkspaceButton } from './components/WorkspaceButton';
 import { useState } from 'react';
-import { FiChevronRight } from 'react-icons/fi';
 import { Button } from '@/components/ui/button';
 interface Props {
     workspaceSlug: string;
@@ -23,7 +23,7 @@ interface Props {
 }
 
 export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
-    const { isOpen } = useSidebar();
+    const { isOpen, toggle } = useSidebar();
     const pathname = usePathname();
     const [isFoldersCollapsed, setIsFoldersCollapsed] = useState(false);
 
@@ -47,80 +47,102 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
     };
 
     return (
-        <aside
-            className={cn(
-                'transition-all duration-300 ease-in-out bg-background text-foreground fixed top-12 left-0 z-40 h-[calc(100vh-48px)]',
-                isOpen ? '' : 'w-0 overflow-hidden'
-            )}
-            style={{ width: isOpen ? SIDEBAR_WIDTH : 0 }}>
-            <div className="flex h-full flex-col p-4 gap-2">
-                <NewDocumentButton />
-                <SidebarButton
-                    icon={<IoShareOutline className="w-4 h-4" />}
-                    label="Shared with me"
-                    href={ROUTES.SHARED_WITH_ME}
+        <>
+            {isOpen && (
+                <button
+                    type="button"
+                    aria-label="Close sidebar"
+                    className="fixed inset-x-0 bottom-0 top-[var(--header-height)] z-30 bg-black/35 md:hidden"
+                    onClick={toggle}
                 />
-                <Separator />
-                <WorkspaceButton />
-                <div className="flex flex-col gap-2">
-                    {MENU_ITEMS(workspaceSlug, {
-                        allDocs: docsCountLoading
-                            ? undefined
-                            : docsCount?.blocks_aggregate?.aggregate?.count ||
-                              0,
-                    }).map((item) => {
-                        const isActive =
-                            pathname === item.href ||
-                            pathname.startsWith(item.href + '/');
-                        return (
-                            <SidebarButton
-                                key={item.href}
-                                icon={<item.icon className="w-4 h-4" />}
-                                label={item.label}
-                                href={item.href}
-                                isActive={isActive}
-                                count={item.count}
-                                action={
-                                    item.modalType && item.action
-                                        ? renderModalWrapper(
-                                              item.modalType,
-                                              item.action
-                                          )
-                                        : item.action
-                                }
-                            />
-                        );
-                    })}
+            )}
+            <aside
+                id="app-sidebar"
+                aria-label="Workspace navigation"
+                aria-hidden={!isOpen}
+                className={cn(
+                    'fixed bottom-0 left-0 top-[var(--header-height)] z-40 w-[var(--sidebar-width)] border-r border-border-subtle bg-background text-foreground shadow-md transition-[transform,visibility] duration-300 ease-out md:shadow-none',
+                    isOpen
+                        ? 'visible translate-x-0'
+                        : 'invisible -translate-x-full pointer-events-none'
+                )}>
+                <div className="flex h-full flex-col gap-2 p-3 sm:p-4">
+                    <NewDocumentButton />
+                    <SidebarButton
+                        icon={<RiUserVoiceLine className="h-4 w-4" />}
+                        label="Shared with me"
+                        href={ROUTES.SHARED_WITH_ME}
+                    />
                     <Separator />
-                </div>
-                <div className="flex justify-between items-center">
-                    <span className="text-xs font-medium">Folders</span>
-                    <div className="flex items-center gap-1">
-                        <NewFolderButton />
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="w-5 h-5"
-                            onClick={() =>
-                                setIsFoldersCollapsed(!isFoldersCollapsed)
-                            }>
-                            <FiChevronRight
-                                className={cn(
-                                    'w-4 h-4 transition-transform duration-200',
+                    <WorkspaceButton />
+                    <div className="flex flex-col gap-2">
+                        {MENU_ITEMS(workspaceSlug, {
+                            allDocs: docsCountLoading
+                                ? undefined
+                                : docsCount?.blocks_aggregate?.aggregate
+                                      ?.count || 0,
+                        }).map((item) => {
+                            const isActive =
+                                pathname === item.href ||
+                                pathname.startsWith(item.href + '/');
+                            return (
+                                <SidebarButton
+                                    key={item.href}
+                                    icon={<item.icon className="w-4 h-4" />}
+                                    label={item.label}
+                                    href={item.href}
+                                    isActive={isActive}
+                                    count={item.count}
+                                    action={
+                                        item.modalType && item.action
+                                            ? renderModalWrapper(
+                                                  item.modalType,
+                                                  item.action
+                                              )
+                                            : item.action
+                                    }
+                                />
+                            );
+                        })}
+                        <Separator />
+                    </div>
+                    <div className="flex min-h-8 items-center justify-between px-1">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                            Folders
+                        </span>
+                        <div className="flex items-center gap-1">
+                            <NewFolderButton />
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                aria-label={
                                     isFoldersCollapsed
-                                        ? 'rotate-0'
-                                        : 'rotate-90'
-                                )}
-                            />
-                        </Button>
+                                        ? 'Expand folders'
+                                        : 'Collapse folders'
+                                }
+                                aria-expanded={!isFoldersCollapsed}
+                                onClick={() =>
+                                    setIsFoldersCollapsed(!isFoldersCollapsed)
+                                }>
+                                <ChevronRight
+                                    className={cn(
+                                        'w-4 h-4 transition-transform duration-200',
+                                        isFoldersCollapsed
+                                            ? 'rotate-0'
+                                            : 'rotate-90'
+                                    )}
+                                />
+                            </Button>
+                        </div>
                     </div>
+                    {!isFoldersCollapsed && (
+                        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+                            <FolderMenu />
+                        </div>
+                    )}
                 </div>
-                {!isFoldersCollapsed && (
-                    <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
-                        <FolderMenu />
-                    </div>
-                )}
-            </div>
-        </aside>
+            </aside>
+        </>
     );
 }

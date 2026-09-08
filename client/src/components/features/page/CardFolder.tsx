@@ -35,14 +35,13 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
     const docCount = folder.blocks_aggregate?.aggregate?.count || 0;
     const selected = isSelected(folder.id);
 
-    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.stopPropagation();
+    const openFolder = (newTab = false) => {
         if (!workspaceId) return;
 
         const folderUrl = ROUTES.WORKSPACE_FOLDER(workspaceId, folder.id);
 
-        if (e.ctrlKey || e.metaKey) {
-            window.open(folderUrl, '_blank');
+        if (newTab) {
+            window.open(folderUrl, '_blank', 'noopener,noreferrer');
             return;
         }
 
@@ -50,9 +49,22 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
         router.push(folderUrl);
     };
 
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        openFolder(e.ctrlKey || e.metaKey);
+    };
+
     const handleSelectToggle = (e: React.MouseEvent) => {
         e.stopPropagation();
         toggleFolder(folder.id);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.target !== event.currentTarget) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openFolder();
+        }
     };
 
     return (
@@ -64,21 +76,31 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
             }}>
             <Card
                 key={folder.id}
-                className={`group relative cursor-pointer transition-all duration-200 h-[140px] w-full rounded-md bg-primary/5 flex flex-col ${
+                role="link"
+                tabIndex={0}
+                aria-label={`Open folder “${folder.name}”`}
+                className={`group relative flex h-[140px] w-full cursor-pointer flex-col bg-primary/5 transition-[border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 ${
                     selected
-                        ? 'border-2 border-primary'
-                        : 'border-2 border-[rgb(223,228,231)] hover:border-primary dark:border-border dark:hover:border-primary'
+                        ? 'border-primary ring-1 ring-primary/25'
+                        : 'border-border-subtle hover:border-border-strong hover:shadow-md'
                 }`}
-                onClick={handleClick}>
+                onClick={handleClick}
+                onKeyDown={handleKeyDown}>
                 <CardHeader className="flex flex-col p-4 flex-1">
                     <div className="absolute top-3 right-3 z-10">
                         <Button
                             variant="ghost"
                             size="icon"
-                            className={`h-6 w-6 rounded-full border-2 transition-all ${
+                            aria-label={
+                                selected
+                                    ? `Deselect “${folder.name}”`
+                                    : `Select “${folder.name}”`
+                            }
+                            aria-pressed={selected}
+                            className={`h-8 w-8 rounded-full border transition-all focus-visible:opacity-100 ${
                                 selected
                                     ? 'opacity-100 bg-primary border-primary text-primary-foreground'
-                                    : 'opacity-0 group-hover:opacity-100 bg-background border-border hover:border-primary'
+                                    : 'bg-background border-border opacity-100 hover:border-primary md:opacity-0 md:group-hover:opacity-100'
                             }`}
                             onClick={handleSelectToggle}>
                             {selected && <Check className="h-4 w-4" />}

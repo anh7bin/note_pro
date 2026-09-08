@@ -19,26 +19,22 @@ const separatorStyles: Array<{
     {
         style: 'strong',
         label: 'Strong',
-        previewClass:
-            'border-t-[3px] border-solid border-gray-900 dark:border-gray-100',
+        previewClass: 'border-t-[3px] border-solid border-foreground',
     },
     {
         style: 'regular',
         label: 'Regular',
-        previewClass:
-            'border-t-[2px] border-solid border-gray-700 dark:border-gray-300',
+        previewClass: 'border-t-2 border-solid border-foreground/80',
     },
     {
         style: 'light',
         label: 'Light',
-        previewClass:
-            'border-t border-solid border-gray-400 dark:border-gray-500',
+        previewClass: 'border-t border-solid border-border-strong',
     },
     {
         style: 'extralight',
         label: 'Extralight',
-        previewClass:
-            'border-t border-dotted border-gray-400 dark:border-gray-500',
+        previewClass: 'border-t border-dotted border-border-strong',
     },
 ];
 
@@ -80,21 +76,24 @@ export const SeparatorStylePicker = ({
     return (
         <div
             ref={ref}
-            className="fixed bg-popover text-popover-foreground border border-border rounded-lg shadow-xl p-2 z-50 min-w-[200px]"
+            role="dialog"
+            aria-label="Choose separator style"
+            className="fixed z-50 min-w-52 rounded-md border border-border bg-popover p-2 text-popover-foreground shadow-md"
             style={{ top: position.top, left: position.left }}>
-            <div className="text-xs font-semibold mb-2 px-2 pt-1 text-muted-foreground">
-                Insert Separator
+            <div className="mb-2 px-2 pt-1 text-xs font-semibold text-muted-foreground">
+                Insert separator
             </div>
             <div className="space-y-1">
                 {separatorStyles.map(({ style, label, previewClass }) => (
                     <button
+                        type="button"
                         key={style}
                         onClick={() => {
                             onSelect(style);
                             close();
                         }}
-                        className="w-full px-3 py-2.5 rounded-md hover:bg-accent transition-colors text-left group">
-                        <div className="text-sm font-medium mb-1.5 text-foreground group-hover:text-primary">
+                        className="group min-h-11 w-full rounded-md px-3 py-2.5 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
+                        <div className="mb-1.5 text-sm font-medium text-foreground group-hover:text-primary">
                             {label}
                         </div>
                         <div className={cn('w-full', previewClass)} />

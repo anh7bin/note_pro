@@ -1,4 +1,6 @@
 import { SectionItem } from './types';
+import { EmptyState } from './EmptyState';
+import { ListTree } from 'lucide-react';
 
 interface ContentsTabProps {
     sections: SectionItem[];
@@ -13,15 +15,16 @@ export const ContentsTab = ({
 }: ContentsTabProps) => {
     return (
         <div className="flex flex-col h-full">
-            <h3 className="text-xs text-muted-foreground mb-2">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Table of Contents
-            </h3>
+            </h2>
             <div className="text-sm space-y-1.5">
                 {sections.length === 0 ? (
-                    <h3 className="text-xs text-muted-foreground mt-2">
-                        Use titles, pages or cards to create a table of
-                        contents.
-                    </h3>
+                    <EmptyState
+                        icon={<ListTree className="h-4 w-4" />}
+                        title="No headings yet"
+                        description="Add headings to build a table of contents."
+                    />
                 ) : (
                     sections.map((section) => {
                         const isActive = section.id === activeBlockId;
@@ -30,14 +33,15 @@ export const ContentsTab = ({
                         return (
                             <button
                                 key={section.id}
+                                type="button"
                                 onClick={() => onScrollToBlock(section.id)}
-                                className={`w-full rounded-lg border px-2 py-1.5 text-left transition-colors ${
+                                className={`min-h-9 w-full rounded-md border px-2 py-1.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${
                                     isActive
                                         ? 'border-border bg-muted/60'
                                         : 'border-transparent hover:border-border hover:bg-muted/60'
                                 }`}>
                                 <span
-                                    className={`text-xs truncate block ${level === 1 ? 'font-bold' : level === 2 ? 'font-semibold' : 'font-medium'}`}>
+                                    className={`block truncate text-sm ${level === 1 ? 'font-semibold' : level === 2 ? 'font-medium' : 'font-normal'}`}>
                                     {section.title}
                                 </span>
                             </button>

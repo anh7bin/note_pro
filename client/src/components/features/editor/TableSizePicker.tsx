@@ -58,15 +58,17 @@ export const TableSizePicker = ({
     return (
         <div
             ref={ref}
-            className="fixed bg-popover text-popover-foreground border border-border rounded-lg shadow-xl p-3 z-50 min-w-[240px]"
+            role="dialog"
+            aria-label="Choose table size"
+            className="fixed z-50 min-w-60 rounded-md border border-border bg-popover p-3 text-popover-foreground shadow-md"
             style={{ top: position.top, left: position.left }}>
-            <div className="text-xs font-semibold mb-3 text-center">
+            <div className="mb-3 text-center text-xs font-semibold">
                 {hoveredCell ? (
                     <span className="text-primary">
-                        {rows} × {cols} Table
+                        {rows} × {cols} table
                     </span>
                 ) : (
-                    <span className="text-muted-foreground">Insert Table</span>
+                    <span className="text-muted-foreground">Insert table</span>
                 )}
             </div>
             <div
@@ -82,19 +84,21 @@ export const TableSizePicker = ({
 
                     return (
                         <button
+                            type="button"
                             key={index}
                             onMouseEnter={() => setHoveredCell({ row, col })}
+                            onFocus={() => setHoveredCell({ row, col })}
                             onClick={() => {
                                 onSelect(row + 1, col + 1);
                                 close();
                             }}
                             className={cn(
-                                'w-5 h-5 border-2 rounded-sm transition-all duration-150',
+                                'h-5 w-5 rounded-sm border-2 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-1',
                                 isHighlighted
                                     ? 'bg-primary/90 border-primary scale-105 shadow-sm'
                                     : 'bg-background border-border/50 hover:border-primary/30 hover:bg-accent/50'
                             )}
-                            title={`${row + 1} × ${col + 1}`}
+                            aria-label={`Insert a ${row + 1} by ${col + 1} table`}
                         />
                     );
                 })}

@@ -12,8 +12,24 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
+function getGraphqlEndpoint(endpoint?: string): string {
+    if (!endpoint) return '';
+
+    const normalizedEndpoint = endpoint.replace(/\/+$/, '');
+    return normalizedEndpoint.endsWith('/v1/graphql')
+        ? normalizedEndpoint
+        : `${normalizedEndpoint}/v1/graphql`;
+}
+
+const httpEndpoint = getGraphqlEndpoint(
+    process.env.NEXT_PUBLIC_HASURA_SERVER_ENDPOINT
+);
+const wsEndpoint =
+    getGraphqlEndpoint(process.env.NEXT_PUBLIC_HASURA_WS_ENDPOINT) ||
+    httpEndpoint.replace(/^http/, 'ws');
+
 const httpLink = createHttpLink({
-    uri: `${process.env.NEXT_PUBLIC_HASURA_SERVER_ENDPOINT}/v1/graphql`,
+    uri: httpEndpoint,
 });
 
 const authLink = setContext(async (_, { headers }) => {
@@ -31,9 +47,7 @@ const wsLink =
     typeof window !== 'undefined'
         ? new GraphQLWsLink(
               createClient({
-                  url:
-                      process.env.NEXT_PUBLIC_HASURA_WS_ENDPOINT ||
-                      `${process.env.NEXT_PUBLIC_HASURA_SERVER_ENDPOINT?.replace('http', 'ws')}/v1/graphql`,
+                  url: wsEndpoint,
                   connectionParams: async () => {
                       const session = await getSession();
                       if (session?.token) {

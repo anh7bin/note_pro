@@ -7,7 +7,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeGrid as Grid, GridOnScrollProps } from 'react-window';
 
 const MIN_CARD_WIDTH = 200;
-const GUTTER = 24;
+const GUTTER = 16;
 const CARD_HEIGHT = 304;
 const rowHeight = CARD_HEIGHT + GUTTER;
 
@@ -50,7 +50,7 @@ export function DocumentGrid({ documents }: DocumentGridProps) {
     };
 
     return (
-        <div className="flex-1 w-full pb-4 pl-6 overflow-hidden relative">
+        <div className="relative h-full min-h-0 w-full overflow-hidden pb-1">
             <AutoSizer>
                 {({ width, height }) => {
                     if (width === 0 || height === 0) return null;
@@ -103,10 +103,10 @@ export function DocumentGrid({ documents }: DocumentGridProps) {
                                 {CellDocument}
                             </Grid>
                             {isScrollable && showTopFade && (
-                                <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none bg-gradient-to-b from-background via-background/50 to-transparent" />
+                                <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background to-transparent" />
                             )}
                             {isScrollable && showBottomFade && (
-                                <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none bg-gradient-to-t from-background via-background/50 to-transparent" />
+                                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent" />
                             )}
                         </>
                     );

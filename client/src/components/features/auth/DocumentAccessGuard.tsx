@@ -107,8 +107,8 @@ export function DocumentAccessGuard({
 
     if (loading || accessRequestLoading) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <Loading />
+            <div className="flex h-full min-h-40 items-center justify-center">
+                <Loading text="Checking document access…" />
             </div>
         );
     }

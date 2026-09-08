@@ -50,7 +50,7 @@ const TableKeyHandler = Extension.create({
             },
             // Prevent Backspace from deleting the table structure
             Backspace: ({ editor }) => {
-                const { selection, doc } = editor.state;
+                const { selection } = editor.state;
                 const { empty, $from } = selection;
 
                 if (!empty) return false;

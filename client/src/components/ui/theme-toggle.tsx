@@ -12,7 +12,11 @@ export function ThemeToggle() {
 
     if (!mounted) {
         return (
-            <Button variant="ghost" size="icon" className="w-6 h-6">
+            <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Loading theme preference"
+                disabled>
                 <div className="h-4 w-4" />
             </Button>
         );
@@ -41,7 +45,11 @@ export function ThemeToggle() {
                 variant="ghost"
                 size="icon"
                 onClick={toggleTheme}
-                className="w-6 h-6">
+                aria-label={
+                    theme === 'light'
+                        ? 'Switch to dark mode'
+                        : 'Switch to light mode'
+                }>
                 {getIcon()}
             </Button>
         </SimpleTooltip>

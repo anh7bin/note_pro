@@ -22,12 +22,16 @@ export const TasksTab = ({
 }: TasksTabProps) => {
     return (
         <div className="flex flex-col h-full">
-            <h3 className="text-xs text-muted-foreground mb-2">Tasks</h3>
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Tasks
+            </h2>
             <div className="text-sm space-y-1.5">
                 {tasks.length === 0 ? (
-                    <h3 className="text-xs text-muted-foreground mt-2">
-                        Tasks inside this document will appear here.
-                    </h3>
+                    <EmptyState
+                        icon={<ListChecks className="h-4 w-4" />}
+                        title="No tasks yet"
+                        description="Tasks inside this document will appear here."
+                    />
                 ) : (
                     tasks.map(({ blockId, task, title }) => (
                         <TaskItem
@@ -45,7 +49,7 @@ export const TasksTab = ({
                             }
                             isActive={blockId === activeBlockId}
                             className={cn(
-                                'rounded-lg border',
+                                'rounded-md border',
                                 task &&
                                     pendingTaskIds.has(task.id) &&
                                     'opacity-70'

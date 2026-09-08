@@ -54,7 +54,7 @@ function UserCard({
 
     return (
         <div
-            className={`flex items-center justify-between p-2 rounded-lg ${
+            className={`flex items-center justify-between gap-2 rounded-md p-2 ${
                 isOwner
                     ? 'bg-accent/30'
                     : 'hover:bg-accent/50 transition-colors'
@@ -106,6 +106,7 @@ function UserCard({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
+                            aria-label={`Remove ${getDisplayName(user)} from document`}
                             onClick={() => onRemoveUser?.(user.id)}>
                             <X className="h-4 w-4" />
                         </Button>
@@ -128,9 +129,9 @@ export function SharedUsersList({
     if (isLoading) {
         return (
             <div className="mt-4 space-y-2">
-                <p className="text-xs font-medium text-muted-foreground px-2">
+                <h3 className="px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     People with access
-                </p>
+                </h3>
                 <div className="flex items-center justify-center p-8">
                     <Spinner />
                 </div>
@@ -142,9 +143,9 @@ export function SharedUsersList({
 
     return (
         <div className="mt-4 space-y-2">
-            <p className="text-xs font-medium text-muted-foreground px-2">
+            <h3 className="px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 People with access
-            </p>
+            </h3>
 
             {owner && (
                 <UserCard user={owner} currentUserId={currentUserId} isOwner />

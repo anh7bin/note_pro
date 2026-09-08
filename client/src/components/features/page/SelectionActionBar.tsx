@@ -14,7 +14,8 @@ import {
     handleBulkRemoveShared,
     pluralize,
 } from '@/lib/bulk-actions';
-import { FolderInput, MinusCircle, Trash2 } from 'lucide-react';
+import { FolderInput, Trash2, X } from 'lucide-react';
+import showToast from '@/lib/toast';
 import { useCallback, useState } from 'react';
 import { MoveToDialog } from './MoveToDialog';
 
@@ -64,22 +65,34 @@ export function SelectionActionBar({
     }, []);
 
     const handleDeleteConfirm = useCallback(async () => {
-        if (mode === 'shared') {
-            await handleBulkRemoveShared(
-                selectedDocuments,
-                bulkDeleteAccessRequests,
-                userId,
-                clearSelection
+        try {
+            if (mode === 'shared') {
+                await handleBulkRemoveShared(
+                    selectedDocuments,
+                    bulkDeleteAccessRequests,
+                    userId,
+                    clearSelection
+                );
+            } else {
+                await handleBulkDeleteDocumentsAndFolders(
+                    Array.from(selectedDocuments),
+                    Array.from(selectedFolders),
+                    bulkDeleteDocumentsAndFolders,
+                    clearSelection
+                );
+            }
+            showToast.success(
+                mode === 'shared'
+                    ? 'Removed selected items from Shared'
+                    : 'Moved selected items to Recently Deleted'
             );
-            return;
+        } catch {
+            showToast.error(
+                mode === 'shared'
+                    ? 'Failed to remove selected items'
+                    : 'Failed to delete selected items'
+            );
         }
-
-        await handleBulkDeleteDocumentsAndFolders(
-            Array.from(selectedDocuments),
-            Array.from(selectedFolders),
-            bulkDeleteDocumentsAndFolders,
-            clearSelection
-        );
     }, [
         mode,
         selectedDocuments,
@@ -92,14 +105,20 @@ export function SelectionActionBar({
 
     const handleMove = useCallback(
         async (folderId: string | null) => {
-            await bulkMoveDocuments({
-                variables: {
-                    ids: Array.from(selectedDocuments),
-                    folderId,
-                },
-            });
-            setIsMoveDialogOpen(false);
-            clearSelection();
+            try {
+                await bulkMoveDocuments({
+                    variables: {
+                        ids: Array.from(selectedDocuments),
+                        folderId,
+                    },
+                });
+                setIsMoveDialogOpen(false);
+                clearSelection();
+                showToast.success('Moved selected documents');
+            } catch {
+                showToast.error('Failed to move selected documents');
+                throw new Error('Bulk move failed');
+            }
         },
         [selectedDocuments, bulkMoveDocuments, clearSelection]
     );
@@ -108,16 +127,20 @@ export function SelectionActionBar({
 
     return (
         <>
-            <div className="flex items-center gap-2 rounded-lg bg-accent">
+            <div
+                role="status"
+                aria-live="polite"
+                className="flex items-center gap-1 rounded-md border border-border bg-card p-1 shadow-sm">
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 rounded-full hover:bg-primary/20"
+                    className="h-8 w-8"
+                    aria-label="Clear selection"
                     onClick={clearSelection}>
-                    <MinusCircle className="h-8 w-8 fill-primary text-primary-foreground" />
+                    <X className="h-4 w-4" />
                 </Button>
 
-                <span className="text-sm text-muted-foreground">
+                <span className="px-1 text-sm font-medium tabular-nums text-foreground">
                     {totalSelected} selected
                 </span>
 
@@ -126,7 +149,7 @@ export function SelectionActionBar({
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 hover:bg-accent-foreground/10"
-                        title="Move to"
+                        aria-label="Move selected items"
                         onClick={() => setIsMoveDialogOpen(true)}>
                         <FolderInput className="h-4 w-4" />
                     </Button>
@@ -136,7 +159,11 @@ export function SelectionActionBar({
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 hover:bg-accent-foreground/10 hover:text-destructive"
-                    title={mode === 'shared' ? 'Remove' : 'Delete'}
+                    aria-label={
+                        mode === 'shared'
+                            ? 'Remove selected items'
+                            : 'Delete selected items'
+                    }
                     onClick={handleDeleteClick}>
                     <Trash2 className="h-4 w-4" />
                 </Button>

@@ -41,8 +41,8 @@ export const Calendar = ({ appointments }: Props) => {
             height="100%"
             events={events}
             eventDisplay="block"
-            eventColor="#1976d2"
-            eventTextColor="#fff"
+            eventColor="hsl(var(--primary))"
+            eventTextColor="hsl(var(--primary-foreground))"
         />
     );
 };

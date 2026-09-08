@@ -16,20 +16,25 @@ export const PendingAccessRequests = ({
     onApprove,
     onDecline,
 }: PendingAccessRequestsProps) => (
-    <div className="mb-4 space-y-2">
+    <section className="space-y-2" aria-labelledby="pending-requests-heading">
+        <h3
+            id="pending-requests-heading"
+            className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Pending requests
+        </h3>
         {requests.map((request) => {
             const isProcessing = processingRequestId === request.id;
 
             return (
                 <div
                     key={request.id}
-                    className="flex items-center gap-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-950/20">
+                    className="flex flex-col gap-3 rounded-md border border-info/20 bg-info-subtle p-3 sm:flex-row sm:items-center">
                     <Avatar className="h-10 w-10 shrink-0">
                         <AvatarImage
                             src={request.requester?.avatar_url || ''}
                             alt={request.requester?.name || 'User'}
                         />
-                        <AvatarFallback className="bg-gradient-to-br from-pink-400 to-pink-600 text-white">
+                        <AvatarFallback className="bg-primary text-primary-foreground">
                             {getUserInitials(
                                 request.requester?.name,
                                 request.requester?.email
@@ -49,7 +54,7 @@ export const PendingAccessRequests = ({
                         </p>
                     </div>
 
-                    <div className="flex shrink-0 gap-2">
+                    <div className="flex shrink-0 gap-2 self-end sm:self-auto">
                         <Button
                             variant="outline"
                             size="sm"
@@ -67,5 +72,5 @@ export const PendingAccessRequests = ({
                 </div>
             );
         })}
-    </div>
+    </section>
 );

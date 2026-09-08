@@ -8,6 +8,7 @@ interface InputFieldProps extends React.ComponentProps<'input'> {
     popoverContent?: React.ReactNode;
     popoverClassName?: string;
     popoverHeight?: string | number;
+    popoverLabel?: string;
     triggerClassName?: string;
     icon?: React.ReactNode;
     iconPosition?: 'left' | 'right';
@@ -19,6 +20,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             popoverContent,
             popoverClassName,
             popoverHeight = '200px',
+            popoverLabel = 'Suggestions',
             triggerClassName,
             className,
             icon,
@@ -26,6 +28,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             onFocus,
             onClick,
             onBlur,
+            onKeyDown,
             ...props
         },
         ref
@@ -33,6 +36,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
         const [open, setOpen] = React.useState(false);
         const inputRef = React.useRef<HTMLInputElement>(null);
         const dropdownRef = React.useRef<HTMLDivElement>(null);
+        const popoverId = React.useId();
 
         // Combine refs
         React.useImperativeHandle(ref, () => inputRef.current!);
@@ -67,6 +71,16 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
                 }, 150);
             }
             onBlur?.(e);
+        };
+
+        const handleInputKeyDown = (
+            event: React.KeyboardEvent<HTMLInputElement>
+        ) => {
+            if (event.key === 'Escape' && open) {
+                setOpen(false);
+                event.stopPropagation();
+            }
+            onKeyDown?.(event);
         };
 
         // Auto-open popover when content becomes available and input is focused
@@ -104,10 +118,12 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
         }, [open, hasPopover]);
 
         return (
-            <div className="relative">
+            <div className="relative min-w-0">
                 <div className="relative">
                     {icon && iconPosition === 'left' && (
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
+                        <div
+                            aria-hidden="true"
+                            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                             {icon}
                         </div>
                     )}
@@ -122,19 +138,27 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
                         onFocus={handleInputFocus}
                         onClick={handleInputClick}
                         onBlur={handleInputBlur}
+                        onKeyDown={handleInputKeyDown}
+                        aria-expanded={hasPopover ? open : undefined}
+                        aria-controls={hasPopover ? popoverId : undefined}
                         {...props}
                     />
                     {icon && iconPosition === 'right' && (
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
+                        <div
+                            aria-hidden="true"
+                            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                             {icon}
                         </div>
                     )}
                 </div>
                 {hasPopover && open && (
                     <div
+                        id={popoverId}
                         ref={dropdownRef}
+                        role="region"
+                        aria-label={popoverLabel}
                         className={cn(
-                            'absolute z-50 mt-2 w-full rounded-lg border bg-background shadow-lg animate-in fade-in-0 zoom-in-95',
+                            'absolute z-50 mt-2 w-full animate-in rounded-md border border-border bg-popover shadow-md fade-in-0 zoom-in-95',
                             popoverClassName
                         )}
                         style={

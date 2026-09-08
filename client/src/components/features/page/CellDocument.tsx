@@ -22,15 +22,13 @@ export const CellDocument = React.memo(function CellDocument({
     if (itemIndex >= docs.length) return null;
 
     const document = docs[itemIndex];
-    const isLastColumn = columnIndex === columnCount - 1;
-
     return (
         <div
             style={{
                 ...style,
                 width: columnWidth,
                 height: 304,
-                paddingRight: isLastColumn ? 24 : 24,
+                paddingRight: 16,
             }}>
             {document ? <CardDocument document={document} /> : null}
         </div>

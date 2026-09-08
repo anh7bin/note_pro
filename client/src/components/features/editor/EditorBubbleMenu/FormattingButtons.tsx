@@ -2,8 +2,14 @@
 
 import { memo, useCallback } from 'react';
 import { Editor } from '@tiptap/react';
-import { Code, Italic, List, ListOrdered } from 'lucide-react';
-import { HiBold, HiStrikethrough } from 'react-icons/hi2';
+import {
+    Bold,
+    Code,
+    Italic,
+    List,
+    ListOrdered,
+    Strikethrough,
+} from 'lucide-react';
 import { BubbleButton } from '../BubbleButton';
 
 interface Props {
@@ -13,6 +19,7 @@ interface Props {
 
 interface ButtonConfig {
     type: string;
+    label: string;
     icon: React.ReactNode;
     action: (editor: Editor) => void;
 }
@@ -20,32 +27,38 @@ interface ButtonConfig {
 const FORMATTING_BUTTONS: ButtonConfig[] = [
     {
         type: 'bold',
-        icon: <HiBold className="w-4 h-4" />,
+        label: 'Bold',
+        icon: <Bold />,
         action: (editor) => editor.chain().focus().toggleBold().run(),
     },
     {
         type: 'italic',
-        icon: <Italic className="w-4 h-4" />,
+        label: 'Italic',
+        icon: <Italic />,
         action: (editor) => editor.chain().focus().toggleItalic().run(),
     },
     {
         type: 'strike',
-        icon: <HiStrikethrough className="w-4 h-4" />,
+        label: 'Strikethrough',
+        icon: <Strikethrough />,
         action: (editor) => editor.chain().focus().toggleStrike().run(),
     },
     {
         type: 'code',
-        icon: <Code className="w-4 h-4" />,
+        label: 'Inline code',
+        icon: <Code />,
         action: (editor) => editor.chain().focus().toggleCode().run(),
     },
     {
         type: 'bulletList',
-        icon: <List className="w-4 h-4" />,
+        label: 'Bulleted list',
+        icon: <List />,
         action: (editor) => editor.chain().focus().toggleBulletList().run(),
     },
     {
         type: 'orderedList',
-        icon: <ListOrdered className="w-4 h-4" />,
+        label: 'Numbered list',
+        icon: <ListOrdered />,
         action: (editor) => editor.chain().focus().toggleOrderedList().run(),
     },
 ];
@@ -66,6 +79,7 @@ export const FormattingButtons = memo(function FormattingButtons({
             {FORMATTING_BUTTONS.map((button) => (
                 <BubbleButton
                     key={button.type}
+                    ariaLabel={button.label}
                     onClick={() => handleClick(button.action)}
                     isActive={isMarkActive(button.type)}>
                     {button.icon}

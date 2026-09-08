@@ -3,7 +3,6 @@
 import { SearchInputField } from 'components/features/search/SearchInputField';
 import { ThemeToggle } from 'components/ui/theme-toggle';
 import { TopLoadingBar } from 'components/ui/TopLoadingBar';
-import { HEADER_HEIGHT } from 'lib/constants';
 import { useDocumentAccess } from 'contexts/DocumentAccessContext';
 import { useLoading } from 'contexts/LoadingContext';
 import { useSidebar } from 'contexts/SidebarContext';
@@ -11,7 +10,14 @@ import { ROUTES } from 'lib/routes';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { MdOutlineViewSidebar } from 'react-icons/md';
+import { PanelLeft, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import { useState } from 'react';
 import { NotificationButton } from './components/NotificationButton';
 import { RequestEditButton } from './components/RequestEditButton';
 import { SettingButton } from './components/SettingButton';
@@ -22,8 +28,31 @@ interface Props {
     workspaceSlug: string;
 }
 
+function MobileSearch() {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Search">
+                    <Search className="h-4 w-4" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent
+                align="end"
+                className="w-[calc(100vw-1rem)] p-2 lg:hidden">
+                <SearchInputField onResultClick={() => setOpen(false)} />
+            </PopoverContent>
+        </Popover>
+    );
+}
+
 export default function Header({ workspaceSlug }: Props) {
-    const { toggle } = useSidebar();
+    const { isOpen, toggle } = useSidebar();
     const { documentId } = useDocumentAccess();
     const { isLoading, startLoading } = useLoading();
     const pathname = usePathname();
@@ -46,30 +75,47 @@ export default function Header({ workspaceSlug }: Props) {
         workspaceSlug && (
             <>
                 <TopLoadingBar isLoading={isLoading} />
-                <header
-                    className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center mx-4 bg-background"
-                    style={{ height: HEADER_HEIGHT }}>
-                    <div className="flex items-center gap-2">
-                        <Link
-                            href={ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug)}
-                            onClick={handleLogoClick}>
-                            <Image
-                                src="/images/logo.png"
-                                alt="Bin Craft Logo"
-                                width={24}
-                                height={24}
-                            />
-                        </Link>
-                        <MdOutlineViewSidebar
-                            size={20}
-                            className="cursor-pointer"
-                            onClick={toggle}
-                        />
+                <header className="fixed inset-x-0 top-0 z-50 grid h-[var(--header-height)] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 border-b border-border-subtle bg-background/95 px-3 backdrop-blur-sm sm:px-4">
+                    <div className="flex items-center gap-1">
+                        <Button
+                            asChild
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Open all documents">
+                            <Link
+                                href={ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug)}
+                                onClick={handleLogoClick}>
+                                <Image
+                                    src="/images/logo.png"
+                                    alt=""
+                                    width={24}
+                                    height={24}
+                                    priority
+                                />
+                            </Link>
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            aria-label={
+                                isOpen ? 'Close sidebar' : 'Open sidebar'
+                            }
+                            aria-controls="app-sidebar"
+                            aria-expanded={Boolean(isOpen)}
+                            onClick={toggle}>
+                            <PanelLeft className="h-5 w-5" />
+                        </Button>
                     </div>
-                    <div className="min-w-[480px]">
-                        <SearchInputField />
+                    <div className="min-w-0 justify-self-end lg:w-full lg:max-w-xl lg:justify-self-center">
+                        <div className="lg:hidden">
+                            <MobileSearch />
+                        </div>
+                        <div className="hidden lg:block">
+                            <SearchInputField />
+                        </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex min-w-0 items-center justify-end gap-1">
                         {isDocumentPage && documentId && permissionType && (
                             <>
                                 <RequestEditButton documentId={documentId} />

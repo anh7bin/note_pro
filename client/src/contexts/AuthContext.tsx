@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext } from 'react';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { getUserIdFromToken } from '@/lib/utils';
 
@@ -15,24 +15,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data: session, status } = useSession();
-    const [userId, setUserId] = useState<string | null>(null);
-    const [token, setToken] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (session?.token) {
-            const extractedUserId = getUserIdFromToken(session.token);
-            setUserId(extractedUserId);
-            setToken(session.token);
-        } else {
-            setUserId(null);
-            setToken(null);
-        }
-    }, [session]);
+    const token = session?.token ?? null;
+    const userId = token ? getUserIdFromToken(token) : null;
 
     const value: AuthContextType = {
         userId,
         isLoading: status === 'loading',
-        isAuthenticated: !!session && !!userId,
+        isAuthenticated:
+            status === 'authenticated' && !session?.error && !!userId,
         token,
     };
 

@@ -45,7 +45,10 @@ export const EditorBubbleMenu = memo(function EditorBubbleMenu({
         <BubbleMenu
             editor={editor}
             options={{ placement: 'top-start', offset: 8, flip: true }}>
-            <div className="bg-card dark:bg-black border border-gray-200 dark:border-gray-700 shadow-md rounded-lg flex items-center gap-1 p-1">
+            <div
+                role="toolbar"
+                aria-label="Text formatting"
+                className="flex items-center gap-1 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md">
                 <FormattingButtons
                     editor={editor}
                     isMarkActive={isMarkActive}

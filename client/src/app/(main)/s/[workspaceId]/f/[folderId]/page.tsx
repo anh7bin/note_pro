@@ -10,6 +10,14 @@ import { Document } from '@/types/app';
 import { useMemo, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { NewItemMenu } from '@/components/features/page/NewItemMenu';
+import { FolderOpen } from 'lucide-react';
+import {
+    EmptyState,
+    PageContent,
+    PageHeader,
+    PageShell,
+    PageTitle,
+} from '@/components/shared';
 
 export default function FolderPage() {
     const params = useParams();
@@ -38,35 +46,40 @@ export default function FolderPage() {
 
     if (!folder) {
         return (
-            <div className="flex items-center justify-center h-full">
-                <p className="text-muted-foreground">Folder not found</p>
-            </div>
+            <EmptyState
+                icon={<FolderOpen />}
+                title="Folder not found"
+                description="It may have been moved, deleted, or you may no longer have access."
+            />
         );
     }
 
     return (
-        <div className="p-0 w-full h-full">
-            <div className="flex flex-col items-start justify-start mx-auto w-full h-full min-h-0 max-w-screen-2xl gap-6">
-                <div className="w-full pt-4 px-6 flex items-center justify-between">
-                    <div className="flex items-center gap-2 h-full">
-                        <NewItemMenu folderId={folderId} />
-                        <Separator orientation="vertical" />
-                        <h1 className="text-xl font-medium">{folder.name}</h1>
-                    </div>
-                    <SelectionActionBar />
+        <PageShell>
+            <PageHeader>
+                <div className="flex min-w-0 items-center gap-2">
+                    <NewItemMenu folderId={folderId} />
+                    <Separator orientation="vertical" />
+                    <PageTitle className="truncate">{folder.name}</PageTitle>
                 </div>
+                <SelectionActionBar />
+            </PageHeader>
 
+            <PageContent>
                 {subFolders.length === 0 && documents.length === 0 ? (
-                    <div className="text-sm text-muted-foreground flex items-center justify-center w-full h-full">
-                        This folder is empty
-                    </div>
+                    <EmptyState
+                        icon={<FolderOpen />}
+                        title="This folder is empty"
+                        description="Add a document or subfolder to organize your work."
+                        action={<NewItemMenu folderId={folderId} />}
+                    />
                 ) : (
                     <FolderDocumentGrid
                         folders={subFolders}
                         documents={documents}
                     />
                 )}
-            </div>
-        </div>
+            </PageContent>
+        </PageShell>
     );
 }

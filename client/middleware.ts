@@ -6,12 +6,13 @@ export default withAuth(
     function middleware(req) {
         const isLoginPage = req.nextUrl.pathname === ROUTES.LOGIN;
         const token = req.nextauth.token;
+        const hasValidSession = !!token?.token && !token.error;
 
-        if (token && isLoginPage) {
+        if (hasValidSession && isLoginPage) {
             return NextResponse.redirect(new URL(ROUTES.HOME, req.url));
         }
 
-        if (!token && !isLoginPage) {
+        if (!hasValidSession && !isLoginPage) {
             return NextResponse.redirect(new URL(ROUTES.LOGIN, req.url));
         }
 
@@ -21,8 +22,11 @@ export default withAuth(
         callbacks: {
             authorized: ({ token, req }) => {
                 const isLoginPage = req.nextUrl.pathname === ROUTES.LOGIN;
-                return !!token || isLoginPage;
+                return (!!token?.token && !token.error) || isLoginPage;
             },
+        },
+        pages: {
+            signIn: ROUTES.LOGIN,
         },
     }
 );

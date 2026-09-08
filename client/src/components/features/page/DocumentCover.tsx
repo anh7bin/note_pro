@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { FiX, FiImage } from 'react-icons/fi';
+import { useRef } from 'react';
+import { ImagePlus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
@@ -18,7 +18,6 @@ export function DocumentCover({
     onChangeCover,
     isUploading,
 }: DocumentCoverProps) {
-    const [isHovered, setIsHovered] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleChangeCover = () => {
@@ -36,10 +35,7 @@ export function DocumentCover({
     };
 
     return (
-        <div
-            className="relative w-full h-[265px] bg-muted overflow-hidden group"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}>
+        <div className="group relative h-[265px] w-full overflow-hidden bg-muted">
             <Image
                 src={imageUrl}
                 alt="Document cover"
@@ -47,32 +43,31 @@ export function DocumentCover({
                 className="object-cover"
                 priority
             />
-            {isHovered && (
-                <div className="absolute top-3 right-3 flex gap-2">
-                    <Button
-                        size="sm"
-                        className="gap-1 text-xs rounded-lg bg-primary-button hover:bg-primary-buttonHover"
-                        onClick={handleChangeCover}
-                        disabled={isUploading}>
-                        <FiImage className="w-4 h-4" />
-                        {isUploading ? 'Uploading...' : 'Change cover'}
-                    </Button>
-                    <Button
-                        size="sm"
-                        className="gap-1 text-xs rounded-lg bg-primary-button hover:bg-primary-buttonHover"
-                        onClick={onRemove}
-                        disabled={isUploading}>
-                        <FiX className="w-4 h-4" />
-                        Remove cover
-                    </Button>
-                </div>
-            )}
+            <div className="absolute right-3 top-3 flex gap-2 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
+                <Button
+                    size="sm"
+                    onClick={handleChangeCover}
+                    aria-busy={isUploading}
+                    disabled={isUploading}>
+                    <ImagePlus />
+                    {isUploading ? 'Uploading…' : 'Change cover'}
+                </Button>
+                <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={onRemove}
+                    disabled={isUploading}>
+                    <Trash2 />
+                    Remove cover
+                </Button>
+            </div>
             <input
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
                 className="hidden"
+                aria-label="Choose a document cover image"
             />
         </div>
     );

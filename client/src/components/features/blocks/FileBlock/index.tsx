@@ -99,7 +99,7 @@ export const FileBlock = memo(
                         type="button"
                         onDoubleClick={handleDoubleClick}
                         className={cn(
-                            'flex-1 min-w-0 rounded p-1.5 text-left transition-all duration-200 hover:shadow-md bg-muted/30 border border-transparent focus-visible:outline-none',
+                            'min-w-0 flex-1 rounded-md border border-transparent bg-muted/30 p-1.5 text-left transition-[border-color,box-shadow] duration-150 hover:border-border hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                             !fileUrl && 'cursor-not-allowed opacity-70'
                         )}
                         disabled={!fileUrl}
@@ -161,7 +161,7 @@ const FilePreview = memo(function FilePreview({
             <div className="relative flex h-14 w-12 items-center justify-center">
                 <Image
                     src="/images/file-badge-base.png"
-                    alt="File badge"
+                    alt=""
                     width={48}
                     height={60}
                     className="pointer-events-none select-none object-contain"
@@ -195,12 +195,13 @@ const ImagePreview = memo(function ImagePreview({
     fileName: string;
 }) {
     return (
-        <div className="overflow-hidden px-24">
+        <div className="overflow-hidden px-2 sm:px-8 lg:px-24">
             <Image
                 src={fileUrl}
                 alt={fileName}
                 width={1200}
                 height={675}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 960px"
                 className="h-auto w-full object-contain"
             />
         </div>

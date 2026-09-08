@@ -10,7 +10,6 @@ import {
     useRef,
     useEffect,
 } from 'react';
-import { flushSync } from 'react-dom';
 import { Block, useBlocks, useDebounce } from '@/hooks';
 import { BlockType, AccessRequestStatus, PermissionType } from '@/types/types';
 import { useGetDocumentBlocksQuery } from '@/graphql/queries/__generated__/document.generated';

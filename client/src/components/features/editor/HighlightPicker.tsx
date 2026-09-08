@@ -1,8 +1,7 @@
 'use client';
 
 import { useRef, useEffect, CSSProperties } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { FaHighlighter } from 'react-icons/fa';
+import { ChevronDown, Highlighter } from 'lucide-react';
 import { HIGHLIGHT_COLORS } from '@/lib/constants';
 
 interface Props {
@@ -40,15 +39,15 @@ export const HighlightPicker = ({
     return (
         <div className="relative" ref={ref}>
             <button
+                type="button"
+                aria-label="Choose highlight color"
+                aria-expanded={show}
                 onClick={toggle}
-                className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center gap-1">
+                className="flex h-8 items-center gap-1 rounded-sm px-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40">
                 <div className="relative">
-                    <FaHighlighter
-                        className={`w-4 h-4 ${
-                            isActive
-                                ? 'text-blue-600'
-                                : 'text-gray-600 dark:text-gray-300'
-                        }`}
+                    <Highlighter
+                        className={`h-4 w-4 ${isActive ? 'text-primary' : ''}`}
+                        aria-hidden="true"
                     />
                     {currentColor && (
                         <div
@@ -57,20 +56,23 @@ export const HighlightPicker = ({
                         />
                     )}
                 </div>
-                <ChevronDown className="w-3 h-3 text-gray-400" />
+                <ChevronDown className="h-3 w-3" aria-hidden="true" />
             </button>
 
             {show && (
-                <div className="absolute top-full left-0 mt-1 z-50 w-max rounded-lg border border-border bg-popover p-3 shadow-lg">
+                <div
+                    role="group"
+                    aria-label="Highlight colors"
+                    className="absolute left-0 top-full z-50 mt-1 w-max rounded-md border border-border bg-popover p-3 shadow-md">
                     <div className="grid grid-cols-6 gap-3">
                         {HIGHLIGHT_COLORS.map((colorOption, i) => {
                             const isSelected =
                                 currentColor === colorOption.value;
                             const isTransparent = colorOption.value === null;
                             const transparentStyle: CSSProperties = {
-                                backgroundColor: '#f3f4f6',
+                                backgroundColor: 'hsl(var(--muted))',
                                 backgroundImage:
-                                    'linear-gradient(45deg, #cbd5f5 25%, transparent 25%), linear-gradient(-45deg, #cbd5f5 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #cbd5f5 75%), linear-gradient(-45deg, transparent 75%, #cbd5f5 75%)',
+                                    'linear-gradient(45deg, hsl(var(--border-strong)) 25%, transparent 25%), linear-gradient(-45deg, hsl(var(--border-strong)) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, hsl(var(--border-strong)) 75%), linear-gradient(-45deg, transparent 75%, hsl(var(--border-strong)) 75%)',
                                 backgroundSize: '8px 8px',
                                 backgroundPosition:
                                     '0 0, 0 4px, 4px -4px, -4px 0',
@@ -78,6 +80,7 @@ export const HighlightPicker = ({
 
                             return (
                                 <button
+                                    type="button"
                                     key={i}
                                     onClick={() => {
                                         onSelect(colorOption.value);
@@ -88,7 +91,8 @@ export const HighlightPicker = ({
                                             ? 'scale-105'
                                             : 'hover:scale-105'
                                     }`}
-                                    title={colorOption.name}>
+                                    aria-label={colorOption.name}
+                                    aria-pressed={isSelected}>
                                     <span className="sr-only">
                                         {colorOption.name}
                                     </span>
@@ -104,7 +108,7 @@ export const HighlightPicker = ({
                                         }
                                     />
                                     {isSelected && (
-                                        <span className="pointer-events-none absolute inset-0 rounded-full border-[2.5px] border-foreground/80" />
+                                        <span className="pointer-events-none absolute inset-0 rounded-full border-2 border-foreground/80" />
                                     )}
                                 </button>
                             );

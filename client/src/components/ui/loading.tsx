@@ -28,6 +28,8 @@ export function Loading({
     if (variant === 'spinner') {
         return (
             <div
+                role={text ? 'status' : undefined}
+                aria-live={text ? 'polite' : undefined}
                 className={cn(
                     'flex items-center justify-center gap-2',
                     className
@@ -74,6 +76,8 @@ export function LoadingDots({ size = 'md', className }: LoadingDotsProps) {
 
     return (
         <div
+            role="status"
+            aria-label="Loading"
             className={cn('flex items-center justify-center gap-1', className)}>
             {[0, 1, 2].map((i) => (
                 <div
@@ -94,7 +98,7 @@ export function LoadingDots({ size = 'md', className }: LoadingDotsProps) {
 
 export function PageLoading({ text = 'Loading...' }: { text?: string }) {
     return (
-        <div className="flex items-center justify-center h-screen">
+        <div className="flex h-full min-h-40 items-center justify-center">
             <Loading variant="spinner" size="lg" text={text} />
         </div>
     );

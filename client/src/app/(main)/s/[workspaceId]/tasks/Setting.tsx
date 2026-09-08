@@ -7,8 +7,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { GiSettingsKnobs } from 'react-icons/gi';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, SlidersHorizontal } from 'lucide-react';
 import { taskToDisplayFormat } from '@/hooks/useFilteredTasks';
 import { CompletedTasksModal } from '@/components/layouts/main-layout/components/CompletedTasksModal';
 import {
@@ -76,9 +75,9 @@ export const Setting = () => {
                 <DropdownMenuTrigger asChild>
                     <Button
                         variant="outline"
-                        size="sm"
-                        className="w-8 h-8 rounded-full">
-                        <GiSettingsKnobs className="w-4 h-4" />
+                        size="icon"
+                        aria-label="Task view settings">
+                        <SlidersHorizontal className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-44 p-2" align="end">
@@ -87,7 +86,7 @@ export const Setting = () => {
                         onCheckedChange={(checked) =>
                             updateSetting('showScheduledTasks', checked)
                         }
-                        className="flex items-center space-x-2 py-2 text-xs font-bold cursor-pointer">
+                        className="text-sm">
                         Show Scheduled Tasks
                     </DropdownMenuCheckboxItem>
                     <DropdownMenuSeparator />
@@ -98,7 +97,7 @@ export const Setting = () => {
                         onModalOpen={handleModalOpen}
                         loading={completedTasksLoading}>
                         <DropdownMenuItem
-                            className="flex items-center gap-2 py-2 text-xs font-bold cursor-pointer"
+                            className="text-sm"
                             onSelect={(e) => e.preventDefault()}>
                             <CheckCircle className="w-4 h-4 text-primary" />
                             View Completed Tasks

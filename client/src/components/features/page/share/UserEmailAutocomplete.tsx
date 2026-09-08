@@ -2,7 +2,7 @@
 
 import { Input } from '@/components/ui/input';
 import { useSearchUsersByEmailLazyQuery } from '@/graphql/queries/__generated__/user.generated';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import debounce from 'lodash/debounce';
 import differenceBy from 'lodash/differenceBy';
 import { UserAvatar } from '@/components/shared';
@@ -30,6 +30,7 @@ export function UserEmailAutocomplete({
     const [searchUsers, { data, loading }] = useSearchUsersByEmailLazyQuery();
     const inputRef = useRef<HTMLInputElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const listboxId = useId();
 
     const debouncedSearch = useMemo(
         () =>
@@ -52,8 +53,9 @@ export function UserEmailAutocomplete({
         }
 
         debouncedSearch(inputValue);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inputValue]);
+    }, [inputValue, debouncedSearch]);
+
+    useEffect(() => () => debouncedSearch.cancel(), [debouncedSearch]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -92,6 +94,11 @@ export function UserEmailAutocomplete({
             <Input
                 ref={inputRef}
                 type="email"
+                aria-label="Search users by email"
+                aria-autocomplete="list"
+                aria-controls={listboxId}
+                aria-expanded={isOpen}
+                autoComplete="off"
                 placeholder={placeholder}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
@@ -100,24 +107,35 @@ export function UserEmailAutocomplete({
                         setIsOpen(true);
                     }
                 }}
+                onKeyDown={(event) => {
+                    if (event.key === 'Escape') setIsOpen(false);
+                }}
                 className="w-full"
             />
 
-            {isOpen && filteredUsers.length > 0 && (
+            {isOpen && (loading || filteredUsers.length > 0) && (
                 <div
                     ref={dropdownRef}
-                    className="absolute z-50 w-full mt-1 bg-popover dark:bg-card border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    id={listboxId}
+                    role="listbox"
+                    aria-label="User search results"
+                    className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md">
                     {loading ? (
-                        <div className="p-3 text-sm text-muted-foreground text-center">
+                        <div
+                            role="status"
+                            className="p-3 text-center text-sm text-muted-foreground">
                             Searching...
                         </div>
                     ) : (
                         <div className="py-1">
                             {filteredUsers.map((user) => (
                                 <button
+                                    type="button"
+                                    role="option"
+                                    aria-selected="false"
                                     key={user.id}
                                     onClick={() => handleSelectUser(user)}
-                                    className="w-full flex items-center gap-3 px-2 py-1 hover:bg-accent transition-colors text-left">
+                                    className="flex min-h-11 w-full items-center gap-3 rounded-sm px-2 py-2 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
                                     <UserAvatar
                                         avatarUrl={user.avatar_url}
                                         name={user.name}
@@ -146,8 +164,10 @@ export function UserEmailAutocomplete({
                 inputValue.length >= 2 && (
                     <div
                         ref={dropdownRef}
-                        className="absolute z-50 w-full mt-1 bg-popover dark:bg-card border border-border rounded-md shadow-lg">
-                        <div className="p-3 text-sm text-muted-foreground text-center">
+                        id={listboxId}
+                        role="status"
+                        className="absolute z-50 mt-1 w-full rounded-md border border-border bg-popover text-popover-foreground shadow-md">
+                        <div className="p-3 text-center text-sm text-muted-foreground">
                             No users found
                         </div>
                     </div>

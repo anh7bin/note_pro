@@ -1,7 +1,6 @@
 'use client';
 
-import { LogOut } from 'lucide-react';
-import { FiLock, FiClock, FiXCircle } from 'react-icons/fi';
+import { Clock3, LockKeyhole, LogOut, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AccessRequestStatus } from '@/types/types';
 import { Loading } from '@/components/ui/loading';
@@ -23,27 +22,27 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
     } = useRequestAccess(documentId);
 
     return isLoading ? (
-        <div className="flex items-center justify-center min-h-screen">
-            <Loading />
+        <div className="flex h-full min-h-40 items-center justify-center">
+            <Loading text="Checking access…" />
         </div>
     ) : (
-        <div className="min-h-screen bg-background flex items-center justify-center p-4">
-            <div className="max-w-md w-full text-center space-y-6">
+        <div className="flex h-full min-h-0 items-center justify-center overflow-y-auto bg-background p-4">
+            <div className="w-full max-w-md space-y-6 rounded-lg border border-border-subtle bg-card p-6 text-center shadow-sm sm:p-8">
                 <div className="flex justify-center">
                     <div
-                        className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                        className={`flex h-14 w-14 items-center justify-center rounded-full ${
                             requestStatus === AccessRequestStatus.PENDING
-                                ? 'bg-yellow-100 dark:bg-yellow-900/20'
+                                ? 'bg-warning-subtle text-warning-foreground'
                                 : requestStatus === AccessRequestStatus.REJECTED
-                                  ? 'bg-red-100 dark:bg-red-900/20'
-                                  : 'bg-gray-100 dark:bg-gray-800'
+                                  ? 'bg-destructive/10 text-destructive'
+                                  : 'bg-muted text-muted-foreground'
                         }`}>
                         {requestStatus === AccessRequestStatus.PENDING ? (
-                            <FiClock className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+                            <Clock3 className="h-7 w-7" />
                         ) : requestStatus === AccessRequestStatus.REJECTED ? (
-                            <FiXCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
+                            <XCircle className="h-7 w-7" />
                         ) : (
-                            <FiLock className="w-8 h-8 text-gray-400" />
+                            <LockKeyhole className="h-7 w-7" />
                         )}
                     </div>
                 </div>
@@ -67,30 +66,30 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                 {!requestStatus && (
                     <Button
                         variant="default"
-                        size="sm"
-                        className="gap-2 text-xs rounded-lg w-full"
+                        className="w-full"
                         onClick={requestReadAccess}
-                        disabled={isRequesting}>
-                        <FiLock />
-                        {isRequesting ? 'Sending request...' : 'Request Access'}
+                        disabled={isRequesting}
+                        aria-busy={isRequesting}>
+                        <LockKeyhole />
+                        {isRequesting ? 'Sending request…' : 'Request access'}
                     </Button>
                 )}
 
                 {requestStatus === AccessRequestStatus.PENDING && (
-                    <div className="bg-yellow-44 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-900/30 rounded-lg p-4">
-                        <div className="flex items-center gap-2 text-yellow-800 dark:text-yellow-200">
-                            <FiClock className="w-5 h-5" />
+                    <div className="rounded-md border border-warning/20 bg-warning-subtle p-4">
+                        <div className="flex items-center gap-2 text-warning-foreground">
+                            <Clock3 className="h-5 w-5" />
                             <p className="text-sm font-medium">
-                                Waiting for approval...
+                                Waiting for approval…
                             </p>
                         </div>
                     </div>
                 )}
 
                 {requestStatus === AccessRequestStatus.REJECTED && (
-                    <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded-lg p-4">
-                        <div className="flex items-center gap-2 text-red-800 dark:text-red-200">
-                            <FiXCircle className="w-5 h-5" />
+                    <div className="rounded-md border border-destructive/20 bg-destructive/10 p-4">
+                        <div className="flex items-center gap-2 text-destructive">
+                            <XCircle className="h-5 w-5" />
                             <p className="text-sm font-medium">
                                 Request was denied
                             </p>
@@ -98,7 +97,7 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                     </div>
                 )}
 
-                <div className="text-sm text-gray-500 dark:text-gray-400 space-y-2">
+                <div className="space-y-3 text-sm text-muted-foreground">
                     <p>
                         You are logged in as{' '}
                         <span className="font-medium">{userEmail}</span>
@@ -106,11 +105,11 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                     <Button
                         variant="outline"
                         size="sm"
-                        className="gap-2 text-xs rounded-lg"
                         onClick={logout}
-                        disabled={isLoggingOut}>
+                        disabled={isLoggingOut}
+                        aria-busy={isLoggingOut}>
                         <LogOut />
-                        Logout
+                        {isLoggingOut ? 'Signing out…' : 'Sign out'}
                     </Button>
                 </div>
             </div>

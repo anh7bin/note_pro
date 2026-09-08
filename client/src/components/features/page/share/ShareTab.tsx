@@ -1,6 +1,6 @@
 'use client';
 
-import { FiShare2 } from 'react-icons/fi';
+import { Share2 } from 'lucide-react';
 import { PendingAccessRequests } from './PendingAccessRequests';
 import { SharedUsersList } from './SharedUsersList';
 import { UserEmailAutocomplete } from './UserEmailAutocomplete';
@@ -28,7 +28,7 @@ export function ShareTab({ documentId }: ShareTabProps) {
     } = useDocumentSharing(documentId);
 
     return (
-        <div className="px-2 py-4">
+        <div className="space-y-5 py-2">
             {isOwner && pendingRequests.length > 0 && (
                 <PendingAccessRequests
                     requests={pendingRequests}
@@ -38,21 +38,31 @@ export function ShareTab({ documentId }: ShareTabProps) {
                 />
             )}
 
-            <div className="flex items-center gap-2">
-                <FiShare2 className="h-4 w-4" />
-                <h3 className="text-sm font-bold">Invite to Collaborate</h3>
-            </div>
-            <p className="my-2 text-sm text-muted-foreground">
-                For easy collaboration with anyone, even without a Bin account
-            </p>
+            <section aria-labelledby="invite-collaborators-heading">
+                <div className="flex items-center gap-2">
+                    <Share2
+                        className="h-4 w-4 text-muted-foreground"
+                        aria-hidden="true"
+                    />
+                    <h3
+                        id="invite-collaborators-heading"
+                        className="text-sm font-semibold">
+                        Invite collaborators
+                    </h3>
+                </div>
+                <p className="mb-3 mt-1 text-sm text-muted-foreground">
+                    Search for a Bin Craft user by email and grant access to
+                    this document.
+                </p>
 
-            {isOwner && (
-                <UserEmailAutocomplete
-                    onSelectUser={onSelectUser}
-                    excludeUserIds={excludeUserIds}
-                    placeholder="Add emails to invite"
-                />
-            )}
+                {isOwner && (
+                    <UserEmailAutocomplete
+                        onSelectUser={onSelectUser}
+                        excludeUserIds={excludeUserIds}
+                        placeholder="Search by email"
+                    />
+                )}
+            </section>
 
             <SharedUsersList
                 users={sharedUsers}

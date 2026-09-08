@@ -63,8 +63,7 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
         router.prefetch(href);
     }, [workspaceId, document.folder?.id, document.id, router]);
 
-    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.stopPropagation();
+    const openDocument = () => {
         if (!workspaceId) return;
 
         startLoading();
@@ -82,33 +81,56 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
         }
     };
 
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        openDocument();
+    };
+
     const handleSelectToggle = (e: React.MouseEvent) => {
         e.stopPropagation();
         toggleDocument(document.id);
     };
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.target !== event.currentTarget) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openDocument();
+        }
+    };
+
     const cardContent = (
         <Card
-            className={`group relative cursor-pointer transition-all duration-200 h-[304px] w-full rounded-md flex flex-col ${
+            role="link"
+            tabIndex={0}
+            aria-label={`Open document “${plainTitle}”`}
+            className={`group relative flex h-[304px] w-full cursor-pointer flex-col overflow-hidden transition-[border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 ${
                 selected
-                    ? 'border-2 border-primary'
-                    : 'border-2 border-[rgb(223,228,231)] hover:border-primary dark:border-border dark:hover:border-primary'
+                    ? 'border-primary ring-1 ring-primary/25'
+                    : 'border-border-subtle hover:border-border-strong hover:shadow-md'
             }`}
-            onClick={handleClick}>
+            onClick={handleClick}
+            onKeyDown={handleKeyDown}>
             <div className="absolute top-3 right-3 z-10">
                 <Button
                     variant="ghost"
                     size="icon"
-                    className={`h-6 w-6 rounded-full border-2 transition-all ${
+                    aria-label={
+                        selected
+                            ? `Deselect “${plainTitle}”`
+                            : `Select “${plainTitle}”`
+                    }
+                    aria-pressed={selected}
+                    className={`h-8 w-8 rounded-full border transition-all focus-visible:opacity-100 ${
                         selected
                             ? 'opacity-100 bg-primary border-primary text-primary-foreground'
-                            : 'opacity-0 group-hover:opacity-100 bg-background border-border hover:border-primary'
+                            : 'bg-background border-border opacity-100 hover:border-primary md:opacity-0 md:group-hover:opacity-100'
                     }`}
                     onClick={handleSelectToggle}>
                     {selected && <Check className="h-4 w-4" />}
                 </Button>
             </div>
-            <CardHeader className="flex flex-col p-4 flex-shrink-0">
+            <CardHeader className="flex flex-shrink-0 flex-col p-4">
                 <div className="flex justify-between items-start gap-2">
                     <div className="flex-1 min-w-0">
                         <TruncatedTooltip text={plainTitle}>
@@ -116,7 +138,7 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
                                 {plainTitle}
                             </CardTitle>
                         </TruncatedTooltip>
-                        <CardDescription className="text-xs flex items-center gap-1 whitespace-nowrap overflow-hidden text-ellipsis">
+                        <CardDescription className="flex items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-xs">
                             {document.folder?.name && (
                                 <span className="flex items-center gap-1 shrink-0">
                                     <Folder className="w-3 h-3" />

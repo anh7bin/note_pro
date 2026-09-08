@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -13,14 +14,13 @@ import { InputField } from '@/components/ui/input-field';
 import { useUpdateWorkspaceMutation } from '@/graphql/mutations/__generated__/workspace.generated';
 import { useGetWorkspaceByIdQuery } from '@/graphql/queries/__generated__/workspace.generated';
 import { useImageUpload } from '@/hooks/useImageUpload';
-import { toast } from '@/hooks/useToast';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { DEFAULT_WORKSPACE_IMAGE } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { Camera, X } from 'lucide-react';
+import showToast from '@/lib/toast';
+import { Camera, Settings, X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { CiSettings } from 'react-icons/ci';
 
 export const WorkspaceButton = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -30,8 +30,8 @@ export const WorkspaceButton = () => {
         null
     );
     const [hasImageChanged, setHasImageChanged] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [isHovering, setIsHovering] = useState(false);
 
     const [updateWorkspace] = useUpdateWorkspaceMutation();
     const { workspace } = useWorkspace();
@@ -95,6 +95,7 @@ export const WorkspaceButton = () => {
                 return;
             }
 
+            setIsSaving(true);
             await updateWorkspace({
                 variables: {
                     workspaceId: workspace?.id || '',
@@ -109,16 +110,14 @@ export const WorkspaceButton = () => {
 
             await refetch();
             setIsOpen(false);
-            toast({
-                title: 'Success',
-                description: 'Workspace updated successfully',
-            });
+            showToast.success('Workspace updated successfully');
         } catch (error) {
-            toast({
-                title: 'Error updating workspace',
+            showToast.error('Error updating workspace', {
                 description:
                     error instanceof Error ? error.message : 'Unknown error',
             });
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -127,17 +126,9 @@ export const WorkspaceButton = () => {
             <DialogTrigger asChild>
                 <Button
                     variant="ghost"
-                    className="px-2 py-1.5 h-auto cursor-pointer justify-start gap-1 rounded-md text-xs w-full hover:bg-accent hover:text-accent-foreground"
-                    onMouseEnter={() => setIsHovering(true)}
-                    onMouseLeave={() => setIsHovering(false)}>
-                    <div className="relative w-5 h-5 rounded overflow-hidden flex-shrink-0 flex items-center justify-center">
-                        <div
-                            className={cn(
-                                'absolute inset-0 flex items-center justify-center transition-all duration-200',
-                                isHovering
-                                    ? 'opacity-0 scale-75'
-                                    : 'opacity-100 scale-100'
-                            )}>
+                    className="group h-9 w-full cursor-pointer justify-start gap-2 px-2 text-xs">
+                    <div className="relative flex h-5 w-5 flex-shrink-0 items-center justify-center overflow-hidden rounded">
+                        <div className="absolute inset-0 flex items-center justify-center transition-all duration-200 group-hover:scale-75 group-hover:opacity-0 group-focus-visible:scale-75 group-focus-visible:opacity-0">
                             <Image
                                 src={workspaceImage}
                                 alt="Workspace"
@@ -146,14 +137,8 @@ export const WorkspaceButton = () => {
                                 sizes="20px"
                             />
                         </div>
-                        <div
-                            className={cn(
-                                'absolute inset-0 flex items-center justify-center transition-all duration-200',
-                                isHovering
-                                    ? 'opacity-100 scale-100'
-                                    : 'opacity-0 scale-75'
-                            )}>
-                            <CiSettings className="w-5 h-5 text-foreground" />
+                        <div className="absolute inset-0 flex scale-75 items-center justify-center opacity-0 transition-all duration-200 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100">
+                            <Settings className="h-4 w-4 text-foreground" />
                         </div>
                     </div>
 
@@ -168,17 +153,21 @@ export const WorkspaceButton = () => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Space Settings</DialogTitle>
+                    <DialogTitle>Workspace settings</DialogTitle>
+                    <DialogDescription>
+                        Update the workspace name and image shown to members.
+                    </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-6 py-4">
                     <div className="space-y-3">
                         <div className="flex items-center justify-center">
-                            <div className="relative group">
-                                <div
+                            <div className="group relative">
+                                <button
+                                    type="button"
+                                    aria-label="Change workspace image"
                                     className={cn(
-                                        'relative overflow-hidden transition-all cursor-pointer',
-                                        'w-24 h-24 rounded-[20px]',
+                                        'relative h-24 w-24 cursor-pointer overflow-hidden rounded-lg transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2',
                                         tempImageUrl
                                             ? 'bg-muted'
                                             : 'bg-muted/50'
@@ -198,7 +187,7 @@ export const WorkspaceButton = () => {
                                         className="object-cover"
                                         sizes="96px"
                                     />
-                                </div>
+                                </button>
 
                                 <button
                                     type="button"
@@ -207,8 +196,8 @@ export const WorkspaceButton = () => {
                                         fileInputRef.current?.click();
                                     }}
                                     disabled={isUploading}
-                                    className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-background border-2 border-background shadow-md hover:shadow-lg flex items-center justify-center transition-all disabled:opacity-50"
-                                    title={
+                                    className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-background shadow-md transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50"
+                                    aria-label={
                                         tempImageUrl
                                             ? 'Change image'
                                             : 'Upload image'
@@ -225,8 +214,8 @@ export const WorkspaceButton = () => {
                                                 e.stopPropagation();
                                                 handleRemoveImage();
                                             }}
-                                            className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 flex items-center justify-center shadow-md transition-all opacity-0 group-hover:opacity-100"
-                                            title="Cancel and restore original image">
+                                            className="absolute -right-1 -top-1 flex h-8 w-8 items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-100 shadow-md transition-all hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
+                                            aria-label="Restore original workspace image">
                                             <X className="w-3 h-3" />
                                         </button>
                                     )}
@@ -243,10 +232,13 @@ export const WorkspaceButton = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">
+                        <label
+                            htmlFor="workspace-name"
+                            className="text-sm font-medium">
                             Workspace Name
                         </label>
                         <InputField
+                            id="workspace-name"
                             value={tempName}
                             onChange={(e) => setTempName(e.target.value)}
                             placeholder="My Workspace"
@@ -257,14 +249,19 @@ export const WorkspaceButton = () => {
                 <DialogFooter>
                     <Button
                         onClick={handleSave}
-                        className="w-full h-9 bg-primary-button rounded-lg hover:bg-primary-buttonHover font-medium"
+                        className="w-full sm:w-auto"
                         disabled={
                             isUploading ||
+                            isSaving ||
                             !tempName.trim() ||
                             (tempName === data?.workspaces_by_pk?.name &&
                                 !hasImageChanged)
                         }>
-                        {isUploading ? 'Uploading...' : 'Save Changes'}
+                        {isUploading
+                            ? 'Uploading...'
+                            : isSaving
+                              ? 'Saving...'
+                              : 'Save changes'}
                     </Button>
                 </DialogFooter>
             </DialogContent>

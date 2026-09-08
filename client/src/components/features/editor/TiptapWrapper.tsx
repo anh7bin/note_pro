@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface TiptapWrapperProps {
     children: React.ReactNode;
@@ -15,10 +16,13 @@ export const TiptapWrapper = ({ children }: TiptapWrapperProps) => {
 
     if (!isMounted) {
         return (
-            <div className="min-h-[100px] bg-gray-50 dark:bg-gray-800 rounded-lg animate-pulse">
+            <div
+                role="status"
+                aria-label="Loading editor"
+                className="min-h-24 rounded-md border border-border-subtle bg-muted/30">
                 <div className="p-4">
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                    <Skeleton className="mb-2 h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
                 </div>
             </div>
         );

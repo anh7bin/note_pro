@@ -7,11 +7,13 @@ import { DatePicker } from '@/components/ui/date-picker';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { InputField } from '@/components/ui/input-field';
+import { Label } from '@/components/ui/label';
 import {
     Popover,
     PopoverContent,
@@ -24,10 +26,8 @@ import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { TASK_STATUS } from '@/lib/constants';
 import { showToast } from '@/lib/toast';
-import React, { useRef, useState } from 'react';
-import { CiFlag1 } from 'react-icons/ci';
-import { FaInbox } from 'react-icons/fa';
-import { FiChevronDown, FiSearch } from 'react-icons/fi';
+import React, { useMemo, useRef, useState } from 'react';
+import { ChevronDown, Flag, Inbox, Search } from 'lucide-react';
 interface NewTaskModalProps {
     children: React.ReactNode;
 }
@@ -192,143 +192,132 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
         }
     };
 
+    const filteredDocuments = useMemo(() => {
+        const normalizedSearch = searchTerm.trim().toLowerCase();
+        return (docsData?.blocks || []).filter((doc) => {
+            const title = getPlainText(doc.content?.title || 'Untitled');
+            return title.toLowerCase().includes(normalizedSearch);
+        });
+    }, [docsData?.blocks, searchTerm]);
+
+    const selectedDocumentTitle = useMemo(() => {
+        if (!taskData.selectedDocumentId) return 'Inbox';
+        const document = docsData?.blocks.find(
+            (item) => item.id === taskData.selectedDocumentId
+        );
+        return getPlainText(document?.content?.title || 'Untitled');
+    }, [docsData?.blocks, taskData.selectedDocumentId]);
+
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent
-                ref={dialogContentRef}
-                className="sm:max-w-[500px] shadow-2xl p-4">
+            <DialogContent ref={dialogContentRef} className="sm:max-w-[500px]">
                 <DialogHeader>
-                    <DialogTitle>
-                        <Popover
-                            open={isDocumentPopoverOpen}
-                            onOpenChange={handleDocumentPopoverOpenChange}>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    className="justify-start text-left font-normal h-9 px-2 text-muted-foreground hover:text-foreground focus-visible:ring-0 focus-visible:ring-transparent">
-                                    <FaInbox className="w-4 h-4" />
-                                    {taskData.selectedDocumentId
-                                        ? (() => {
-                                              const doc = docsData?.blocks.find(
-                                                  (item) =>
-                                                      item.id ===
-                                                      taskData.selectedDocumentId
-                                              );
-                                              const title =
-                                                  doc?.content?.title ||
-                                                  'Untitled';
-                                              return getPlainText(title);
-                                          })()
-                                        : 'Inbox'}
-                                    <FiChevronDown className="w-4 h-4" />
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                                className="w-80 p-0 bg-card"
-                                container={
-                                    dialogContentRef.current ?? undefined
-                                }>
-                                <div className="p-3">
-                                    <InputField
-                                        placeholder="Move to..."
-                                        value={searchTerm}
-                                        onChange={(e) =>
-                                            setSearchTerm(e.target.value)
-                                        }
-                                        className="h-8 bg-card"
-                                        icon={<FiSearch className="w-3 h-3" />}
-                                    />
-                                </div>
-                                <div className="max-h-48 overflow-y-auto">
-                                    {docsLoading ? (
-                                        <div className="px-3 py-8 text-sm text-muted-foreground text-center">
-                                            Loading documents...
-                                        </div>
-                                    ) : (
-                                        docsData?.blocks
-                                            .filter((doc) => {
-                                                const title =
-                                                    doc.content?.title ||
-                                                    'Untitled';
-                                                return title
-                                                    .toLowerCase()
-                                                    .includes(
-                                                        searchTerm.toLowerCase()
-                                                    );
-                                            })
-                                            .map((doc) => {
-                                                const title =
-                                                    doc.content?.title ||
-                                                    'Untitled';
-                                                return (
-                                                    <div
-                                                        key={doc.id}
-                                                        className="flex items-center gap-2 px-3 py-2 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
-                                                        onClick={() => {
-                                                            handleInputChange(
-                                                                'selectedDocumentId',
-                                                                doc.id
-                                                            );
-                                                            handleDocumentPopoverOpenChange(
-                                                                false
-                                                            );
-                                                            setSearchTerm('');
-                                                        }}>
-                                                        <NewDocumentIcon
-                                                            size={24}
-                                                        />
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="text-sm font-medium truncate">
-                                                                {getPlainText(
-                                                                    title
-                                                                )}
-                                                            </div>
-                                                            {doc.folder && (
-                                                                <div className="text-xs text-muted-foreground">
-                                                                    in{' '}
-                                                                    {
-                                                                        doc
-                                                                            .folder
-                                                                            .name
-                                                                    }
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })
-                                    )}
-                                    {!docsLoading &&
-                                        docsData?.blocks.filter((doc) => {
-                                            const title =
-                                                doc.content?.title ||
-                                                'Untitled';
-                                            return title
-                                                .toLowerCase()
-                                                .includes(
-                                                    searchTerm.toLowerCase()
-                                                );
-                                        }).length === 0 && (
-                                            <div className="px-3 py-2 text-sm text-muted-foreground">
-                                                No documents found
-                                            </div>
-                                        )}
-                                </div>
-                            </PopoverContent>
-                        </Popover>
-                    </DialogTitle>
+                    <DialogTitle>Create task</DialogTitle>
+                    <DialogDescription>
+                        Add a task to your inbox or connect it to a document.
+                    </DialogDescription>
                 </DialogHeader>
-                <InputField
-                    id="text"
-                    placeholder="New Task"
-                    value={taskData.text}
-                    onChange={(e) => handleInputChange('text', e.target.value)}
-                    className="placeholder:text-muted-foreground bg-card !border-0 !border-none focus-visible:!border-0 focus-visible:!ring-0 focus-visible:!ring-transparent focus:!border-0 focus:!ring-0 focus:!outline-none shadow-none"
-                    autoComplete="off"
-                />
-                <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
+                <div className="space-y-2">
+                    <Label htmlFor="task-destination">Destination</Label>
+                    <Popover
+                        open={isDocumentPopoverOpen}
+                        onOpenChange={handleDocumentPopoverOpenChange}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                id="task-destination"
+                                variant="outline"
+                                aria-expanded={isDocumentPopoverOpen}
+                                className="w-full justify-start text-left font-normal text-muted-foreground">
+                                <Inbox className="h-4 w-4" />
+                                <span className="min-w-0 flex-1 truncate">
+                                    {selectedDocumentTitle}
+                                </span>
+                                <ChevronDown className="h-4 w-4" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                            className="w-[min(20rem,calc(100vw-3rem))] p-0"
+                            container={dialogContentRef.current ?? undefined}>
+                            <div className="p-3">
+                                <InputField
+                                    type="search"
+                                    aria-label="Search documents"
+                                    placeholder="Search documents"
+                                    value={searchTerm}
+                                    onChange={(e) =>
+                                        setSearchTerm(e.target.value)
+                                    }
+                                    className="h-9"
+                                    icon={<Search className="h-4 w-4" />}
+                                />
+                            </div>
+                            <div className="max-h-48 overflow-y-auto">
+                                {docsLoading ? (
+                                    <div className="px-3 py-8 text-sm text-muted-foreground text-center">
+                                        Loading documents...
+                                    </div>
+                                ) : (
+                                    filteredDocuments.map((doc) => {
+                                        const title =
+                                            doc.content?.title || 'Untitled';
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={doc.id}
+                                                className="flex min-h-11 w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40"
+                                                onClick={() => {
+                                                    handleInputChange(
+                                                        'selectedDocumentId',
+                                                        doc.id
+                                                    );
+                                                    handleDocumentPopoverOpenChange(
+                                                        false
+                                                    );
+                                                    setSearchTerm('');
+                                                }}>
+                                                <NewDocumentIcon size={24} />
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-sm font-medium truncate">
+                                                        {getPlainText(title)}
+                                                    </div>
+                                                    {doc.folder && (
+                                                        <div className="text-xs text-muted-foreground">
+                                                            in {doc.folder.name}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </button>
+                                        );
+                                    })
+                                )}
+                                {!docsLoading &&
+                                    filteredDocuments.length === 0 && (
+                                        <div className="px-3 py-2 text-sm text-muted-foreground">
+                                            No documents found
+                                        </div>
+                                    )}
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="task-title">
+                        Task title <span className="text-destructive">*</span>
+                    </Label>
+                    <InputField
+                        id="task-title"
+                        placeholder="What needs to be done?"
+                        value={taskData.text}
+                        onChange={(e) =>
+                            handleInputChange('text', e.target.value)
+                        }
+                        autoComplete="off"
+                        required
+                    />
+                </div>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-wrap items-center gap-2">
                         <DatePicker
                             value={taskData.scheduleDate}
                             onChange={(date) =>
@@ -346,17 +335,19 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                                 handleInputChange('deadlineDate', date)
                             }
                             placeholder="Deadline"
-                            icon={<CiFlag1 className="w-4 h-4" />}
+                            icon={<Flag className="h-4 w-4" />}
                             container={dialogContentRef.current}
                             quickActions={true}
                         />
                     </div>
 
                     <Button
+                        type="button"
                         onClick={handleCreate}
                         disabled={!taskData.text.trim() || isCreating}
-                        className="px-4 h-9 bg-primary-button hover:bg-primary-buttonHover font-medium rounded-lg">
-                        {isCreating ? 'Creating...' : 'Create'}
+                        aria-busy={isCreating}
+                        className="sm:min-w-24">
+                        {isCreating ? 'Creating…' : 'Create'}
                     </Button>
                 </div>
             </DialogContent>

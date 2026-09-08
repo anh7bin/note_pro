@@ -40,7 +40,7 @@ export function SearchItem({
         <Link
             href={href}
             className={cn(
-                'flex items-center gap-3 p-1 rounded-md hover:bg-background-soft dark:hover:bg-background-soft transition-colors cursor-pointer group',
+                'group flex min-h-11 items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                 className
             )}
             onClick={onClick}>

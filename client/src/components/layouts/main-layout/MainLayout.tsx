@@ -10,7 +10,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { HEADER_HEIGHT, SIDEBAR_WIDTH } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 function LayoutMain({ children }: { children: React.ReactNode }) {
     const { workspaceSlug, loading, workspace } = useWorkspace();
@@ -37,39 +37,49 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
         <>{children}</>
     ) : (
         <AuthGuard>
-            <div className={`h-screen flex flex-col overflow-hidden`}>
+            <div className="flex h-dvh min-h-0 flex-col overflow-hidden">
+                <a
+                    href="#main-content"
+                    className="sr-only fixed left-3 top-3 z-[100] rounded-md bg-background px-3 py-2 text-sm font-medium text-foreground shadow-md focus:not-sr-only focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    Skip to main content
+                </a>
                 {loading && !isGlobalRoute ? (
                     <PageLoading />
                 ) : (
                     <>
                         <Header workspaceSlug={workspaceSlug ?? ''} />
-                        <div className="flex flex-1 pt-[var(--header-height)]">
+                        <div className="flex min-h-0 flex-1 pt-[var(--header-height)]">
                             {!editorPage && (
-                                <div
-                                    className={`transition-all duration-300 overflow-hidden`}
-                                    style={{
-                                        width: isOpen ? SIDEBAR_WIDTH : 0,
-                                    }}>
+                                <>
                                     <Sidebar
                                         workspaceSlug={workspaceSlug || ''}
                                         workspaceId={workspace?.id || ''}
                                     />
-                                </div>
+                                    <div
+                                        aria-hidden="true"
+                                        className={cn(
+                                            'hidden shrink-0 overflow-hidden transition-[width] duration-300 md:block',
+                                            isOpen
+                                                ? 'md:w-[var(--sidebar-width)]'
+                                                : 'md:w-0'
+                                        )}
+                                    />
+                                </>
                             )}
 
                             <main
-                                className={`flex-1 transition-all duration-300 flex justify-center overflow-hidden ${
-                                    editorPage ? 'p-0' : 'p-4'
-                                }`}
-                                style={{
-                                    paddingTop: HEADER_HEIGHT,
-                                }}>
+                                id="main-content"
+                                className={cn(
+                                    'flex min-w-0 flex-1 justify-center overflow-hidden transition-[padding] duration-300',
+                                    editorPage
+                                        ? 'p-0'
+                                        : 'p-[var(--page-padding)]'
+                                )}>
                                 <div
-                                    className={`w-full ${
-                                        editorPage
-                                            ? 'max-w-full mt-1'
-                                            : 'max-w-7xl'
-                                    }`}>
+                                    className={cn(
+                                        'h-full min-h-0 w-full',
+                                        editorPage ? 'max-w-full' : 'max-w-page'
+                                    )}>
                                     {children}
                                 </div>
                             </main>

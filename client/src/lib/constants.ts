@@ -1,9 +1,7 @@
 import { ROUTES } from '@/lib/routes';
 import { HexColor } from '@/types/types';
 import { createElement } from 'react';
-import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { FiFileText, FiPlus } from 'react-icons/fi';
-import { LuCalendarRange } from 'react-icons/lu';
+import { CalendarDays, CircleCheckBig, FileText, Plus } from 'lucide-react';
 
 // Authentication constants
 export const AUTHENTICATED = 'authenticated';
@@ -44,20 +42,20 @@ export const MENU_ITEMS = (
     counts: { allDocs: number | undefined }
 ) => [
     {
-        icon: FiFileText,
+        icon: FileText,
         label: 'All Docs',
         href: ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug),
         count: counts.allDocs,
     },
     {
-        icon: AiOutlineCheckCircle,
+        icon: CircleCheckBig,
         label: 'Tasks',
         href: ROUTES.WORKSPACE_TASKS(workspaceSlug),
-        action: createElement(FiPlus, { className: 'w-3 h-3 cursor-pointer' }),
+        action: createElement(Plus, { className: 'h-4 w-4 cursor-pointer' }),
         modalType: ModalType.TASK,
     },
     {
-        icon: LuCalendarRange,
+        icon: CalendarDays,
         label: 'Calendar',
         href: ROUTES.WORKSPACE_CALENDAR(workspaceSlug),
     },

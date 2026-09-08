@@ -60,14 +60,18 @@ export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
 
     return (
         <div className="flex flex-col h-full">
-            <h3 className="text-xs text-muted-foreground mb-2">Search</h3>
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Search
+            </h2>
             <div className="text-sm space-y-3">
                 <div className="space-y-2">
                     <Input
+                        type="search"
+                        aria-label="Search in document"
                         value={searchQuery}
                         onChange={(event) => setSearchQuery(event.target.value)}
                         placeholder="Search in document"
-                        className="h-8 text-xs"
+                        className="h-9"
                     />
                     <div className="flex flex-wrap gap-1">
                         {searchFilters.map((filter) => (
@@ -77,8 +81,9 @@ export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => setSearchFilter(filter.value)}
+                                aria-pressed={searchFilter === filter.value}
                                 className={cn(
-                                    'h-6 rounded-full border px-2 text-[11px]',
+                                    'h-8 border px-2 text-xs',
                                     searchFilter === filter.value
                                         ? 'border-primary bg-primary/10 text-primary'
                                         : 'border-transparent bg-muted/60 text-muted-foreground'
@@ -109,20 +114,21 @@ export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
                     <div className="space-y-2">
                         {searchResults.map((result) => (
                             <button
+                                type="button"
                                 key={result.id}
                                 onClick={() => onScrollToBlock(result.id)}
-                                className="w-full rounded-lg border border-transparent px-2 py-1.5 text-left transition-colors hover:border-border hover:bg-muted/60">
+                                className="w-full rounded-md border border-transparent px-2 py-2 text-left transition-colors hover:border-border hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40">
                                 <div className="flex items-center gap-2">
                                     <Badge
                                         variant="outline"
-                                        className="text-[10px] capitalize">
+                                        className="capitalize">
                                         {result.type}
                                     </Badge>
                                     <span className="text-xs font-medium truncate">
                                         {result.text.slice(0, 60)}
                                     </span>
                                 </div>
-                                <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground">
+                                <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
                                     <Highlighted
                                         text={result.snippet}
                                         query={searchQuery}

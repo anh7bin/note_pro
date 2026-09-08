@@ -1,11 +1,17 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import { ButtonLoading, PageLoading } from '@/components/ui/loading';
 import { AUTHENTICATED } from '@/lib/constants';
 import { ROUTES } from '@/lib/routes';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -13,68 +19,104 @@ import { FcGoogle } from 'react-icons/fc';
 import { useWorkspace } from '@/hooks/useWorkspace';
 
 export default function LoginPage() {
-    const { status } = useSession();
-    const { workspaceSlug, loading: workspaceLoading } = useWorkspace();
+    const { data: session, status } = useSession();
+    const {
+        workspaceSlug,
+        loading: workspaceLoading,
+        error: workspaceError,
+    } = useWorkspace();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const hasValidSession =
+        status === AUTHENTICATED && !!session?.token && !session.error;
+    const hasWorkspaceError =
+        hasValidSession &&
+        !workspaceLoading &&
+        (!!workspaceError || !workspaceSlug);
+    const errorMessage =
+        status === AUTHENTICATED && !hasValidSession
+            ? 'Google sign-in succeeded, but the app could not create a secure session. Please try again.'
+            : hasWorkspaceError
+              ? 'Your session is ready, but your workspace could not be loaded. Please try signing in again.'
+              : null;
 
     useEffect(() => {
-        if (status === AUTHENTICATED && workspaceSlug && !workspaceLoading) {
+        if (hasValidSession && workspaceSlug && !workspaceLoading) {
             router.replace(ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug));
         }
-    }, [status, workspaceSlug, workspaceLoading, router]);
+    }, [hasValidSession, workspaceSlug, workspaceLoading, router]);
 
     const handleGoogleSignIn = useCallback(async () => {
         try {
             setIsLoading(true);
-            await signIn('google');
+
+            if (status === AUTHENTICATED) {
+                await signOut({ redirect: false });
+            }
+
+            await signIn('google', { callbackUrl: ROUTES.HOME });
         } catch (error) {
             console.error('Login error:', error);
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [status]);
 
-    return status === AUTHENTICATED ? (
+    return status === 'loading' || (hasValidSession && !hasWorkspaceError) ? (
         <div
-            className="flex items-center justify-center min-h-screen"
+            className="flex min-h-dvh items-center justify-center"
             role="status"
             aria-label="Loading">
             <PageLoading />
         </div>
     ) : (
-        <div className="min-h-screen flex items-center justify-center px-4 bg-[linear-gradient(rgb(18,18,18)_0%,rgb(30,42,54)_100%)]">
-            <Card className="w-full max-w-md bg-[#090a0b] border-none">
-                <CardHeader className="text-center">
-                    <div className="flex justify-center mb-4">
+        <main className="flex min-h-dvh items-center justify-center bg-background px-4 py-10">
+            <Card className="w-full max-w-sm border-border-subtle bg-card shadow-md">
+                <CardHeader className="items-center space-y-3 p-6 pb-4 text-center">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10">
                         <Image
                             src="/images/logo.png"
-                            alt="Bin Craft Logo"
-                            width={56}
-                            height={56}
+                            alt=""
+                            width={40}
+                            height={40}
+                            priority
                         />
                     </div>
-                    <CardTitle className="text-2xl font-medium text-white">
+                    <CardTitle className="text-xl font-semibold">
                         Welcome to Bin Craft
                     </CardTitle>
+                    {errorMessage ? (
+                        <CardDescription
+                            role="alert"
+                            className="max-w-xs leading-relaxed text-destructive">
+                            {errorMessage}
+                        </CardDescription>
+                    ) : (
+                        <CardDescription className="max-w-xs leading-relaxed">
+                            Sign in to continue to your notes, tasks, and shared
+                            work.
+                        </CardDescription>
+                    )}
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="p-6 pt-2">
                     <Button
                         variant="outline"
                         onClick={handleGoogleSignIn}
                         disabled={isLoading}
-                        className="w-full gap-2 bg-[#374151] border-[#4b5563] text-[#f4f4f4] hover:bg-[#4b5563] hover:border-[#374151] hover:text-[#f4f4f4] disabled:opacity-50 disabled:cursor-not-allowed">
+                        className="w-full">
                         {isLoading ? (
                             <ButtonLoading>Signing in...</ButtonLoading>
                         ) : (
                             <>
                                 <FcGoogle size={20} />
-                                Continue with Google
+                                {errorMessage
+                                    ? 'Try Google again'
+                                    : 'Continue with Google'}
                             </>
                         )}
                     </Button>
                 </CardContent>
             </Card>
-        </div>
+        </main>
     );
 }

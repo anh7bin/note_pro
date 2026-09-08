@@ -8,12 +8,10 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { highlightBlock } from '@/lib/blockHighlight';
-import { MoreVertical } from 'lucide-react';
+import { Download, MoreVertical, Trash2 } from 'lucide-react';
 import { useCallback, useRef } from 'react';
-import { FiDownload } from 'react-icons/fi';
 import { InsertBlockAboveIcon } from '@/components/shared/icons/InsertBlockAboveIcon';
 import { InsertBlockBelowIcon } from '@/components/shared/icons/InsertBlockBelowIcon';
-import { RiDeleteBin6Line } from 'react-icons/ri';
 
 interface BlockActionMenuProps {
     blockId?: string;
@@ -36,6 +34,7 @@ export function BlockActionMenu({
 
     const hasActions =
         Boolean(downloadUrl) ||
+        Boolean(onDelete) ||
         Boolean(onInsertAbove) ||
         Boolean(onInsertBelow);
 
@@ -95,41 +94,36 @@ export function BlockActionMenu({
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="w-6 h-6 group-hover:opacity-100 opacity-0 transition-opacity"
+                    aria-label="Open block actions"
+                    className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
                     onClick={handleButtonClick}>
-                    <MoreVertical size={18} />
+                    <MoreVertical />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-44 p-2 rounded-xl" align="start">
+            <DropdownMenuContent className="w-48" align="start">
                 {onInsertAbove && (
-                    <DropdownMenuItem
-                        className="flex items-center gap-2 rounded-xl"
-                        onClick={onInsertAbove}>
+                    <DropdownMenuItem onClick={onInsertAbove}>
                         <InsertBlockAboveIcon />
-                        Insert Block Above
+                        Insert block above
                     </DropdownMenuItem>
                 )}
                 {onInsertBelow && (
-                    <DropdownMenuItem
-                        className="flex items-center gap-2 rounded-xl"
-                        onClick={onInsertBelow}>
+                    <DropdownMenuItem onClick={onInsertBelow}>
                         <InsertBlockBelowIcon />
-                        Insert Block Below
+                        Insert block below
                     </DropdownMenuItem>
                 )}
                 {onDelete && (
                     <DropdownMenuItem
-                        className="flex items-center gap-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950 focus:bg-red-100 dark:focus:bg-red-900 focus:text-red-700 dark:focus:text-red-300 rounded-xl"
+                        className="text-destructive focus:bg-destructive/10 focus:text-destructive"
                         onClick={onDelete}>
-                        <RiDeleteBin6Line size={16} />
+                        <Trash2 />
                         Delete
                     </DropdownMenuItem>
                 )}
                 {downloadUrl && (
-                    <DropdownMenuItem
-                        className="flex items-center gap-2 rounded-xl"
-                        onClick={handleDownload}>
-                        <FiDownload size={16} />
+                    <DropdownMenuItem onClick={handleDownload}>
+                        <Download />
                         Download
                     </DropdownMenuItem>
                 )}

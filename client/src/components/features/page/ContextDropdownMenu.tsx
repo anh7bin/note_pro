@@ -9,7 +9,7 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { CgMoreO } from 'react-icons/cg';
+import { MoreHorizontal } from 'lucide-react';
 
 interface ContextDropdownMenuProps {
     children?: React.ReactNode;
@@ -26,7 +26,7 @@ export const ContextDropdownMenu = ({
         return (
             <ContextMenu modal={false}>
                 <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
-                <ContextMenuContent className="w-44 p-2 rounded-md">
+                <ContextMenuContent className="w-48">
                     {menuContent}
                 </ContextMenuContent>
             </ContextMenu>
@@ -39,12 +39,13 @@ export const ContextDropdownMenu = ({
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="w-6 h-6 group-hover:opacity-100 opacity-0 transition-opacity"
+                    aria-label="Open item actions"
+                    className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
                     onClick={(e) => e.stopPropagation()}>
-                    <CgMoreO size={18} />
+                    <MoreHorizontal />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-44 p-2 rounded-md" align={align}>
+            <DropdownMenuContent className="w-48" align={align}>
                 {menuContent}
             </DropdownMenuContent>
         </DropdownMenu>

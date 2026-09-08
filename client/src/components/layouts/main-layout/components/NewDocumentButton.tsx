@@ -2,7 +2,7 @@
 
 import { useCreateDocument } from '@/hooks';
 import { useParams } from 'next/navigation';
-import { FiFilePlus } from 'react-icons/fi';
+import { FilePlus2 } from 'lucide-react';
 import { SidebarButton } from './SidebarButton';
 
 export default function NewDocumentButton() {
@@ -14,7 +14,7 @@ export default function NewDocumentButton() {
 
     return (
         <SidebarButton
-            icon={<FiFilePlus className="w-4 h-4" />}
+            icon={<FilePlus2 className="h-4 w-4" />}
             label="New Document"
             onClick={createNewDocument}
             disabled={!canCreate || isCreating}

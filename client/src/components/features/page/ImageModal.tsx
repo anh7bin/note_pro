@@ -110,52 +110,60 @@ export function ImageModal({
             } else {
                 await document.exitFullscreen();
             }
-        } catch (error) {
+        } catch {
             toast.error('Fullscreen not supported');
         }
     }, []);
 
+    const controlClassName =
+        'inline-flex h-10 min-w-10 items-center justify-center rounded-md border border-white/25 bg-black/60 px-2 text-white transition-colors hover:border-white/40 hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 disabled:cursor-not-allowed disabled:opacity-50';
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent
-                className="max-w-[95vw] w-[95vw] h-[95vh] p-0 overflow-hidden bg-black/95 [&>button]:hidden border-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=open]:duration-300 data-[state=closed]:duration-200"
+                className="h-[95dvh] w-[95vw] max-w-[95vw] overflow-hidden border-0 bg-black/95 p-0 [&>button]:hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=open]:duration-300 data-[state=closed]:duration-200"
                 data-image-modal-content>
                 <DialogTitle className="sr-only">{fileName}</DialogTitle>
-                <div className="absolute top-4 left-4 right-4 z-50 flex items-center justify-between animate-in fade-in-50 slide-in-from-top-2 duration-300 delay-150">
-                    <div className="flex items-center gap-2">
+                <div className="absolute inset-x-2 top-2 z-50 flex items-start justify-between gap-2 animate-in fade-in-50 slide-in-from-top-2 sm:inset-x-4 sm:top-4">
+                    <div className="flex flex-wrap items-center gap-2">
                         <button
+                            type="button"
                             onClick={handleDownload}
-                            className="rounded-lg border border-white/20 bg-black/50 p-1 text-white transition-colors hover:bg-black/70 hover:border-white/40 focus:outline-none"
+                            className={controlClassName}
                             aria-label="Download image"
                             title="Download">
                             <Download size={20} />
                         </button>
                         <button
+                            type="button"
                             onClick={handleZoomOut}
                             disabled={zoom <= 0.5}
-                            className="rounded-lg border border-white/20 bg-black/50 p-1 text-white transition-colors hover:bg-black/70 hover:border-white/40 focus:outline-none  disabled:opacity-50 disabled:cursor-not-allowed"
+                            className={controlClassName}
                             aria-label="Zoom out"
                             title="Zoom out">
                             <ZoomOut size={20} />
                         </button>
                         <button
+                            type="button"
                             onClick={handleZoomReset}
-                            className="rounded-lg border border-white/20 bg-black/50 px-2 py-1 text-sm font-medium text-white transition-colors hover:bg-black/70 hover:border-white/40 focus:outline-none "
+                            className={`${controlClassName} min-w-14 text-sm font-medium tabular-nums`}
                             aria-label="Reset zoom"
                             title="Reset zoom">
                             {Math.round(zoom * 100)}%
                         </button>
                         <button
+                            type="button"
                             onClick={handleZoomIn}
                             disabled={zoom >= 3}
-                            className="rounded-lg border border-white/20 bg-black/50 p-1 text-white transition-colors hover:bg-black/70 hover:border-white/40 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                            className={controlClassName}
                             aria-label="Zoom in"
                             title="Zoom in">
                             <ZoomIn size={20} />
                         </button>
                         <button
+                            type="button"
                             onClick={handleFullscreen}
-                            className="rounded-lg border border-white/20 bg-black/50 p-1 text-white transition-colors hover:bg-black/70 hover:border-white/40 focus:outline-none"
+                            className={controlClassName}
                             aria-label={
                                 isFullscreen
                                     ? 'Exit fullscreen'
@@ -173,15 +181,16 @@ export function ImageModal({
                     </div>
 
                     <button
+                        type="button"
                         onClick={onClose}
-                        className="rounded-lg border border-white/20 bg-black/50 p-1 text-white transition-colors hover:bg-black/70 hover:border-white/40 focus:outline-none"
+                        className={controlClassName}
                         aria-label="Close modal"
                         title="Close">
                         <X size={24} />
                     </button>
                 </div>
 
-                <div className="relative flex h-full w-full items-center justify-center p-8 overflow-auto animate-in fade-in-50 zoom-in-95 duration-500 delay-100">
+                <div className="relative flex h-full w-full items-center justify-center overflow-auto p-4 pt-16 animate-in fade-in-50 zoom-in-95 sm:p-8 sm:pt-20">
                     <div
                         className="transition-transform duration-300 ease-out"
                         style={{

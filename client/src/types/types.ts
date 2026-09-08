@@ -1,8 +1,4 @@
-import { IconType } from 'react-icons';
-
-export type IconComponent =
-    | IconType
-    | React.ComponentType<{ className?: string }>;
+export type IconComponent = React.ComponentType<{ className?: string }>;
 
 export enum HexColor {
     BLACK = '#1c1c1e',

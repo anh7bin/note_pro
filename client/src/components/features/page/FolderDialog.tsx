@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -9,7 +10,6 @@ import {
 import { IconPicker } from '@/components/ui/icon-picker';
 import { InputField } from '@/components/ui/input-field';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -46,6 +46,7 @@ export const FolderDialog = ({
         description: initialData?.description || '',
         icon: initialData?.icon || IconDefault,
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const dialogContentRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -69,29 +70,36 @@ export const FolderDialog = ({
     };
 
     const handleSubmit = async () => {
-        await onSubmit(folderData);
-        if (mode === FolderMode.CREATE) {
-            setFolderData({
-                name: '',
-                description: '',
-                icon: IconDefault,
-            });
+        setIsSubmitting(true);
+        try {
+            await onSubmit(folderData);
+            if (mode === FolderMode.CREATE) {
+                setFolderData({
+                    name: '',
+                    description: '',
+                    icon: IconDefault,
+                });
+            }
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent
-                ref={dialogContentRef}
-                className="sm:max-w-[400px] shadow-2xl">
+            <DialogContent ref={dialogContentRef} className="sm:max-w-[400px]">
                 <DialogHeader>
                     <DialogTitle>
                         {mode === FolderMode.CREATE
                             ? 'Create New Folder'
                             : 'Edit'}
                     </DialogTitle>
+                    <DialogDescription>
+                        {mode === FolderMode.CREATE
+                            ? 'Create a folder to keep related work together.'
+                            : 'Update the folder name, description, or icon.'}
+                    </DialogDescription>
                 </DialogHeader>
-                <Separator />
                 <div className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="title" className="text-sm font-medium">
@@ -104,7 +112,8 @@ export const FolderDialog = ({
                             onChange={(e) =>
                                 handleInputChange('name', e.target.value)
                             }
-                            className="placeholder:text-muted-foreground focus:ring-0 bg-card"
+                            required
+                            aria-required="true"
                         />
                     </div>
 
@@ -121,7 +130,7 @@ export const FolderDialog = ({
                             onChange={(e) =>
                                 handleInputChange('description', e.target.value)
                             }
-                            className="placeholder:text-muted-foreground focus:ring-0 resize-none h-20 bg-card"
+                            className="resize-none"
                         />
                     </div>
 
@@ -138,10 +147,22 @@ export const FolderDialog = ({
 
                 <DialogFooter>
                     <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => onOpenChange(false)}
+                        disabled={isSubmitting}>
+                        Cancel
+                    </Button>
+                    <Button
+                        type="button"
                         onClick={handleSubmit}
-                        disabled={!folderData.name.trim()}
-                        className="w-full h-9 bg-primary-button rounded-lg hover:bg-primary-buttonHover font-medium">
-                        {mode === FolderMode.CREATE ? 'Create' : 'Update'}
+                        disabled={!folderData.name.trim() || isSubmitting}
+                        aria-busy={isSubmitting}>
+                        {isSubmitting
+                            ? 'Saving…'
+                            : mode === FolderMode.CREATE
+                              ? 'Create'
+                              : 'Update'}
                     </Button>
                 </DialogFooter>
             </DialogContent>

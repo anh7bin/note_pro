@@ -1,7 +1,7 @@
 'use client';
 
 import { memo, useState, useCallback } from 'react';
-import { HiLinkSlash } from 'react-icons/hi2';
+import { Link } from 'lucide-react';
 import { BubbleButton } from '../BubbleButton';
 import { LinkInput } from '../LinkInput';
 
@@ -37,8 +37,11 @@ export const LinkControl = memo(function LinkControl({
     }
 
     return (
-        <BubbleButton onClick={handleToggle} isActive={isActive}>
-            <HiLinkSlash className="w-4 h-4" />
+        <BubbleButton
+            ariaLabel={isActive ? 'Edit link' : 'Add link'}
+            onClick={handleToggle}
+            isActive={isActive}>
+            <Link />
         </BubbleButton>
     );
 });

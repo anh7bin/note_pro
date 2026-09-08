@@ -66,8 +66,10 @@ export const SortableBlockItem = memo(
             opacity: isDragging ? 0.8 : 1,
             position: 'relative' as const,
             zIndex: isDragging ? 999 : 'auto',
-            backgroundColor: isDragging ? 'white' : 'transparent',
-            boxShadow: isDragging ? '0 4px 12px rgba(0, 0, 0, 0.1)' : 'none',
+            backgroundColor: isDragging
+                ? 'hsl(var(--background))'
+                : 'transparent',
+            boxShadow: isDragging ? 'var(--shadow-md)' : 'none',
             willChange: isDragging ? 'transform, opacity' : 'auto',
         };
 

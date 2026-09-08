@@ -17,12 +17,16 @@ export const AttachmentsTab = ({
 }: AttachmentsTabProps) => {
     return (
         <div className="flex flex-col h-full">
-            <h3 className="text-xs text-muted-foreground mb-2">Attachments</h3>
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Attachments
+            </h2>
             <div className="text-sm space-y-1.5">
                 {attachments.length === 0 ? (
-                    <h3 className="text-xs text-muted-foreground mt-2">
-                        Upload files right from the editor.
-                    </h3>
+                    <EmptyState
+                        icon={<Paperclip className="h-4 w-4" />}
+                        title="No attachments yet"
+                        description="Upload files directly from the editor."
+                    />
                 ) : (
                     attachments.map((file) => (
                         <AttachmentRow
@@ -52,8 +56,9 @@ function AttachmentRow({
 
     return (
         <button
+            type="button"
             onClick={() => onScrollToBlock(file.blockId)}
-            className={`w-full flex items-center gap-3 rounded-lg border px-2 py-2 text-left transition-colors ${
+            className={`flex min-h-11 w-full items-center gap-3 rounded-md border px-2 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${
                 isActive
                     ? 'border-border bg-muted/60'
                     : 'border-transparent hover:border-border hover:bg-muted/50'
@@ -61,7 +66,7 @@ function AttachmentRow({
             <div className="relative flex h-10 w-8 items-center justify-center">
                 <Image
                     src="/images/file-badge-base.png"
-                    alt="File badge"
+                    alt=""
                     width={32}
                     height={40}
                     className="pointer-events-none select-none object-contain"
@@ -73,7 +78,7 @@ function AttachmentRow({
             </div>
             <div className="min-w-0 flex-1">
                 <p className="text-xs font-semibold truncate">{file.name}</p>
-                <p className="text-[11px] text-muted-foreground truncate">
+                <p className="truncate text-xs text-muted-foreground">
                     {file.type}
                     {file.size ? ` · ${file.size}` : ''}
                 </p>

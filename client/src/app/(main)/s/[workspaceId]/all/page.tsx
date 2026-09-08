@@ -9,7 +9,14 @@ import { useGetAllDocsQuery } from '@/graphql/queries/__generated__/document.gen
 import { useCreateDocument, useWorkspace } from '@/hooks';
 import { Document } from '@/types/app';
 import { useMemo, useEffect } from 'react';
-import { FiFilePlus } from 'react-icons/fi';
+import { FilePlus2, Files } from 'lucide-react';
+import {
+    EmptyState,
+    PageContent,
+    PageHeader,
+    PageShell,
+    PageTitle,
+} from '@/components/shared';
 
 export default function AllDocsPage() {
     const { workspace } = useWorkspace();
@@ -32,31 +39,41 @@ export default function AllDocsPage() {
     return loading && allDocs.length === 0 ? (
         <PageLoading />
     ) : (
-        <div className="p-0 w-full h-full">
-            <div className="flex flex-col items-start justify-start mx-auto w-full h-full min-h-0 max-w-screen-2xl gap-6">
-                <div className="w-full pt-4 px-6 flex items-center justify-between">
-                    <h1 className="text-xl font-medium">All Docs</h1>
-                    <div className="flex items-center gap-2">
-                        <SelectionActionBar />
-                        <Button
-                            size="sm"
-                            className="gap-2 text-xs text-white rounded-lg bg-primary"
-                            onClick={createNewDocument}
-                            disabled={!canCreate || isCreating}>
-                            <FiFilePlus className="w-4 h-4" />
-                            New Doc
-                        </Button>
-                    </div>
+        <PageShell>
+            <PageHeader>
+                <PageTitle>All Docs</PageTitle>
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                    <SelectionActionBar />
+                    <Button
+                        size="sm"
+                        onClick={createNewDocument}
+                        disabled={!canCreate || isCreating}>
+                        <FilePlus2 />
+                        {isCreating ? 'Creating…' : 'New Doc'}
+                    </Button>
                 </div>
+            </PageHeader>
 
-                {allDocs.length === 0 ? (
-                    <div className="text-sm text-muted-foreground flex items-center justify-center w-full h-full">
-                        You have no documents yet
-                    </div>
-                ) : (
+            <PageContent>
+                {allDocs.length > 0 ? (
                     <DocumentGrid documents={allDocs} />
+                ) : (
+                    <EmptyState
+                        icon={<Files />}
+                        title="No documents yet"
+                        description="Create your first document to start capturing notes and ideas."
+                        action={
+                            <Button
+                                size="sm"
+                                onClick={createNewDocument}
+                                disabled={!canCreate || isCreating}>
+                                <FilePlus2 />
+                                Create document
+                            </Button>
+                        }
+                    />
                 )}
-            </div>
-        </div>
+            </PageContent>
+        </PageShell>
     );
 }

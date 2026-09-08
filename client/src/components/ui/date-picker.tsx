@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { format, isToday, isTomorrow } from 'date-fns';
-import { FiCalendar } from 'react-icons/fi';
+import { CalendarDays } from 'lucide-react';
 import { Calendar } from './calendar';
 import { Button } from './button';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
@@ -77,13 +77,20 @@ export const DatePicker = ({
             <PopoverTrigger asChild>
                 <Button
                     variant="ghost"
-                    className="justify-start text-left font-normal h-9 px-3 text-muted-foreground hover:text-foreground border border-input hover:border-border rounded-md bg-background hover:bg-accent transition-colors">
-                    {icon ? icon : <FiCalendar className="w-4 h-4 mr-2" />}
-                    {value ? getDateDisplayText(value) : textContent}
+                    aria-label={
+                        value
+                            ? `${placeholder}: ${getDateDisplayText(value)}`
+                            : placeholder
+                    }
+                    className="h-10 justify-start border border-input bg-background px-3 text-left font-normal text-muted-foreground hover:border-border-strong hover:bg-accent hover:text-foreground">
+                    {icon ? icon : <CalendarDays className="h-4 w-4" />}
+                    {value
+                        ? getDateDisplayText(value)
+                        : textContent || placeholder}
                 </Button>
             </PopoverTrigger>
             <PopoverContent
-                className="w-auto p-0 shadow-lg border bg-card"
+                className="w-auto p-0"
                 container={container ?? undefined}
                 side="bottom"
                 align="start"
@@ -95,7 +102,7 @@ export const DatePicker = ({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-6 px-2 text-xs font-normal hover:bg-accent rounded-md"
+                                className="font-normal"
                                 onClick={(event) =>
                                     handleQuickActionClick(event, 0)
                                 }>
@@ -104,7 +111,7 @@ export const DatePicker = ({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-6 px-2 text-xs font-normal hover:bg-accent rounded-md"
+                                className="font-normal"
                                 onClick={(event) =>
                                     handleQuickActionClick(event, 1)
                                 }>
@@ -113,7 +120,7 @@ export const DatePicker = ({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-6 px-2 text-xs font-normal hover:bg-accent rounded-md"
+                                className="font-normal"
                                 onClick={(event) =>
                                     handleQuickActionClick(event, -1)
                                 }>
@@ -123,7 +130,7 @@ export const DatePicker = ({
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="h-6 px-2 text-xs font-normal text-destructive hover:bg-destructive/10 hover:text-destructive rounded-md ml-auto"
+                                    className="ml-auto font-normal text-destructive hover:bg-destructive/10 hover:text-destructive"
                                     onClick={handleClearClick}>
                                     Clear
                                 </Button>
@@ -141,7 +148,7 @@ export const DatePicker = ({
                             }
                         }}
                         initialFocus
-                        className="rounded-md [--cell-size:1.75rem] p-1"
+                        className="rounded-md [--cell-size:2rem] p-1"
                     />
                 </div>
             </PopoverContent>

@@ -2,9 +2,9 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { ROUTES } from '@/lib/routes';
-import { AUTHENTICATED, UNAUTHENTICATED } from '@/lib/constants';
+import { AUTHENTICATED } from '@/lib/constants';
 import { PageLoading } from '@/components/ui/loading';
 
 interface AuthGuardProps {
@@ -12,24 +12,24 @@ interface AuthGuardProps {
 }
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-    const { status } = useSession();
+    const { data: session, status } = useSession();
     const router = useRouter();
-    const [isReady, setIsReady] = useState(false);
+    const hasValidSession =
+        status === AUTHENTICATED && !!session?.token && !session.error;
 
     useEffect(() => {
         if (status === 'loading') {
             return;
         }
 
-        if (status === UNAUTHENTICATED) {
+        if (!hasValidSession) {
             router.replace(ROUTES.LOGIN);
-            return;
         }
+    }, [status, hasValidSession, router]);
 
-        if (status === AUTHENTICATED) {
-            setIsReady(true);
-        }
-    }, [status, router]);
-
-    return status === 'loading' || !isReady ? <PageLoading /> : <>{children}</>;
+    return status === 'loading' || !hasValidSession ? (
+        <PageLoading />
+    ) : (
+        <>{children}</>
+    );
 }

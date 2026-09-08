@@ -7,7 +7,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FiShare2 } from 'react-icons/fi';
+import { FaShare } from 'react-icons/fa';
 import { ShareTab } from '@/components/features/page/share/ShareTab';
 import { ExportTab } from '@/components/features/page/share/ExportTab';
 import { useSearchParams } from 'next/navigation';
@@ -37,28 +37,24 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
                 <Button
                     variant="outline"
                     size="sm"
-                    className="gap-2 rounded-lg">
-                    <FiShare2 className="h-4 w-4" />
-                    Share
+                    aria-label="Share or export document">
+                    <FaShare className="h-4 w-4" />
+                    <span className="hidden lg:inline">Share</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-                className="w-[480px] p-3 rounded-lg"
+                className="w-[min(30rem,calc(100vw-1rem))] p-3"
                 align="end">
                 <Tabs defaultValue="share" className="w-full">
-                    <TabsList className="w-full grid grid-cols-2 rounded-2xl">
-                        <TabsTrigger value="share" className="rounded-2xl">
-                            Share
-                        </TabsTrigger>
-                        <TabsTrigger value="export" className="rounded-2xl">
-                            Export
-                        </TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="share">Share</TabsTrigger>
+                        <TabsTrigger value="export">Export</TabsTrigger>
                     </TabsList>
                     <TabsContent value="share" className="m-0">
                         <ShareTab documentId={documentId} />
                     </TabsContent>
                     <TabsContent value="export" className="m-0">
-                        <ExportTab documentId={documentId} />
+                        <ExportTab />
                     </TabsContent>
                 </Tabs>
             </DropdownMenuContent>

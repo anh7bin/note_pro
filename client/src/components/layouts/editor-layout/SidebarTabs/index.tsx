@@ -38,21 +38,21 @@ export function SidebarTabs({
         <Tabs
             defaultValue="contents"
             className="flex h-full flex-1 flex-col overflow-hidden">
-            <TabsList className="grid grid-cols-4 rounded-xl shrink-0">
-                <TabsTrigger value="contents" className="rounded-md">
+            <TabsList className="grid shrink-0 grid-cols-4">
+                <TabsTrigger value="contents" aria-label="Document contents">
                     <Menu className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="tasks" className="rounded-md">
+                <TabsTrigger value="tasks" aria-label="Document tasks">
                     <CheckCircle className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="attachments" className="rounded-md">
+                <TabsTrigger value="attachments" aria-label="Attachments">
                     <Paperclip className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="find" className="rounded-md">
+                <TabsTrigger value="find" aria-label="Search in document">
                     <Search className="h-4 w-4" />
                 </TabsTrigger>
             </TabsList>
-            <div className="flex-1 overflow-y-auto mt-2 mb-20 min-h-0">
+            <div className="mt-2 min-h-0 flex-1 overflow-y-auto pb-4">
                 <TabsContent value="contents">
                     <ContentsTab
                         sections={sections}

@@ -1,8 +1,7 @@
 import { stripHtmlTags } from '@/lib/utils';
 import { Notification } from '@/types/app';
 import { formatDistanceToNow } from 'date-fns';
-import { FaRegBell } from 'react-icons/fa6';
-import { FiAlertCircle, FiCheckCircle, FiClock, FiEdit3 } from 'react-icons/fi';
+import { Bell, CheckCircle2, CircleAlert, Clock3, Pencil } from 'lucide-react';
 import { NotificationData } from './notification.types';
 
 export const NOTIFICATION_LIMIT = 20;
@@ -26,36 +25,35 @@ export function getNotificationPresentation(notification: Notification) {
     switch (notification.type) {
         case 'access_request':
             return {
-                icon: FiClock,
+                icon: Clock3,
                 avatar: data.requester_avatar,
                 actor: data.requester_name || data.requester_email,
-                accentClass: 'text-amber-600 bg-amber-50 dark:bg-amber-950/30',
+                accentClass: 'text-warning-foreground bg-warning-subtle',
             };
         case 'access_granted':
             return {
-                icon: FiCheckCircle,
+                icon: CheckCircle2,
                 avatar: data.owner_avatar,
                 actor: data.owner_name || data.owner_email,
-                accentClass:
-                    'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30',
+                accentClass: 'text-success bg-success-subtle',
             };
         case 'access_permission_updated':
             return {
-                icon: FiEdit3,
+                icon: Pencil,
                 avatar: data.owner_avatar,
                 actor: data.owner_name || data.owner_email,
-                accentClass: 'text-blue-600 bg-blue-50 dark:bg-blue-950/30',
+                accentClass: 'text-info bg-info-subtle',
             };
         case 'access_denied':
             return {
-                icon: FiAlertCircle,
+                icon: CircleAlert,
                 avatar: data.owner_avatar,
                 actor: data.owner_name || data.owner_email,
-                accentClass: 'text-red-600 bg-red-50 dark:bg-red-950/30',
+                accentClass: 'text-destructive bg-destructive/10',
             };
         default:
             return {
-                icon: FaRegBell,
+                icon: Bell,
                 avatar: undefined,
                 actor: undefined,
                 accentClass: 'text-muted-foreground bg-muted',

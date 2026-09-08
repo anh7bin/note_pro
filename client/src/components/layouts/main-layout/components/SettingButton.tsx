@@ -10,6 +10,7 @@ import { LogOut } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useLogout } from '@/hooks/useLogout';
 import { UserAvatar } from '@/components/shared';
+import { Button } from '@/components/ui/button';
 
 export const SettingButton = () => {
     const { data: session } = useSession();
@@ -19,14 +20,18 @@ export const SettingButton = () => {
         <div className="relative">
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                    <div className="cursor-pointer">
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Open account menu">
                         <UserAvatar
                             avatarUrl={session?.user?.image}
                             name={session?.user?.name}
                             email={session?.user?.email || ''}
                             size={24}
                         />
-                    </div>
+                    </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 p-2" align="end">
                     <DropdownMenuLabel>

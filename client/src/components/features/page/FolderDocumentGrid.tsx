@@ -48,17 +48,17 @@ export function FolderDocumentGrid({
     }, [updateFade, folders.length, documents.length]);
 
     return (
-        <div className="flex-1 w-full pb-4 pl-6 overflow-hidden relative">
+        <div className="relative h-full min-h-0 w-full overflow-hidden pb-1">
             <AutoSizer>
                 {({ width, height }) => (
                     <div
                         ref={containerRef}
                         onScroll={updateFade}
                         style={{ width, height }}
-                        className="overflow-y-auto overflow-x-hidden pr-6">
+                        className="overflow-y-auto overflow-x-hidden pr-1">
                         {folders.length > 0 && (
-                            <div className="mb-6">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                            <div className="mb-5">
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                                     {folders.map((folder) => (
                                         <CardFolder
                                             key={folder.id}
@@ -70,7 +70,7 @@ export function FolderDocumentGrid({
                         )}
 
                         {documents.length > 0 && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-4">
+                            <div className="grid grid-cols-1 gap-4 pb-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                                 {documents.map((document) => (
                                     <CardDocument
                                         key={document.id}
@@ -84,11 +84,11 @@ export function FolderDocumentGrid({
             </AutoSizer>
 
             {showTopFade && (
-                <div className="absolute top-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-b from-background to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background to-transparent" />
             )}
 
             {showBottomFade && (
-                <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-t from-background to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent" />
             )}
         </div>
     );

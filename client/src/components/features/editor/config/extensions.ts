@@ -46,12 +46,12 @@ export const createExtensions = ({
         },
         blockquote: {
             HTMLAttributes: {
-                class: 'border-l-4 border-gray-300 pl-4 italic',
+                class: 'border-l-4 border-border-strong pl-4 italic',
             },
         },
         codeBlock: {
             HTMLAttributes: {
-                class: 'bg-gray-100 rounded p-2 font-mono text-sm',
+                class: 'rounded-md bg-muted p-2 font-mono text-sm',
             },
         },
     }),

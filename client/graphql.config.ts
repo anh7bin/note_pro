@@ -7,6 +7,15 @@ dotenv.config({
     override: true,
 });
 
+function getGraphqlEndpoint(endpoint?: string): string {
+    if (!endpoint) return '';
+
+    const normalizedEndpoint = endpoint.replace(/\/+$/, '');
+    return normalizedEndpoint.endsWith('/v1/graphql')
+        ? normalizedEndpoint
+        : `${normalizedEndpoint}/v1/graphql`;
+}
+
 const codegenConfig: Types.Config = {
     overwrite: true,
     generates: {
@@ -33,7 +42,9 @@ const codegenConfig: Types.Config = {
 const config: IGraphQLConfig = {
     schema: [
         {
-            [`${process.env.NEXT_PUBLIC_HASURA_SERVER_ENDPOINT}/v1/graphql`]: {
+            [getGraphqlEndpoint(
+                process.env.NEXT_PUBLIC_HASURA_SERVER_ENDPOINT
+            )]: {
                 headers: {
                     'X-Hasura-Admin-Secret': String(
                         process.env.HASURA_GRAPHQL_ADMIN_SECRET

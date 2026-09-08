@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -34,34 +34,43 @@ export const ConfirmDialog = ({
     variant = 'default',
     loading = false,
 }: ConfirmDialogProps) => {
+    const [isPending, setIsPending] = useState(false);
+    const isBusy = loading || isPending;
+
     const handleConfirm = async () => {
-        await onConfirm();
-        onOpenChange(false);
+        setIsPending(true);
+        try {
+            await onConfirm();
+            onOpenChange(false);
+        } finally {
+            setIsPending(false);
+        }
     };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[348px] p-4">
+            <DialogContent className="sm:max-w-sm">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription className="py-2">
+                    <DialogDescription className="pt-1 leading-relaxed">
                         {description}
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                     <Button
-                        className="h-8"
+                        size="sm"
                         variant="outline"
                         onClick={() => onOpenChange(false)}
-                        disabled={loading}>
+                        disabled={isBusy}>
                         {cancelText}
                     </Button>
                     <Button
-                        className="h-8"
+                        size="sm"
                         variant={variant}
                         onClick={handleConfirm}
-                        disabled={loading}>
-                        {loading ? 'Processing...' : confirmText}
+                        disabled={isBusy}
+                        aria-busy={isBusy}>
+                        {isBusy ? 'Processing...' : confirmText}
                     </Button>
                 </DialogFooter>
             </DialogContent>

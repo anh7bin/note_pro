@@ -49,7 +49,7 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
 
     return (
         <div>
-            <div className="text-xs text-muted-foreground font-semibold p-1">
+            <div className="px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {title}
             </div>
             <div className="space-y-1">

@@ -13,6 +13,7 @@ import { useCreateDocument } from '@/hooks/useCreateDocument';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { FolderNode } from '@/lib/folder';
 import showToast from '@/lib/toast';
+import { FilePlus2, FolderPlus, Pencil, Trash2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { FolderDialog, FolderMode } from './FolderDialog';
 import { ContextDropdownMenu } from './ContextDropdownMenu';
@@ -161,33 +162,37 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
     const MenuItem = children ? ContextMenuItem : DropdownMenuItem;
 
     const menuContent = (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col">
             <MenuItem
-                className="flex items-center cursor-pointer rounded-md"
+                className="cursor-pointer"
                 onClick={(e) =>
                     handleMenuItemClick(e, () => setIsEditDialogOpen(true))
                 }>
-                Edit...
+                <Pencil />
+                Edit
             </MenuItem>
             <Separator />
             <MenuItem
-                className="flex items-center cursor-pointer rounded-md"
+                className="cursor-pointer"
                 onClick={(e) => handleMenuItemClick(e, createNewDocument)}>
-                New Doc
+                <FilePlus2 />
+                New document
             </MenuItem>
             <MenuItem
-                className="flex items-center cursor-pointer rounded-md"
+                className="cursor-pointer"
                 onClick={(e) =>
                     handleMenuItemClick(e, () => setIsNewFolderDialogOpen(true))
                 }>
-                New Folder
+                <FolderPlus />
+                New folder
             </MenuItem>
             <Separator />
             <MenuItem
-                className="flex items-center cursor-pointer text-red-600 hover:bg-red-50 dark:hover:bg-red-950 focus:bg-red-100 dark:focus:bg-red-900 focus:text-red-700 dark:focus:text-red-300 rounded-md"
+                className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
                 onClick={(e) =>
                     handleMenuItemClick(e, () => setIsDeleteDialogOpen(true))
                 }>
+                <Trash2 />
                 Delete
             </MenuItem>
         </div>
