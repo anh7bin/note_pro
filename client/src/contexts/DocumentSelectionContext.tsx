@@ -8,7 +8,7 @@ interface DocumentSelectionContextType {
     toggleDocument: (id: string) => void;
     toggleFolder: (id: string) => void;
     clearSelection: () => void;
-    selectAll: (documentIds: string[]) => void;
+    selectAll: (documentIds: string[], folderIds?: string[]) => void;
     isSelected: (id: string) => boolean;
     mode: 'default' | 'shared';
     setMode: (mode: 'default' | 'shared') => void;
@@ -60,9 +60,13 @@ export function DocumentSelectionProvider({
         setSelectedFolders(new Set());
     }, []);
 
-    const selectAll = useCallback((documentIds: string[]) => {
-        setSelectedDocuments(new Set(documentIds));
-    }, []);
+    const selectAll = useCallback(
+        (documentIds: string[], folderIds: string[] = []) => {
+            setSelectedDocuments(new Set(documentIds));
+            setSelectedFolders(new Set(folderIds));
+        },
+        []
+    );
 
     const isSelected = useCallback(
         (id: string) => selectedDocuments.has(id) || selectedFolders.has(id),

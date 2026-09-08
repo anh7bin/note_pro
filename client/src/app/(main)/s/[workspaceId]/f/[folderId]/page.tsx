@@ -62,7 +62,10 @@ export default function FolderPage() {
                     <Separator orientation="vertical" />
                     <PageTitle className="truncate">{folder.name}</PageTitle>
                 </div>
-                <SelectionActionBar />
+                <SelectionActionBar
+                    documentIds={documents.map((document) => document.id)}
+                    folderIds={subFolders.map((subFolder) => subFolder.id)}
+                />
             </PageHeader>
 
             <PageContent>

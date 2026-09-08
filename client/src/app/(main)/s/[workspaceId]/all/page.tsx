@@ -43,7 +43,9 @@ export default function AllDocsPage() {
             <PageHeader>
                 <PageTitle>All Docs</PageTitle>
                 <div className="flex flex-wrap items-center justify-end gap-2">
-                    <SelectionActionBar />
+                    <SelectionActionBar
+                        documentIds={allDocs.map((document) => document.id)}
+                    />
                     <Button
                         size="sm"
                         onClick={createNewDocument}

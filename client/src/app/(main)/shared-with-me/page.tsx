@@ -43,7 +43,10 @@ export default function SharedWithMePage() {
             <PageHeader>
                 <PageTitle>Shared with Me</PageTitle>
                 <div className="flex flex-wrap items-center justify-end gap-3">
-                    <SelectionActionBar mode="shared" />
+                    <SelectionActionBar
+                        mode="shared"
+                        documentIds={sharedDocs.map((document) => document.id)}
+                    />
                     <span className="text-sm tabular-nums text-muted-foreground">
                         {sharedDocs.length}{' '}
                         {pluralize(sharedDocs.length, 'document')}

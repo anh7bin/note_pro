@@ -14,13 +14,15 @@ import {
     handleBulkRemoveShared,
     pluralize,
 } from '@/lib/bulk-actions';
-import { FolderInput, Trash2, X } from 'lucide-react';
+import { Check, FolderInput, Minus, Trash2 } from 'lucide-react';
 import showToast from '@/lib/toast';
 import { useCallback, useState } from 'react';
 import { MoveToDialog } from './MoveToDialog';
 
 interface SelectionActionBarProps {
     mode?: 'default' | 'shared';
+    documentIds: string[];
+    folderIds?: string[];
 }
 
 const REFETCH_QUERIES = [
@@ -33,11 +35,14 @@ const REFETCH_QUERIES = [
 
 export function SelectionActionBar({
     mode: propMode,
+    documentIds,
+    folderIds = [],
 }: SelectionActionBarProps) {
     const {
         selectedDocuments,
         selectedFolders,
         clearSelection,
+        selectAll,
         mode: contextMode,
     } = useDocumentSelection();
     const mode = propMode || contextMode;
@@ -46,6 +51,20 @@ export function SelectionActionBar({
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     const totalSelected = selectedDocuments.size + selectedFolders.size;
+    const totalItems = documentIds.length + folderIds.length;
+    const allSelected =
+        totalItems > 0 &&
+        documentIds.every((id) => selectedDocuments.has(id)) &&
+        folderIds.every((id) => selectedFolders.has(id));
+
+    const handleSelectAllChange = useCallback(() => {
+        if (allSelected) {
+            clearSelection();
+            return;
+        }
+
+        selectAll(documentIds, folderIds);
+    }, [allSelected, clearSelection, documentIds, folderIds, selectAll]);
 
     const [bulkDeleteDocumentsAndFolders] =
         useBulkDeleteDocumentsAndFoldersMutation({
@@ -132,12 +151,23 @@ export function SelectionActionBar({
                 aria-live="polite"
                 className="flex items-center gap-1 rounded-md border border-border bg-card p-1 shadow-sm">
                 <Button
+                    type="button"
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8"
-                    aria-label="Clear selection"
-                    onClick={clearSelection}>
-                    <X className="h-4 w-4" />
+                    role="checkbox"
+                    aria-checked={allSelected ? true : 'mixed'}
+                    aria-label={
+                        allSelected ? 'Clear selection' : 'Select all items'
+                    }
+                    className="h-6 w-6 rounded-full"
+                    onClick={handleSelectAllChange}>
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        {allSelected ? (
+                            <Check aria-hidden="true" className="h-3.5 w-3.5" />
+                        ) : (
+                            <Minus aria-hidden="true" className="h-3.5 w-3.5" />
+                        )}
+                    </span>
                 </Button>
 
                 <span className="px-1 text-sm font-medium tabular-nums text-foreground">

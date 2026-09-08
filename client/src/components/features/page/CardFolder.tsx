@@ -29,11 +29,18 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
     const router = useRouter();
     const { workspace } = useWorkspace();
     const { startLoading } = useLoading();
-    const { toggleFolder, isSelected } = useDocumentSelection();
+    const {
+        toggleFolder,
+        isSelected,
+        selectedDocuments,
+        selectedFolders,
+    } = useDocumentSelection();
 
     const workspaceId = workspace?.id;
     const docCount = folder.blocks_aggregate?.aggregate?.count || 0;
     const selected = isSelected(folder.id);
+    const isSelectionActive =
+        selectedDocuments.size + selectedFolders.size > 0;
 
     const openFolder = (newTab = false) => {
         if (!workspaceId) return;
@@ -51,6 +58,12 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
+
+        if (isSelectionActive) {
+            toggleFolder(folder.id);
+            return;
+        }
+
         openFolder(e.ctrlKey || e.metaKey);
     };
 
@@ -63,6 +76,12 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
         if (event.target !== event.currentTarget) return;
         if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
+
+            if (isSelectionActive) {
+                toggleFolder(folder.id);
+                return;
+            }
+
             openFolder();
         }
     };
@@ -76,9 +95,14 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
             }}>
             <Card
                 key={folder.id}
-                role="link"
+                role={isSelectionActive ? 'button' : 'link'}
                 tabIndex={0}
-                aria-label={`Open folder “${folder.name}”`}
+                aria-label={
+                    isSelectionActive
+                        ? `${selected ? 'Deselect' : 'Select'} folder “${folder.name}”`
+                        : `Open folder “${folder.name}”`
+                }
+                aria-pressed={isSelectionActive ? selected : undefined}
                 className={`group relative flex h-[140px] w-full cursor-pointer flex-col bg-primary/5 transition-[border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 ${
                     selected
                         ? 'border-primary ring-1 ring-primary/25'
