@@ -11,7 +11,7 @@ function getTitleFromPathname(pathname: string): string {
     if (pathname.includes('/calendar')) return 'Calendar';
     if (pathname.includes('/all') || pathname.includes('/documents'))
         return 'All Docs';
-    if (pathname.includes('/shared-with-me')) return 'Shared with me';
+    if (pathname.includes('/shared-with-me')) return 'Shared with Me';
     return 'Bin Craft';
 }
 

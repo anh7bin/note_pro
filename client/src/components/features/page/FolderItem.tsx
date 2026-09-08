@@ -68,22 +68,23 @@ export const FolderItem: React.FC<{
     return (
         <div className="flex flex-col gap-1">
             <FolderMoreMenu folder={folder}>
-                <div>
+                <div className="group/folder-item">
                     <SidebarButton
                         className="min-w-0"
                         label={folder.name}
                         icon={
-                            <div className="group/folder-icon relative flex h-5 w-5 items-center justify-center">
+                            <div className="relative flex h-5 w-5 items-center justify-center">
                                 <div
                                     className={cn(
                                         'absolute inset-0 flex items-center justify-center transition-all duration-200',
                                         hasChildren &&
-                                            'group-hover/folder-icon:scale-75 group-hover/folder-icon:opacity-0 group-focus-within/folder-icon:scale-75 group-focus-within/folder-icon:opacity-0'
+                                            'group-hover/folder-item:scale-75 group-hover/folder-item:opacity-0'
                                     )}>
                                     <span className="text-base leading-none">
                                         {folder.icon}
                                     </span>
                                 </div>
+
                                 {hasChildren && (
                                     <button
                                         type="button"
@@ -95,14 +96,15 @@ export const FolderItem: React.FC<{
                                         }
                                         aria-expanded={expanded}
                                         className={cn(
-                                            'pointer-events-none absolute inset-0 flex scale-75 items-center justify-center rounded-sm opacity-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 group-hover/folder-icon:pointer-events-auto group-hover/folder-icon:scale-100 group-hover/folder-icon:opacity-100 focus-visible:pointer-events-auto focus-visible:scale-100 focus-visible:opacity-100 group-focus-within/folder-icon:pointer-events-auto group-focus-within/folder-icon:scale-100 group-focus-within/folder-icon:opacity-100'
+                                            'pointer-events-none absolute inset-0 flex scale-75 items-center justify-center rounded-sm opacity-0 transition-all duration-200',
+                                            'group-hover/folder-item:pointer-events-auto group-hover/folder-item:scale-100 group-hover/folder-item:opacity-100',
+                                            'focus-visible:pointer-events-auto focus-visible:scale-100 focus-visible:opacity-100',
+                                            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40'
                                         )}>
                                         <ChevronRight
                                             className={cn(
-                                                'w-4 h-4 transition-transform duration-200',
-                                                expanded
-                                                    ? 'rotate-90'
-                                                    : 'rotate-0'
+                                                'h-4 w-4 transition-transform duration-200',
+                                                expanded && 'rotate-90'
                                             )}
                                         />
                                     </button>

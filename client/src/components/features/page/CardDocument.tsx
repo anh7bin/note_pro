@@ -121,13 +121,13 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
                             : `Select “${plainTitle}”`
                     }
                     aria-pressed={selected}
-                    className={`h-8 w-8 rounded-full border transition-all focus-visible:opacity-100 ${
+                    className={`h-5 w-5 rounded-full border transition-all focus-visible:opacity-100 ${
                         selected
                             ? 'opacity-100 bg-primary border-primary text-primary-foreground'
                             : 'bg-background border-border opacity-100 hover:border-primary md:opacity-0 md:group-hover:opacity-100'
                     }`}
                     onClick={handleSelectToggle}>
-                    {selected && <Check className="h-4 w-4" />}
+                    {selected && <Check />}
                 </Button>
             </div>
             <CardHeader className="flex flex-shrink-0 flex-col p-4">

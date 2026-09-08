@@ -120,7 +120,7 @@ export const BulkDocumentMenu = ({
     ]);
 
     const menuContent = (
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-1">
             {mode !== 'shared' && (
                 <>
                     <ContextMenuItem

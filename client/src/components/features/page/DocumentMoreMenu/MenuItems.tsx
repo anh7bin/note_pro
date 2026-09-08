@@ -12,7 +12,6 @@ import {
 
 interface MenuItemsProps {
     isOwner: boolean;
-    hasChildren: boolean;
     onOpenInNewTab: (e: React.MouseEvent<HTMLDivElement>) => void;
     onCopyLink: (e: React.MouseEvent<HTMLDivElement>) => void;
     onMove: (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -21,39 +20,34 @@ interface MenuItemsProps {
 
 export const MenuItems = ({
     isOwner,
-    hasChildren,
     onOpenInNewTab,
     onCopyLink,
     onMove,
     onDeleteOrRemove,
 }: MenuItemsProps) => {
-    const MenuItem = hasChildren ? ContextMenuItem : DropdownMenuItem;
-
     const deleteMenuClassName = isOwner
-        ? 'cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive'
-        : 'cursor-pointer text-warning-foreground focus:bg-warning-subtle focus:text-warning-foreground';
+        ? 'text-destructive focus:bg-destructive/10 focus:text-destructive'
+        : 'text-warning-foreground focus:bg-warning-subtle focus:text-warning-foreground';
 
     return (
-        <div className="flex flex-col">
-            <MenuItem className="cursor-pointer" onClick={onOpenInNewTab}>
+        <div className="flex flex-col gap-1">
+            <ContextMenuItem onClick={onOpenInNewTab}>
                 <ExternalLink />
                 Open in new tab
-            </MenuItem>
+            </ContextMenuItem>
             <Separator />
-            <MenuItem className="cursor-pointer" onClick={onCopyLink}>
+            <ContextMenuItem onClick={onCopyLink}>
                 <Clipboard />
                 Copy link
-            </MenuItem>
+            </ContextMenuItem>
             {isOwner && (
-                <MenuItem className="cursor-pointer" onClick={onMove}>
+                <ContextMenuItem onClick={onMove}>
                     <FolderInput />
                     Move to
-                </MenuItem>
+                </ContextMenuItem>
             )}
-
             <Separator />
-
-            <MenuItem
+            <ContextMenuItem
                 className={deleteMenuClassName}
                 onClick={onDeleteOrRemove}>
                 {isOwner ? (
@@ -67,7 +61,7 @@ export const MenuItems = ({
                         Remove
                     </>
                 )}
-            </MenuItem>
+            </ContextMenuItem>
         </div>
     );
 };

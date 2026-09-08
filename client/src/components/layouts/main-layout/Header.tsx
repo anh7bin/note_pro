@@ -23,6 +23,7 @@ import { RequestEditButton } from './components/RequestEditButton';
 import { SettingButton } from './components/SettingButton';
 import { ShareExportButton } from './components/ShareExportButton';
 import { useDocumentPermission } from '@/hooks/useDocumentPermission';
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 
 interface Props {
     workspaceSlug: string;
@@ -52,7 +53,7 @@ function MobileSearch() {
 }
 
 export default function Header({ workspaceSlug }: Props) {
-    const { isOpen, toggle } = useSidebar();
+    const { toggle } = useSidebar();
     const { documentId } = useDocumentAccess();
     const { isLoading, startLoading } = useLoading();
     const pathname = usePathname();
@@ -77,35 +78,28 @@ export default function Header({ workspaceSlug }: Props) {
                 <TopLoadingBar isLoading={isLoading} />
                 <header className="fixed inset-x-0 top-0 z-50 grid h-[var(--header-height)] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 border-b border-border-subtle bg-background/95 px-3 backdrop-blur-sm sm:px-4">
                     <div className="flex items-center gap-1">
-                        <Button
-                            asChild
-                            variant="ghost"
-                            size="icon"
-                            aria-label="Open all documents">
+                        <Button asChild variant="ghost" size="icon">
                             <Link
                                 href={ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug)}
                                 onClick={handleLogoClick}>
                                 <Image
                                     src="/images/logo.png"
-                                    alt=""
+                                    alt="Home Page"
                                     width={24}
                                     height={24}
                                     priority
                                 />
                             </Link>
                         </Button>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            aria-label={
-                                isOpen ? 'Close sidebar' : 'Open sidebar'
-                            }
-                            aria-controls="app-sidebar"
-                            aria-expanded={Boolean(isOpen)}
-                            onClick={toggle}>
-                            <PanelLeft className="h-5 w-5" />
-                        </Button>
+                        <SimpleTooltip title="Toggle sidebar visibility">
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={toggle}>
+                                <PanelLeft className="h-5 w-5" />
+                            </Button>
+                        </SimpleTooltip>
                     </div>
                     <div className="min-w-0 justify-self-end lg:w-full lg:max-w-xl lg:justify-self-center">
                         <div className="lg:hidden">

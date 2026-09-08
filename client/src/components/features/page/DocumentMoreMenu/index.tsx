@@ -84,7 +84,6 @@ export const DocumentMoreMenu = ({
                 menuContent={
                     <MenuItems
                         isOwner={isOwner}
-                        hasChildren={!!children}
                         onOpenInNewTab={handleOpenInNewTab}
                         onCopyLink={handleCopyLink}
                         onMove={handleOpenMoveDialog}

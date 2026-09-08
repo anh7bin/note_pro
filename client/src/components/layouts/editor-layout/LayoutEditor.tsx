@@ -26,7 +26,7 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
             <div
                 aria-hidden={!isOpen}
                 className={cn(
-                    'fixed bottom-0 left-0 top-[var(--header-height)] z-40 w-[var(--sidebar-width)] flex-shrink-0 overflow-hidden border-r border-border-subtle bg-background shadow-md transition-[transform,width,visibility] duration-300 md:static md:h-full md:shadow-none',
+                    'fixed bottom-0 left-0 top-[var(--header-height)] z-40 w-[var(--sidebar-width)] flex-shrink-0 overflow-hidden border-border-subtle bg-background shadow-md transition-[transform,width,visibility] duration-300 md:static md:h-full md:shadow-none',
                     isOpen
                         ? 'visible translate-x-0 md:w-[var(--sidebar-width)]'
                         : 'invisible -translate-x-full pointer-events-none md:w-0'

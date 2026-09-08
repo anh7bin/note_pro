@@ -41,7 +41,7 @@ export default function SharedWithMePage() {
     ) : (
         <PageShell>
             <PageHeader>
-                <PageTitle>Shared With Me</PageTitle>
+                <PageTitle>Shared with Me</PageTitle>
                 <div className="flex flex-wrap items-center justify-end gap-3">
                     <SelectionActionBar mode="shared" />
                     <span className="text-sm tabular-nums text-muted-foreground">

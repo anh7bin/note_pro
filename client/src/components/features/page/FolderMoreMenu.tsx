@@ -159,42 +159,38 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
         }
     }, [id, deleteFolder]);
 
-    const MenuItem = children ? ContextMenuItem : DropdownMenuItem;
-
     const menuContent = (
-        <div className="flex flex-col">
-            <MenuItem
-                className="cursor-pointer"
+        <div className="flex flex-col gap-1">
+            <ContextMenuItem
                 onClick={(e) =>
                     handleMenuItemClick(e, () => setIsEditDialogOpen(true))
                 }>
                 <Pencil />
                 Edit
-            </MenuItem>
+            </ContextMenuItem>
             <Separator />
-            <MenuItem
-                className="cursor-pointer"
+            <ContextMenuItem
                 onClick={(e) => handleMenuItemClick(e, createNewDocument)}>
                 <FilePlus2 />
                 New document
-            </MenuItem>
-            <MenuItem
+            </ContextMenuItem>
+            <ContextMenuItem
                 className="cursor-pointer"
                 onClick={(e) =>
                     handleMenuItemClick(e, () => setIsNewFolderDialogOpen(true))
                 }>
                 <FolderPlus />
                 New folder
-            </MenuItem>
+            </ContextMenuItem>
             <Separator />
-            <MenuItem
-                className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
+            <ContextMenuItem
+                className="text-destructive focus:bg-destructive/10 focus:text-destructive"
                 onClick={(e) =>
                     handleMenuItemClick(e, () => setIsDeleteDialogOpen(true))
                 }>
                 <Trash2 />
                 Delete
-            </MenuItem>
+            </ContextMenuItem>
         </div>
     );
 

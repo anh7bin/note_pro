@@ -93,7 +93,7 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
                                         : 'shrink-0'
                                 }
                                 onClick={() => navigateTo(href)}>
-                                <Icon className="h-4 w-4" />
+                                <Icon />
                                 {label}
                             </Button>
                         )

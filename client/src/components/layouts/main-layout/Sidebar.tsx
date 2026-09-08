@@ -70,7 +70,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                     <NewDocumentButton />
                     <SidebarButton
                         icon={<RiUserVoiceLine className="h-4 w-4" />}
-                        label="Shared with me"
+                        label="Shared with Me"
                         href={ROUTES.SHARED_WITH_ME}
                     />
                     <Separator />

@@ -10,6 +10,7 @@ import { Bell, CircleAlert } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
 import { NotificationMenuProps } from './notification.types';
 import { NOTIFICATION_LIMIT } from './notification.utils';
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 
 export const NotificationMenu = ({
     notifications,
@@ -35,31 +36,26 @@ export const NotificationMenu = ({
 
     return (
         <DropdownMenu modal={false}>
-            <DropdownMenuTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={
-                        unreadCount > 0
-                            ? `${unreadCount} unread notifications`
-                            : 'Notifications'
-                    }>
-                    <Bell className="h-4 w-4" />
-                    {unreadCount > 0 && (
-                        <span
-                            aria-hidden="true"
-                            className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground">
-                            {unreadCount > 9 ? '9+' : unreadCount}
-                        </span>
-                    )}
-                    {hasConnectionError && (
-                        <span
-                            className="absolute bottom-0 right-0 h-2 w-2 rounded-full border border-background bg-warning"
-                            aria-hidden="true"
-                        />
-                    )}
-                </Button>
-            </DropdownMenuTrigger>
+            <SimpleTooltip title="Notifications">
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <Bell className="h-4 w-4" />
+                        {unreadCount > 0 && (
+                            <span
+                                aria-hidden="true"
+                                className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground">
+                                {unreadCount > 9 ? '9+' : unreadCount}
+                            </span>
+                        )}
+                        {hasConnectionError && (
+                            <span
+                                className="absolute bottom-0 right-0 h-2 w-2 rounded-full border border-background bg-warning"
+                                aria-hidden="true"
+                            />
+                        )}
+                    </Button>
+                </DropdownMenuTrigger>
+            </SimpleTooltip>
 
             <DropdownMenuContent
                 className="w-[min(24rem,calc(100vw-1rem))] p-0"

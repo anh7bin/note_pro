@@ -213,7 +213,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent ref={dialogContentRef} className="sm:max-w-[500px]">
                 <DialogHeader>
-                    <DialogTitle>Create task</DialogTitle>
+                    <DialogTitle>Create Task</DialogTitle>
                     <DialogDescription>
                         Add a task to your inbox or connect it to a document.
                     </DialogDescription>
