@@ -26,8 +26,8 @@ interface SelectionActionBarProps {
 }
 
 const REFETCH_QUERIES = [
-    'GetFolders',
     'GetAllDocs',
+    'GetFolders',
     'GetWorkspaceFolderDocuments',
     'GetFolderById',
     'GetDocsCount',

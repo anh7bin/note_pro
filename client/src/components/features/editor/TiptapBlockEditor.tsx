@@ -53,6 +53,7 @@ function EditorContent() {
                                 imageUrl={coverImage}
                                 onRemove={handleRemoveCover}
                                 onChangeCover={handleAddCover}
+                                editable={editable}
                                 isUploading={isUploading}
                             />
                         )}

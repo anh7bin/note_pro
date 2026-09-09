@@ -9,6 +9,7 @@ interface DocumentCoverProps {
     imageUrl: string;
     onRemove: () => void;
     onChangeCover: (file: File) => void;
+    editable: boolean;
     isUploading?: boolean;
 }
 
@@ -16,6 +17,7 @@ export function DocumentCover({
     imageUrl,
     onRemove,
     onChangeCover,
+    editable,
     isUploading,
 }: DocumentCoverProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -43,32 +45,36 @@ export function DocumentCover({
                 className="object-cover"
                 priority
             />
-            <div className="absolute right-3 top-3 flex gap-2 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
-                <Button
-                    size="sm"
-                    onClick={handleChangeCover}
-                    aria-busy={isUploading}
-                    disabled={isUploading}>
-                    <ImagePlus />
-                    {isUploading ? 'Uploading…' : 'Change cover'}
-                </Button>
-                <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={onRemove}
-                    disabled={isUploading}>
-                    <Trash2 />
-                    Remove cover
-                </Button>
-            </div>
-            <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-                aria-label="Choose a document cover image"
-            />
+            {editable && (
+                <>
+                    <div className="absolute right-3 top-3 flex gap-2 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
+                        <Button
+                            size="sm"
+                            onClick={handleChangeCover}
+                            aria-busy={isUploading}
+                            disabled={isUploading}>
+                            <ImagePlus />
+                            {isUploading ? 'Uploading…' : 'Change cover'}
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={onRemove}
+                            disabled={isUploading}>
+                            <Trash2 />
+                            Remove cover
+                        </Button>
+                    </div>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                        aria-label="Choose a document cover image"
+                    />
+                </>
+            )}
         </div>
     );
 }

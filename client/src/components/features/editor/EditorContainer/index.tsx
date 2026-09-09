@@ -26,7 +26,7 @@ const DragHandle = memo(function DragHandle({
 }: {
     children: ReactNode;
 }) {
-    return <div className="pt-2 text-muted-foreground">{children}</div>;
+    return <div className="text-muted-foreground">{children}</div>;
 });
 
 const BlockActions = memo(function BlockActions({

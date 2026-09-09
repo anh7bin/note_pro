@@ -2,10 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FaShare } from 'react-icons/fa';
 import { ShareTab } from '@/components/features/page/share/ShareTab';
@@ -32,8 +32,8 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
     }, [searchParams]);
 
     return (
-        <DropdownMenu open={open} onOpenChange={setOpen}>
-            <DropdownMenuTrigger asChild>
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
                 <Button
                     variant="outline"
                     size="sm"
@@ -41,8 +41,8 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
                     <FaShare className="h-4 w-4" />
                     <span className="hidden lg:inline">Share</span>
                 </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
+            </PopoverTrigger>
+            <PopoverContent
                 className="w-[min(30rem,calc(100vw-1rem))] p-3"
                 align="end">
                 <Tabs defaultValue="share" className="w-full">
@@ -57,7 +57,7 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
                         <ExportTab />
                     </TabsContent>
                 </Tabs>
-            </DropdownMenuContent>
-        </DropdownMenu>
+            </PopoverContent>
+        </Popover>
     );
 }

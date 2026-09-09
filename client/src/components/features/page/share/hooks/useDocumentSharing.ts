@@ -14,7 +14,7 @@ import {
     handleMutationError,
     handleMutationSuccess,
 } from '@/lib/error-handler';
-import { PermissionType } from '@/types/types';
+import { AccessRequestStatus, PermissionType } from '@/types/types';
 import { useCallback, useMemo, useState } from 'react';
 import { UserSearchResult } from '../UserEmailAutocomplete';
 import { PendingAccessRequest, SharedUserRole } from '../share.types';
@@ -137,8 +137,16 @@ export function useDocumentSharing(documentId: string) {
             setProcessingRequestId(request.id);
 
             try {
+                const isEditUpgrade =
+                    request.permission_type === PermissionType.WRITE;
+
                 await declineRequest({
-                    variables: { requestId: request.id },
+                    variables: {
+                        requestId: request.id,
+                        status: isEditUpgrade
+                            ? AccessRequestStatus.APPROVED
+                            : AccessRequestStatus.REJECTED,
+                    },
                 });
                 handleMutationSuccess('Request declined');
                 await refetch();

@@ -39,7 +39,7 @@ export function SearchInputField({ onResultClick }: Props) {
             iconPosition="left"
             popoverHeight="auto"
             popoverLabel="Search results"
-            popoverClassName="max-h-[60vh] max-w-3xl overflow-hidden"
+            popoverClassName="max-h-[60vh] max-w-full overflow-hidden"
             popoverContent={popoverContent}
         />
     );

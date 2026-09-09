@@ -46,10 +46,11 @@ export type ApproveAccessRequestMutation = { __typename?: 'mutation_root', updat
 
 export type DeclineAccessRequestMutationVariables = Types.Exact<{
   requestId: Types.Scalars['uuid']['input'];
+  status: Types.Scalars['String']['input'];
 }>;
 
 
-export type DeclineAccessRequestMutation = { __typename?: 'mutation_root', update_access_requests_by_pk?: { __typename?: 'access_requests', id: string, status?: string | null, requester_id: string, document_id: string } | null };
+export type DeclineAccessRequestMutation = { __typename?: 'mutation_root', update_access_requests_by_pk?: { __typename?: 'access_requests', id: string, status?: string | null, requester_id: string, document_id: string, permission_type?: string | null } | null };
 
 
 export const ShareDocumentWithUserDocument = gql`
@@ -295,15 +296,16 @@ export type ApproveAccessRequestMutationHookResult = ReturnType<typeof useApprov
 export type ApproveAccessRequestMutationResult = Apollo.MutationResult<ApproveAccessRequestMutation>;
 export type ApproveAccessRequestMutationOptions = Apollo.BaseMutationOptions<ApproveAccessRequestMutation, ApproveAccessRequestMutationVariables>;
 export const DeclineAccessRequestDocument = gql`
-    mutation DeclineAccessRequest($requestId: uuid!) {
+    mutation DeclineAccessRequest($requestId: uuid!, $status: String!) {
   update_access_requests_by_pk(
     pk_columns: {id: $requestId}
-    _set: {status: "rejected", updated_at: "now()"}
+    _set: {status: $status, permission_type: "read", updated_at: "now()"}
   ) {
     id
     status
     requester_id
     document_id
+    permission_type
   }
 }
     `;
@@ -323,6 +325,7 @@ export type DeclineAccessRequestMutationFn = Apollo.MutationFunction<DeclineAcce
  * const [declineAccessRequestMutation, { data, loading, error }] = useDeclineAccessRequestMutation({
  *   variables: {
  *      requestId: // value for 'requestId'
+ *      status: // value for 'status'
  *   },
  * });
  */

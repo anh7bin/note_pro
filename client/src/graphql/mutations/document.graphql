@@ -10,6 +10,27 @@ mutation SoftDeleteDocument($id: uuid!) {
 mutation CreateUntitledPage($input: blocks_insert_input!) {
     insert_blocks_one(object: $input) {
         id
+        content
+        cover_image
+        created_at
+        updated_at
+        workspace_id
+        user_id
+        folder {
+            id
+            name
+        }
+        sub_blocks(order_by: { position: asc }, limit: 10) {
+            id
+            type
+            content
+            tasks {
+                id
+                status
+                schedule_date
+                deadline_date
+            }
+        }
     }
 }
 

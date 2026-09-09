@@ -1,6 +1,10 @@
 'use client';
 
 import { useCreateUntitledPageMutation } from '@/graphql/mutations/__generated__/document.generated';
+import {
+    GetAllDocsDocument,
+    type GetAllDocsQuery,
+} from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { useLoading } from '@/contexts/LoadingContext';
@@ -49,6 +53,34 @@ export function useCreateDocument(options: CreateDocumentOptions = {}) {
                     parent_id: null,
                     page_id: null,
                 },
+            },
+            update(cache, { data }) {
+                const createdDocument = data?.insert_blocks_one;
+                if (!createdDocument) return;
+
+                cache.updateQuery<GetAllDocsQuery>(
+                    {
+                        query: GetAllDocsDocument,
+                        variables: { workspaceId: workspace.id },
+                    },
+                    (existing) => {
+                        if (
+                            existing?.blocks.some(
+                                (document) => document.id === createdDocument.id
+                            )
+                        ) {
+                            return existing;
+                        }
+
+                        return {
+                            __typename: 'query_root',
+                            blocks: [
+                                createdDocument,
+                                ...(existing?.blocks ?? []),
+                            ],
+                        };
+                    }
+                );
             },
         })
             .then((res) => {

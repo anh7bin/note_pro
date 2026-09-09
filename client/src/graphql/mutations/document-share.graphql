@@ -121,14 +121,15 @@ mutation ApproveAccessRequest($requestId: uuid!) {
     }
 }
 
-mutation DeclineAccessRequest($requestId: uuid!) {
+mutation DeclineAccessRequest($requestId: uuid!, $status: String!) {
     update_access_requests_by_pk(
         pk_columns: { id: $requestId }
-        _set: { status: "rejected", updated_at: "now()" }
+        _set: { status: $status, permission_type: "read", updated_at: "now()" }
     ) {
         id
         status
         requester_id
         document_id
+        permission_type
     }
 }

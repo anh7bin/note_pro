@@ -15,7 +15,7 @@ export type CreateUntitledPageMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateUntitledPageMutation = { __typename?: 'mutation_root', insert_blocks_one?: { __typename?: 'blocks', id: string } | null };
+export type CreateUntitledPageMutation = { __typename?: 'mutation_root', insert_blocks_one?: { __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, workspace_id?: string | null, user_id?: string | null, folder?: { __typename?: 'folders', id: string, name: string } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }> } | null };
 
 export type UpdateBlockMutationVariables = Types.Exact<{
   id: Types.Scalars['uuid']['input'];
@@ -121,6 +121,27 @@ export const CreateUntitledPageDocument = gql`
     mutation CreateUntitledPage($input: blocks_insert_input!) {
   insert_blocks_one(object: $input) {
     id
+    content
+    cover_image
+    created_at
+    updated_at
+    workspace_id
+    user_id
+    folder {
+      id
+      name
+    }
+    sub_blocks(order_by: {position: asc}, limit: 10) {
+      id
+      type
+      content
+      tasks {
+        id
+        status
+        schedule_date
+        deadline_date
+      }
+    }
   }
 }
     `;
