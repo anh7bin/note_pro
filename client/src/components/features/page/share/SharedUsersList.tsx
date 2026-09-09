@@ -4,12 +4,11 @@ import {
     Select,
     SelectContent,
     SelectItem,
+    SelectSeparator,
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
-import { X } from 'lucide-react';
 import { UserAvatar } from '@/components/shared';
 
 export type SharedUser = {
@@ -51,6 +50,7 @@ function UserCard({
     onRemoveUser,
 }: UserCardProps) {
     const isCurrentUser = currentUserId === user.id;
+    const canOpenPermissionMenu = canManageUsers || isCurrentUser;
 
     return (
         <div
@@ -86,31 +86,72 @@ function UserCard({
                     Owner
                 </span>
             ) : (
-                <div className="flex items-center gap-2">
-                    <Select
-                        value={user.role}
-                        onValueChange={(value: 'viewer' | 'editor') =>
-                            onRoleChange?.(user.id, value)
+                <Select
+                    value={user.role}
+                    onValueChange={(value) => {
+                        if (value === 'remove' || value === 'leave') {
+                            onRemoveUser?.(user.id);
+                            return;
                         }
-                        disabled={isCurrentUser || !canManageUsers}>
-                        <SelectTrigger className="w-[110px] h-8 text-sm">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="viewer">Viewer</SelectItem>
-                            <SelectItem value="editor">Editor</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    {!isCurrentUser && canManageUsers && (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            aria-label={`Remove ${getDisplayName(user)} from document`}
-                            onClick={() => onRemoveUser?.(user.id)}>
-                            <X />
-                        </Button>
-                    )}
-                </div>
+
+                        if (value === 'viewer' || value === 'editor') {
+                            onRoleChange?.(user.id, value);
+                        }
+                    }}
+                    disabled={!canOpenPermissionMenu}>
+                    <SelectTrigger
+                        className="h-8 w-[120px] text-sm"
+                        aria-label={
+                            isCurrentUser
+                                ? 'Manage your document access'
+                                : `Change access for ${getDisplayName(user)}`
+                        }>
+                        <SelectValue>
+                            {user.role === 'editor' ? 'Editor' : 'Viewer'}
+                        </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent className="w-[200px]">
+                        {(!isCurrentUser || user.role === 'viewer') && (
+                            <SelectItem
+                                value="viewer"
+                                textValue="Viewer"
+                                className="py-2">
+                                <span className="flex flex-col items-start">
+                                    <span className="font-medium">Viewer</span>
+                                    <span className="text-xs font-normal text-muted-foreground">
+                                        Can view and comment
+                                    </span>
+                                </span>
+                            </SelectItem>
+                        )}
+                        {(!isCurrentUser || user.role === 'editor') && (
+                            <SelectItem
+                                value="editor"
+                                textValue="Editor"
+                                className="py-2">
+                                <span className="flex flex-col items-start">
+                                    <span className="font-medium">Editor</span>
+                                    <span className="text-xs font-normal text-muted-foreground">
+                                        Can edit and comment
+                                    </span>
+                                </span>
+                            </SelectItem>
+                        )}
+                        {canOpenPermissionMenu && (
+                            <>
+                                <SelectSeparator className="my-1.5" />
+                                <SelectItem
+                                    value={isCurrentUser ? 'leave' : 'remove'}
+                                    textValue={
+                                        isCurrentUser ? 'Leave' : 'Remove'
+                                    }
+                                    className="py-2 text-destructive focus:bg-destructive/10 focus:text-destructive">
+                                    {isCurrentUser ? 'Leave' : 'Remove'}
+                                </SelectItem>
+                            </>
+                        )}
+                    </SelectContent>
+                </Select>
             )}
         </div>
     );

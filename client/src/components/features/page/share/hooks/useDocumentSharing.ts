@@ -15,6 +15,8 @@ import {
     handleMutationSuccess,
 } from '@/lib/error-handler';
 import { AccessRequestStatus, PermissionType } from '@/types/types';
+import { ROUTES } from '@/lib/routes';
+import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import { UserSearchResult } from '../UserEmailAutocomplete';
 import { PendingAccessRequest, SharedUserRole } from '../share.types';
@@ -25,6 +27,7 @@ import {
 } from '../share.utils';
 
 export function useDocumentSharing(documentId: string) {
+    const router = useRouter();
     const currentUserId = useUserId();
     const { permissionType } = useDocumentPermission(documentId);
     const [processingRequestId, setProcessingRequestId] = useState<
@@ -104,13 +107,20 @@ export function useDocumentSharing(documentId: string) {
         async (userId: string) => {
             try {
                 await removeAccess({ variables: { documentId, userId } });
+
+                if (userId === currentUserId) {
+                    handleMutationSuccess('You left the document');
+                    router.replace(ROUTES.SHARED_WITH_ME);
+                    return;
+                }
+
                 handleMutationSuccess('Access removed');
                 await refetch();
             } catch (error) {
                 handleMutationError(error, 'remove access');
             }
         },
-        [documentId, refetch, removeAccess]
+        [currentUserId, documentId, refetch, removeAccess, router]
     );
 
     const onApproveRequest = useCallback(

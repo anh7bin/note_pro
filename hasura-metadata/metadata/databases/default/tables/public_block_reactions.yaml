@@ -1,0 +1,79 @@
+table:
+  name: block_reactions
+  schema: public
+object_relationships:
+  - name: block
+    using:
+      foreign_key_constraint_on: block_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - block:
+              _or:
+                - workspace:
+                    created_by:
+                      _eq: X-Hasura-User-Id
+                - page:
+                    access_requests:
+                      requester_id:
+                        _eq: X-Hasura-User-Id
+                      status:
+                        _eq: approved
+                - _and:
+                    - type:
+                        _eq: page
+                    - deleted_at:
+                        _is_null: true
+                    - access_requests:
+                        requester_id:
+                          _eq: X-Hasura-User-Id
+                        status:
+                          _eq: approved
+      columns:
+        - block_id
+        - emoji
+        - user_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - block_id
+        - created_at
+        - emoji
+        - id
+        - user_id
+      filter:
+        block:
+          _or:
+            - workspace:
+                created_by:
+                  _eq: X-Hasura-User-Id
+            - page:
+                access_requests:
+                  requester_id:
+                    _eq: X-Hasura-User-Id
+                  status:
+                    _eq: approved
+            - _and:
+                - type:
+                    _eq: page
+                - deleted_at:
+                    _is_null: true
+                - access_requests:
+                    requester_id:
+                      _eq: X-Hasura-User-Id
+                    status:
+                      _eq: approved
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id

@@ -1,0 +1,130 @@
+query GetBlockInteractions($pageId: uuid!) {
+    block_comments(
+        where: {
+            block: {
+                _or: [{ id: { _eq: $pageId } }, { page_id: { _eq: $pageId } }]
+            }
+        }
+        order_by: { created_at: asc }
+    ) {
+        id
+        block_id
+        user_id
+        content
+        created_at
+        user {
+            id
+            name
+            avatar_url
+        }
+    }
+    block_reactions(
+        where: {
+            block: {
+                _or: [{ id: { _eq: $pageId } }, { page_id: { _eq: $pageId } }]
+            }
+        }
+        order_by: { created_at: asc }
+    ) {
+        id
+        block_id
+        user_id
+        emoji
+        created_at
+        user {
+            id
+            name
+            avatar_url
+        }
+    }
+}
+
+subscription SubscribeToBlockComments($pageId: uuid!) {
+    block_comments(
+        where: {
+            block: {
+                _or: [{ id: { _eq: $pageId } }, { page_id: { _eq: $pageId } }]
+            }
+        }
+        order_by: { created_at: asc }
+    ) {
+        id
+        block_id
+        user_id
+        content
+        created_at
+        user {
+            id
+            name
+            avatar_url
+        }
+    }
+}
+
+subscription SubscribeToBlockReactions($pageId: uuid!) {
+    block_reactions(
+        where: {
+            block: {
+                _or: [{ id: { _eq: $pageId } }, { page_id: { _eq: $pageId } }]
+            }
+        }
+        order_by: { created_at: asc }
+    ) {
+        id
+        block_id
+        user_id
+        emoji
+        created_at
+        user {
+            id
+            name
+            avatar_url
+        }
+    }
+}
+
+mutation AddBlockComment($blockId: uuid!, $userId: uuid!, $content: String!) {
+    insert_block_comments_one(
+        object: { block_id: $blockId, user_id: $userId, content: $content }
+    ) {
+        id
+        block_id
+        user_id
+        content
+        created_at
+        user {
+            id
+            name
+            avatar_url
+        }
+    }
+}
+
+mutation DeleteBlockComment($id: uuid!) {
+    delete_block_comments_by_pk(id: $id) {
+        id
+    }
+}
+
+mutation AddBlockReaction($blockId: uuid!, $userId: uuid!, $emoji: String!) {
+    insert_block_reactions_one(
+        object: { block_id: $blockId, user_id: $userId, emoji: $emoji }
+    ) {
+        id
+        block_id
+        user_id
+        emoji
+        created_at
+        user {
+            id
+            name
+            avatar_url
+        }
+    }
+}
+
+mutation DeleteBlockReaction($id: uuid!) {
+    delete_block_reactions_by_pk(id: $id) {
+        id
+    }
+}

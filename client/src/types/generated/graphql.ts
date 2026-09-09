@@ -364,6 +364,229 @@ export type AccessRequestsUpdates = {
   where: AccessRequestsBoolExp;
 };
 
+/** columns and relationships of "block_comments" */
+export type BlockComments = {
+  __typename?: 'block_comments';
+  /** An object relationship */
+  block: Blocks;
+  block_id: Scalars['uuid']['output'];
+  content: Scalars['String']['output'];
+  created_at: Scalars['timestamptz']['output'];
+  id: Scalars['uuid']['output'];
+  /** An object relationship */
+  user: Users;
+  user_id: Scalars['uuid']['output'];
+};
+
+/** aggregated selection of "block_comments" */
+export type BlockCommentsAggregate = {
+  __typename?: 'block_comments_aggregate';
+  aggregate?: Maybe<BlockCommentsAggregateFields>;
+  nodes: Array<BlockComments>;
+};
+
+export type BlockCommentsAggregateBoolExp = {
+  count?: InputMaybe<BlockCommentsAggregateBoolExpCount>;
+};
+
+export type BlockCommentsAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<BlockCommentsSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<BlockCommentsBoolExp>;
+  predicate: IntComparisonExp;
+};
+
+/** aggregate fields of "block_comments" */
+export type BlockCommentsAggregateFields = {
+  __typename?: 'block_comments_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<BlockCommentsMaxFields>;
+  min?: Maybe<BlockCommentsMinFields>;
+};
+
+
+/** aggregate fields of "block_comments" */
+export type BlockCommentsAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<BlockCommentsSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "block_comments" */
+export type BlockCommentsAggregateOrderBy = {
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<BlockCommentsMaxOrderBy>;
+  min?: InputMaybe<BlockCommentsMinOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "block_comments" */
+export type BlockCommentsArrRelInsertInput = {
+  data: Array<BlockCommentsInsertInput>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<BlockCommentsOnConflict>;
+};
+
+/** Boolean expression to filter rows from the table "block_comments". All fields are combined with a logical 'AND'. */
+export type BlockCommentsBoolExp = {
+  _and?: InputMaybe<Array<BlockCommentsBoolExp>>;
+  _not?: InputMaybe<BlockCommentsBoolExp>;
+  _or?: InputMaybe<Array<BlockCommentsBoolExp>>;
+  block?: InputMaybe<BlocksBoolExp>;
+  block_id?: InputMaybe<UuidComparisonExp>;
+  content?: InputMaybe<StringComparisonExp>;
+  created_at?: InputMaybe<TimestamptzComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  user?: InputMaybe<UsersBoolExp>;
+  user_id?: InputMaybe<UuidComparisonExp>;
+};
+
+/** unique or primary key constraints on table "block_comments" */
+export enum BlockCommentsConstraint {
+  /** unique or primary key constraint on columns "id" */
+  BlockCommentsPkey = 'block_comments_pkey'
+}
+
+/** input type for inserting data into table "block_comments" */
+export type BlockCommentsInsertInput = {
+  block?: InputMaybe<BlocksObjRelInsertInput>;
+  block_id?: InputMaybe<Scalars['uuid']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  user?: InputMaybe<UsersObjRelInsertInput>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type BlockCommentsMaxFields = {
+  __typename?: 'block_comments_max_fields';
+  block_id?: Maybe<Scalars['uuid']['output']>;
+  content?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "block_comments" */
+export type BlockCommentsMaxOrderBy = {
+  block_id?: InputMaybe<OrderBy>;
+  content?: InputMaybe<OrderBy>;
+  created_at?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type BlockCommentsMinFields = {
+  __typename?: 'block_comments_min_fields';
+  block_id?: Maybe<Scalars['uuid']['output']>;
+  content?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "block_comments" */
+export type BlockCommentsMinOrderBy = {
+  block_id?: InputMaybe<OrderBy>;
+  content?: InputMaybe<OrderBy>;
+  created_at?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "block_comments" */
+export type BlockCommentsMutationResponse = {
+  __typename?: 'block_comments_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<BlockComments>;
+};
+
+/** on_conflict condition type for table "block_comments" */
+export type BlockCommentsOnConflict = {
+  constraint: BlockCommentsConstraint;
+  update_columns?: Array<BlockCommentsUpdateColumn>;
+  where?: InputMaybe<BlockCommentsBoolExp>;
+};
+
+/** Ordering options when selecting data from "block_comments". */
+export type BlockCommentsOrderBy = {
+  block?: InputMaybe<BlocksOrderBy>;
+  block_id?: InputMaybe<OrderBy>;
+  content?: InputMaybe<OrderBy>;
+  created_at?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  user?: InputMaybe<UsersOrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: block_comments */
+export type BlockCommentsPkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "block_comments" */
+export enum BlockCommentsSelectColumn {
+  /** column name */
+  BlockId = 'block_id',
+  /** column name */
+  Content = 'content',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** input type for updating data in table "block_comments" */
+export type BlockCommentsSetInput = {
+  block_id?: InputMaybe<Scalars['uuid']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** Streaming cursor of the table "block_comments" */
+export type BlockCommentsStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: BlockCommentsStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type BlockCommentsStreamCursorValueInput = {
+  block_id?: InputMaybe<Scalars['uuid']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "block_comments" */
+export enum BlockCommentsUpdateColumn {
+  /** column name */
+  BlockId = 'block_id',
+  /** column name */
+  Content = 'content',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+export type BlockCommentsUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<BlockCommentsSetInput>;
+  /** filter the rows which have to be updated */
+  where: BlockCommentsBoolExp;
+};
+
 /** columns and relationships of "block_links" */
 export type BlockLinks = {
   __typename?: 'block_links';
@@ -544,6 +767,231 @@ export type BlockLinksUpdates = {
   _set?: InputMaybe<BlockLinksSetInput>;
   /** filter the rows which have to be updated */
   where: BlockLinksBoolExp;
+};
+
+/** columns and relationships of "block_reactions" */
+export type BlockReactions = {
+  __typename?: 'block_reactions';
+  /** An object relationship */
+  block: Blocks;
+  block_id: Scalars['uuid']['output'];
+  created_at: Scalars['timestamptz']['output'];
+  emoji: Scalars['String']['output'];
+  id: Scalars['uuid']['output'];
+  /** An object relationship */
+  user: Users;
+  user_id: Scalars['uuid']['output'];
+};
+
+/** aggregated selection of "block_reactions" */
+export type BlockReactionsAggregate = {
+  __typename?: 'block_reactions_aggregate';
+  aggregate?: Maybe<BlockReactionsAggregateFields>;
+  nodes: Array<BlockReactions>;
+};
+
+export type BlockReactionsAggregateBoolExp = {
+  count?: InputMaybe<BlockReactionsAggregateBoolExpCount>;
+};
+
+export type BlockReactionsAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<BlockReactionsSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<BlockReactionsBoolExp>;
+  predicate: IntComparisonExp;
+};
+
+/** aggregate fields of "block_reactions" */
+export type BlockReactionsAggregateFields = {
+  __typename?: 'block_reactions_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<BlockReactionsMaxFields>;
+  min?: Maybe<BlockReactionsMinFields>;
+};
+
+
+/** aggregate fields of "block_reactions" */
+export type BlockReactionsAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<BlockReactionsSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "block_reactions" */
+export type BlockReactionsAggregateOrderBy = {
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<BlockReactionsMaxOrderBy>;
+  min?: InputMaybe<BlockReactionsMinOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "block_reactions" */
+export type BlockReactionsArrRelInsertInput = {
+  data: Array<BlockReactionsInsertInput>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<BlockReactionsOnConflict>;
+};
+
+/** Boolean expression to filter rows from the table "block_reactions". All fields are combined with a logical 'AND'. */
+export type BlockReactionsBoolExp = {
+  _and?: InputMaybe<Array<BlockReactionsBoolExp>>;
+  _not?: InputMaybe<BlockReactionsBoolExp>;
+  _or?: InputMaybe<Array<BlockReactionsBoolExp>>;
+  block?: InputMaybe<BlocksBoolExp>;
+  block_id?: InputMaybe<UuidComparisonExp>;
+  created_at?: InputMaybe<TimestamptzComparisonExp>;
+  emoji?: InputMaybe<StringComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  user?: InputMaybe<UsersBoolExp>;
+  user_id?: InputMaybe<UuidComparisonExp>;
+};
+
+/** unique or primary key constraints on table "block_reactions" */
+export enum BlockReactionsConstraint {
+  /** unique or primary key constraint on columns "user_id", "emoji", "block_id" */
+  BlockReactionsBlockIdUserIdEmojiKey = 'block_reactions_block_id_user_id_emoji_key',
+  /** unique or primary key constraint on columns "id" */
+  BlockReactionsPkey = 'block_reactions_pkey'
+}
+
+/** input type for inserting data into table "block_reactions" */
+export type BlockReactionsInsertInput = {
+  block?: InputMaybe<BlocksObjRelInsertInput>;
+  block_id?: InputMaybe<Scalars['uuid']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  emoji?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  user?: InputMaybe<UsersObjRelInsertInput>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type BlockReactionsMaxFields = {
+  __typename?: 'block_reactions_max_fields';
+  block_id?: Maybe<Scalars['uuid']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  emoji?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "block_reactions" */
+export type BlockReactionsMaxOrderBy = {
+  block_id?: InputMaybe<OrderBy>;
+  created_at?: InputMaybe<OrderBy>;
+  emoji?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type BlockReactionsMinFields = {
+  __typename?: 'block_reactions_min_fields';
+  block_id?: Maybe<Scalars['uuid']['output']>;
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  emoji?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "block_reactions" */
+export type BlockReactionsMinOrderBy = {
+  block_id?: InputMaybe<OrderBy>;
+  created_at?: InputMaybe<OrderBy>;
+  emoji?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "block_reactions" */
+export type BlockReactionsMutationResponse = {
+  __typename?: 'block_reactions_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<BlockReactions>;
+};
+
+/** on_conflict condition type for table "block_reactions" */
+export type BlockReactionsOnConflict = {
+  constraint: BlockReactionsConstraint;
+  update_columns?: Array<BlockReactionsUpdateColumn>;
+  where?: InputMaybe<BlockReactionsBoolExp>;
+};
+
+/** Ordering options when selecting data from "block_reactions". */
+export type BlockReactionsOrderBy = {
+  block?: InputMaybe<BlocksOrderBy>;
+  block_id?: InputMaybe<OrderBy>;
+  created_at?: InputMaybe<OrderBy>;
+  emoji?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  user?: InputMaybe<UsersOrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: block_reactions */
+export type BlockReactionsPkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "block_reactions" */
+export enum BlockReactionsSelectColumn {
+  /** column name */
+  BlockId = 'block_id',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Emoji = 'emoji',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** input type for updating data in table "block_reactions" */
+export type BlockReactionsSetInput = {
+  block_id?: InputMaybe<Scalars['uuid']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  emoji?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** Streaming cursor of the table "block_reactions" */
+export type BlockReactionsStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: BlockReactionsStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type BlockReactionsStreamCursorValueInput = {
+  block_id?: InputMaybe<Scalars['uuid']['input']>;
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  emoji?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "block_reactions" */
+export enum BlockReactionsUpdateColumn {
+  /** column name */
+  BlockId = 'block_id',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Emoji = 'emoji',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+export type BlockReactionsUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<BlockReactionsSetInput>;
+  /** filter the rows which have to be updated */
+  where: BlockReactionsBoolExp;
 };
 
 /** columns and relationships of "block_tags" */
@@ -751,6 +1199,10 @@ export type Blocks = {
   children: Array<Blocks>;
   /** An aggregate relationship */
   children_aggregate: BlocksAggregate;
+  /** An array relationship */
+  comments: Array<BlockComments>;
+  /** An aggregate relationship */
+  comments_aggregate: BlockCommentsAggregate;
   content?: Maybe<Scalars['jsonb']['output']>;
   cover_image?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -766,6 +1218,10 @@ export type Blocks = {
   parent_block?: Maybe<Blocks>;
   parent_id?: Maybe<Scalars['uuid']['output']>;
   position?: Maybe<Scalars['Int']['output']>;
+  /** An array relationship */
+  reactions: Array<BlockReactions>;
+  /** An aggregate relationship */
+  reactions_aggregate: BlockReactionsAggregate;
   search_text?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   sub_blocks: Array<Blocks>;
@@ -887,8 +1343,48 @@ export type BlocksChildrenAggregateArgs = {
 
 
 /** columns and relationships of "blocks" */
+export type BlocksCommentsArgs = {
+  distinct_on?: InputMaybe<Array<BlockCommentsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockCommentsOrderBy>>;
+  where?: InputMaybe<BlockCommentsBoolExp>;
+};
+
+
+/** columns and relationships of "blocks" */
+export type BlocksCommentsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<BlockCommentsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockCommentsOrderBy>>;
+  where?: InputMaybe<BlockCommentsBoolExp>;
+};
+
+
+/** columns and relationships of "blocks" */
 export type BlocksContentArgs = {
   path?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** columns and relationships of "blocks" */
+export type BlocksReactionsArgs = {
+  distinct_on?: InputMaybe<Array<BlockReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockReactionsOrderBy>>;
+  where?: InputMaybe<BlockReactionsBoolExp>;
+};
+
+
+/** columns and relationships of "blocks" */
+export type BlocksReactionsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<BlockReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockReactionsOrderBy>>;
+  where?: InputMaybe<BlockReactionsBoolExp>;
 };
 
 
@@ -1025,6 +1521,8 @@ export type BlocksBoolExp = {
   block_tags_aggregate?: InputMaybe<BlockTagsAggregateBoolExp>;
   children?: InputMaybe<BlocksBoolExp>;
   children_aggregate?: InputMaybe<BlocksAggregateBoolExp>;
+  comments?: InputMaybe<BlockCommentsBoolExp>;
+  comments_aggregate?: InputMaybe<BlockCommentsAggregateBoolExp>;
   content?: InputMaybe<JsonbComparisonExp>;
   cover_image?: InputMaybe<StringComparisonExp>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
@@ -1037,6 +1535,8 @@ export type BlocksBoolExp = {
   parent_block?: InputMaybe<BlocksBoolExp>;
   parent_id?: InputMaybe<UuidComparisonExp>;
   position?: InputMaybe<IntComparisonExp>;
+  reactions?: InputMaybe<BlockReactionsBoolExp>;
+  reactions_aggregate?: InputMaybe<BlockReactionsAggregateBoolExp>;
   search_text?: InputMaybe<StringComparisonExp>;
   sub_blocks?: InputMaybe<BlocksBoolExp>;
   sub_blocks_aggregate?: InputMaybe<BlocksAggregateBoolExp>;
@@ -1083,6 +1583,7 @@ export type BlocksInsertInput = {
   block_links_to?: InputMaybe<BlockLinksArrRelInsertInput>;
   block_tags?: InputMaybe<BlockTagsArrRelInsertInput>;
   children?: InputMaybe<BlocksArrRelInsertInput>;
+  comments?: InputMaybe<BlockCommentsArrRelInsertInput>;
   content?: InputMaybe<Scalars['jsonb']['input']>;
   cover_image?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -1095,6 +1596,7 @@ export type BlocksInsertInput = {
   parent_block?: InputMaybe<BlocksObjRelInsertInput>;
   parent_id?: InputMaybe<Scalars['uuid']['input']>;
   position?: InputMaybe<Scalars['Int']['input']>;
+  reactions?: InputMaybe<BlockReactionsArrRelInsertInput>;
   sub_blocks?: InputMaybe<BlocksArrRelInsertInput>;
   tasks?: InputMaybe<TasksArrRelInsertInput>;
   type?: InputMaybe<Scalars['String']['input']>;
@@ -1205,6 +1707,7 @@ export type BlocksOrderBy = {
   block_links_to_aggregate?: InputMaybe<BlockLinksAggregateOrderBy>;
   block_tags_aggregate?: InputMaybe<BlockTagsAggregateOrderBy>;
   children_aggregate?: InputMaybe<BlocksAggregateOrderBy>;
+  comments_aggregate?: InputMaybe<BlockCommentsAggregateOrderBy>;
   content?: InputMaybe<OrderBy>;
   cover_image?: InputMaybe<OrderBy>;
   created_at?: InputMaybe<OrderBy>;
@@ -1217,6 +1720,7 @@ export type BlocksOrderBy = {
   parent_block?: InputMaybe<BlocksOrderBy>;
   parent_id?: InputMaybe<OrderBy>;
   position?: InputMaybe<OrderBy>;
+  reactions_aggregate?: InputMaybe<BlockReactionsAggregateOrderBy>;
   search_text?: InputMaybe<OrderBy>;
   sub_blocks_aggregate?: InputMaybe<BlocksAggregateOrderBy>;
   tasks_aggregate?: InputMaybe<TasksAggregateOrderBy>;
@@ -2060,10 +2564,18 @@ export type MutationRoot = {
   delete_access_requests?: Maybe<AccessRequestsMutationResponse>;
   /** delete single row from the table: "access_requests" */
   delete_access_requests_by_pk?: Maybe<AccessRequests>;
+  /** delete data from the table: "block_comments" */
+  delete_block_comments?: Maybe<BlockCommentsMutationResponse>;
+  /** delete single row from the table: "block_comments" */
+  delete_block_comments_by_pk?: Maybe<BlockComments>;
   /** delete data from the table: "block_links" */
   delete_block_links?: Maybe<BlockLinksMutationResponse>;
   /** delete single row from the table: "block_links" */
   delete_block_links_by_pk?: Maybe<BlockLinks>;
+  /** delete data from the table: "block_reactions" */
+  delete_block_reactions?: Maybe<BlockReactionsMutationResponse>;
+  /** delete single row from the table: "block_reactions" */
+  delete_block_reactions_by_pk?: Maybe<BlockReactions>;
   /** delete data from the table: "block_tags" */
   delete_block_tags?: Maybe<BlockTagsMutationResponse>;
   /** delete single row from the table: "block_tags" */
@@ -2104,10 +2616,18 @@ export type MutationRoot = {
   insert_access_requests?: Maybe<AccessRequestsMutationResponse>;
   /** insert a single row into the table: "access_requests" */
   insert_access_requests_one?: Maybe<AccessRequests>;
+  /** insert data into the table: "block_comments" */
+  insert_block_comments?: Maybe<BlockCommentsMutationResponse>;
+  /** insert a single row into the table: "block_comments" */
+  insert_block_comments_one?: Maybe<BlockComments>;
   /** insert data into the table: "block_links" */
   insert_block_links?: Maybe<BlockLinksMutationResponse>;
   /** insert a single row into the table: "block_links" */
   insert_block_links_one?: Maybe<BlockLinks>;
+  /** insert data into the table: "block_reactions" */
+  insert_block_reactions?: Maybe<BlockReactionsMutationResponse>;
+  /** insert a single row into the table: "block_reactions" */
+  insert_block_reactions_one?: Maybe<BlockReactions>;
   /** insert data into the table: "block_tags" */
   insert_block_tags?: Maybe<BlockTagsMutationResponse>;
   /** insert a single row into the table: "block_tags" */
@@ -2150,12 +2670,24 @@ export type MutationRoot = {
   update_access_requests_by_pk?: Maybe<AccessRequests>;
   /** update multiples rows of table: "access_requests" */
   update_access_requests_many?: Maybe<Array<Maybe<AccessRequestsMutationResponse>>>;
+  /** update data of the table: "block_comments" */
+  update_block_comments?: Maybe<BlockCommentsMutationResponse>;
+  /** update single row of the table: "block_comments" */
+  update_block_comments_by_pk?: Maybe<BlockComments>;
+  /** update multiples rows of table: "block_comments" */
+  update_block_comments_many?: Maybe<Array<Maybe<BlockCommentsMutationResponse>>>;
   /** update data of the table: "block_links" */
   update_block_links?: Maybe<BlockLinksMutationResponse>;
   /** update single row of the table: "block_links" */
   update_block_links_by_pk?: Maybe<BlockLinks>;
   /** update multiples rows of table: "block_links" */
   update_block_links_many?: Maybe<Array<Maybe<BlockLinksMutationResponse>>>;
+  /** update data of the table: "block_reactions" */
+  update_block_reactions?: Maybe<BlockReactionsMutationResponse>;
+  /** update single row of the table: "block_reactions" */
+  update_block_reactions_by_pk?: Maybe<BlockReactions>;
+  /** update multiples rows of table: "block_reactions" */
+  update_block_reactions_many?: Maybe<Array<Maybe<BlockReactionsMutationResponse>>>;
   /** update data of the table: "block_tags" */
   update_block_tags?: Maybe<BlockTagsMutationResponse>;
   /** update single row of the table: "block_tags" */
@@ -2226,6 +2758,18 @@ export type MutationRootDeleteAccessRequestsByPkArgs = {
 
 
 /** mutation root */
+export type MutationRootDeleteBlockCommentsArgs = {
+  where: BlockCommentsBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootDeleteBlockCommentsByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
 export type MutationRootDeleteBlockLinksArgs = {
   where: BlockLinksBoolExp;
 };
@@ -2235,6 +2779,18 @@ export type MutationRootDeleteBlockLinksArgs = {
 export type MutationRootDeleteBlockLinksByPkArgs = {
   from_block_id: Scalars['uuid']['input'];
   to_block_id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type MutationRootDeleteBlockReactionsArgs = {
+  where: BlockReactionsBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootDeleteBlockReactionsByPkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -2362,6 +2918,20 @@ export type MutationRootInsertAccessRequestsOneArgs = {
 
 
 /** mutation root */
+export type MutationRootInsertBlockCommentsArgs = {
+  objects: Array<BlockCommentsInsertInput>;
+  on_conflict?: InputMaybe<BlockCommentsOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertBlockCommentsOneArgs = {
+  object: BlockCommentsInsertInput;
+  on_conflict?: InputMaybe<BlockCommentsOnConflict>;
+};
+
+
+/** mutation root */
 export type MutationRootInsertBlockLinksArgs = {
   objects: Array<BlockLinksInsertInput>;
   on_conflict?: InputMaybe<BlockLinksOnConflict>;
@@ -2372,6 +2942,20 @@ export type MutationRootInsertBlockLinksArgs = {
 export type MutationRootInsertBlockLinksOneArgs = {
   object: BlockLinksInsertInput;
   on_conflict?: InputMaybe<BlockLinksOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertBlockReactionsArgs = {
+  objects: Array<BlockReactionsInsertInput>;
+  on_conflict?: InputMaybe<BlockReactionsOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertBlockReactionsOneArgs = {
+  object: BlockReactionsInsertInput;
+  on_conflict?: InputMaybe<BlockReactionsOnConflict>;
 };
 
 
@@ -2522,6 +3106,26 @@ export type MutationRootUpdateAccessRequestsManyArgs = {
 
 
 /** mutation root */
+export type MutationRootUpdateBlockCommentsArgs = {
+  _set?: InputMaybe<BlockCommentsSetInput>;
+  where: BlockCommentsBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateBlockCommentsByPkArgs = {
+  _set?: InputMaybe<BlockCommentsSetInput>;
+  pk_columns: BlockCommentsPkColumnsInput;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateBlockCommentsManyArgs = {
+  updates: Array<BlockCommentsUpdates>;
+};
+
+
+/** mutation root */
 export type MutationRootUpdateBlockLinksArgs = {
   _set?: InputMaybe<BlockLinksSetInput>;
   where: BlockLinksBoolExp;
@@ -2538,6 +3142,26 @@ export type MutationRootUpdateBlockLinksByPkArgs = {
 /** mutation root */
 export type MutationRootUpdateBlockLinksManyArgs = {
   updates: Array<BlockLinksUpdates>;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateBlockReactionsArgs = {
+  _set?: InputMaybe<BlockReactionsSetInput>;
+  where: BlockReactionsBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateBlockReactionsByPkArgs = {
+  _set?: InputMaybe<BlockReactionsSetInput>;
+  pk_columns: BlockReactionsPkColumnsInput;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateBlockReactionsManyArgs = {
+  updates: Array<BlockReactionsUpdates>;
 };
 
 
@@ -3040,12 +3664,24 @@ export type QueryRoot = {
   access_requests_aggregate: AccessRequestsAggregate;
   /** fetch data from the table: "access_requests" using primary key columns */
   access_requests_by_pk?: Maybe<AccessRequests>;
+  /** An array relationship */
+  block_comments: Array<BlockComments>;
+  /** An aggregate relationship */
+  block_comments_aggregate: BlockCommentsAggregate;
+  /** fetch data from the table: "block_comments" using primary key columns */
+  block_comments_by_pk?: Maybe<BlockComments>;
   /** fetch data from the table: "block_links" */
   block_links: Array<BlockLinks>;
   /** fetch aggregated fields from the table: "block_links" */
   block_links_aggregate: BlockLinksAggregate;
   /** fetch data from the table: "block_links" using primary key columns */
   block_links_by_pk?: Maybe<BlockLinks>;
+  /** An array relationship */
+  block_reactions: Array<BlockReactions>;
+  /** An aggregate relationship */
+  block_reactions_aggregate: BlockReactionsAggregate;
+  /** fetch data from the table: "block_reactions" using primary key columns */
+  block_reactions_by_pk?: Maybe<BlockReactions>;
   /** An array relationship */
   block_tags: Array<BlockTags>;
   /** An aggregate relationship */
@@ -3126,6 +3762,29 @@ export type QueryRootAccessRequestsByPkArgs = {
 };
 
 
+export type QueryRootBlockCommentsArgs = {
+  distinct_on?: InputMaybe<Array<BlockCommentsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockCommentsOrderBy>>;
+  where?: InputMaybe<BlockCommentsBoolExp>;
+};
+
+
+export type QueryRootBlockCommentsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<BlockCommentsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockCommentsOrderBy>>;
+  where?: InputMaybe<BlockCommentsBoolExp>;
+};
+
+
+export type QueryRootBlockCommentsByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
 export type QueryRootBlockLinksArgs = {
   distinct_on?: InputMaybe<Array<BlockLinksSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -3147,6 +3806,29 @@ export type QueryRootBlockLinksAggregateArgs = {
 export type QueryRootBlockLinksByPkArgs = {
   from_block_id: Scalars['uuid']['input'];
   to_block_id: Scalars['uuid']['input'];
+};
+
+
+export type QueryRootBlockReactionsArgs = {
+  distinct_on?: InputMaybe<Array<BlockReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockReactionsOrderBy>>;
+  where?: InputMaybe<BlockReactionsBoolExp>;
+};
+
+
+export type QueryRootBlockReactionsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<BlockReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockReactionsOrderBy>>;
+  where?: InputMaybe<BlockReactionsBoolExp>;
+};
+
+
+export type QueryRootBlockReactionsByPkArgs = {
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -3367,6 +4049,14 @@ export type SubscriptionRoot = {
   access_requests_by_pk?: Maybe<AccessRequests>;
   /** fetch data from the table in a streaming manner: "access_requests" */
   access_requests_stream: Array<AccessRequests>;
+  /** An array relationship */
+  block_comments: Array<BlockComments>;
+  /** An aggregate relationship */
+  block_comments_aggregate: BlockCommentsAggregate;
+  /** fetch data from the table: "block_comments" using primary key columns */
+  block_comments_by_pk?: Maybe<BlockComments>;
+  /** fetch data from the table in a streaming manner: "block_comments" */
+  block_comments_stream: Array<BlockComments>;
   /** fetch data from the table: "block_links" */
   block_links: Array<BlockLinks>;
   /** fetch aggregated fields from the table: "block_links" */
@@ -3375,6 +4065,14 @@ export type SubscriptionRoot = {
   block_links_by_pk?: Maybe<BlockLinks>;
   /** fetch data from the table in a streaming manner: "block_links" */
   block_links_stream: Array<BlockLinks>;
+  /** An array relationship */
+  block_reactions: Array<BlockReactions>;
+  /** An aggregate relationship */
+  block_reactions_aggregate: BlockReactionsAggregate;
+  /** fetch data from the table: "block_reactions" using primary key columns */
+  block_reactions_by_pk?: Maybe<BlockReactions>;
+  /** fetch data from the table in a streaming manner: "block_reactions" */
+  block_reactions_stream: Array<BlockReactions>;
   /** An array relationship */
   block_tags: Array<BlockTags>;
   /** An aggregate relationship */
@@ -3480,6 +4178,36 @@ export type SubscriptionRootAccessRequestsStreamArgs = {
 };
 
 
+export type SubscriptionRootBlockCommentsArgs = {
+  distinct_on?: InputMaybe<Array<BlockCommentsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockCommentsOrderBy>>;
+  where?: InputMaybe<BlockCommentsBoolExp>;
+};
+
+
+export type SubscriptionRootBlockCommentsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<BlockCommentsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockCommentsOrderBy>>;
+  where?: InputMaybe<BlockCommentsBoolExp>;
+};
+
+
+export type SubscriptionRootBlockCommentsByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type SubscriptionRootBlockCommentsStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<BlockCommentsStreamCursorInput>>;
+  where?: InputMaybe<BlockCommentsBoolExp>;
+};
+
+
 export type SubscriptionRootBlockLinksArgs = {
   distinct_on?: InputMaybe<Array<BlockLinksSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -3508,6 +4236,36 @@ export type SubscriptionRootBlockLinksStreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<BlockLinksStreamCursorInput>>;
   where?: InputMaybe<BlockLinksBoolExp>;
+};
+
+
+export type SubscriptionRootBlockReactionsArgs = {
+  distinct_on?: InputMaybe<Array<BlockReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockReactionsOrderBy>>;
+  where?: InputMaybe<BlockReactionsBoolExp>;
+};
+
+
+export type SubscriptionRootBlockReactionsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<BlockReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockReactionsOrderBy>>;
+  where?: InputMaybe<BlockReactionsBoolExp>;
+};
+
+
+export type SubscriptionRootBlockReactionsByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type SubscriptionRootBlockReactionsStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<BlockReactionsStreamCursorInput>>;
+  where?: InputMaybe<BlockReactionsBoolExp>;
 };
 
 
@@ -4274,6 +5032,14 @@ export type Users = {
   __typename?: 'users';
   avatar_url?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
+  block_comments: Array<BlockComments>;
+  /** An aggregate relationship */
+  block_comments_aggregate: BlockCommentsAggregate;
+  /** An array relationship */
+  block_reactions: Array<BlockReactions>;
+  /** An aggregate relationship */
+  block_reactions_aggregate: BlockReactionsAggregate;
+  /** An array relationship */
   blocks: Array<Blocks>;
   /** An aggregate relationship */
   blocks_aggregate: BlocksAggregate;
@@ -4298,6 +5064,46 @@ export type Users = {
   workspaces: Array<Workspaces>;
   /** An aggregate relationship */
   workspaces_aggregate: WorkspacesAggregate;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersBlockCommentsArgs = {
+  distinct_on?: InputMaybe<Array<BlockCommentsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockCommentsOrderBy>>;
+  where?: InputMaybe<BlockCommentsBoolExp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersBlockCommentsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<BlockCommentsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockCommentsOrderBy>>;
+  where?: InputMaybe<BlockCommentsBoolExp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersBlockReactionsArgs = {
+  distinct_on?: InputMaybe<Array<BlockReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockReactionsOrderBy>>;
+  where?: InputMaybe<BlockReactionsBoolExp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersBlockReactionsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<BlockReactionsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<BlockReactionsOrderBy>>;
+  where?: InputMaybe<BlockReactionsBoolExp>;
 };
 
 
@@ -4428,6 +5234,10 @@ export type UsersBoolExp = {
   _not?: InputMaybe<UsersBoolExp>;
   _or?: InputMaybe<Array<UsersBoolExp>>;
   avatar_url?: InputMaybe<StringComparisonExp>;
+  block_comments?: InputMaybe<BlockCommentsBoolExp>;
+  block_comments_aggregate?: InputMaybe<BlockCommentsAggregateBoolExp>;
+  block_reactions?: InputMaybe<BlockReactionsBoolExp>;
+  block_reactions_aggregate?: InputMaybe<BlockReactionsAggregateBoolExp>;
   blocks?: InputMaybe<BlocksBoolExp>;
   blocks_aggregate?: InputMaybe<BlocksAggregateBoolExp>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
@@ -4456,6 +5266,8 @@ export enum UsersConstraint {
 /** input type for inserting data into table "users" */
 export type UsersInsertInput = {
   avatar_url?: InputMaybe<Scalars['String']['input']>;
+  block_comments?: InputMaybe<BlockCommentsArrRelInsertInput>;
+  block_reactions?: InputMaybe<BlockReactionsArrRelInsertInput>;
   blocks?: InputMaybe<BlocksArrRelInsertInput>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
@@ -4516,6 +5328,8 @@ export type UsersOnConflict = {
 /** Ordering options when selecting data from "users". */
 export type UsersOrderBy = {
   avatar_url?: InputMaybe<OrderBy>;
+  block_comments_aggregate?: InputMaybe<BlockCommentsAggregateOrderBy>;
+  block_reactions_aggregate?: InputMaybe<BlockReactionsAggregateOrderBy>;
   blocks_aggregate?: InputMaybe<BlocksAggregateOrderBy>;
   created_at?: InputMaybe<OrderBy>;
   email?: InputMaybe<OrderBy>;

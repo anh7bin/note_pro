@@ -54,6 +54,48 @@ export type access_requests_mutation_responseFieldPolicy = {
 	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
 	returning?: FieldPolicy<any> | FieldReadFunction<any>
 };
+export type block_commentsKeySpecifier = ('block' | 'block_id' | 'content' | 'created_at' | 'id' | 'user' | 'user_id' | block_commentsKeySpecifier)[];
+export type block_commentsFieldPolicy = {
+	block?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_id?: FieldPolicy<any> | FieldReadFunction<any>,
+	content?: FieldPolicy<any> | FieldReadFunction<any>,
+	created_at?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	user?: FieldPolicy<any> | FieldReadFunction<any>,
+	user_id?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_comments_aggregateKeySpecifier = ('aggregate' | 'nodes' | block_comments_aggregateKeySpecifier)[];
+export type block_comments_aggregateFieldPolicy = {
+	aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	nodes?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_comments_aggregate_fieldsKeySpecifier = ('count' | 'max' | 'min' | block_comments_aggregate_fieldsKeySpecifier)[];
+export type block_comments_aggregate_fieldsFieldPolicy = {
+	count?: FieldPolicy<any> | FieldReadFunction<any>,
+	max?: FieldPolicy<any> | FieldReadFunction<any>,
+	min?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_comments_max_fieldsKeySpecifier = ('block_id' | 'content' | 'created_at' | 'id' | 'user_id' | block_comments_max_fieldsKeySpecifier)[];
+export type block_comments_max_fieldsFieldPolicy = {
+	block_id?: FieldPolicy<any> | FieldReadFunction<any>,
+	content?: FieldPolicy<any> | FieldReadFunction<any>,
+	created_at?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	user_id?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_comments_min_fieldsKeySpecifier = ('block_id' | 'content' | 'created_at' | 'id' | 'user_id' | block_comments_min_fieldsKeySpecifier)[];
+export type block_comments_min_fieldsFieldPolicy = {
+	block_id?: FieldPolicy<any> | FieldReadFunction<any>,
+	content?: FieldPolicy<any> | FieldReadFunction<any>,
+	created_at?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	user_id?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_comments_mutation_responseKeySpecifier = ('affected_rows' | 'returning' | block_comments_mutation_responseKeySpecifier)[];
+export type block_comments_mutation_responseFieldPolicy = {
+	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
+	returning?: FieldPolicy<any> | FieldReadFunction<any>
+};
 export type block_linksKeySpecifier = ('from_block' | 'from_block_id' | 'to_block' | 'to_block_id' | block_linksKeySpecifier)[];
 export type block_linksFieldPolicy = {
 	from_block?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -84,6 +126,48 @@ export type block_links_min_fieldsFieldPolicy = {
 };
 export type block_links_mutation_responseKeySpecifier = ('affected_rows' | 'returning' | block_links_mutation_responseKeySpecifier)[];
 export type block_links_mutation_responseFieldPolicy = {
+	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
+	returning?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_reactionsKeySpecifier = ('block' | 'block_id' | 'created_at' | 'emoji' | 'id' | 'user' | 'user_id' | block_reactionsKeySpecifier)[];
+export type block_reactionsFieldPolicy = {
+	block?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_id?: FieldPolicy<any> | FieldReadFunction<any>,
+	created_at?: FieldPolicy<any> | FieldReadFunction<any>,
+	emoji?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	user?: FieldPolicy<any> | FieldReadFunction<any>,
+	user_id?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_reactions_aggregateKeySpecifier = ('aggregate' | 'nodes' | block_reactions_aggregateKeySpecifier)[];
+export type block_reactions_aggregateFieldPolicy = {
+	aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	nodes?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_reactions_aggregate_fieldsKeySpecifier = ('count' | 'max' | 'min' | block_reactions_aggregate_fieldsKeySpecifier)[];
+export type block_reactions_aggregate_fieldsFieldPolicy = {
+	count?: FieldPolicy<any> | FieldReadFunction<any>,
+	max?: FieldPolicy<any> | FieldReadFunction<any>,
+	min?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_reactions_max_fieldsKeySpecifier = ('block_id' | 'created_at' | 'emoji' | 'id' | 'user_id' | block_reactions_max_fieldsKeySpecifier)[];
+export type block_reactions_max_fieldsFieldPolicy = {
+	block_id?: FieldPolicy<any> | FieldReadFunction<any>,
+	created_at?: FieldPolicy<any> | FieldReadFunction<any>,
+	emoji?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	user_id?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_reactions_min_fieldsKeySpecifier = ('block_id' | 'created_at' | 'emoji' | 'id' | 'user_id' | block_reactions_min_fieldsKeySpecifier)[];
+export type block_reactions_min_fieldsFieldPolicy = {
+	block_id?: FieldPolicy<any> | FieldReadFunction<any>,
+	created_at?: FieldPolicy<any> | FieldReadFunction<any>,
+	emoji?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	user_id?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type block_reactions_mutation_responseKeySpecifier = ('affected_rows' | 'returning' | block_reactions_mutation_responseKeySpecifier)[];
+export type block_reactions_mutation_responseFieldPolicy = {
 	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
 	returning?: FieldPolicy<any> | FieldReadFunction<any>
 };
@@ -120,7 +204,7 @@ export type block_tags_mutation_responseFieldPolicy = {
 	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
 	returning?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type blocksKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'block_links_from' | 'block_links_from_aggregate' | 'block_links_to' | 'block_links_to_aggregate' | 'block_tags' | 'block_tags_aggregate' | 'children' | 'children_aggregate' | 'content' | 'cover_image' | 'created_at' | 'deleted_at' | 'folder' | 'folder_id' | 'id' | 'page' | 'page_id' | 'parent_block' | 'parent_id' | 'position' | 'search_text' | 'sub_blocks' | 'sub_blocks_aggregate' | 'tasks' | 'tasks_aggregate' | 'type' | 'updated_at' | 'user' | 'user_id' | 'workspace' | 'workspace_id' | blocksKeySpecifier)[];
+export type blocksKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'block_links_from' | 'block_links_from_aggregate' | 'block_links_to' | 'block_links_to_aggregate' | 'block_tags' | 'block_tags_aggregate' | 'children' | 'children_aggregate' | 'comments' | 'comments_aggregate' | 'content' | 'cover_image' | 'created_at' | 'deleted_at' | 'folder' | 'folder_id' | 'id' | 'page' | 'page_id' | 'parent_block' | 'parent_id' | 'position' | 'reactions' | 'reactions_aggregate' | 'search_text' | 'sub_blocks' | 'sub_blocks_aggregate' | 'tasks' | 'tasks_aggregate' | 'type' | 'updated_at' | 'user' | 'user_id' | 'workspace' | 'workspace_id' | blocksKeySpecifier)[];
 export type blocksFieldPolicy = {
 	access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
 	access_requests_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -132,6 +216,8 @@ export type blocksFieldPolicy = {
 	block_tags_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
 	children_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	comments?: FieldPolicy<any> | FieldReadFunction<any>,
+	comments_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	content?: FieldPolicy<any> | FieldReadFunction<any>,
 	cover_image?: FieldPolicy<any> | FieldReadFunction<any>,
 	created_at?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -144,6 +230,8 @@ export type blocksFieldPolicy = {
 	parent_block?: FieldPolicy<any> | FieldReadFunction<any>,
 	parent_id?: FieldPolicy<any> | FieldReadFunction<any>,
 	position?: FieldPolicy<any> | FieldReadFunction<any>,
+	reactions?: FieldPolicy<any> | FieldReadFunction<any>,
+	reactions_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	search_text?: FieldPolicy<any> | FieldReadFunction<any>,
 	sub_blocks?: FieldPolicy<any> | FieldReadFunction<any>,
 	sub_blocks_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -344,12 +432,16 @@ export type folders_mutation_responseFieldPolicy = {
 	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
 	returning?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type mutation_rootKeySpecifier = ('delete_access_requests' | 'delete_access_requests_by_pk' | 'delete_block_links' | 'delete_block_links_by_pk' | 'delete_block_tags' | 'delete_block_tags_by_pk' | 'delete_blocks' | 'delete_blocks_by_pk' | 'delete_files' | 'delete_files_by_pk' | 'delete_folders' | 'delete_folders_by_pk' | 'delete_notifications' | 'delete_notifications_by_pk' | 'delete_tags' | 'delete_tags_by_pk' | 'delete_tasks' | 'delete_tasks_by_pk' | 'delete_users' | 'delete_users_by_pk' | 'delete_workspaces' | 'delete_workspaces_by_pk' | 'insert_access_requests' | 'insert_access_requests_one' | 'insert_block_links' | 'insert_block_links_one' | 'insert_block_tags' | 'insert_block_tags_one' | 'insert_blocks' | 'insert_blocks_one' | 'insert_files' | 'insert_files_one' | 'insert_folders' | 'insert_folders_one' | 'insert_notifications' | 'insert_notifications_one' | 'insert_tags' | 'insert_tags_one' | 'insert_tasks' | 'insert_tasks_one' | 'insert_users' | 'insert_users_one' | 'insert_workspaces' | 'insert_workspaces_one' | 'update_access_requests' | 'update_access_requests_by_pk' | 'update_access_requests_many' | 'update_block_links' | 'update_block_links_by_pk' | 'update_block_links_many' | 'update_block_tags' | 'update_block_tags_by_pk' | 'update_block_tags_many' | 'update_blocks' | 'update_blocks_by_pk' | 'update_blocks_many' | 'update_files' | 'update_files_by_pk' | 'update_files_many' | 'update_folders' | 'update_folders_by_pk' | 'update_folders_many' | 'update_notifications' | 'update_notifications_by_pk' | 'update_notifications_many' | 'update_tags' | 'update_tags_by_pk' | 'update_tags_many' | 'update_tasks' | 'update_tasks_by_pk' | 'update_tasks_many' | 'update_users' | 'update_users_by_pk' | 'update_users_many' | 'update_workspaces' | 'update_workspaces_by_pk' | 'update_workspaces_many' | mutation_rootKeySpecifier)[];
+export type mutation_rootKeySpecifier = ('delete_access_requests' | 'delete_access_requests_by_pk' | 'delete_block_comments' | 'delete_block_comments_by_pk' | 'delete_block_links' | 'delete_block_links_by_pk' | 'delete_block_reactions' | 'delete_block_reactions_by_pk' | 'delete_block_tags' | 'delete_block_tags_by_pk' | 'delete_blocks' | 'delete_blocks_by_pk' | 'delete_files' | 'delete_files_by_pk' | 'delete_folders' | 'delete_folders_by_pk' | 'delete_notifications' | 'delete_notifications_by_pk' | 'delete_tags' | 'delete_tags_by_pk' | 'delete_tasks' | 'delete_tasks_by_pk' | 'delete_users' | 'delete_users_by_pk' | 'delete_workspaces' | 'delete_workspaces_by_pk' | 'insert_access_requests' | 'insert_access_requests_one' | 'insert_block_comments' | 'insert_block_comments_one' | 'insert_block_links' | 'insert_block_links_one' | 'insert_block_reactions' | 'insert_block_reactions_one' | 'insert_block_tags' | 'insert_block_tags_one' | 'insert_blocks' | 'insert_blocks_one' | 'insert_files' | 'insert_files_one' | 'insert_folders' | 'insert_folders_one' | 'insert_notifications' | 'insert_notifications_one' | 'insert_tags' | 'insert_tags_one' | 'insert_tasks' | 'insert_tasks_one' | 'insert_users' | 'insert_users_one' | 'insert_workspaces' | 'insert_workspaces_one' | 'update_access_requests' | 'update_access_requests_by_pk' | 'update_access_requests_many' | 'update_block_comments' | 'update_block_comments_by_pk' | 'update_block_comments_many' | 'update_block_links' | 'update_block_links_by_pk' | 'update_block_links_many' | 'update_block_reactions' | 'update_block_reactions_by_pk' | 'update_block_reactions_many' | 'update_block_tags' | 'update_block_tags_by_pk' | 'update_block_tags_many' | 'update_blocks' | 'update_blocks_by_pk' | 'update_blocks_many' | 'update_files' | 'update_files_by_pk' | 'update_files_many' | 'update_folders' | 'update_folders_by_pk' | 'update_folders_many' | 'update_notifications' | 'update_notifications_by_pk' | 'update_notifications_many' | 'update_tags' | 'update_tags_by_pk' | 'update_tags_many' | 'update_tasks' | 'update_tasks_by_pk' | 'update_tasks_many' | 'update_users' | 'update_users_by_pk' | 'update_users_many' | 'update_workspaces' | 'update_workspaces_by_pk' | 'update_workspaces_many' | mutation_rootKeySpecifier)[];
 export type mutation_rootFieldPolicy = {
 	delete_access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_access_requests_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	delete_block_comments?: FieldPolicy<any> | FieldReadFunction<any>,
+	delete_block_comments_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_block_links?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_block_links_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	delete_block_reactions?: FieldPolicy<any> | FieldReadFunction<any>,
+	delete_block_reactions_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_block_tags?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_block_tags_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_blocks?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -370,8 +462,12 @@ export type mutation_rootFieldPolicy = {
 	delete_workspaces_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_access_requests_one?: FieldPolicy<any> | FieldReadFunction<any>,
+	insert_block_comments?: FieldPolicy<any> | FieldReadFunction<any>,
+	insert_block_comments_one?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_block_links?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_block_links_one?: FieldPolicy<any> | FieldReadFunction<any>,
+	insert_block_reactions?: FieldPolicy<any> | FieldReadFunction<any>,
+	insert_block_reactions_one?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_block_tags?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_block_tags_one?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_blocks?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -393,9 +489,15 @@ export type mutation_rootFieldPolicy = {
 	update_access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_access_requests_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_access_requests_many?: FieldPolicy<any> | FieldReadFunction<any>,
+	update_block_comments?: FieldPolicy<any> | FieldReadFunction<any>,
+	update_block_comments_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	update_block_comments_many?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_block_links?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_block_links_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_block_links_many?: FieldPolicy<any> | FieldReadFunction<any>,
+	update_block_reactions?: FieldPolicy<any> | FieldReadFunction<any>,
+	update_block_reactions_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	update_block_reactions_many?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_block_tags?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_block_tags_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_block_tags_many?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -476,14 +578,20 @@ export type notifications_mutation_responseFieldPolicy = {
 	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
 	returning?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type query_rootKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'access_requests_by_pk' | 'block_links' | 'block_links_aggregate' | 'block_links_by_pk' | 'block_tags' | 'block_tags_aggregate' | 'block_tags_by_pk' | 'blocks' | 'blocks_aggregate' | 'blocks_by_pk' | 'files' | 'files_aggregate' | 'files_by_pk' | 'folders' | 'folders_aggregate' | 'folders_by_pk' | 'notifications' | 'notifications_aggregate' | 'notifications_by_pk' | 'tags' | 'tags_aggregate' | 'tags_by_pk' | 'tasks' | 'tasks_aggregate' | 'tasks_by_pk' | 'users' | 'users_aggregate' | 'users_by_pk' | 'workspaces' | 'workspaces_aggregate' | 'workspaces_by_pk' | query_rootKeySpecifier)[];
+export type query_rootKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'access_requests_by_pk' | 'block_comments' | 'block_comments_aggregate' | 'block_comments_by_pk' | 'block_links' | 'block_links_aggregate' | 'block_links_by_pk' | 'block_reactions' | 'block_reactions_aggregate' | 'block_reactions_by_pk' | 'block_tags' | 'block_tags_aggregate' | 'block_tags_by_pk' | 'blocks' | 'blocks_aggregate' | 'blocks_by_pk' | 'files' | 'files_aggregate' | 'files_by_pk' | 'folders' | 'folders_aggregate' | 'folders_by_pk' | 'notifications' | 'notifications_aggregate' | 'notifications_by_pk' | 'tags' | 'tags_aggregate' | 'tags_by_pk' | 'tasks' | 'tasks_aggregate' | 'tasks_by_pk' | 'users' | 'users_aggregate' | 'users_by_pk' | 'workspaces' | 'workspaces_aggregate' | 'workspaces_by_pk' | query_rootKeySpecifier)[];
 export type query_rootFieldPolicy = {
 	access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
 	access_requests_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	access_requests_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_comments?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_comments_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_comments_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_links?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_links_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_links_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_reactions?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_reactions_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_reactions_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_tags?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_tags_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_tags_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -512,16 +620,24 @@ export type query_rootFieldPolicy = {
 	workspaces_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	workspaces_by_pk?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type subscription_rootKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'access_requests_by_pk' | 'access_requests_stream' | 'block_links' | 'block_links_aggregate' | 'block_links_by_pk' | 'block_links_stream' | 'block_tags' | 'block_tags_aggregate' | 'block_tags_by_pk' | 'block_tags_stream' | 'blocks' | 'blocks_aggregate' | 'blocks_by_pk' | 'blocks_stream' | 'files' | 'files_aggregate' | 'files_by_pk' | 'files_stream' | 'folders' | 'folders_aggregate' | 'folders_by_pk' | 'folders_stream' | 'notifications' | 'notifications_aggregate' | 'notifications_by_pk' | 'notifications_stream' | 'tags' | 'tags_aggregate' | 'tags_by_pk' | 'tags_stream' | 'tasks' | 'tasks_aggregate' | 'tasks_by_pk' | 'tasks_stream' | 'users' | 'users_aggregate' | 'users_by_pk' | 'users_stream' | 'workspaces' | 'workspaces_aggregate' | 'workspaces_by_pk' | 'workspaces_stream' | subscription_rootKeySpecifier)[];
+export type subscription_rootKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'access_requests_by_pk' | 'access_requests_stream' | 'block_comments' | 'block_comments_aggregate' | 'block_comments_by_pk' | 'block_comments_stream' | 'block_links' | 'block_links_aggregate' | 'block_links_by_pk' | 'block_links_stream' | 'block_reactions' | 'block_reactions_aggregate' | 'block_reactions_by_pk' | 'block_reactions_stream' | 'block_tags' | 'block_tags_aggregate' | 'block_tags_by_pk' | 'block_tags_stream' | 'blocks' | 'blocks_aggregate' | 'blocks_by_pk' | 'blocks_stream' | 'files' | 'files_aggregate' | 'files_by_pk' | 'files_stream' | 'folders' | 'folders_aggregate' | 'folders_by_pk' | 'folders_stream' | 'notifications' | 'notifications_aggregate' | 'notifications_by_pk' | 'notifications_stream' | 'tags' | 'tags_aggregate' | 'tags_by_pk' | 'tags_stream' | 'tasks' | 'tasks_aggregate' | 'tasks_by_pk' | 'tasks_stream' | 'users' | 'users_aggregate' | 'users_by_pk' | 'users_stream' | 'workspaces' | 'workspaces_aggregate' | 'workspaces_by_pk' | 'workspaces_stream' | subscription_rootKeySpecifier)[];
 export type subscription_rootFieldPolicy = {
 	access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
 	access_requests_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	access_requests_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	access_requests_stream?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_comments?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_comments_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_comments_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_comments_stream?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_links?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_links_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_links_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_links_stream?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_reactions?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_reactions_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_reactions_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_reactions_stream?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_tags?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_tags_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_tags_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -649,9 +765,13 @@ export type tasks_mutation_responseFieldPolicy = {
 	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
 	returning?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type usersKeySpecifier = ('avatar_url' | 'blocks' | 'blocks_aggregate' | 'created_at' | 'email' | 'files' | 'files_aggregate' | 'folders' | 'folders_aggregate' | 'id' | 'name' | 'role' | 'tasks' | 'tasks_aggregate' | 'workspaces' | 'workspaces_aggregate' | usersKeySpecifier)[];
+export type usersKeySpecifier = ('avatar_url' | 'block_comments' | 'block_comments_aggregate' | 'block_reactions' | 'block_reactions_aggregate' | 'blocks' | 'blocks_aggregate' | 'created_at' | 'email' | 'files' | 'files_aggregate' | 'folders' | 'folders_aggregate' | 'id' | 'name' | 'role' | 'tasks' | 'tasks_aggregate' | 'workspaces' | 'workspaces_aggregate' | usersKeySpecifier)[];
 export type usersFieldPolicy = {
 	avatar_url?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_comments?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_comments_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_reactions?: FieldPolicy<any> | FieldReadFunction<any>,
+	block_reactions_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	blocks?: FieldPolicy<any> | FieldReadFunction<any>,
 	blocks_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	created_at?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -772,6 +892,30 @@ export type StrictTypedTypePolicies = {
 		keyFields?: false | access_requests_mutation_responseKeySpecifier | (() => undefined | access_requests_mutation_responseKeySpecifier),
 		fields?: access_requests_mutation_responseFieldPolicy,
 	},
+	block_comments?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_commentsKeySpecifier | (() => undefined | block_commentsKeySpecifier),
+		fields?: block_commentsFieldPolicy,
+	},
+	block_comments_aggregate?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_comments_aggregateKeySpecifier | (() => undefined | block_comments_aggregateKeySpecifier),
+		fields?: block_comments_aggregateFieldPolicy,
+	},
+	block_comments_aggregate_fields?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_comments_aggregate_fieldsKeySpecifier | (() => undefined | block_comments_aggregate_fieldsKeySpecifier),
+		fields?: block_comments_aggregate_fieldsFieldPolicy,
+	},
+	block_comments_max_fields?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_comments_max_fieldsKeySpecifier | (() => undefined | block_comments_max_fieldsKeySpecifier),
+		fields?: block_comments_max_fieldsFieldPolicy,
+	},
+	block_comments_min_fields?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_comments_min_fieldsKeySpecifier | (() => undefined | block_comments_min_fieldsKeySpecifier),
+		fields?: block_comments_min_fieldsFieldPolicy,
+	},
+	block_comments_mutation_response?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_comments_mutation_responseKeySpecifier | (() => undefined | block_comments_mutation_responseKeySpecifier),
+		fields?: block_comments_mutation_responseFieldPolicy,
+	},
 	block_links?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | block_linksKeySpecifier | (() => undefined | block_linksKeySpecifier),
 		fields?: block_linksFieldPolicy,
@@ -795,6 +939,30 @@ export type StrictTypedTypePolicies = {
 	block_links_mutation_response?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | block_links_mutation_responseKeySpecifier | (() => undefined | block_links_mutation_responseKeySpecifier),
 		fields?: block_links_mutation_responseFieldPolicy,
+	},
+	block_reactions?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_reactionsKeySpecifier | (() => undefined | block_reactionsKeySpecifier),
+		fields?: block_reactionsFieldPolicy,
+	},
+	block_reactions_aggregate?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_reactions_aggregateKeySpecifier | (() => undefined | block_reactions_aggregateKeySpecifier),
+		fields?: block_reactions_aggregateFieldPolicy,
+	},
+	block_reactions_aggregate_fields?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_reactions_aggregate_fieldsKeySpecifier | (() => undefined | block_reactions_aggregate_fieldsKeySpecifier),
+		fields?: block_reactions_aggregate_fieldsFieldPolicy,
+	},
+	block_reactions_max_fields?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_reactions_max_fieldsKeySpecifier | (() => undefined | block_reactions_max_fieldsKeySpecifier),
+		fields?: block_reactions_max_fieldsFieldPolicy,
+	},
+	block_reactions_min_fields?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_reactions_min_fieldsKeySpecifier | (() => undefined | block_reactions_min_fieldsKeySpecifier),
+		fields?: block_reactions_min_fieldsFieldPolicy,
+	},
+	block_reactions_mutation_response?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | block_reactions_mutation_responseKeySpecifier | (() => undefined | block_reactions_mutation_responseKeySpecifier),
+		fields?: block_reactions_mutation_responseFieldPolicy,
 	},
 	block_tags?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | block_tagsKeySpecifier | (() => undefined | block_tagsKeySpecifier),

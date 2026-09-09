@@ -10,6 +10,8 @@ import { DocumentCover } from '@/components/features/page/DocumentCover';
 import { AddCoverButton } from '@/components/features/page/AddCoverButton';
 import { useDocumentCover } from '@/hooks/useDocumentCover';
 import { EditorProvider, useEditor } from '@/contexts/EditorContext';
+import { BlockInteractionsProvider } from '@/contexts/BlockInteractionsContext';
+import { BlockInteractions } from './BlockInteractions';
 
 interface Props {
     pageId: string;
@@ -67,8 +69,8 @@ function EditorContent() {
                                         />
                                     </div>
                                 )}
-                                <div className="flex items-center justify-between">
-                                    <div className="flex-1">
+                                <div className="group/block relative">
+                                    <div className="min-w-0 pr-16">
                                         <DocumentTitleInput
                                             value={
                                                 rootBlock.content?.title || ''
@@ -79,6 +81,10 @@ function EditorContent() {
                                             editable={editable}
                                         />
                                     </div>
+                                    <BlockInteractions
+                                        blockId={rootBlock.id}
+                                        variant="document-title"
+                                    />
                                 </div>
                             </div>
                             <Separator className="my-4" />
@@ -97,7 +103,9 @@ function EditorContent() {
 export default function TiptapBlockEditor({ pageId }: Props) {
     return (
         <EditorProvider pageId={pageId}>
-            <EditorContent />
+            <BlockInteractionsProvider pageId={pageId}>
+                <EditorContent />
+            </BlockInteractionsProvider>
         </EditorProvider>
     );
 }

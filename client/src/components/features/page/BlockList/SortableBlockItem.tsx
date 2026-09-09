@@ -9,6 +9,7 @@ import { SortableBlockItemProps } from './types';
 import { DragHandle } from './DragHandle';
 import { BlockRenderer } from './BlockRenderer';
 import { useEditor } from '@/contexts/EditorContext';
+import { BlockInteractions } from '@/components/features/editor/BlockInteractions';
 
 export const SortableBlockItem = memo(
     function SortableBlockItem({ block, totalBlocks }: SortableBlockItemProps) {
@@ -91,7 +92,11 @@ export const SortableBlockItem = memo(
         };
 
         return (
-            <div ref={setNodeRef} style={style} data-block-id={block.id}>
+            <div
+                ref={setNodeRef}
+                style={style}
+                data-block-id={block.id}
+                className="group/block relative">
                 <BlockRenderer
                     block={block}
                     dragHandle={dragHandle}
@@ -113,6 +118,7 @@ export const SortableBlockItem = memo(
                     onConvertToTable={handleConvertToTable}
                     totalBlocks={totalBlocks}
                 />
+                <BlockInteractions blockId={block.id} />
             </div>
         );
     },

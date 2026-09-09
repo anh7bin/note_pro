@@ -2,6 +2,20 @@ table:
   name: users
   schema: public
 array_relationships:
+  - name: block_comments
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: block_comments
+          schema: public
+  - name: block_reactions
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: block_reactions
+          schema: public
   - name: blocks
     using:
       foreign_key_constraint_on:

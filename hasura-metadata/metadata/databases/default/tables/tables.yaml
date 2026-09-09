@@ -1,5 +1,7 @@
 - "!include public_access_requests.yaml"
 - "!include public_block_links.yaml"
+- "!include public_block_comments.yaml"
+- "!include public_block_reactions.yaml"
 - "!include public_block_tags.yaml"
 - "!include public_blocks.yaml"
 - "!include public_files.yaml"
