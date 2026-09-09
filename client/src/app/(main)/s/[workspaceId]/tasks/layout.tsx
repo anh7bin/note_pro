@@ -68,7 +68,7 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
                                 variant="outline"
                                 size="icon"
                                 aria-label="Create task">
-                                <Plus className="h-5 w-5" />
+                                <Plus />
                             </Button>
                         </NewTaskModal>
                         <Separator orientation="vertical" />
@@ -79,7 +79,7 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
 
                 <nav
                     aria-label="Task views"
-                    className="flex w-full gap-1 overflow-x-auto rounded-md bg-muted p-1">
+                    className="flex w-fit gap-1 overflow-x-auto rounded-md bg-muted p-1">
                     {NAV_ITEMS.map(
                         ({ id, label, icon: Icon, href, active }) => (
                             <Button
