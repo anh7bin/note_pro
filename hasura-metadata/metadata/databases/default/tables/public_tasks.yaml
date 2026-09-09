@@ -13,9 +13,22 @@ insert_permissions:
     permission:
       check:
         block:
-          workspace:
-            created_by:
-              _eq: X-Hasura-User-Id
+          _or:
+            - workspace:
+                created_by:
+                  _eq: X-Hasura-User-Id
+            - page:
+                access_requests:
+                  permission_type:
+                    _eq: write
+                  requester_id:
+                    _eq: X-Hasura-User-Id
+                  status:
+                    _eq: approved
+            - page:
+                link_access:
+                  permission_type:
+                    _eq: write
       columns:
         - deadline_date
         - schedule_date
@@ -42,9 +55,22 @@ select_permissions:
         - user_id
       filter:
         block:
-          workspace:
-            created_by:
-              _eq: X-Hasura-User-Id
+          _or:
+            - workspace:
+                created_by:
+                  _eq: X-Hasura-User-Id
+            - page:
+                access_requests:
+                  requester_id:
+                    _eq: X-Hasura-User-Id
+                  status:
+                    _eq: approved
+            - page:
+                link_access:
+                  permission_type:
+                    _in:
+                      - read
+                      - write
     comment: ""
 update_permissions:
   - role: user
@@ -61,12 +87,38 @@ update_permissions:
         - user_id
       filter:
         block:
-          workspace:
-            created_by:
-              _eq: X-Hasura-User-Id
+          _or:
+            - workspace:
+                created_by:
+                  _eq: X-Hasura-User-Id
+            - page:
+                access_requests:
+                  permission_type:
+                    _eq: write
+                  requester_id:
+                    _eq: X-Hasura-User-Id
+                  status:
+                    _eq: approved
+            - page:
+                link_access:
+                  permission_type:
+                    _eq: write
       check:
         block:
-          workspace:
-            created_by:
-              _eq: X-Hasura-User-Id
+          _or:
+            - workspace:
+                created_by:
+                  _eq: X-Hasura-User-Id
+            - page:
+                access_requests:
+                  permission_type:
+                    _eq: write
+                  requester_id:
+                    _eq: X-Hasura-User-Id
+                  status:
+                    _eq: approved
+            - page:
+                link_access:
+                  permission_type:
+                    _eq: write
     comment: ""

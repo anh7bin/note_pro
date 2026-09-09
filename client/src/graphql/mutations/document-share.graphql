@@ -28,6 +28,32 @@ mutation ShareDocumentWithUser(
     }
 }
 
+mutation ShareDocumentWithUsers($objects: [access_requests_insert_input!]!) {
+    insert_access_requests(
+        objects: $objects
+        on_conflict: {
+            constraint: access_requests_document_id_requester_id_key
+            update_columns: [permission_type, status, updated_at]
+        }
+    ) {
+        affected_rows
+    }
+}
+
+mutation SetDocumentLinkAccess($documentId: uuid!, $permissionType: String!) {
+    insert_document_link_access_one(
+        object: { document_id: $documentId, permission_type: $permissionType }
+        on_conflict: {
+            constraint: document_link_access_pkey
+            update_columns: [permission_type, updated_at]
+        }
+    ) {
+        document_id
+        permission_type
+        updated_at
+    }
+}
+
 mutation RemoveDocumentAccess($documentId: uuid!, $userId: uuid!) {
     delete_access_requests(
         where: {
@@ -99,6 +125,9 @@ query GetDocumentSharedUsers($documentId: uuid!) {
         id
         user_id
         content
+        link_access {
+            permission_type
+        }
         user {
             id
             email

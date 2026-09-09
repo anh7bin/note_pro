@@ -6,13 +6,22 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
-import { Check, ChevronsUpDown, Eye, Pencil } from 'lucide-react';
+import { Check, ChevronsUpDown, Eye, LockKeyhole, Pencil } from 'lucide-react';
 import { PermissionType } from '@/types/types';
 import { useState } from 'react';
 
-type LinkPermissionType = PermissionType.READ | PermissionType.WRITE;
+export type LinkPermissionType =
+    | 'restricted'
+    | PermissionType.READ
+    | PermissionType.WRITE;
 
 const permissionOptions = [
+    {
+        value: 'restricted',
+        label: 'Only collaborators with access',
+        icon: LockKeyhole,
+        description: 'Only invited people can open this document.',
+    },
     {
         value: PermissionType.READ,
         label: 'Anyone with the link can view',
@@ -30,11 +39,13 @@ const permissionOptions = [
 interface PermissionSelectorProps {
     value: LinkPermissionType;
     onChange: (value: LinkPermissionType) => void;
+    disabled?: boolean;
 }
 
 export function PermissionSelector({
     value,
     onChange,
+    disabled = false,
 }: PermissionSelectorProps) {
     const [isOpen, setIsOpen] = useState(false);
     const selectedOption = permissionOptions.find((opt) => opt.value === value);
@@ -45,12 +56,15 @@ export function PermissionSelector({
                 <Button
                     variant="outline"
                     aria-expanded={isOpen}
-                    className="flex-1 justify-between text-sm">
+                    disabled={disabled}
+                    className="min-w-0 flex-1 justify-between text-sm">
                     <div className="flex items-center gap-2">
                         {selectedOption && (
                             <selectedOption.icon className="h-4 w-4" />
                         )}
-                        <span>{selectedOption?.label}</span>
+                        <span className="truncate">
+                            {selectedOption?.label}
+                        </span>
                     </div>
                     <ChevronsUpDown className="opacity-50" aria-hidden="true" />
                 </Button>
@@ -89,9 +103,8 @@ export function PermissionSelector({
                 ))}
                 <div className="border-t border-border mt-2 pt-2 px-3 pb-2">
                     <p className="text-xs text-muted-foreground">
-                        Set your link to &ldquo;view&rdquo; or
-                        &ldquo;edit&rdquo; for easy collaboration, no Craft
-                        account needed.
+                        Choose whether the link is restricted or grants view or
+                        edit access.
                     </p>
                 </div>
             </PopoverContent>

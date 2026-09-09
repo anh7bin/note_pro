@@ -51,6 +51,9 @@ query GetDocumentBlocks($pageId: uuid!) {
         user_id
         created_at
         updated_at
+        link_access {
+            permission_type
+        }
         tasks {
             id
             status

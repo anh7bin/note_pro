@@ -5,6 +5,15 @@ object_relationships:
   - name: folder
     using:
       foreign_key_constraint_on: folder_id
+  - name: link_access
+    using:
+      manual_configuration:
+        column_mapping:
+          id: document_id
+        insertion_order: null
+        remote_table:
+          name: document_link_access
+          schema: public
   - name: page
     using:
       foreign_key_constraint_on: page_id
@@ -87,9 +96,22 @@ insert_permissions:
   - role: user
     permission:
       check:
-        workspace:
-          created_by:
-            _eq: X-Hasura-User-Id
+        _or:
+          - workspace:
+              created_by:
+                _eq: X-Hasura-User-Id
+          - page:
+              access_requests:
+                permission_type:
+                  _eq: write
+                requester_id:
+                  _eq: X-Hasura-User-Id
+                status:
+                  _eq: approved
+          - page:
+              link_access:
+                permission_type:
+                  _eq: write
       columns:
         - content
         - cover_image
@@ -142,6 +164,22 @@ select_permissions:
                     _eq: X-Hasura-User-Id
                   status:
                     _eq: approved
+          - page:
+              link_access:
+                permission_type:
+                  _in:
+                    - read
+                    - write
+          - _and:
+              - type:
+                  _eq: page
+              - deleted_at:
+                  _is_null: true
+              - link_access:
+                  permission_type:
+                    _in:
+                      - read
+                      - write
       allow_aggregations: true
     comment: ""
 update_permissions:
@@ -174,6 +212,18 @@ update_permissions:
                   _eq: X-Hasura-User-Id
                 status:
                   _eq: approved
+          - page:
+              link_access:
+                permission_type:
+                  _eq: write
+          - _and:
+              - type:
+                  _eq: page
+              - deleted_at:
+                  _is_null: true
+              - link_access:
+                  permission_type:
+                    _eq: write
       check:
         _or:
           - workspace:
@@ -187,12 +237,37 @@ update_permissions:
                   _eq: X-Hasura-User-Id
                 status:
                   _eq: approved
+          - page:
+              link_access:
+                permission_type:
+                  _eq: write
+          - _and:
+              - type:
+                  _eq: page
+              - deleted_at:
+                  _is_null: true
+              - link_access:
+                  permission_type:
+                    _eq: write
     comment: ""
 delete_permissions:
   - role: user
     permission:
       filter:
-        workspace:
-          created_by:
-            _eq: X-Hasura-User-Id
+        _or:
+          - workspace:
+              created_by:
+                _eq: X-Hasura-User-Id
+          - page:
+              access_requests:
+                permission_type:
+                  _eq: write
+                requester_id:
+                  _eq: X-Hasura-User-Id
+                status:
+                  _eq: approved
+          - page:
+              link_access:
+                permission_type:
+                  _eq: write
     comment: ""

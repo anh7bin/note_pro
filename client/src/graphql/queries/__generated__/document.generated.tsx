@@ -15,7 +15,7 @@ export type GetDocumentBlocksQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetDocumentBlocksQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> };
+export type GetDocumentBlocksQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> };
 
 export type GetDocsCountQueryVariables = Types.Exact<{
   workspaceId: Types.Scalars['uuid']['input'];
@@ -113,6 +113,9 @@ export const GetDocumentBlocksDocument = gql`
     user_id
     created_at
     updated_at
+    link_access {
+      permission_type
+    }
     tasks {
       id
       status

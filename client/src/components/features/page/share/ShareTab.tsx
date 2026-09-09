@@ -1,16 +1,26 @@
 'use client';
 
-import { Share2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Copy } from 'lucide-react';
+import { useState } from 'react';
 import { PendingAccessRequests } from './PendingAccessRequests';
+import { TbUsers } from 'react-icons/tb';
+import {
+    PermissionSelector,
+    type LinkPermissionType,
+} from './PermissionSelector';
 import { SharedUsersList } from './SharedUsersList';
 import { UserEmailAutocomplete } from './UserEmailAutocomplete';
 import { useDocumentSharing } from './hooks/useDocumentSharing';
 
 interface ShareTabProps {
     documentId: string;
+    onInviteModeChange?: (isInviting: boolean) => void;
 }
 
-export function ShareTab({ documentId }: ShareTabProps) {
+export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
+    const [inviteOpen, setInviteOpen] = useState(false);
     const {
         currentUserId,
         isOwner,
@@ -20,15 +30,34 @@ export function ShareTab({ documentId }: ShareTabProps) {
         pendingRequests,
         processingRequestId,
         excludeUserIds,
-        onSelectUser,
+        documentTitle,
+        linkPermission,
+        isUpdatingLinkPermission,
+        onInviteUsers,
+        onLinkPermissionChange,
+        onCopyLink,
         onRoleChange,
         onRemoveUser,
         onApproveRequest,
         onDeclineRequest,
     } = useDocumentSharing(documentId);
 
+    if (inviteOpen) {
+        return (
+            <UserEmailAutocomplete
+                documentTitle={documentTitle}
+                excludeUserIds={excludeUserIds}
+                onInviteUsers={onInviteUsers}
+                onClose={() => {
+                    setInviteOpen(false);
+                    onInviteModeChange?.(false);
+                }}
+            />
+        );
+    }
+
     return (
-        <div className="space-y-5 py-2">
+        <div className="space-y-4 py-2">
             {isOwner && pendingRequests.length > 0 && (
                 <PendingAccessRequests
                     requests={pendingRequests}
@@ -38,41 +67,75 @@ export function ShareTab({ documentId }: ShareTabProps) {
                 />
             )}
 
-            <section aria-labelledby="invite-collaborators-heading">
+            <section
+                aria-labelledby="invite-collaborators-heading"
+                className="rounded-lg bg-muted/40 p-3">
                 <div className="flex items-center gap-2">
-                    <Share2
-                        className="h-4 w-4 text-muted-foreground"
-                        aria-hidden="true"
-                    />
+                    <TbUsers />
                     <h3
                         id="invite-collaborators-heading"
                         className="text-sm font-semibold">
                         Invite collaborators
                     </h3>
                 </div>
-                <p className="mb-3 mt-1 text-sm text-muted-foreground">
-                    Search for a Bin Craft user by email and grant access to
-                    this document.
+                <p className="mb-2 mt-1 text-sm text-muted-foreground">
+                    For easy collaboration with anyone, even without a Bin Craft
+                    account
                 </p>
 
                 {isOwner && (
-                    <UserEmailAutocomplete
-                        onSelectUser={onSelectUser}
-                        excludeUserIds={excludeUserIds}
-                        placeholder="Search by email"
+                    <Input
+                        readOnly
+                        aria-label="Add people to this document"
+                        placeholder="Add emails to invite"
+                        className="cursor-text bg-background"
+                        onClick={() => {
+                            setInviteOpen(true);
+                            onInviteModeChange?.(true);
+                        }}
+                        onFocus={() => {
+                            setInviteOpen(true);
+                            onInviteModeChange?.(true);
+                        }}
                     />
                 )}
+
+                <SharedUsersList
+                    users={sharedUsers}
+                    owner={owner}
+                    onRoleChange={onRoleChange}
+                    onRemoveUser={onRemoveUser}
+                    currentUserId={currentUserId}
+                    canManageUsers={isOwner}
+                    isLoading={isLoading}
+                />
             </section>
 
-            <SharedUsersList
-                users={sharedUsers}
-                owner={owner}
-                onRoleChange={onRoleChange}
-                onRemoveUser={onRemoveUser}
-                currentUserId={currentUserId}
-                canManageUsers={isOwner}
-                isLoading={isLoading}
-            />
+            <section
+                aria-label="Link access"
+                className="rounded-lg bg-muted/40 p-3">
+                <div className="flex gap-2">
+                    <PermissionSelector
+                        value={linkPermission}
+                        disabled={!isOwner || isUpdatingLinkPermission}
+                        onChange={(value: LinkPermissionType) =>
+                            void onLinkPermissionChange(value)
+                        }
+                    />
+                    <Button
+                        type="button"
+                        className="shrink-0"
+                        onClick={() => void onCopyLink()}>
+                        <Copy aria-hidden="true" />
+                        Copy link
+                    </Button>
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                    {isOwner
+                        ? 'Choose who can open this link.'
+                        : 'Only the document owner can change link access.'}
+                </p>
+            </section>
         </div>
     );
 }

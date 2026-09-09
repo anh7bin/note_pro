@@ -1,0 +1,47 @@
+table:
+  name: document_link_access
+  schema: public
+object_relationships:
+  - name: document
+    using:
+      foreign_key_constraint_on: document_id
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        document:
+          user_id:
+            _eq: X-Hasura-User-Id
+      columns:
+        - document_id
+        - permission_type
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - created_at
+        - document_id
+        - permission_type
+        - updated_at
+      filter: {}
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - permission_type
+        - updated_at
+      filter:
+        document:
+          user_id:
+            _eq: X-Hasura-User-Id
+      check:
+        document:
+          user_id:
+            _eq: X-Hasura-User-Id
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        document:
+          user_id:
+            _eq: X-Hasura-User-Id

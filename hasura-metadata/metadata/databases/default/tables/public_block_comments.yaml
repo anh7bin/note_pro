@@ -36,6 +36,22 @@ insert_permissions:
                           _eq: X-Hasura-User-Id
                         status:
                           _eq: approved
+                - page:
+                    link_access:
+                      permission_type:
+                        _in:
+                          - read
+                          - write
+                - _and:
+                    - type:
+                        _eq: page
+                    - deleted_at:
+                        _is_null: true
+                    - link_access:
+                        permission_type:
+                          _in:
+                            - read
+                            - write
       columns:
         - block_id
         - content
@@ -71,6 +87,22 @@ select_permissions:
                       _eq: X-Hasura-User-Id
                     status:
                       _eq: approved
+            - page:
+                link_access:
+                  permission_type:
+                    _in:
+                      - read
+                      - write
+            - _and:
+                - type:
+                    _eq: page
+                - deleted_at:
+                    _is_null: true
+                - link_access:
+                    permission_type:
+                      _in:
+                        - read
+                        - write
 delete_permissions:
   - role: user
     permission:

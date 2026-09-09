@@ -1212,6 +1212,8 @@ export type Blocks = {
   folder_id?: Maybe<Scalars['uuid']['output']>;
   id: Scalars['uuid']['output'];
   /** An object relationship */
+  link_access?: Maybe<DocumentLinkAccess>;
+  /** An object relationship */
   page?: Maybe<Blocks>;
   page_id?: Maybe<Scalars['uuid']['output']>;
   /** An object relationship */
@@ -1530,6 +1532,7 @@ export type BlocksBoolExp = {
   folder?: InputMaybe<FoldersBoolExp>;
   folder_id?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
+  link_access?: InputMaybe<DocumentLinkAccessBoolExp>;
   page?: InputMaybe<BlocksBoolExp>;
   page_id?: InputMaybe<UuidComparisonExp>;
   parent_block?: InputMaybe<BlocksBoolExp>;
@@ -1591,6 +1594,7 @@ export type BlocksInsertInput = {
   folder?: InputMaybe<FoldersObjRelInsertInput>;
   folder_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  link_access?: InputMaybe<DocumentLinkAccessObjRelInsertInput>;
   page?: InputMaybe<BlocksObjRelInsertInput>;
   page_id?: InputMaybe<Scalars['uuid']['input']>;
   parent_block?: InputMaybe<BlocksObjRelInsertInput>;
@@ -1715,6 +1719,7 @@ export type BlocksOrderBy = {
   folder?: InputMaybe<FoldersOrderBy>;
   folder_id?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
+  link_access?: InputMaybe<DocumentLinkAccessOrderBy>;
   page?: InputMaybe<BlocksOrderBy>;
   page_id?: InputMaybe<OrderBy>;
   parent_block?: InputMaybe<BlocksOrderBy>;
@@ -1962,6 +1967,182 @@ export type DateComparisonExp = {
   _lte?: InputMaybe<Scalars['date']['input']>;
   _neq?: InputMaybe<Scalars['date']['input']>;
   _nin?: InputMaybe<Array<Scalars['date']['input']>>;
+};
+
+/** Controls access granted to authenticated users who have a document link. */
+export type DocumentLinkAccess = {
+  __typename?: 'document_link_access';
+  created_at: Scalars['timestamptz']['output'];
+  /** An object relationship */
+  document: Blocks;
+  document_id: Scalars['uuid']['output'];
+  /** restricted, read, or write */
+  permission_type: Scalars['String']['output'];
+  updated_at: Scalars['timestamptz']['output'];
+};
+
+/** aggregated selection of "document_link_access" */
+export type DocumentLinkAccessAggregate = {
+  __typename?: 'document_link_access_aggregate';
+  aggregate?: Maybe<DocumentLinkAccessAggregateFields>;
+  nodes: Array<DocumentLinkAccess>;
+};
+
+/** aggregate fields of "document_link_access" */
+export type DocumentLinkAccessAggregateFields = {
+  __typename?: 'document_link_access_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<DocumentLinkAccessMaxFields>;
+  min?: Maybe<DocumentLinkAccessMinFields>;
+};
+
+
+/** aggregate fields of "document_link_access" */
+export type DocumentLinkAccessAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<DocumentLinkAccessSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "document_link_access". All fields are combined with a logical 'AND'. */
+export type DocumentLinkAccessBoolExp = {
+  _and?: InputMaybe<Array<DocumentLinkAccessBoolExp>>;
+  _not?: InputMaybe<DocumentLinkAccessBoolExp>;
+  _or?: InputMaybe<Array<DocumentLinkAccessBoolExp>>;
+  created_at?: InputMaybe<TimestamptzComparisonExp>;
+  document?: InputMaybe<BlocksBoolExp>;
+  document_id?: InputMaybe<UuidComparisonExp>;
+  permission_type?: InputMaybe<StringComparisonExp>;
+  updated_at?: InputMaybe<TimestamptzComparisonExp>;
+};
+
+/** unique or primary key constraints on table "document_link_access" */
+export enum DocumentLinkAccessConstraint {
+  /** unique or primary key constraint on columns "document_id" */
+  DocumentLinkAccessPkey = 'document_link_access_pkey'
+}
+
+/** input type for inserting data into table "document_link_access" */
+export type DocumentLinkAccessInsertInput = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document?: InputMaybe<BlocksObjRelInsertInput>;
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+  /** restricted, read, or write */
+  permission_type?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** aggregate max on columns */
+export type DocumentLinkAccessMaxFields = {
+  __typename?: 'document_link_access_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  document_id?: Maybe<Scalars['uuid']['output']>;
+  /** restricted, read, or write */
+  permission_type?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** aggregate min on columns */
+export type DocumentLinkAccessMinFields = {
+  __typename?: 'document_link_access_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  document_id?: Maybe<Scalars['uuid']['output']>;
+  /** restricted, read, or write */
+  permission_type?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** response of any mutation on the table "document_link_access" */
+export type DocumentLinkAccessMutationResponse = {
+  __typename?: 'document_link_access_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<DocumentLinkAccess>;
+};
+
+/** input type for inserting object relation for remote table "document_link_access" */
+export type DocumentLinkAccessObjRelInsertInput = {
+  data: DocumentLinkAccessInsertInput;
+  /** upsert condition */
+  on_conflict?: InputMaybe<DocumentLinkAccessOnConflict>;
+};
+
+/** on_conflict condition type for table "document_link_access" */
+export type DocumentLinkAccessOnConflict = {
+  constraint: DocumentLinkAccessConstraint;
+  update_columns?: Array<DocumentLinkAccessUpdateColumn>;
+  where?: InputMaybe<DocumentLinkAccessBoolExp>;
+};
+
+/** Ordering options when selecting data from "document_link_access". */
+export type DocumentLinkAccessOrderBy = {
+  created_at?: InputMaybe<OrderBy>;
+  document?: InputMaybe<BlocksOrderBy>;
+  document_id?: InputMaybe<OrderBy>;
+  permission_type?: InputMaybe<OrderBy>;
+  updated_at?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: document_link_access */
+export type DocumentLinkAccessPkColumnsInput = {
+  document_id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "document_link_access" */
+export enum DocumentLinkAccessSelectColumn {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DocumentId = 'document_id',
+  /** column name */
+  PermissionType = 'permission_type',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "document_link_access" */
+export type DocumentLinkAccessSetInput = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+  /** restricted, read, or write */
+  permission_type?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** Streaming cursor of the table "document_link_access" */
+export type DocumentLinkAccessStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: DocumentLinkAccessStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type DocumentLinkAccessStreamCursorValueInput = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+  /** restricted, read, or write */
+  permission_type?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** update columns of table "document_link_access" */
+export enum DocumentLinkAccessUpdateColumn {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DocumentId = 'document_id',
+  /** column name */
+  PermissionType = 'permission_type',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+export type DocumentLinkAccessUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<DocumentLinkAccessSetInput>;
+  /** filter the rows which have to be updated */
+  where: DocumentLinkAccessBoolExp;
 };
 
 /** columns and relationships of "files" */
@@ -2584,6 +2765,10 @@ export type MutationRoot = {
   delete_blocks?: Maybe<BlocksMutationResponse>;
   /** delete single row from the table: "blocks" */
   delete_blocks_by_pk?: Maybe<Blocks>;
+  /** delete data from the table: "document_link_access" */
+  delete_document_link_access?: Maybe<DocumentLinkAccessMutationResponse>;
+  /** delete single row from the table: "document_link_access" */
+  delete_document_link_access_by_pk?: Maybe<DocumentLinkAccess>;
   /** delete data from the table: "files" */
   delete_files?: Maybe<FilesMutationResponse>;
   /** delete single row from the table: "files" */
@@ -2636,6 +2821,10 @@ export type MutationRoot = {
   insert_blocks?: Maybe<BlocksMutationResponse>;
   /** insert a single row into the table: "blocks" */
   insert_blocks_one?: Maybe<Blocks>;
+  /** insert data into the table: "document_link_access" */
+  insert_document_link_access?: Maybe<DocumentLinkAccessMutationResponse>;
+  /** insert a single row into the table: "document_link_access" */
+  insert_document_link_access_one?: Maybe<DocumentLinkAccess>;
   /** insert data into the table: "files" */
   insert_files?: Maybe<FilesMutationResponse>;
   /** insert a single row into the table: "files" */
@@ -2700,6 +2889,12 @@ export type MutationRoot = {
   update_blocks_by_pk?: Maybe<Blocks>;
   /** update multiples rows of table: "blocks" */
   update_blocks_many?: Maybe<Array<Maybe<BlocksMutationResponse>>>;
+  /** update data of the table: "document_link_access" */
+  update_document_link_access?: Maybe<DocumentLinkAccessMutationResponse>;
+  /** update single row of the table: "document_link_access" */
+  update_document_link_access_by_pk?: Maybe<DocumentLinkAccess>;
+  /** update multiples rows of table: "document_link_access" */
+  update_document_link_access_many?: Maybe<Array<Maybe<DocumentLinkAccessMutationResponse>>>;
   /** update data of the table: "files" */
   update_files?: Maybe<FilesMutationResponse>;
   /** update single row of the table: "files" */
@@ -2816,6 +3011,18 @@ export type MutationRootDeleteBlocksArgs = {
 /** mutation root */
 export type MutationRootDeleteBlocksByPkArgs = {
   id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type MutationRootDeleteDocumentLinkAccessArgs = {
+  where: DocumentLinkAccessBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootDeleteDocumentLinkAccessByPkArgs = {
+  document_id: Scalars['uuid']['input'];
 };
 
 
@@ -2984,6 +3191,20 @@ export type MutationRootInsertBlocksArgs = {
 export type MutationRootInsertBlocksOneArgs = {
   object: BlocksInsertInput;
   on_conflict?: InputMaybe<BlocksOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertDocumentLinkAccessArgs = {
+  objects: Array<DocumentLinkAccessInsertInput>;
+  on_conflict?: InputMaybe<DocumentLinkAccessOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertDocumentLinkAccessOneArgs = {
+  object: DocumentLinkAccessInsertInput;
+  on_conflict?: InputMaybe<DocumentLinkAccessOnConflict>;
 };
 
 
@@ -3214,6 +3435,26 @@ export type MutationRootUpdateBlocksByPkArgs = {
 /** mutation root */
 export type MutationRootUpdateBlocksManyArgs = {
   updates: Array<BlocksUpdates>;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateDocumentLinkAccessArgs = {
+  _set?: InputMaybe<DocumentLinkAccessSetInput>;
+  where: DocumentLinkAccessBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateDocumentLinkAccessByPkArgs = {
+  _set?: InputMaybe<DocumentLinkAccessSetInput>;
+  pk_columns: DocumentLinkAccessPkColumnsInput;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateDocumentLinkAccessManyArgs = {
+  updates: Array<DocumentLinkAccessUpdates>;
 };
 
 
@@ -3694,6 +3935,12 @@ export type QueryRoot = {
   blocks_aggregate: BlocksAggregate;
   /** fetch data from the table: "blocks" using primary key columns */
   blocks_by_pk?: Maybe<Blocks>;
+  /** fetch data from the table: "document_link_access" */
+  document_link_access: Array<DocumentLinkAccess>;
+  /** fetch aggregated fields from the table: "document_link_access" */
+  document_link_access_aggregate: DocumentLinkAccessAggregate;
+  /** fetch data from the table: "document_link_access" using primary key columns */
+  document_link_access_by_pk?: Maybe<DocumentLinkAccess>;
   /** An array relationship */
   files: Array<Files>;
   /** An aggregate relationship */
@@ -3876,6 +4123,29 @@ export type QueryRootBlocksAggregateArgs = {
 
 export type QueryRootBlocksByPkArgs = {
   id: Scalars['uuid']['input'];
+};
+
+
+export type QueryRootDocumentLinkAccessArgs = {
+  distinct_on?: InputMaybe<Array<DocumentLinkAccessSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentLinkAccessOrderBy>>;
+  where?: InputMaybe<DocumentLinkAccessBoolExp>;
+};
+
+
+export type QueryRootDocumentLinkAccessAggregateArgs = {
+  distinct_on?: InputMaybe<Array<DocumentLinkAccessSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentLinkAccessOrderBy>>;
+  where?: InputMaybe<DocumentLinkAccessBoolExp>;
+};
+
+
+export type QueryRootDocumentLinkAccessByPkArgs = {
+  document_id: Scalars['uuid']['input'];
 };
 
 
@@ -4089,6 +4359,14 @@ export type SubscriptionRoot = {
   blocks_by_pk?: Maybe<Blocks>;
   /** fetch data from the table in a streaming manner: "blocks" */
   blocks_stream: Array<Blocks>;
+  /** fetch data from the table: "document_link_access" */
+  document_link_access: Array<DocumentLinkAccess>;
+  /** fetch aggregated fields from the table: "document_link_access" */
+  document_link_access_aggregate: DocumentLinkAccessAggregate;
+  /** fetch data from the table: "document_link_access" using primary key columns */
+  document_link_access_by_pk?: Maybe<DocumentLinkAccess>;
+  /** fetch data from the table in a streaming manner: "document_link_access" */
+  document_link_access_stream: Array<DocumentLinkAccess>;
   /** An array relationship */
   files: Array<Files>;
   /** An aggregate relationship */
@@ -4327,6 +4605,36 @@ export type SubscriptionRootBlocksStreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<BlocksStreamCursorInput>>;
   where?: InputMaybe<BlocksBoolExp>;
+};
+
+
+export type SubscriptionRootDocumentLinkAccessArgs = {
+  distinct_on?: InputMaybe<Array<DocumentLinkAccessSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentLinkAccessOrderBy>>;
+  where?: InputMaybe<DocumentLinkAccessBoolExp>;
+};
+
+
+export type SubscriptionRootDocumentLinkAccessAggregateArgs = {
+  distinct_on?: InputMaybe<Array<DocumentLinkAccessSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentLinkAccessOrderBy>>;
+  where?: InputMaybe<DocumentLinkAccessBoolExp>;
+};
+
+
+export type SubscriptionRootDocumentLinkAccessByPkArgs = {
+  document_id: Scalars['uuid']['input'];
+};
+
+
+export type SubscriptionRootDocumentLinkAccessStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<DocumentLinkAccessStreamCursorInput>>;
+  where?: InputMaybe<DocumentLinkAccessBoolExp>;
 };
 
 

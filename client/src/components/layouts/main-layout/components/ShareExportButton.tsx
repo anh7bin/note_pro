@@ -20,6 +20,7 @@ interface ShareExportButtonProps {
 export function ShareExportButton({ documentId }: ShareExportButtonProps) {
     const searchParams = useSearchParams();
     const [open, setOpen] = useState(false);
+    const [inviteMode, setInviteMode] = useState(false);
 
     useEffect(() => {
         const openShare = searchParams.get('openShare');
@@ -32,7 +33,12 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
     }, [searchParams]);
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover
+            open={open}
+            onOpenChange={(nextOpen) => {
+                setOpen(nextOpen);
+                if (!nextOpen) setInviteMode(false);
+            }}>
             <PopoverTrigger asChild>
                 <Button
                     variant="outline"
@@ -46,12 +52,17 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
                 className="w-[min(30rem,calc(100vw-1rem))] p-3"
                 align="end">
                 <Tabs defaultValue="share" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="share">Share</TabsTrigger>
-                        <TabsTrigger value="export">Export</TabsTrigger>
-                    </TabsList>
+                    {!inviteMode && (
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="share">Share</TabsTrigger>
+                            <TabsTrigger value="export">Export</TabsTrigger>
+                        </TabsList>
+                    )}
                     <TabsContent value="share" className="m-0">
-                        <ShareTab documentId={documentId} />
+                        <ShareTab
+                            documentId={documentId}
+                            onInviteModeChange={setInviteMode}
+                        />
                     </TabsContent>
                     <TabsContent value="export" className="m-0">
                         <ExportTab />

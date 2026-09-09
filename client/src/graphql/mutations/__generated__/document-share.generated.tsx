@@ -13,6 +13,21 @@ export type ShareDocumentWithUserMutationVariables = Types.Exact<{
 
 export type ShareDocumentWithUserMutation = { __typename?: 'mutation_root', insert_access_requests_one?: { __typename?: 'access_requests', id: string, document_id: string, requester_id: string, owner_id: string, status?: string | null, permission_type?: string | null, created_at?: string | null, updated_at?: string | null } | null };
 
+export type ShareDocumentWithUsersMutationVariables = Types.Exact<{
+  objects: Array<Types.AccessRequestsInsertInput> | Types.AccessRequestsInsertInput;
+}>;
+
+
+export type ShareDocumentWithUsersMutation = { __typename?: 'mutation_root', insert_access_requests?: { __typename?: 'access_requests_mutation_response', affected_rows: number } | null };
+
+export type SetDocumentLinkAccessMutationVariables = Types.Exact<{
+  documentId: Types.Scalars['uuid']['input'];
+  permissionType: Types.Scalars['String']['input'];
+}>;
+
+
+export type SetDocumentLinkAccessMutation = { __typename?: 'mutation_root', insert_document_link_access_one?: { __typename?: 'document_link_access', document_id: string, permission_type: string, updated_at: string } | null };
+
 export type RemoveDocumentAccessMutationVariables = Types.Exact<{
   documentId: Types.Scalars['uuid']['input'];
   userId: Types.Scalars['uuid']['input'];
@@ -35,7 +50,7 @@ export type GetDocumentSharedUsersQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetDocumentSharedUsersQuery = { __typename?: 'query_root', access_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, pending_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, blocks_by_pk?: { __typename?: 'blocks', id: string, user_id?: string | null, content?: any | null, user?: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } | null } | null };
+export type GetDocumentSharedUsersQuery = { __typename?: 'query_root', access_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, pending_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, blocks_by_pk?: { __typename?: 'blocks', id: string, user_id?: string | null, content?: any | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, user?: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } | null } | null };
 
 export type ApproveAccessRequestMutationVariables = Types.Exact<{
   requestId: Types.Scalars['uuid']['input'];
@@ -99,6 +114,81 @@ export function useShareDocumentWithUserMutation(baseOptions?: Apollo.MutationHo
 export type ShareDocumentWithUserMutationHookResult = ReturnType<typeof useShareDocumentWithUserMutation>;
 export type ShareDocumentWithUserMutationResult = Apollo.MutationResult<ShareDocumentWithUserMutation>;
 export type ShareDocumentWithUserMutationOptions = Apollo.BaseMutationOptions<ShareDocumentWithUserMutation, ShareDocumentWithUserMutationVariables>;
+export const ShareDocumentWithUsersDocument = gql`
+    mutation ShareDocumentWithUsers($objects: [access_requests_insert_input!]!) {
+  insert_access_requests(
+    objects: $objects
+    on_conflict: {constraint: access_requests_document_id_requester_id_key, update_columns: [permission_type, status, updated_at]}
+  ) {
+    affected_rows
+  }
+}
+    `;
+export type ShareDocumentWithUsersMutationFn = Apollo.MutationFunction<ShareDocumentWithUsersMutation, ShareDocumentWithUsersMutationVariables>;
+
+/**
+ * __useShareDocumentWithUsersMutation__
+ *
+ * To run a mutation, you first call `useShareDocumentWithUsersMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useShareDocumentWithUsersMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [shareDocumentWithUsersMutation, { data, loading, error }] = useShareDocumentWithUsersMutation({
+ *   variables: {
+ *      objects: // value for 'objects'
+ *   },
+ * });
+ */
+export function useShareDocumentWithUsersMutation(baseOptions?: Apollo.MutationHookOptions<ShareDocumentWithUsersMutation, ShareDocumentWithUsersMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ShareDocumentWithUsersMutation, ShareDocumentWithUsersMutationVariables>(ShareDocumentWithUsersDocument, options);
+      }
+export type ShareDocumentWithUsersMutationHookResult = ReturnType<typeof useShareDocumentWithUsersMutation>;
+export type ShareDocumentWithUsersMutationResult = Apollo.MutationResult<ShareDocumentWithUsersMutation>;
+export type ShareDocumentWithUsersMutationOptions = Apollo.BaseMutationOptions<ShareDocumentWithUsersMutation, ShareDocumentWithUsersMutationVariables>;
+export const SetDocumentLinkAccessDocument = gql`
+    mutation SetDocumentLinkAccess($documentId: uuid!, $permissionType: String!) {
+  insert_document_link_access_one(
+    object: {document_id: $documentId, permission_type: $permissionType}
+    on_conflict: {constraint: document_link_access_pkey, update_columns: [permission_type, updated_at]}
+  ) {
+    document_id
+    permission_type
+    updated_at
+  }
+}
+    `;
+export type SetDocumentLinkAccessMutationFn = Apollo.MutationFunction<SetDocumentLinkAccessMutation, SetDocumentLinkAccessMutationVariables>;
+
+/**
+ * __useSetDocumentLinkAccessMutation__
+ *
+ * To run a mutation, you first call `useSetDocumentLinkAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetDocumentLinkAccessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setDocumentLinkAccessMutation, { data, loading, error }] = useSetDocumentLinkAccessMutation({
+ *   variables: {
+ *      documentId: // value for 'documentId'
+ *      permissionType: // value for 'permissionType'
+ *   },
+ * });
+ */
+export function useSetDocumentLinkAccessMutation(baseOptions?: Apollo.MutationHookOptions<SetDocumentLinkAccessMutation, SetDocumentLinkAccessMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetDocumentLinkAccessMutation, SetDocumentLinkAccessMutationVariables>(SetDocumentLinkAccessDocument, options);
+      }
+export type SetDocumentLinkAccessMutationHookResult = ReturnType<typeof useSetDocumentLinkAccessMutation>;
+export type SetDocumentLinkAccessMutationResult = Apollo.MutationResult<SetDocumentLinkAccessMutation>;
+export type SetDocumentLinkAccessMutationOptions = Apollo.BaseMutationOptions<SetDocumentLinkAccessMutation, SetDocumentLinkAccessMutationVariables>;
 export const RemoveDocumentAccessDocument = gql`
     mutation RemoveDocumentAccess($documentId: uuid!, $userId: uuid!) {
   delete_access_requests(
@@ -213,6 +303,9 @@ export const GetDocumentSharedUsersDocument = gql`
     id
     user_id
     content
+    link_access {
+      permission_type
+    }
     user {
       id
       email

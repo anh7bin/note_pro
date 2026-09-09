@@ -27,6 +27,7 @@ export function useDocumentPermission(documentId: string) {
     }, [documentData?.blocks, documentId]);
 
     const isOwnDocument = rootBlock?.workspace_id === workspace?.id;
+    const linkPermission = rootBlock?.link_access?.permission_type;
 
     const shouldFetchAccessRequests =
         !documentLoading && documentData?.blocks && rootBlock && !isOwnDocument;
@@ -79,6 +80,17 @@ export function useDocumentPermission(documentId: string) {
             };
         }
 
+        if (
+            linkPermission === PermissionType.READ ||
+            linkPermission === PermissionType.WRITE
+        ) {
+            return {
+                canView: true,
+                canEdit: linkPermission === PermissionType.WRITE,
+                permissionType: linkPermission,
+            };
+        }
+
         if (hasPendingWriteRequest) {
             return {
                 canView: true,
@@ -88,7 +100,14 @@ export function useDocumentPermission(documentId: string) {
         }
 
         return { canView: false, canEdit: false, permissionType: null };
-    }, [documentData, userId, accessRequestData, rootBlock, isOwnDocument]);
+    }, [
+        documentData,
+        userId,
+        accessRequestData,
+        rootBlock,
+        isOwnDocument,
+        linkPermission,
+    ]);
 
     return permission;
 }

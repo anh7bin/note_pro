@@ -38,6 +38,10 @@ export function DocumentAccessGuard({
     }, [data?.blocks, documentId]);
 
     const isOwnDocument = rootBlock?.workspace_id === workspace?.id;
+    const linkPermission = rootBlock?.link_access?.permission_type;
+    const hasLinkAccess =
+        linkPermission === PermissionType.READ ||
+        linkPermission === PermissionType.WRITE;
 
     const shouldFetchAccessRequests =
         !loading && data?.blocks && rootBlock && !isOwnDocument;
@@ -69,6 +73,10 @@ export function DocumentAccessGuard({
             return true;
         }
 
+        if (hasLinkAccess) {
+            return true;
+        }
+
         const accessRequests = accessRequestData?.access_requests || [];
 
         const hasApprovedAccess = accessRequests.some(
@@ -94,6 +102,7 @@ export function DocumentAccessGuard({
         accessRequestData,
         rootBlock,
         isOwnDocument,
+        hasLinkAccess,
     ]);
 
     useEffect(() => {

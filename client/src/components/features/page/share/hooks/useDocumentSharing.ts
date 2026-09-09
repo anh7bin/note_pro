@@ -5,7 +5,8 @@ import {
     useDeclineAccessRequestMutation,
     useGetDocumentSharedUsersQuery,
     useRemoveDocumentAccessMutation,
-    useShareDocumentWithUserMutation,
+    useShareDocumentWithUsersMutation,
+    useSetDocumentLinkAccessMutation,
     useUpdateDocumentPermissionMutation,
 } from '@/graphql/mutations/__generated__/document-share.generated';
 import { useUserId } from '@/hooks/useAuth';
@@ -16,9 +17,11 @@ import {
 } from '@/lib/error-handler';
 import { AccessRequestStatus, PermissionType } from '@/types/types';
 import { ROUTES } from '@/lib/routes';
+import { commonToasts } from '@/lib/toast';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import { UserSearchResult } from '../UserEmailAutocomplete';
+import type { LinkPermissionType } from '../PermissionSelector';
 import { PendingAccessRequest, SharedUserRole } from '../share.types';
 import {
     getExcludedUserIds,
@@ -38,7 +41,9 @@ export function useDocumentSharing(documentId: string) {
         variables: { documentId },
         skip: !documentId,
     });
-    const [shareDocument] = useShareDocumentWithUserMutation();
+    const [shareDocuments] = useShareDocumentWithUsersMutation();
+    const [setDocumentLinkAccess, { loading: isUpdatingLinkPermission }] =
+        useSetDocumentLinkAccessMutation();
     const [removeAccess] = useRemoveDocumentAccessMutation();
     const [updatePermission] = useUpdateDocumentPermissionMutation();
     const [approveRequest] = useApproveAccessRequestMutation();
@@ -56,29 +61,82 @@ export function useDocumentSharing(documentId: string) {
         () => getExcludedUserIds(sharedUsers, owner),
         [owner, sharedUsers]
     );
+    const documentTitle = useMemo(() => {
+        const title = data?.blocks_by_pk?.content?.title;
+        if (typeof title !== 'string') return 'Untitled';
+        return title.replace(/<[^>]*>/g, '').trim() || 'Untitled';
+    }, [data?.blocks_by_pk?.content]);
+    const linkPermission =
+        (data?.blocks_by_pk?.link_access
+            ?.permission_type as LinkPermissionType) || 'restricted';
 
-    const onSelectUser = useCallback(
-        async (user: UserSearchResult) => {
-            if (!currentUserId) return;
+    const onInviteUsers = useCallback(
+        async (
+            users: UserSearchResult[],
+            permission: PermissionType.READ | PermissionType.WRITE
+        ) => {
+            if (!currentUserId || users.length === 0) return false;
 
             try {
-                await shareDocument({
+                await shareDocuments({
                     variables: {
-                        documentId,
-                        userId: user.id,
-                        ownerId: currentUserId,
-                        permissionType: PermissionType.READ,
+                        objects: users.map((user) => ({
+                            document_id: documentId,
+                            requester_id: user.id,
+                            owner_id: currentUserId,
+                            status: AccessRequestStatus.APPROVED,
+                            permission_type: permission,
+                        })),
                     },
                 });
 
-                handleMutationSuccess(`Shared document with ${user.email}`);
+                handleMutationSuccess(
+                    users.length === 1
+                        ? `Shared document with ${users[0]?.email || 'user'}`
+                        : `Shared document with ${users.length} people`
+                );
                 await refetch();
+                return true;
             } catch (error) {
                 handleMutationError(error, 'share document');
+                return false;
             }
         },
-        [currentUserId, documentId, refetch, shareDocument]
+        [currentUserId, documentId, refetch, shareDocuments]
     );
+
+    const onLinkPermissionChange = useCallback(
+        async (permission: LinkPermissionType) => {
+            if (!currentUserId) return false;
+
+            try {
+                await setDocumentLinkAccess({
+                    variables: {
+                        documentId,
+                        permissionType: permission,
+                    },
+                });
+                handleMutationSuccess('Link access updated');
+                await refetch();
+                return true;
+            } catch (error) {
+                handleMutationError(error, 'update link access');
+                return false;
+            }
+        },
+        [currentUserId, documentId, refetch, setDocumentLinkAccess]
+    );
+
+    const onCopyLink = useCallback(async () => {
+        try {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('openShare');
+            await navigator.clipboard.writeText(url.toString());
+            commonToasts.copied();
+        } catch (error) {
+            handleMutationError(error, 'copy link');
+        }
+    }, []);
 
     const onRoleChange = useCallback(
         async (userId: string, role: SharedUserRole) => {
@@ -178,7 +236,12 @@ export function useDocumentSharing(documentId: string) {
         pendingRequests: data?.pending_requests || [],
         processingRequestId,
         excludeUserIds,
-        onSelectUser,
+        documentTitle,
+        linkPermission,
+        isUpdatingLinkPermission,
+        onInviteUsers,
+        onLinkPermissionChange,
+        onCopyLink,
         onRoleChange,
         onRemoveUser,
         onApproveRequest,
