@@ -9,6 +9,11 @@ import {
     getPopoverPosition,
 } from '../slash/helpers';
 import type { CommandHandlers, SlashCommandState } from '../slash/types';
+import type {
+    AddEditorBlockHandler,
+    ConvertToFileHandler,
+    SeparatorStyle,
+} from '@/types/editor';
 import { BlockType } from '@/types/types';
 
 interface UseCommandHandlersOptions {
@@ -16,15 +21,8 @@ interface UseCommandHandlersOptions {
     blockId?: string;
     isTitle: boolean;
     position: number;
-    onAddBlock?: (
-        position: number,
-        type: BlockType,
-        content?: Record<string, unknown>
-    ) => void;
-    onConvertToFile?: (
-        blockId: string,
-        fileData: Record<string, unknown>
-    ) => void;
+    onAddBlock?: AddEditorBlockHandler;
+    onConvertToFile?: ConvertToFileHandler;
     onConvertToTable?: (blockId: string, tableHTML: string) => void;
     onToggleUploading?: (isUploading: boolean) => void;
     updateState: (updates: Partial<SlashCommandState>) => void;
@@ -157,7 +155,7 @@ export function useCommandHandlers({
     );
 
     const onSeparatorSelect = useCallback(
-        async (style: string) => {
+        async (style: SeparatorStyle) => {
             const currentOnAddBlock = onAddBlockRef.current;
             if (!currentOnAddBlock) return;
 

@@ -1,5 +1,8 @@
-import { Block } from '@/hooks';
-import { BlockType } from '@/types/types';
+import type {
+    AddEditorBlockHandler,
+    Block,
+    ConvertToFileHandler,
+} from '@/types/editor';
 import { ReactNode } from 'react';
 
 export interface BaseBlockProps {
@@ -16,17 +19,13 @@ export interface TextBlockProps extends BaseBlockProps {
     onFocus: () => void;
     onBlur: () => void;
     onChange: (value: string) => void;
-    onAddBlock: (
-        position: number,
-        type: BlockType,
-        content?: Record<string, unknown>
-    ) => Promise<void> | void;
+    onAddBlock: AddEditorBlockHandler;
+    onBackspaceAtStart: (currentContent: string) => boolean;
+    onNavigateBlock: (direction: 'previous' | 'next') => boolean;
+    focusPosition: 'start' | 'end';
     onSaveImmediate: () => void;
     onConvertToTask?: (blockId: string) => void;
-    onConvertToFile?: (
-        blockId: string,
-        fileData: Record<string, unknown>
-    ) => void;
+    onConvertToFile?: ConvertToFileHandler;
     onConvertToTable?: (blockId: string, tableHTML: string) => void;
     totalBlocks?: number;
 }

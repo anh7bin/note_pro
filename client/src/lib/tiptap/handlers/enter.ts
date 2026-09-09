@@ -1,12 +1,34 @@
 import { Extension } from '@tiptap/core';
+import type { Editor } from '@tiptap/core';
+import { DOMSerializer } from '@tiptap/pm/model';
+import type { AddEditorBlockHandler } from '@/types/editor';
 import { BlockType } from '@/types/types';
 
+const EMPTY_PARAGRAPH = '<p></p>';
+
+function serializeRange(editor: Editor, from: number, to: number): string {
+    if (from >= to) return EMPTY_PARAGRAPH;
+
+    const container = document.createElement('div');
+    const fragment = editor.state.doc.slice(from, to).content;
+    container.appendChild(
+        DOMSerializer.fromSchema(editor.schema).serializeFragment(fragment)
+    );
+    return container.innerHTML || EMPTY_PARAGRAPH;
+}
+
+function splitContentAtSelection(editor: Editor): string {
+    const { doc, selection } = editor.state;
+    const before = serializeRange(editor, 0, selection.from);
+    const after = serializeRange(editor, selection.to, doc.content.size);
+
+    editor.commands.setContent(before, { emitUpdate: true });
+    return after;
+}
+
 interface EnterHandlerOptions {
-    onAddBlock?: (
-        position: number,
-        type: BlockType,
-        content?: Record<string, unknown>
-    ) => Promise<void> | void;
+    onAddBlock?: AddEditorBlockHandler;
+    onBackspaceAtStart?: (currentContent: string) => boolean;
     getPosition: () => number;
     onFlush?: () => Promise<void> | void;
 }
@@ -17,6 +39,7 @@ export const EnterHandler = Extension.create<EnterHandlerOptions>({
     addOptions() {
         return {
             onAddBlock: undefined,
+            onBackspaceAtStart: undefined,
             getPosition: () => 0,
             onFlush: undefined,
         };
@@ -27,12 +50,12 @@ export const EnterHandler = Extension.create<EnterHandlerOptions>({
             'Shift-Enter': () => {
                 return this.editor.commands.first(({ commands }) => [
                     () => commands.newlineInCode(),
-                    () => commands.createParagraphNear(),
-                    () => commands.liftEmptyBlock(),
-                    () => commands.splitBlock(),
+                    () => commands.setHardBreak(),
                 ]);
             },
             Enter: () => {
+                if (this.editor.view.composing) return false;
+
                 const { state } = this.editor;
                 const { selection } = state;
                 const { $from } = selection;
@@ -46,33 +69,19 @@ export const EnterHandler = Extension.create<EnterHandlerOptions>({
                     const currentNode = $from.node($from.depth);
 
                     if (currentNode.textContent === '') {
-                        const lifted =
-                            this.editor.commands.liftListItem('listItem');
-                        if (lifted) {
-                            if (this.options.onAddBlock) {
-                                this.options.onFlush?.();
-                                this.options.onAddBlock(
-                                    currentPosition + 1,
-                                    BlockType.PARAGRAPH
-                                );
-                                return true;
-                            }
-                        }
-                        return lifted;
+                        return this.editor.commands.liftListItem('listItem');
                     }
 
                     if (this.options.onAddBlock) {
-                        const isBulletList = this.editor.isActive('bulletList');
-
-                        const listContent = isBulletList
-                            ? { text: '<ul><li><p></p></li></ul>' }
-                            : { text: '<ol><li><p></p></li></ol>' };
-
+                        const nextContent = splitContentAtSelection(
+                            this.editor
+                        );
                         this.options.onFlush?.();
                         this.options.onAddBlock(
                             currentPosition + 1,
                             BlockType.PARAGRAPH,
-                            listContent
+                            { text: nextContent },
+                            'start'
                         );
                         return true;
                     }
@@ -81,14 +90,17 @@ export const EnterHandler = Extension.create<EnterHandlerOptions>({
                 }
 
                 if (this.editor.isActive('codeBlock')) {
-                    return this.editor.commands.splitBlock();
+                    return this.editor.commands.newlineInCode();
                 }
 
                 if (this.options.onAddBlock) {
+                    const nextContent = splitContentAtSelection(this.editor);
                     this.options.onFlush?.();
                     this.options.onAddBlock(
                         currentPosition + 1,
-                        BlockType.PARAGRAPH
+                        BlockType.PARAGRAPH,
+                        { text: nextContent },
+                        'start'
                     );
                     return true;
                 }
@@ -97,6 +109,8 @@ export const EnterHandler = Extension.create<EnterHandlerOptions>({
             },
 
             Backspace: () => {
+                if (this.editor.view.composing) return false;
+
                 const { state } = this.editor;
                 const { selection } = state;
                 const { $from, empty } = selection;
@@ -110,6 +124,19 @@ export const EnterHandler = Extension.create<EnterHandlerOptions>({
                                 'listItem'
                             );
                         }
+
+                        return false;
+                    }
+
+                    const isFirstTopLevelNode = $from.before(1) === 0;
+                    if (
+                        isFirstTopLevelNode &&
+                        !this.editor.isActive('codeBlock') &&
+                        this.options.onBackspaceAtStart
+                    ) {
+                        return this.options.onBackspaceAtStart(
+                            this.editor.getHTML()
+                        );
                     }
                 }
 

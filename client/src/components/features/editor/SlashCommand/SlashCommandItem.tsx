@@ -21,6 +21,7 @@ export const SlashCommandItem = memo(function SlashCommandItem({
 
     return (
         <button
+            id={`slash-command-${command.id}`}
             type="button"
             role="option"
             aria-selected={isActive}

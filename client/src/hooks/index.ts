@@ -11,7 +11,7 @@ export { useDebounce } from './useDebounce';
 export { useThrottle } from './useThrottle';
 export { useSearch } from './useSearch';
 export { useFilteredTasks, taskToDisplayFormat } from './useFilteredTasks';
-export type { Block, CreateBlockInput } from './useBlocks';
+export type { Block, BlockRepository, CreateBlockInput } from './useBlocks';
 export type { FilteredTasksResult } from './useFilteredTasks';
 export { useDocumentBlocksData } from './useDocumentBlocksData';
 export { useDocumentPermission } from './useDocumentPermission';

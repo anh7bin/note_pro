@@ -1,11 +1,17 @@
 'use client';
 
 import { useGetDocumentBlocksQuery } from '@/graphql/queries/__generated__/document.generated';
+import { type Block, normalizeBlock } from '@/types/editor';
 import { BlockType } from '@/types/types';
 import { useMemo } from 'react';
-import { Block } from './useBlocks';
 
-export function useDocumentBlocksData(pageId: string) {
+interface DocumentBlocksData {
+    loading: boolean;
+    processedBlocks: Block[];
+    processedRootBlock: Block | null;
+}
+
+export function useDocumentBlocksData(pageId: string): DocumentBlocksData {
     const { data, loading } = useGetDocumentBlocksQuery({
         variables: { pageId },
         skip: !pageId,
@@ -14,14 +20,17 @@ export function useDocumentBlocksData(pageId: string) {
     });
 
     const { processedBlocks, processedRootBlock } = useMemo(() => {
-        if (!data?.blocks)
+        if (!data?.blocks) {
             return { processedBlocks: [], processedRootBlock: null };
+        }
 
-        const allBlocks = data.blocks as Block[];
+        const allBlocks = data.blocks
+            .map(normalizeBlock)
+            .filter((block) => block !== null);
         const root =
             allBlocks.find(
                 (block) => block.id === pageId && block.type === BlockType.PAGE
-            ) || null;
+            ) ?? null;
 
         const childBlocksRaw = allBlocks
             .filter(
@@ -29,8 +38,8 @@ export function useDocumentBlocksData(pageId: string) {
                     block.page_id === pageId && block.type !== BlockType.PAGE
             )
             .sort((a, b) => {
-                const positionA = a.position || 0;
-                const positionB = b.position || 0;
+                const positionA = a.position ?? 0;
+                const positionB = b.position ?? 0;
 
                 if (positionA !== positionB) {
                     return positionA - positionB;

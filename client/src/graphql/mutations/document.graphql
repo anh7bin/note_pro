@@ -34,6 +34,7 @@ mutation DeleteBlock($id: uuid!) {
 }
 
 mutation InsertBlockAndUpdatePosition(
+    $id: uuid!
     $pageId: uuid!
     $position: Int!
     $type: String!
@@ -51,6 +52,7 @@ mutation InsertBlockAndUpdatePosition(
 
     insert_blocks_one(
         object: {
+            id: $id
             page_id: $pageId
             position: $position
             type: $type

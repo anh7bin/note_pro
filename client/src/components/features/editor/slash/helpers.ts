@@ -1,5 +1,10 @@
 import { uploadFileToCloudinary } from '@/lib/cloudinary/index';
 import { BlockType } from '@/types/types';
+import type {
+    AddEditorBlockHandler,
+    ConvertToFileHandler,
+    FileBlockContent,
+} from '@/types/editor';
 import type { Editor } from '@tiptap/react';
 import { toast } from 'sonner';
 import { MAX_FILE_SIZE_BYTES } from './constants';
@@ -8,15 +13,8 @@ interface FileUploadOptions {
     file: File;
     blockId?: string;
     editor: Editor | null;
-    onAddBlock?: (
-        position: number,
-        type: BlockType,
-        content?: Record<string, unknown>
-    ) => Promise<void> | void;
-    onConvertToFile?: (
-        blockId: string,
-        fileData: Record<string, unknown>
-    ) => Promise<void> | void;
+    onAddBlock?: AddEditorBlockHandler;
+    onConvertToFile?: ConvertToFileHandler;
     position: number;
     onToggleUploading?: (isUploading: boolean) => void;
     startLoading: () => void;
@@ -54,7 +52,7 @@ export const handleFileUpload = async ({
             resourceType: 'auto',
         });
 
-        const fileData = {
+        const fileData: FileBlockContent = {
             fileUrl: uploadResult.secure_url,
             fileName: file.name,
             fileType: file.type,
@@ -91,11 +89,7 @@ interface TableInsertOptions {
     cols: number;
     editor: Editor | null;
     blockId?: string;
-    onAddBlock?: (
-        position: number,
-        type: BlockType,
-        content?: Record<string, unknown>
-    ) => Promise<void> | void;
+    onAddBlock?: AddEditorBlockHandler;
     onConvertToTable?: (
         blockId: string,
         tableHTML: string
@@ -147,8 +141,10 @@ export const getPopoverPosition = (coords: {
     left: number;
     right: number;
 }) => ({
-    top: coords.bottom + window.scrollY,
-    left: coords.left + window.scrollX,
+    // coordsAtPos already returns viewport coordinates and every editor menu is
+    // position: fixed. Adding page scroll here makes menus drift while editing.
+    top: coords.bottom,
+    left: coords.left,
 });
 
 export const shouldShowSlash = (textBefore: string, suffixes: string[]) =>

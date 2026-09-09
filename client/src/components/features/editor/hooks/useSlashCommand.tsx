@@ -20,10 +20,8 @@ export function useSlashCommand(
         onConvertToFile,
         onConvertToTable,
         onAddBlock,
-        onDeleteBlock,
         position = 0,
         isTitle = false,
-        totalBlocks = 1,
     }: SlashCommandOptions = {}
 ) {
     const { state, updateState } = useMenuState();
@@ -52,14 +50,13 @@ export function useSlashCommand(
         updateState,
     });
 
-    const handleKeyDown = useSlashKeyHandler(editor, {
+    const handleKeyDown = useSlashKeyHandler({
         state,
         updateState,
         availableCommands,
         onConvertToTask,
-        onDeleteBlock,
         blockId,
-        totalBlocks,
+        onCommandSelect,
     });
 
     const menus = useMemo(
@@ -80,6 +77,10 @@ export function useSlashCommand(
                         close={() => updateState({ showSlash: false })}
                         position={state.slashPos}
                         commands={availableCommands}
+                        selectedIndex={state.selectedIndex}
+                        onActiveIndexChange={(selectedIndex) =>
+                            updateState({ selectedIndex })
+                        }
                     />
                 )}
                 {state.showEmoji && (

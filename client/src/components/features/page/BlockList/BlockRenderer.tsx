@@ -9,8 +9,13 @@ import {
     TableBlock,
     type SeparatorStyle,
 } from '@/components/features/blocks';
-import { Block } from '@/hooks';
+import type { Block } from '@/types/editor';
 import { BlockType } from '@/types/types';
+import type {
+    AddEditorBlockHandler,
+    ConvertToFileHandler,
+    EditorFocusPosition,
+} from '@/types/editor';
 
 interface BlockRendererProps {
     block: Block;
@@ -27,20 +32,19 @@ interface BlockRendererProps {
     };
     focusedBlockId: string | null;
     onFocus: (blockId: string) => void;
-    onBlur: () => void;
+    onBlur: (blockId: string) => void;
     onChange: (blockId: string, value: string) => void;
-    onAddBlock: (
-        position: number,
-        type: BlockType,
-        content?: Record<string, unknown>
-    ) => Promise<void> | void;
+    onAddBlock: AddEditorBlockHandler;
+    onBackspaceAtStart: (blockId: string, currentContent: string) => boolean;
+    onNavigateBlock: (
+        blockId: string,
+        direction: 'previous' | 'next'
+    ) => boolean;
+    focusPosition: EditorFocusPosition;
     onSaveImmediate: () => void;
     editable: boolean;
     onConvertToTask?: (blockId: string) => void;
-    onConvertToFile?: (
-        blockId: string,
-        fileData: Record<string, unknown>
-    ) => void;
+    onConvertToFile?: ConvertToFileHandler;
     onConvertToTable?: (blockId: string, tableHTML: string) => void;
     totalBlocks: number;
 }
@@ -57,6 +61,9 @@ export const BlockRenderer = memo(
         onBlur,
         onChange,
         onAddBlock,
+        onBackspaceAtStart,
+        onNavigateBlock,
+        focusPosition,
         onSaveImmediate,
         editable,
         onConvertToTask,
@@ -76,9 +83,14 @@ export const BlockRenderer = memo(
             ...commonProps,
             isFocused: focusedBlockId === block.id,
             onFocus: () => onFocus(block.id),
-            onBlur,
+            onBlur: () => onBlur(block.id),
             onChange: (value: string) => onChange(block.id, value),
             onAddBlock,
+            onBackspaceAtStart: (currentContent: string) =>
+                onBackspaceAtStart(block.id, currentContent),
+            onNavigateBlock: (direction: 'previous' | 'next') =>
+                onNavigateBlock(block.id, direction),
+            focusPosition,
             onSaveImmediate,
             onConvertToTask,
             onConvertToFile,
@@ -110,7 +122,7 @@ export const BlockRenderer = memo(
                         {...commonProps}
                         isFocused={focusedBlockId === block.id}
                         onFocus={() => onFocus(block.id)}
-                        onBlur={onBlur}
+                        onBlur={() => onBlur(block.id)}
                         onChange={(value: string) => onChange(block.id, value)}
                         onSaveImmediate={onSaveImmediate}
                     />
@@ -140,6 +152,7 @@ export const BlockRenderer = memo(
             prevProps.block.position === nextProps.block.position &&
             prevProps.block.type === nextProps.block.type &&
             prevProps.focusedBlockId === nextProps.focusedBlockId &&
+            prevProps.focusPosition === nextProps.focusPosition &&
             prevProps.editable === nextProps.editable &&
             tasksEqual
         );

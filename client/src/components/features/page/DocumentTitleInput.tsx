@@ -7,7 +7,7 @@ interface Props {
     value: string;
     onChange: (value: string) => void;
     onFocus?: () => void;
-    onKeyDown?: (e: React.KeyboardEvent) => void;
+    onKeyDown?: (event: KeyboardEvent) => boolean | void;
     onBlur?: () => void;
     className?: string;
     editable?: boolean;
@@ -41,7 +41,8 @@ export const DocumentTitleInput = memo(
     (prevProps, nextProps) => {
         return (
             prevProps.value === nextProps.value &&
-            prevProps.editable === nextProps.editable
+            prevProps.editable === nextProps.editable &&
+            prevProps.onKeyDown === nextProps.onKeyDown
         );
     }
 );

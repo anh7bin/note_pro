@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from 'react';
 import { TiptapWrapper } from './TiptapWrapper';
 import { PageLoading } from '@/components/ui/loading';
 import { DocumentTitleInput } from '@/components/features/page/DocumentTitleInput';
@@ -15,11 +16,28 @@ interface Props {
 }
 
 function EditorContent() {
-    const { loading, rootBlock, editable, handleUpdateTitle } = useEditor();
+    const {
+        loading,
+        rootBlock,
+        editable,
+        handleUpdateTitle,
+        handleTitleBlur,
+        handleTitleEnter,
+    } = useEditor();
     const { coverImage, handleAddCover, handleRemoveCover, isUploading } =
         useDocumentCover({
             rootBlock,
         });
+    const handleTitleKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+            if (event.key !== 'Enter') return false;
+
+            event.preventDefault();
+            handleTitleEnter();
+            return true;
+        },
+        [handleTitleEnter]
+    );
 
     if (loading || !rootBlock) {
         return <PageLoading />;
@@ -55,6 +73,8 @@ function EditorContent() {
                                                 rootBlock.content?.title || ''
                                             }
                                             onChange={handleUpdateTitle}
+                                            onBlur={handleTitleBlur}
+                                            onKeyDown={handleTitleKeyDown}
                                             editable={editable}
                                         />
                                     </div>

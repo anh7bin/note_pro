@@ -1,4 +1,4 @@
-import { Block } from '@/hooks';
+import type { Block } from '@/types/editor';
 
 export type SectionItem = {
     id: string;

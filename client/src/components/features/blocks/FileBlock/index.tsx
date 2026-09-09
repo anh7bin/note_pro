@@ -24,9 +24,9 @@ export const FileBlock = memo(
         onInsertBelow,
     }: FileBlockProps) {
         const content = block.content;
-        const fileUrl = content.fileUrl;
-        const fileName = content.fileName;
-        const fileType = content.fileType;
+        const fileUrl = content.fileUrl ?? '';
+        const fileName = content.fileName ?? 'Untitled file';
+        const fileType = content.fileType ?? 'application/octet-stream';
         const fileSize = content.fileSize
             ? formatFileSize(content.fileSize)
             : null;

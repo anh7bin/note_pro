@@ -1,98 +1,94 @@
-import { useRef, useCallback, useMemo } from 'react';
-import debounce from 'lodash/debounce';
+import { useRef, useCallback } from 'react';
 
-export const useDebounce = (delay: number) => {
-    const pendingChangesRef = useRef<Map<string, () => void>>(new Map());
-    const isFlushingRef = useRef(false);
+export type DebouncedCallback = () => void | Promise<void>;
 
-    const debouncedFn = useMemo(
-        () =>
-            debounce((callback: () => void) => {
-                if (!isFlushingRef.current) {
-                    isFlushingRef.current = true;
-                    try {
-                        callback();
-                    } finally {
-                        isFlushingRef.current = false;
-                    }
-                }
-            }, delay),
-        [delay]
+export interface DebounceController {
+    debounced: (callback: DebouncedCallback, key?: string) => void;
+    flush: () => void;
+    flushAsync: () => Promise<void>;
+    cancel: (key?: string) => void;
+}
+
+const DEFAULT_KEY = '__default__';
+
+export const useDebounce = (delay: number): DebounceController => {
+    const pendingChangesRef = useRef<Map<string, DebouncedCallback>>(new Map());
+    const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(
+        new Map()
+    );
+    const inFlightRef = useRef<Set<Promise<void>>>(new Set());
+
+    const runCallback = useCallback((callback: DebouncedCallback) => {
+        const promise = Promise.resolve()
+            .then(callback)
+            .catch((error) => {
+                console.error('Error executing debounced callback:', error);
+            });
+
+        inFlightRef.current.add(promise);
+        void promise.finally(() => inFlightRef.current.delete(promise));
+        return promise;
+    }, []);
+
+    const runKey = useCallback(
+        (key: string) => {
+            const timer = timersRef.current.get(key);
+            if (timer) clearTimeout(timer);
+            timersRef.current.delete(key);
+
+            const callback = pendingChangesRef.current.get(key);
+            if (!callback) return undefined;
+
+            pendingChangesRef.current.delete(key);
+            return runCallback(callback);
+        },
+        [runCallback]
     );
 
     const debounced = useCallback(
-        (callback: () => void, key?: string) => {
-            if (key) {
-                pendingChangesRef.current.set(key, callback);
-            }
-            debouncedFn(callback);
+        (callback: DebouncedCallback, key = DEFAULT_KEY) => {
+            pendingChangesRef.current.set(key, callback);
+
+            const existingTimer = timersRef.current.get(key);
+            if (existingTimer) clearTimeout(existingTimer);
+
+            timersRef.current.set(
+                key,
+                setTimeout(() => runKey(key), delay)
+            );
         },
-        [debouncedFn]
+        [delay, runKey]
     );
 
-    // Non-blocking flush - executes callbacks but doesn't wait
     const flush = useCallback(() => {
-        if (isFlushingRef.current) return;
+        const keys = Array.from(pendingChangesRef.current.keys());
+        keys.forEach((key) => {
+            void runKey(key);
+        });
+    }, [runKey]);
 
-        isFlushingRef.current = true;
-
-        try {
-            debouncedFn.flush();
-
-            // Execute all pending changes without waiting
-            const pendingCallbacks = Array.from(
-                pendingChangesRef.current.values()
-            );
-            pendingChangesRef.current.clear();
-
-            // Fire and forget - don't block on completion
-            pendingCallbacks.forEach((cb) => {
-                try {
-                    cb();
-                } catch (error) {
-                    console.error('Error executing pending callback:', error);
-                }
-            });
-        } finally {
-            isFlushingRef.current = false;
-        }
-    }, [debouncedFn]);
-
-    // Async flush for when you need to wait for completion
     const flushAsync = useCallback(async () => {
-        if (isFlushingRef.current) return;
+        const existingPromises = Array.from(inFlightRef.current);
+        const newPromises = Array.from(pendingChangesRef.current.keys())
+            .map(runKey)
+            .filter((promise): promise is Promise<void> => Boolean(promise));
 
-        isFlushingRef.current = true;
+        await Promise.all([...existingPromises, ...newPromises]);
+    }, [runKey]);
 
-        try {
-            debouncedFn.flush();
-
-            const pendingCallbacks = Array.from(
-                pendingChangesRef.current.values()
-            );
-            pendingChangesRef.current.clear();
-
-            await Promise.all(
-                pendingCallbacks.map(async (cb) => {
-                    try {
-                        await cb();
-                    } catch (error) {
-                        console.error(
-                            'Error executing pending callback:',
-                            error
-                        );
-                    }
-                })
-            );
-        } finally {
-            isFlushingRef.current = false;
+    const cancel = useCallback((key?: string) => {
+        if (key) {
+            const timer = timersRef.current.get(key);
+            if (timer) clearTimeout(timer);
+            timersRef.current.delete(key);
+            pendingChangesRef.current.delete(key);
+            return;
         }
-    }, [debouncedFn]);
 
-    const cancel = useCallback(() => {
-        debouncedFn.cancel();
+        timersRef.current.forEach((timer) => clearTimeout(timer));
+        timersRef.current.clear();
         pendingChangesRef.current.clear();
-    }, [debouncedFn]);
+    }, []);
 
     return { debounced, flush, flushAsync, cancel };
 };

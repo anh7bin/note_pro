@@ -1,4 +1,5 @@
-import { BlockType } from '@/types/types';
+import type { AddEditorBlockHandler } from '@/types/editor';
+import type { EditorView } from '@tiptap/pm/view';
 import { MutableRefObject } from 'react';
 
 export interface UseEditorConfigProps {
@@ -8,13 +9,12 @@ export interface UseEditorConfigProps {
     onFocusRef: MutableRefObject<(() => void) | undefined>;
     onBlurRef: MutableRefObject<(() => void) | undefined>;
     onSaveImmediateRef: MutableRefObject<(() => void) | undefined>;
-    onAddBlockRef: MutableRefObject<
-        | ((
-              position: number,
-              type: BlockType,
-              content?: Record<string, unknown>
-          ) => void)
-        | undefined
+    onAddBlockRef: MutableRefObject<AddEditorBlockHandler | undefined>;
+    onBackspaceAtStartRef: MutableRefObject<
+        ((currentContent: string) => boolean) | undefined
+    >;
+    keyboardHandlerRef: MutableRefObject<
+        ((view: EditorView, event: KeyboardEvent) => boolean) | undefined
     >;
     prevValueRef: MutableRefObject<string>;
 }

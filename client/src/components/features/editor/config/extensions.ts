@@ -1,9 +1,6 @@
 import { CustomCode } from '@/lib/tiptap/extensions/custom-code';
 import { EnterHandler } from '@/lib/tiptap/handlers/enter';
-import { PasteHandler } from '@/lib/tiptap/handlers/paste';
-import { PerformanceOptimizer } from '@/lib/performanceOptimizer';
-import { BlockType } from '@/types/types';
-import CharacterCount from '@tiptap/extension-character-count';
+import type { AddEditorBlockHandler } from '@/types/editor';
 import Highlight from '@tiptap/extension-highlight';
 import Link from '@tiptap/extension-link';
 import { Table } from '@tiptap/extension-table';
@@ -18,17 +15,15 @@ import { MARKDOWN_CONFIG, TABLE_CONFIG } from './constants';
 
 interface ExtensionsConfig {
     getPosition: () => number;
-    onAddBlock?: (
-        position: number,
-        type: BlockType,
-        content?: Record<string, unknown>
-    ) => void;
+    onAddBlock?: AddEditorBlockHandler;
+    onBackspaceAtStart?: (currentContent: string) => boolean;
     onFlush?: () => void;
 }
 
 export const createExtensions = ({
     getPosition,
     onAddBlock,
+    onBackspaceAtStart,
     onFlush,
 }: ExtensionsConfig) => [
     StarterKit.configure({
@@ -67,9 +62,6 @@ export const createExtensions = ({
         linkOnPaste: true,
     }),
     Typography,
-    CharacterCount.configure({
-        limit: null,
-    }),
     Table.configure(TABLE_CONFIG),
     TableRow,
     TableHeader,
@@ -80,9 +72,8 @@ export const createExtensions = ({
     }),
     EnterHandler.configure({
         onAddBlock,
+        onBackspaceAtStart,
         getPosition,
         onFlush,
     }),
-    PasteHandler,
-    PerformanceOptimizer,
 ];

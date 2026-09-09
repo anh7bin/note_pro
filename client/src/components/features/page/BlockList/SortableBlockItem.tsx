@@ -14,9 +14,12 @@ export const SortableBlockItem = memo(
     function SortableBlockItem({ block, totalBlocks }: SortableBlockItemProps) {
         const {
             focusedBlock,
+            focusPosition,
             editable,
             handleBlockFocus,
             handleBlockBlur,
+            handleBackspaceAtStart,
+            handleNavigateBlock,
             handleUpdateBlockContent,
             handleAddBlock,
             handleSaveImmediate,
@@ -100,6 +103,9 @@ export const SortableBlockItem = memo(
                     onBlur={handleBlockBlur}
                     onChange={handleUpdateBlockContent}
                     onAddBlock={handleAddBlock}
+                    onBackspaceAtStart={handleBackspaceAtStart}
+                    onNavigateBlock={handleNavigateBlock}
+                    focusPosition={focusPosition}
                     onSaveImmediate={handleSaveImmediate}
                     editable={editable}
                     onConvertToTask={handleConvertToTask}

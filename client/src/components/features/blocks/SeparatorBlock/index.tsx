@@ -4,8 +4,9 @@ import { memo } from 'react';
 import { cn } from '@/lib/utils';
 import { BlockActionMenu } from '@/components/features/page/BlockActionMenu';
 import type { SeparatorBlockProps } from '../types';
+import type { SeparatorStyle } from '@/types/editor';
 
-export type SeparatorStyle = 'extralight' | 'light' | 'regular' | 'strong';
+export type { SeparatorStyle } from '@/types/editor';
 
 const SEPARATOR_STYLES: Record<SeparatorStyle, string> = {
     strong: 'border-t-[3px] border-solid border-gray-900 dark:border-gray-100',

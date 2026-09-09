@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import type { Editor } from '@tiptap/react';
 import type { EditorView } from '@tiptap/pm/view';
 import {
     createSlashCommands,
@@ -20,6 +19,7 @@ const INITIAL_STATE: SlashCommandState = {
     emojiPos: { top: 0, left: 0 },
     tablePos: { top: 0, left: 0 },
     separatorPos: { top: 0, left: 0 },
+    selectedIndex: 0,
 };
 
 export function useMenuState() {
@@ -36,32 +36,47 @@ export function useMenuState() {
     return { state, updateState, closeAll };
 }
 
-export function useSlashKeyHandler(
-    editor: Editor | null,
-    {
-        state,
-        updateState,
-        availableCommands,
-        onConvertToTask,
-        onDeleteBlock,
-        blockId,
-        totalBlocks = 1,
-    }: {
-        state: SlashCommandState;
-        updateState: (updates: Partial<SlashCommandState>) => void;
-        availableCommands: ReturnType<typeof createSlashCommands>;
-        onConvertToTask?: (blockId: string) => void;
-        onDeleteBlock?: () => void;
-        blockId?: string;
-        totalBlocks?: number;
-    }
-) {
+export function useSlashKeyHandler({
+    state,
+    updateState,
+    availableCommands,
+    onConvertToTask,
+    blockId,
+    onCommandSelect,
+}: {
+    state: SlashCommandState;
+    updateState: (updates: Partial<SlashCommandState>) => void;
+    availableCommands: ReturnType<typeof createSlashCommands>;
+    onConvertToTask?: (blockId: string) => void;
+    blockId?: string;
+    onCommandSelect: (commandId: string) => void;
+}) {
     return useCallback(
         (view: EditorView, event: KeyboardEvent): boolean => {
-            // Close slash menu if non-menu key is pressed
-            if (state.showSlash && !SLASH_MENU_KEYS.includes(event.key)) {
-                updateState({ showSlash: false });
-                return false;
+            if (state.showSlash) {
+                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    const direction = event.key === 'ArrowDown' ? 1 : -1;
+                    const commandCount = Math.max(availableCommands.length, 1);
+                    updateState({
+                        selectedIndex:
+                            (state.selectedIndex + direction + commandCount) %
+                            commandCount,
+                    });
+                    return true;
+                }
+
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const command = availableCommands[state.selectedIndex];
+                    if (command) onCommandSelect(command.id);
+                    return true;
+                }
+
+                if (!SLASH_MENU_KEYS.includes(event.key)) {
+                    updateState({ showSlash: false, selectedIndex: 0 });
+                    return false;
+                }
             }
 
             // Check for "[] " pattern to convert to task
@@ -76,19 +91,6 @@ export function useSlashKeyHandler(
                         editorState.tr.delete($from.pos - 2, $from.pos)
                     );
                     onConvertToTask(blockId);
-                    return true;
-                }
-            }
-
-            // Handle backspace to delete empty block
-            if (event.key === 'Backspace' && onDeleteBlock && totalBlocks > 1) {
-                const { state: editorState } = view;
-                const { $from } = editorState.selection;
-                const textContent = editorState.doc.textContent;
-
-                if (textContent.trim() === '' && $from.pos === 1) {
-                    event.preventDefault();
-                    onDeleteBlock();
                     return true;
                 }
             }
@@ -110,6 +112,7 @@ export function useSlashKeyHandler(
                         updateState({
                             slashPos: getPopoverPosition(coords),
                             showSlash: true,
+                            selectedIndex: 0,
                         });
                     }, 0);
                     return false;
@@ -140,11 +143,11 @@ export function useSlashKeyHandler(
             state.showEmoji,
             state.showTable,
             state.showSeparator,
+            state.selectedIndex,
             availableCommands,
             onConvertToTask,
-            onDeleteBlock,
             blockId,
-            totalBlocks,
+            onCommandSelect,
             updateState,
         ]
     );

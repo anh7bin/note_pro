@@ -33,6 +33,7 @@ export type DeleteBlockMutationVariables = Types.Exact<{
 export type DeleteBlockMutation = { __typename?: 'mutation_root', delete_blocks_by_pk?: { __typename?: 'blocks', id: string } | null };
 
 export type InsertBlockAndUpdatePositionMutationVariables = Types.Exact<{
+  id: Types.Scalars['uuid']['input'];
   pageId: Types.Scalars['uuid']['input'];
   position: Types.Scalars['Int']['input'];
   type: Types.Scalars['String']['input'];
@@ -225,7 +226,7 @@ export type DeleteBlockMutationHookResult = ReturnType<typeof useDeleteBlockMuta
 export type DeleteBlockMutationResult = Apollo.MutationResult<DeleteBlockMutation>;
 export type DeleteBlockMutationOptions = Apollo.BaseMutationOptions<DeleteBlockMutation, DeleteBlockMutationVariables>;
 export const InsertBlockAndUpdatePositionDocument = gql`
-    mutation InsertBlockAndUpdatePosition($pageId: uuid!, $position: Int!, $type: String!, $workspaceId: uuid!, $userId: uuid!, $content: jsonb!) {
+    mutation InsertBlockAndUpdatePosition($id: uuid!, $pageId: uuid!, $position: Int!, $type: String!, $workspaceId: uuid!, $userId: uuid!, $content: jsonb!) {
   update_blocks(
     where: {page_id: {_eq: $pageId}, position: {_gte: $position}}
     _inc: {position: 1}
@@ -234,7 +235,7 @@ export const InsertBlockAndUpdatePositionDocument = gql`
     affected_rows
   }
   insert_blocks_one(
-    object: {page_id: $pageId, position: $position, type: $type, workspace_id: $workspaceId, user_id: $userId, content: $content}
+    object: {id: $id, page_id: $pageId, position: $position, type: $type, workspace_id: $workspaceId, user_id: $userId, content: $content}
   ) {
     id
     content
@@ -263,6 +264,7 @@ export type InsertBlockAndUpdatePositionMutationFn = Apollo.MutationFunction<Ins
  * @example
  * const [insertBlockAndUpdatePositionMutation, { data, loading, error }] = useInsertBlockAndUpdatePositionMutation({
  *   variables: {
+ *      id: // value for 'id'
  *      pageId: // value for 'pageId'
  *      position: // value for 'position'
  *      type: // value for 'type'

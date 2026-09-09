@@ -12,6 +12,8 @@ export function useEditorConfig({
     onBlurRef,
     onSaveImmediateRef,
     onAddBlockRef,
+    onBackspaceAtStartRef,
+    keyboardHandlerRef,
     prevValueRef,
 }: UseEditorConfigProps) {
     const isComposingRef = useRef(false);
@@ -23,9 +25,11 @@ export function useEditorConfig({
             createExtensions({
                 getPosition,
                 onAddBlock: (...args) => onAddBlockRef.current?.(...args),
+                onBackspaceAtStart: (content) =>
+                    onBackspaceAtStartRef.current?.(content) ?? false,
                 onFlush: () => onSaveImmediateRef.current?.(),
             }),
-        [getPosition, onAddBlockRef, onSaveImmediateRef]
+        [getPosition, onAddBlockRef, onBackspaceAtStartRef, onSaveImmediateRef]
     );
 
     const eventHandlers = useMemo(
@@ -36,9 +40,17 @@ export function useEditorConfig({
                 onBlurRef,
                 onSaveImmediateRef,
                 onChangeRef,
+                keyboardHandlerRef,
                 prevValueRef,
             }),
-        [onFocusRef, onBlurRef, onSaveImmediateRef, onChangeRef, prevValueRef]
+        [
+            onFocusRef,
+            onBlurRef,
+            onSaveImmediateRef,
+            onChangeRef,
+            keyboardHandlerRef,
+            prevValueRef,
+        ]
     );
 
     return useMemo(
@@ -49,7 +61,7 @@ export function useEditorConfig({
             editable,
             editorProps: {
                 attributes: EDITOR_ATTRIBUTES,
-                ...eventHandlers.handleDOMEvents,
+                handleDOMEvents: eventHandlers.handleDOMEvents,
                 handleKeyDown: eventHandlers.handleKeyDown,
             },
             onFocus: eventHandlers.onFocus,

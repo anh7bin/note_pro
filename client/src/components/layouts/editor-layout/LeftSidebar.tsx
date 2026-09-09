@@ -94,16 +94,18 @@ export const LeftSidebar = ({ pageId }: Props) => {
     const attachments = useMemo<SidebarAttachment[]>(() => {
         return attachmentBlocks.map((block) => {
             const content = block.content;
-            const sizeLabel = formatFileSize(content.fileSize);
+            const sizeLabel = content.fileSize
+                ? formatFileSize(content.fileSize)
+                : null;
             const uploadedAt = block.created_at || null;
 
             return {
                 id: block.id,
                 blockId: block.id,
-                name: content.fileName,
-                type: content.fileType,
+                name: content.fileName ?? 'Untitled file',
+                type: content.fileType ?? 'application/octet-stream',
                 size: sizeLabel,
-                url: content.fileUrl,
+                url: content.fileUrl ?? null,
                 uploadedAt,
             };
         });

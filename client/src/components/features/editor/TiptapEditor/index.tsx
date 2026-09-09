@@ -1,11 +1,16 @@
 'use client';
 
 import { Task } from '@/types/app';
-import { BlockType } from '@/types/types';
+import type {
+    AddEditorBlockHandler,
+    ConvertToFileHandler,
+    EditorFocusPosition,
+} from '@/types/editor';
 import { EditorContent, useEditor, UseEditorOptions } from '@tiptap/react';
 import {
     useCallback,
     useEffect,
+    useLayoutEffect,
     useRef,
     useState,
     memo,
@@ -29,17 +34,15 @@ interface TiptapEditorProps {
     onChange: (value: string) => void;
     onFocus?: () => void;
     onBlur?: () => void;
-    onKeyDown?: (e: React.KeyboardEvent) => void;
+    onKeyDown?: (event: KeyboardEvent) => boolean | void;
     className?: string;
     editorClassName?: string;
     showBubbleMenu?: boolean;
     isFocused?: boolean;
     position?: number;
-    onAddBlock?: (
-        position: number,
-        type: BlockType,
-        content?: Record<string, unknown>
-    ) => void;
+    onAddBlock?: AddEditorBlockHandler;
+    onBackspaceAtStart?: (currentContent: string) => boolean;
+    onNavigateBlock?: (direction: 'previous' | 'next') => boolean;
     onSaveImmediate?: () => void;
     onDeleteBlock?: () => void;
     onInsertAbove?: () => void;
@@ -49,13 +52,11 @@ interface TiptapEditorProps {
     task?: Task | null;
     editable?: boolean;
     onConvertToTask?: (blockId: string) => void;
-    onConvertToFile?: (
-        blockId: string,
-        fileData: Record<string, unknown>
-    ) => void;
+    onConvertToFile?: ConvertToFileHandler;
     onConvertToTable?: (blockId: string, tableHTML: string) => void;
     dragHandle?: React.ReactNode;
     totalBlocks?: number;
+    focusPosition?: EditorFocusPosition;
 }
 
 function useEditorContentSync(
@@ -64,12 +65,12 @@ function useEditorContentSync(
     prevValueRef: React.MutableRefObject<string>
 ) {
     useEffect(() => {
-        if (!editor || !value) return;
+        if (!editor) return;
 
         if (value !== prevValueRef.current) {
-            if (!editor.isFocused) {
-                editor.commands.setContent(value, { emitUpdate: false });
-            }
+            if (editor.isFocused) return;
+
+            editor.commands.setContent(value, { emitUpdate: false });
             prevValueRef.current = value;
         }
     }, [value, editor, prevValueRef]);
@@ -77,20 +78,16 @@ function useEditorContentSync(
 
 function useEditorFocus(
     editor: ReturnType<typeof useEditor>,
-    isFocused: boolean
+    isFocused: boolean,
+    focusPosition: EditorFocusPosition
 ) {
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!editor || !isFocused || editor.isFocused) return;
 
-        // Single RAF for smooth focus without delay
-        const rafId = requestAnimationFrame(() => {
-            if (!editor.isDestroyed && !editor.isFocused) {
-                editor.commands.focus('end', { scrollIntoView: false });
-            }
-        });
-
-        return () => cancelAnimationFrame(rafId);
-    }, [editor, isFocused]);
+        if (!editor.isDestroyed) {
+            editor.commands.focus(focusPosition, { scrollIntoView: false });
+        }
+    }, [editor, isFocused, focusPosition]);
 }
 
 function useEditableSync(
@@ -104,31 +101,6 @@ function useEditableSync(
     }, [editor, editable]);
 }
 
-function useEditorKeyboard(
-    editor: ReturnType<typeof useEditor>,
-    handleKeyDown: (
-        view: ReturnType<typeof useEditor>['view'],
-        event: KeyboardEvent
-    ) => boolean,
-    onKeyDown?: (e: React.KeyboardEvent) => void
-) {
-    useEffect(() => {
-        if (!editor) return;
-
-        const handleEditorKeyDown = (e: KeyboardEvent) => {
-            if (onKeyDown) {
-                onKeyDown(e as unknown as React.KeyboardEvent);
-            }
-            handleKeyDown(editor.view, e);
-        };
-
-        editor.view.dom.addEventListener('keydown', handleEditorKeyDown);
-        return () => {
-            editor.view.dom.removeEventListener('keydown', handleEditorKeyDown);
-        };
-    }, [editor, handleKeyDown, onKeyDown]);
-}
-
 function useEditorPropsSync(
     editor: ReturnType<typeof useEditor>,
     editorClassName: string,
@@ -139,11 +111,11 @@ function useEditorPropsSync(
 
         editor.setOptions({
             editorProps: {
+                ...editor.options.editorProps,
                 attributes: {
+                    ...editor.options.editorProps?.attributes,
                     class: editorClassName || '',
-                    style: isTitle
-                        ? 'line-height: 1.2; will-change: contents;'
-                        : 'padding: 0px; will-change: contents;',
+                    style: isTitle ? 'line-height: 1.2;' : 'padding: 0px;',
                 },
             },
         });
@@ -163,6 +135,8 @@ export const TiptapEditor = memo(
         isFocused = false,
         position = 0,
         onAddBlock,
+        onBackspaceAtStart,
+        onNavigateBlock,
         onSaveImmediate,
         onDeleteBlock,
         onInsertAbove,
@@ -176,10 +150,17 @@ export const TiptapEditor = memo(
         onConvertToTable,
         dragHandle,
         totalBlocks = 1,
+        focusPosition = 'end',
     }: TiptapEditorProps) {
         const [isUpdating, setIsUpdating] = useState(false);
         const [isUploading, setIsUploading] = useState(false);
         const prevValueRef = useRef(value);
+        const keyboardHandlerRef = useRef<
+            (
+                view: NonNullable<ReturnType<typeof useEditor>>['view'],
+                event: KeyboardEvent
+            ) => boolean
+        >(() => false);
 
         const refs = useEditorRefs({
             onChange,
@@ -187,6 +168,7 @@ export const TiptapEditor = memo(
             onBlur,
             onSaveImmediate,
             onAddBlock,
+            onBackspaceAtStart,
             position,
         });
 
@@ -198,6 +180,8 @@ export const TiptapEditor = memo(
             onBlurRef: refs.onBlurRef,
             onSaveImmediateRef: refs.onSaveImmediateRef,
             onAddBlockRef: refs.onAddBlockRef,
+            onBackspaceAtStartRef: refs.onBackspaceAtStartRef,
+            keyboardHandlerRef,
             prevValueRef,
         });
 
@@ -219,10 +203,35 @@ export const TiptapEditor = memo(
             totalBlocks,
         });
 
+        keyboardHandlerRef.current = (view, event) => {
+            if (onKeyDown?.(event) === true) return true;
+
+            // Slash menu commands must win over cross-block navigation.
+            if (handleKeyDown(view, event)) return true;
+
+            if (
+                onNavigateBlock &&
+                view.state.selection.empty &&
+                (event.key === 'ArrowUp' || event.key === 'ArrowDown')
+            ) {
+                const direction = event.key === 'ArrowUp' ? 'up' : 'down';
+                if (
+                    view.endOfTextblock(direction) &&
+                    onNavigateBlock(
+                        event.key === 'ArrowUp' ? 'previous' : 'next'
+                    )
+                ) {
+                    event.preventDefault();
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
         useEditorContentSync(editor, value, prevValueRef);
-        useEditorFocus(editor, isFocused);
+        useEditorFocus(editor, isFocused, focusPosition);
         useEditableSync(editor, editable);
-        useEditorKeyboard(editor, handleKeyDown, onKeyDown);
         useEditorPropsSync(editor, editorClassName, isTitle);
 
         const handleDelete = useCallback(() => {
@@ -289,6 +298,8 @@ export const TiptapEditor = memo(
             prevProps.editable === nextProps.editable &&
             prevProps.isTask === nextProps.isTask &&
             prevProps.blockId === nextProps.blockId &&
+            prevProps.focusPosition === nextProps.focusPosition &&
+            prevProps.onKeyDown === nextProps.onKeyDown &&
             tasksEqual
         );
     }

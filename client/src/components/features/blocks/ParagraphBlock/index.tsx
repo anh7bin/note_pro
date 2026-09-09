@@ -14,6 +14,9 @@ export const ParagraphBlock = memo(
         onBlur,
         onChange,
         onAddBlock,
+        onBackspaceAtStart,
+        onNavigateBlock,
+        focusPosition,
         onSaveImmediate,
         onDeleteBlock,
         onInsertAbove,
@@ -31,6 +34,9 @@ export const ParagraphBlock = memo(
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onAddBlock={onAddBlock}
+                onBackspaceAtStart={onBackspaceAtStart}
+                onNavigateBlock={onNavigateBlock}
+                focusPosition={focusPosition}
                 onSaveImmediate={onSaveImmediate}
                 onDeleteBlock={onDeleteBlock}
                 onInsertAbove={onInsertAbove}
@@ -56,6 +62,7 @@ export const ParagraphBlock = memo(
             prevProps.block.content?.text === nextProps.block.content?.text &&
             prevProps.block.position === nextProps.block.position &&
             prevProps.isFocused === nextProps.isFocused &&
+            prevProps.focusPosition === nextProps.focusPosition &&
             prevProps.editable === nextProps.editable
         );
     }
