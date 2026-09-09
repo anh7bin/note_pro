@@ -169,7 +169,7 @@ export function SharedUsersList({
     if (isLoading) {
         return (
             <div className="mt-4 space-y-2">
-                <h3 className="px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     People with access
                 </h3>
                 <div className="flex items-center justify-center p-8">
@@ -183,7 +183,7 @@ export function SharedUsersList({
 
     return (
         <div className="mt-4 space-y-2">
-            <h3 className="px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 People with access
             </h3>
 

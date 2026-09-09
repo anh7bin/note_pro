@@ -317,7 +317,7 @@ export function BlockInteractions({
                 <div
                     className={cn(
                         'flex flex-wrap items-center gap-1.5 pb-1 pt-1',
-                        isDocumentTitle ? 'pl-0 pt-2' : 'pl-10'
+                        isDocumentTitle ? 'pl-0' : 'pl-8'
                     )}>
                     {reactionGroups.map(
                         ([emoji, { count, reactedByCurrentUser, names }]) => (

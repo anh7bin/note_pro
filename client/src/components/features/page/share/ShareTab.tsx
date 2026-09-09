@@ -57,7 +57,7 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
     }
 
     return (
-        <div className="space-y-4 py-2">
+        <div className="space-y-2 py-2">
             {isOwner && pendingRequests.length > 0 && (
                 <PendingAccessRequests
                     requests={pendingRequests}

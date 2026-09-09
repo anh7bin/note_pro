@@ -340,8 +340,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                         type="button"
                         onClick={handleCreate}
                         disabled={!taskData.text.trim() || isCreating}
-                        aria-busy={isCreating}
-                        className="sm:min-w-24">
+                        aria-busy={isCreating}>
                         {isCreating ? 'Creating…' : 'Create'}
                     </Button>
                 </div>
