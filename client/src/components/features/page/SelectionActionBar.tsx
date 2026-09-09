@@ -149,7 +149,7 @@ export function SelectionActionBar({
             <div
                 role="status"
                 aria-live="polite"
-                className="flex items-center gap-1 rounded-md border border-border bg-card p-1 shadow-sm">
+                className="flex items-center gap-1 rounded-md border border-border bg-card p-0.5 shadow-sm">
                 <Button
                     type="button"
                     variant="ghost"
@@ -163,9 +163,9 @@ export function SelectionActionBar({
                     onClick={handleSelectAllChange}>
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
                         {allSelected ? (
-                            <Check aria-hidden="true" className="h-3.5 w-3.5" />
+                            <Check aria-hidden="true" />
                         ) : (
-                            <Minus aria-hidden="true" className="h-3.5 w-3.5" />
+                            <Minus aria-hidden="true" />
                         )}
                     </span>
                 </Button>

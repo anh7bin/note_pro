@@ -14,9 +14,15 @@ const TASK_ROW_HEIGHT = 44;
 
 interface TaskListData {
     tasks: Task[];
-    onToggleComplete: (taskId: string, completed: boolean) => void;
+    onToggleComplete: (
+        taskId: string,
+        completed: boolean
+    ) => Promise<void> | void;
     onMoreClick: (taskId: string) => void;
 }
+
+const getTaskItemKey = (index: number, data: TaskListData) =>
+    data.tasks[index]?.id ?? index;
 
 interface VirtualizedTaskListProps extends Omit<TaskListData, 'tasks'> {
     tasks: Task[];
@@ -84,6 +90,7 @@ export function VirtualizedTaskList({
                             itemCount={tasks.length}
                             itemSize={TASK_ROW_HEIGHT}
                             itemData={itemData}
+                            itemKey={getTaskItemKey}
                             overscanCount={6}
                             style={{ overflowX: 'hidden' }}>
                             {TaskRow}

@@ -106,7 +106,7 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                         variant="outline"
                         size="icon"
                         aria-label="Create document or folder">
-                        <PlusIcon className="w-5 h-5" />
+                        <PlusIcon />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent

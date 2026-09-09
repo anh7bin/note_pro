@@ -115,7 +115,6 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8"
                                 aria-label={
                                     isFoldersCollapsed
                                         ? 'Expand folders'
@@ -127,7 +126,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                 }>
                                 <ChevronRight
                                     className={cn(
-                                        'w-4 h-4 transition-transform duration-200',
+                                        'transition-transform duration-200',
                                         isFoldersCollapsed
                                             ? 'rotate-0'
                                             : 'rotate-90'

@@ -57,6 +57,7 @@ export default function TodayPage() {
                             },
                         },
                     ],
+                    awaitRefetchQueries: true,
                 });
                 showToast.success(
                     completed ? 'Task completed' : 'Task reopened'
@@ -64,6 +65,7 @@ export default function TodayPage() {
             } catch (error) {
                 console.error('Failed to update task:', error);
                 showToast.error('Failed to update task');
+                throw error;
             }
         },
         [updateTask, workspace?.id, today]

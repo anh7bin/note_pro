@@ -24,7 +24,7 @@ interface CompletedTask {
 interface CompletedTasksModalProps {
     children: React.ReactNode;
     completedTasks?: CompletedTask[];
-    onTaskToggle?: (id: string, completed: boolean) => void;
+    onTaskToggle?: (id: string, completed: boolean) => Promise<void> | void;
     onModalOpen?: () => void;
     loading?: boolean;
 }
@@ -51,7 +51,7 @@ export const CompletedTasksModal = ({
     }, [isOpen, onModalOpen]);
 
     const handleTaskToggle = (id: string, completed: boolean) => {
-        onTaskToggle?.(id, completed);
+        return onTaskToggle?.(id, completed);
     };
 
     return (

@@ -11,7 +11,6 @@ interface DatePickerProps {
     value?: string;
     onChange: (date: string) => void;
     placeholder?: string;
-    container?: HTMLElement | null;
     quickActions?: boolean;
     textContent?: string;
     icon?: React.ReactNode;
@@ -21,7 +20,6 @@ export const DatePicker = ({
     value,
     onChange,
     placeholder = 'Select date',
-    container,
     quickActions = true,
     textContent,
     icon,
@@ -73,7 +71,7 @@ export const DatePicker = ({
     };
 
     return (
-        <Popover open={isOpen} onOpenChange={setIsOpen} modal={true}>
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
                 <Button
                     variant="ghost"
@@ -91,11 +89,10 @@ export const DatePicker = ({
             </PopoverTrigger>
             <PopoverContent
                 className="w-auto p-0"
-                container={container ?? undefined}
                 side="bottom"
                 align="start"
                 sideOffset={4}
-                avoidCollisions={false}>
+                collisionPadding={16}>
                 <div className="p-2">
                     {quickActions && (
                         <div className="flex gap-1 pb-2 border-b border-border">

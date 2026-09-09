@@ -49,8 +49,7 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
     const plainTitle = getPlainText(document.content?.title) || 'Untitled';
     const selected = isSelected(document.id);
     const hasMultipleSelected = selectedDocuments.size > 1;
-    const isSelectionActive =
-        selectedDocuments.size + selectedFolders.size > 0;
+    const isSelectionActive = selectedDocuments.size + selectedFolders.size > 0;
 
     const workspaceId = document.workspace_id || workspace?.id;
 

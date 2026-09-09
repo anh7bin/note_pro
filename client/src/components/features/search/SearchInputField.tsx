@@ -34,7 +34,7 @@ export function SearchInputField({ onResultClick }: Props) {
             type="search"
             aria-label="Search documents and folders"
             placeholder="Search documents and folders"
-            className={cn('h-9 w-full bg-background')}
+            className={cn('h-8 w-full bg-background')}
             icon={<Search className="h-4 w-4" />}
             iconPosition="left"
             popoverHeight="auto"

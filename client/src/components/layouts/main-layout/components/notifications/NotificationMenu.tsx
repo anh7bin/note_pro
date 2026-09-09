@@ -22,13 +22,8 @@ export const NotificationMenu = ({
 }: NotificationMenuProps) => {
     if (isInitialLoading) {
         return (
-            <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                aria-label="Loading notifications"
-                disabled>
-                <Bell className="h-4 w-4 animate-pulse" />
+            <Button variant="ghost" size="icon">
+                <Bell />
             </Button>
         );
     }
@@ -69,7 +64,6 @@ export const NotificationMenu = ({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-7 text-xs"
                                 onClick={onMarkAllAsRead}
                                 disabled={isMarkingAll}>
                                 {isMarkingAll ? 'Marking…' : 'Mark all read'}

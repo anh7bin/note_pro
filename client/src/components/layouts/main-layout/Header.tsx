@@ -29,29 +29,6 @@ interface Props {
     workspaceSlug: string;
 }
 
-function MobileSearch() {
-    const [open, setOpen] = useState(false);
-
-    return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Search">
-                    <Search className="h-4 w-4" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent
-                align="end"
-                className="w-[calc(100vw-1rem)] p-2 lg:hidden">
-                <SearchInputField onResultClick={() => setOpen(false)} />
-            </PopoverContent>
-        </Popover>
-    );
-}
-
 export default function Header({ workspaceSlug }: Props) {
     const { toggle } = useSidebar();
     const { documentId } = useDocumentAccess();
@@ -97,7 +74,7 @@ export default function Header({ workspaceSlug }: Props) {
                                 variant="ghost"
                                 size="icon"
                                 onClick={toggle}>
-                                <PanelLeft className="h-5 w-5" />
+                                <PanelLeft />
                             </Button>
                         </SimpleTooltip>
                     </div>
@@ -123,5 +100,28 @@ export default function Header({ workspaceSlug }: Props) {
                 </header>
             </>
         )
+    );
+}
+
+function MobileSearch() {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Search">
+                    <Search />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent
+                align="end"
+                className="w-[calc(100vw-1rem)] p-2 lg:hidden">
+                <SearchInputField onResultClick={() => setOpen(false)} />
+            </PopoverContent>
+        </Popover>
     );
 }

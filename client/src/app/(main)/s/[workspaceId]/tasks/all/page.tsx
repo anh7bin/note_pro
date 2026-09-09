@@ -57,6 +57,7 @@ export default function AllTasksPage() {
                             variables: { workspaceId: workspace?.id || '' },
                         },
                     ],
+                    awaitRefetchQueries: true,
                 });
                 showToast.success(
                     completed ? 'Task completed' : 'Task reopened'
@@ -64,6 +65,7 @@ export default function AllTasksPage() {
             } catch (error) {
                 console.error('Failed to update task:', error);
                 showToast.error('Failed to update task');
+                throw error;
             }
         },
         [updateTask, workspace?.id]

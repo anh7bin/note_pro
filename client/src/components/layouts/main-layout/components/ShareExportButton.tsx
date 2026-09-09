@@ -38,7 +38,7 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
                     variant="outline"
                     size="sm"
                     aria-label="Share or export document">
-                    <FaShare className="h-4 w-4" />
+                    <FaShare />
                     <span className="hidden lg:inline">Share</span>
                 </Button>
             </PopoverTrigger>

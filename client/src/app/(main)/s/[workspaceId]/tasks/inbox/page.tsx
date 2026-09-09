@@ -52,6 +52,7 @@ export default function InboxPage() {
                         },
                     },
                     refetchQueries: [GetTodoTasksDocument],
+                    awaitRefetchQueries: true,
                 });
                 showToast.success(
                     completed ? 'Task completed' : 'Task reopened'
@@ -59,6 +60,7 @@ export default function InboxPage() {
             } catch (error) {
                 console.error('Failed to update task:', error);
                 showToast.error('Failed to update task');
+                throw error;
             }
         },
         [updateTask]

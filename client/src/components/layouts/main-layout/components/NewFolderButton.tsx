@@ -58,10 +58,9 @@ export const NewFolderButton = () => {
             <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
                 aria-label="Create folder"
                 onClick={() => setIsOpen(true)}>
-                <Plus className="h-4 w-4" />
+                <Plus />
             </Button>
             <FolderDialog
                 open={isOpen}

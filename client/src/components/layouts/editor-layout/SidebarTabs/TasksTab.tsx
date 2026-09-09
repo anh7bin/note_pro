@@ -8,7 +8,7 @@ import { EmptyState } from './EmptyState';
 interface TasksTabProps {
     tasks: SidebarTask[];
     pendingTaskIds: Set<string>;
-    onToggleTask: (taskId: string, completed: boolean) => void;
+    onToggleTask: (taskId: string, completed: boolean) => Promise<void> | void;
     onScrollToBlock?: (blockId: string) => void;
     activeBlockId?: string;
 }

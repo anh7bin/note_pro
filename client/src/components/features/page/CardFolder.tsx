@@ -29,18 +29,13 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
     const router = useRouter();
     const { workspace } = useWorkspace();
     const { startLoading } = useLoading();
-    const {
-        toggleFolder,
-        isSelected,
-        selectedDocuments,
-        selectedFolders,
-    } = useDocumentSelection();
+    const { toggleFolder, isSelected, selectedDocuments, selectedFolders } =
+        useDocumentSelection();
 
     const workspaceId = workspace?.id;
     const docCount = folder.blocks_aggregate?.aggregate?.count || 0;
     const selected = isSelected(folder.id);
-    const isSelectionActive =
-        selectedDocuments.size + selectedFolders.size > 0;
+    const isSelectionActive = selectedDocuments.size + selectedFolders.size > 0;
 
     const openFolder = (newTab = false) => {
         if (!workspaceId) return;

@@ -16,7 +16,7 @@ export function RequestEditButton({ documentId }: { documentId: string }) {
             aria-label={isRequesting ? 'Edit request sent' : 'Ask to edit'}
             onClick={requestEdit}
             disabled={isRequesting}>
-            <MessageSquarePlus className="h-4 w-4" />
+            <MessageSquarePlus />
             <span className="hidden lg:inline">
                 {isRequesting ? 'Request Sent' : 'Ask to Edit'}
             </span>

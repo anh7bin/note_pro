@@ -26,7 +26,7 @@ import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { TASK_STATUS } from '@/lib/constants';
 import { showToast } from '@/lib/toast';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ChevronDown, Flag, Inbox, Search } from 'lucide-react';
 interface NewTaskModalProps {
     children: React.ReactNode;
@@ -49,7 +49,6 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
         deadlineDate: '',
     });
 
-    const dialogContentRef = useRef<HTMLDivElement>(null);
     const userId = useUserId();
     const { workspace } = useWorkspace();
     const [createDocument] = useCreateUntitledPageMutation();
@@ -211,7 +210,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent ref={dialogContentRef} className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
                     <DialogTitle>Create Task</DialogTitle>
                     <DialogDescription>
@@ -229,16 +228,14 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                                 variant="outline"
                                 aria-expanded={isDocumentPopoverOpen}
                                 className="w-full justify-start text-left font-normal text-muted-foreground">
-                                <Inbox className="h-4 w-4" />
+                                <Inbox />
                                 <span className="min-w-0 flex-1 truncate">
                                     {selectedDocumentTitle}
                                 </span>
-                                <ChevronDown className="h-4 w-4" />
+                                <ChevronDown />
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent
-                            className="w-[min(20rem,calc(100vw-3rem))] p-0"
-                            container={dialogContentRef.current ?? undefined}>
+                        <PopoverContent className="w-[min(20rem,calc(100vw-3rem))] p-0">
                             <div className="p-3">
                                 <InputField
                                     type="search"
@@ -249,7 +246,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                                         setSearchTerm(e.target.value)
                                     }
                                     className="h-9"
-                                    icon={<Search className="h-4 w-4" />}
+                                    icon={<Search />}
                                 />
                             </div>
                             <div className="max-h-48 overflow-y-auto">
@@ -325,7 +322,6 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                             }
                             placeholder="Schedule"
                             textContent="Schedule"
-                            container={dialogContentRef.current}
                             quickActions={true}
                         />
 
@@ -335,8 +331,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                                 handleInputChange('deadlineDate', date)
                             }
                             placeholder="Deadline"
-                            icon={<Flag className="h-4 w-4" />}
-                            container={dialogContentRef.current}
+                            icon={<Flag />}
                             quickActions={true}
                         />
                     </div>

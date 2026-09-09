@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { Calendar, Check, Flag, MoreHorizontal } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { isToday, isTomorrow, format } from 'date-fns';
 
@@ -12,13 +12,15 @@ interface TaskItemProps {
     completed?: boolean;
     scheduleDate?: string;
     deadlineDate?: string;
-    onToggleComplete?: (id: string, completed: boolean) => void;
+    onToggleComplete?: (id: string, completed: boolean) => Promise<void> | void;
     onMoreClick?: (id: string) => void;
     onItemClick?: (id: string) => void;
     isActive?: boolean;
     className?: string;
     variant?: 'default' | 'compact';
 }
+
+const TOGGLE_DEBOUNCE_MS = 400;
 
 export const TaskItem = ({
     id,
@@ -33,25 +35,76 @@ export const TaskItem = ({
     className,
     variant = 'default',
 }: TaskItemProps) => {
-    const [isAnimating, setIsAnimating] = useState(false);
     const [tempCompleted, setTempCompleted] = useState(completed);
+    const [isSaving, setIsSaving] = useState(false);
+    const desiredCompletedRef = useRef(completed);
+    const isSavingRef = useRef(false);
+    const toggleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const onToggleCompleteRef = useRef(onToggleComplete);
+    const isMountedRef = useRef(true);
 
     useEffect(() => {
-        setTempCompleted(completed);
-    }, [completed]);
+        onToggleCompleteRef.current = onToggleComplete;
+    }, [onToggleComplete]);
+
+    useEffect(() => {
+        if (!toggleTimerRef.current && !isSavingRef.current) {
+            desiredCompletedRef.current = completed;
+            setTempCompleted(completed);
+        }
+    }, [completed, id]);
+
+    useEffect(() => {
+        isMountedRef.current = true;
+
+        return () => {
+            isMountedRef.current = false;
+            if (toggleTimerRef.current) {
+                clearTimeout(toggleTimerRef.current);
+            }
+        };
+    }, []);
+
+    const saveToggle = useCallback(async () => {
+        toggleTimerRef.current = null;
+
+        if (desiredCompletedRef.current === completed) {
+            return;
+        }
+
+        isSavingRef.current = true;
+        setIsSaving(true);
+
+        try {
+            await onToggleCompleteRef.current?.(
+                id,
+                desiredCompletedRef.current
+            );
+        } catch {
+            desiredCompletedRef.current = completed;
+            if (isMountedRef.current) {
+                setTempCompleted(completed);
+            }
+        } finally {
+            isSavingRef.current = false;
+            if (isMountedRef.current) {
+                setIsSaving(false);
+            }
+        }
+    }, [completed, id]);
 
     const handleToggleComplete = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (isAnimating) return;
+        if (isSavingRef.current) return;
 
-        const newCompletedState = !tempCompleted;
+        const newCompletedState = !desiredCompletedRef.current;
+        desiredCompletedRef.current = newCompletedState;
         setTempCompleted(newCompletedState);
-        setIsAnimating(true);
 
-        setTimeout(() => {
-            onToggleComplete?.(id, newCompletedState);
-            setIsAnimating(false);
-        }, 300);
+        if (toggleTimerRef.current) {
+            clearTimeout(toggleTimerRef.current);
+        }
+        toggleTimerRef.current = setTimeout(saveToggle, TOGGLE_DEBOUNCE_MS);
     };
 
     const formatDate = (dateString?: string) => {
@@ -78,7 +131,8 @@ export const TaskItem = ({
             <button
                 type="button"
                 onClick={handleToggleComplete}
-                disabled={isAnimating}
+                disabled={isSaving}
+                aria-busy={isSaving}
                 aria-label={
                     tempCompleted
                         ? `Mark “${title}” as incomplete`
@@ -90,7 +144,7 @@ export const TaskItem = ({
                     tempCompleted
                         ? 'text-primary'
                         : 'text-muted-foreground hover:text-foreground',
-                    isAnimating && 'cursor-not-allowed opacity-60'
+                    isSaving && 'cursor-not-allowed opacity-60'
                 )}>
                 <span
                     aria-hidden="true"

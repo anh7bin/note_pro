@@ -105,10 +105,9 @@ function UserCard({
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0"
                             aria-label={`Remove ${getDisplayName(user)} from document`}
                             onClick={() => onRemoveUser?.(user.id)}>
-                            <X className="h-4 w-4" />
+                            <X />
                         </Button>
                     )}
                 </div>
