@@ -41,7 +41,7 @@ export function FileUploadPreview({
 
     return (
         <div
-            className={cn('flex items-start gap-2 py-1', className)}
+            className={cn('relative py-1', className)}
             role="group"
             aria-busy={!hasError}
             aria-label={
@@ -56,9 +56,11 @@ export function FileUploadPreview({
                 {statusText} {fileName}
             </span>
             {dragHandle && (
-                <div className="text-muted-foreground">{dragHandle}</div>
+                <div className="absolute right-full top-1 mr-1 text-muted-foreground">
+                    {dragHandle}
+                </div>
             )}
-            <div className="min-w-0 flex-1 rounded-md border border-border bg-muted/30 p-2">
+            <div className="w-full min-w-0 rounded-md border border-border bg-muted/30 p-2">
                 <div className="flex min-h-12 items-center gap-3">
                     <div className="flex h-12 w-10 shrink-0 items-center justify-center">
                         <FileTypeIcon

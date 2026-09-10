@@ -113,7 +113,7 @@ export function BlockInteractions({
             <div
                 className={cn(
                     'absolute top-0 z-20 flex items-center gap-0.5 rounded-lg border border-border/70 bg-popover/95 p-0.5 shadow-sm backdrop-blur-sm transition-[opacity,box-shadow]',
-                    isDocumentTitle ? 'right-0' : 'right-10',
+                    'right-0',
                     'opacity-100 md:pointer-events-none md:opacity-0 md:group-hover/block:pointer-events-auto md:group-hover/block:opacity-100 md:focus-within:pointer-events-auto md:focus-within:opacity-100',
                     isToolbarOpen &&
                         'shadow-md md:pointer-events-auto md:opacity-100'
@@ -317,7 +317,7 @@ export function BlockInteractions({
                 <div
                     className={cn(
                         'flex flex-wrap items-center gap-1.5 pb-1 pt-1',
-                        isDocumentTitle ? 'pl-0' : 'pl-8'
+                        'pl-0'
                     )}>
                     {reactionGroups.map(
                         ([emoji, { count, reactedByCurrentUser, names }]) => (

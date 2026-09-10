@@ -26,7 +26,11 @@ const DragHandle = memo(function DragHandle({
 }: {
     children: ReactNode;
 }) {
-    return <div className="text-muted-foreground">{children}</div>;
+    return (
+        <div className="absolute right-full top-0 mr-1 text-muted-foreground">
+            {children}
+        </div>
+    );
 });
 
 const BlockActions = memo(function BlockActions({
@@ -41,7 +45,7 @@ const BlockActions = memo(function BlockActions({
     onInsertBelow?: () => void;
 }) {
     return (
-        <div className="ml-1 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+        <div className="absolute left-full top-0 ml-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
             <BlockActionMenu
                 blockId={blockId}
                 onDelete={onDelete}
@@ -93,6 +97,7 @@ export const EditorContainer = memo(
             () =>
                 cn(
                     'flex flex-1 items-start gap-3 p-1 rounded',
+                    'w-full',
                     'border border-transparent',
                     'hover:border-gray-300',
                     'focus-within:border-gray-300',
@@ -103,7 +108,7 @@ export const EditorContainer = memo(
         );
 
         return (
-            <div className="group relative flex items-start gap-2">
+            <div className="group relative">
                 {editable && dragHandle && (
                     <DragHandle>{dragHandle}</DragHandle>
                 )}

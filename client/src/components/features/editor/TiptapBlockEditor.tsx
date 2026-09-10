@@ -47,8 +47,8 @@ function EditorContent() {
 
     return (
         <div className="relative h-full">
-            <div className="max-w-full mx-auto w-full h-full">
-                <div className="mx-auto max-w-full bg-card overflow-hidden h-full">
+            <div className="mx-auto h-full w-full max-w-full">
+                <div className="mx-auto h-full max-w-full overflow-hidden bg-card">
                     <div className="h-full overflow-y-auto">
                         {coverImage && (
                             <DocumentCover
@@ -59,7 +59,7 @@ function EditorContent() {
                                 isUploading={isUploading}
                             />
                         )}
-                        <div className="mx-auto max-w-4xl py-16">
+                        <div className="mx-auto max-w-[61rem] px-9 py-16 sm:px-10">
                             <div className="group flex flex-col gap-2">
                                 {!coverImage && editable && (
                                     <div className="">
@@ -69,18 +69,14 @@ function EditorContent() {
                                         />
                                     </div>
                                 )}
-                                <div className="group/block relative">
-                                    <div className="min-w-0 pr-16">
-                                        <DocumentTitleInput
-                                            value={
-                                                rootBlock.content?.title || ''
-                                            }
-                                            onChange={handleUpdateTitle}
-                                            onBlur={handleTitleBlur}
-                                            onKeyDown={handleTitleKeyDown}
-                                            editable={editable}
-                                        />
-                                    </div>
+                                <div className="group/block relative pl-[5px]">
+                                    <DocumentTitleInput
+                                        value={rootBlock.content?.title || ''}
+                                        onChange={handleUpdateTitle}
+                                        onBlur={handleTitleBlur}
+                                        onKeyDown={handleTitleKeyDown}
+                                        editable={editable}
+                                    />
                                     <BlockInteractions
                                         blockId={rootBlock.id}
                                         variant="document-title"

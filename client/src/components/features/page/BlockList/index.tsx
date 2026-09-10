@@ -52,7 +52,7 @@ export function BlockList() {
             <SortableContext
                 items={blockIds}
                 strategy={verticalListSortingStrategy}>
-                <div className="space-y-1">
+                <div className="w-full space-y-1">
                     {blocks.map((block) => (
                         <SortableBlockItem
                             key={block.id}

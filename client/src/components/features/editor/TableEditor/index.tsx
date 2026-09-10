@@ -100,14 +100,14 @@ export const TableEditor = memo(function TableEditor({
 
     return (
         <div className="group relative my-1" data-block-id={blockId}>
-            <div className="flex items-start gap-2">
+            <div className="relative">
                 {editable && dragHandle && (
-                    <div className="flex-shrink-0 pt-3 text-muted-foreground">
+                    <div className="absolute right-full top-3 mr-1 text-muted-foreground">
                         {dragHandle}
                     </div>
                 )}
                 <div
-                    className="notion-table-wrapper flex-1 min-w-0 overflow-x-auto"
+                    className="notion-table-wrapper min-w-0 w-full overflow-x-auto"
                     onClick={handleContainerClick}>
                     <EditorContent
                         editor={editor}
@@ -115,7 +115,7 @@ export const TableEditor = memo(function TableEditor({
                     />
                 </div>
                 {editable && (
-                    <div className="ml-1 flex-shrink-0 pt-3 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                    <div className="absolute left-full top-3 ml-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
                         <BlockActionMenu
                             blockId={blockId}
                             onDelete={onDeleteBlock}

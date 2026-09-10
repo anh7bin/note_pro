@@ -25,18 +25,22 @@ export const SeparatorBlock = memo(
         onInsertBelow,
     }: SeparatorBlockProps) {
         return (
-            <div className="group relative my-2 flex items-center gap-2">
+            <div className="group relative my-2">
                 {editable && (
-                    <div className="text-muted-foreground">{dragHandle}</div>
+                    <div className="absolute right-full top-1/2 mr-1 -translate-y-1/2 text-muted-foreground">
+                        {dragHandle}
+                    </div>
                 )}
-                <div className={cn('flex-1', SEPARATOR_STYLES[style])} />
+                <div className={cn('w-full', SEPARATOR_STYLES[style])} />
                 {editable && (
-                    <BlockActionMenu
-                        blockId=""
-                        onDelete={onDeleteBlock}
-                        onInsertAbove={onInsertAbove}
-                        onInsertBelow={onInsertBelow}
-                    />
+                    <div className="absolute left-full top-1/2 ml-1 -translate-y-1/2">
+                        <BlockActionMenu
+                            blockId=""
+                            onDelete={onDeleteBlock}
+                            onInsertAbove={onInsertAbove}
+                            onInsertBelow={onInsertBelow}
+                        />
+                    </div>
                 )}
             </div>
         );

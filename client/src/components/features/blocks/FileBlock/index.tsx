@@ -90,9 +90,9 @@ export const FileBlock = memo(
                     imageUrl={fileUrl || ''}
                     fileName={fileName || 'Image'}
                 />
-                <div className="group relative flex items-start gap-2 py-1">
+                <div className="group relative py-1">
                     {editable && (
-                        <div className="text-muted-foreground">
+                        <div className="absolute right-full top-1 mr-1 text-muted-foreground">
                             {dragHandle}
                         </div>
                     )}
@@ -100,7 +100,7 @@ export const FileBlock = memo(
                         type="button"
                         onDoubleClick={handleDoubleClick}
                         className={cn(
-                            'min-w-0 flex-1 rounded-md border border-transparent bg-muted/30 p-1.5 text-left transition-[border-color,box-shadow] duration-150 hover:border-border hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                            'w-full min-w-0 rounded-md border border-transparent bg-muted/30 p-1.5 text-left transition-[border-color,box-shadow] duration-150 hover:border-border hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                             !fileUrl && 'cursor-not-allowed opacity-70'
                         )}
                         disabled={!fileUrl}
@@ -121,7 +121,7 @@ export const FileBlock = memo(
                         )}
                     </button>
                     {editable && (
-                        <div className="ml-1 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                        <div className="absolute left-full top-1 ml-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
                             <BlockActionMenu
                                 blockId={block.id}
                                 onDelete={onDeleteBlock}

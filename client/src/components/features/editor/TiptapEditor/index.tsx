@@ -314,7 +314,6 @@ export const TiptapEditor = memo(
                 {fileUpload?.insertBelow && (
                     <FileUploadPreview
                         {...fileUpload}
-                        className="pl-7"
                         onCancel={cancelFileUpload}
                         onRetry={retryFileUpload}
                         onDismiss={dismissFileUpload}
