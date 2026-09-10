@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useMemo } from 'react';
+import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { TASK_STATUS } from '@/lib/constants';
@@ -40,6 +40,9 @@ export const SortableBlockItem = memo(
             isDragging,
         } = useSortable({ id: block.id });
 
+        const positionRef = useRef(block.position ?? 0);
+        positionRef.current = block.position ?? 0;
+
         const task = useMemo(() => {
             if (
                 block.type !== BlockType.TASK ||
@@ -65,9 +68,10 @@ export const SortableBlockItem = memo(
                     scaleY: 1,
                 }
             ),
-            transition:
-                transition ||
-                'transform 150ms cubic-bezier(0.4, 0, 0.2, 1), opacity 150ms ease',
+            transition: isDragging
+                ? undefined
+                : transition ||
+                  'transform 150ms cubic-bezier(0.4, 0, 0.2, 1), opacity 150ms ease',
             opacity: isDragging ? 0.8 : 1,
             position: 'relative' as const,
             zIndex: isDragging ? 999 : 'auto',
@@ -80,15 +84,30 @@ export const SortableBlockItem = memo(
             <DragHandle attributes={attributes} listeners={listeners} />
         );
 
-        const commonDeleteHandler =
-            totalBlocks > 1 ? () => handleDeleteBlock(block.id) : undefined;
+        const deleteBlock = useCallback(
+            () => handleDeleteBlock(block.id),
+            [block.id, handleDeleteBlock]
+        );
 
-        const commonInsertHandlers = {
-            onInsertAbove: () =>
-                handleAddBlock(block.position || 0, BlockType.PARAGRAPH),
-            onInsertBelow: () =>
-                handleAddBlock((block.position || 0) + 1, BlockType.PARAGRAPH),
-        };
+        const insertAbove = useCallback(
+            () => handleAddBlock(positionRef.current, BlockType.PARAGRAPH),
+            [handleAddBlock]
+        );
+
+        const insertBelow = useCallback(
+            () => handleAddBlock(positionRef.current + 1, BlockType.PARAGRAPH),
+            [handleAddBlock]
+        );
+
+        const commonDeleteHandler = totalBlocks > 1 ? deleteBlock : undefined;
+
+        const commonInsertHandlers = useMemo(
+            () => ({
+                onInsertAbove: insertAbove,
+                onInsertBelow: insertBelow,
+            }),
+            [insertAbove, insertBelow]
+        );
 
         return (
             <div

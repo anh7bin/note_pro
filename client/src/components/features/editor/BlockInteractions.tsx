@@ -13,7 +13,7 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageCirclePlus, Send, SmilePlus, Trash2, X } from 'lucide-react';
-import { FormEvent, useMemo, useRef, useState } from 'react';
+import { FormEvent, memo, useMemo, useRef, useState } from 'react';
 
 const QUICK_REACTIONS = ['👍', '❤️', '🎉', '😂', '😮', '😢'] as const;
 
@@ -41,7 +41,7 @@ function getRelativeTime(value: string) {
     }
 }
 
-export function BlockInteractions({
+export const BlockInteractions = memo(function BlockInteractions({
     blockId,
     variant = 'block',
 }: BlockInteractionsProps) {
@@ -380,4 +380,4 @@ export function BlockInteractions({
             )}
         </>
     );
-}
+});
