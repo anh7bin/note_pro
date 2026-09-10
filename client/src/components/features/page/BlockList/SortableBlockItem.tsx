@@ -10,6 +10,7 @@ import { DragHandle } from './DragHandle';
 import { BlockRenderer } from './BlockRenderer';
 import { useEditor } from '@/contexts/EditorContext';
 import { BlockInteractions } from '@/components/features/editor/BlockInteractions';
+import { cn } from '@/lib/utils';
 
 export const SortableBlockItem = memo(
     function SortableBlockItem({ block, totalBlocks }: SortableBlockItemProps) {
@@ -70,10 +71,8 @@ export const SortableBlockItem = memo(
             opacity: isDragging ? 0.8 : 1,
             position: 'relative' as const,
             zIndex: isDragging ? 999 : 'auto',
-            backgroundColor: isDragging
-                ? 'hsl(var(--background))'
-                : 'transparent',
-            boxShadow: isDragging ? 'var(--shadow-md)' : 'none',
+            backgroundColor: isDragging ? 'hsl(var(--background))' : undefined,
+            boxShadow: isDragging ? 'var(--shadow-md)' : undefined,
             willChange: isDragging ? 'transform, opacity' : 'auto',
         };
 
@@ -96,7 +95,11 @@ export const SortableBlockItem = memo(
                 ref={setNodeRef}
                 style={style}
                 data-block-id={block.id}
-                className="group/block relative">
+                className={cn(
+                    'group/block relative rounded-md px-1.5 py-1 transition-colors duration-150',
+                    'focus-within:bg-primary/5',
+                    focusedBlock === block.id && 'bg-primary/5'
+                )}>
                 <BlockRenderer
                     block={block}
                     dragHandle={dragHandle}

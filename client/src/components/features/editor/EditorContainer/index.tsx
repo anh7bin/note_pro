@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, ReactNode, useMemo } from 'react';
+import { memo, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { Task } from '@/types/app';
 import { TASK_STATUS } from '@/lib/constants';
@@ -93,26 +93,14 @@ export const EditorContainer = memo(
     }: EditorContainerProps) {
         const isCompleted = task?.status === TASK_STATUS.COMPLETED;
 
-        const containerClassName = useMemo(
-            () =>
-                cn(
-                    'flex flex-1 items-start gap-3 p-1 rounded',
-                    'w-full',
-                    'border border-transparent',
-                    'hover:border-gray-300',
-                    'focus-within:border-gray-300',
-                    'transition-[border-color,box-shadow] duration-100',
-                    'hover:shadow-md'
-                ),
-            []
-        );
-
         return (
             <div className="group relative">
                 {editable && dragHandle && (
                     <DragHandle>{dragHandle}</DragHandle>
                 )}
-                <div data-editor-container className={containerClassName}>
+                <div
+                    data-editor-container
+                    className="flex w-full items-start gap-3 rounded-sm">
                     <CheckTask
                         editable={editable}
                         task={task as Task}

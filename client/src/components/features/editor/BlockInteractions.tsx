@@ -94,11 +94,17 @@ export function BlockInteractions({
 
     const handleSubmitComment = async (event?: FormEvent) => {
         event?.preventDefault();
-        if (!commentText.trim() || isSubmitting) return;
+        const submittedComment = commentText.trim();
+        if (!submittedComment || isSubmitting) return;
 
+        setCommentText('');
         setIsSubmitting(true);
-        const wasAdded = await addComment(blockId, commentText);
-        if (wasAdded) setCommentText('');
+        const wasAdded = await addComment(blockId, submittedComment);
+        if (!wasAdded) {
+            setCommentText((currentValue) =>
+                currentValue ? currentValue : submittedComment
+            );
+        }
         setIsSubmitting(false);
         requestAnimationFrame(() => textareaRef.current?.focus());
     };
@@ -314,11 +320,7 @@ export function BlockInteractions({
             </div>
 
             {(reactionGroups.length > 0 || latestComment) && (
-                <div
-                    className={cn(
-                        'flex flex-wrap items-center gap-1.5 pb-1 pt-1',
-                        'pl-0'
-                    )}>
+                <div className="flex flex-wrap items-center gap-1.5 pb-0.5 pt-1">
                     {reactionGroups.map(
                         ([emoji, { count, reactedByCurrentUser, names }]) => (
                             <button

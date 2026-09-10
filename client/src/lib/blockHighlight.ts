@@ -10,11 +10,6 @@ export const highlightBlock = (blockId: string): (() => void) | null => {
         return null;
     }
 
-    const container = el.querySelector<HTMLElement>('[data-editor-container]');
-    if (!container) {
-        return null;
-    }
-
     const scrollContainer = el.closest('.overflow-y-auto');
 
     if (scrollContainer) {
@@ -38,11 +33,11 @@ export const highlightBlock = (blockId: string): (() => void) | null => {
         }
     }
 
-    const originalBorder = container.style.border;
-    const originalBackground = container.style.background;
+    const originalBackgroundColor = el.style.backgroundColor;
+    const originalBoxShadow = el.style.boxShadow;
 
-    container.style.border = '1px solid hsl(var(--button-primary))';
-    container.style.background = 'hsl(var(--button-primary) / 0.1)';
+    el.style.backgroundColor = 'hsl(var(--button-primary) / 0.08)';
+    el.style.boxShadow = 'inset 0 0 0 1px hsl(var(--button-primary) / 0.28)';
 
     const handleClickOutside = (event: MouseEvent) => {
         if (!el.contains(event.target as Node)) {
@@ -51,8 +46,8 @@ export const highlightBlock = (blockId: string): (() => void) | null => {
     };
 
     const cleanup = () => {
-        container.style.border = originalBorder;
-        container.style.background = originalBackground;
+        el.style.backgroundColor = originalBackgroundColor;
+        el.style.boxShadow = originalBoxShadow;
         document.removeEventListener('click', handleClickOutside);
     };
 
