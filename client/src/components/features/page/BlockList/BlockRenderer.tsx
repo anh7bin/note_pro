@@ -149,6 +149,12 @@ export const BlockRenderer = memo(
             prevProps.block.content?.style === nextProps.block.content?.style &&
             prevProps.block.content?.fileUrl ===
                 nextProps.block.content?.fileUrl &&
+            prevProps.block.content?.fileName ===
+                nextProps.block.content?.fileName &&
+            prevProps.block.content?.fileType ===
+                nextProps.block.content?.fileType &&
+            prevProps.block.content?.fileSize ===
+                nextProps.block.content?.fileSize &&
             prevProps.block.position === nextProps.block.position &&
             prevProps.block.type === nextProps.block.type &&
             prevProps.focusedBlockId === nextProps.focusedBlockId &&

@@ -56,6 +56,7 @@ export function EditorProvider({ children, pageId }: EditorProviderProps) {
         waitForPendingBlockWrites: persistence.waitForPendingBlockWrites,
         updateBlockType: blockRepository.updateBlockType,
         updateBlockContent: blockRepository.updateBlockContent,
+        convertBlockToFile: blockRepository.convertBlockToFile,
     });
 
     const value = useMemo<EditorContextValue>(

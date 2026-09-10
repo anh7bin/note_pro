@@ -112,6 +112,9 @@ export async function uploadFileToCloudinary(
         folder?: string;
         tags?: string[];
         resourceType?: 'auto' | 'raw' | 'image' | 'video';
+        onProgress?: (progress: number) => void;
+        signal?: AbortSignal;
+        timeoutMs?: number;
     }
 ): Promise<CloudinaryUploadResponse> {
     const config = getCloudinaryConfig();
@@ -132,20 +135,105 @@ export async function uploadFileToCloudinary(
     const url = `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}/${config.cloudName}/${resourceType}/upload`;
 
     try {
-        const response = await fetch(url, {
-            method: 'POST',
-            body: formData,
-        });
+        return await new Promise<CloudinaryUploadResponse>(
+            (resolve, reject) => {
+                const request = new XMLHttpRequest();
+                let settled = false;
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error?.message || 'Failed to upload file');
-        }
+                const createAbortError = () => {
+                    const error = new Error('Upload cancelled');
+                    error.name = 'AbortError';
+                    return error;
+                };
+                const removeAbortListener = () =>
+                    options?.signal?.removeEventListener('abort', abortRequest);
+                const finish = (callback: () => void) => {
+                    if (settled) return;
+                    settled = true;
+                    removeAbortListener();
+                    callback();
+                };
+                const abortRequest = () => request.abort();
 
-        const data: CloudinaryUploadResponse = await response.json();
-        return data;
+                if (options?.signal?.aborted) {
+                    reject(createAbortError());
+                    return;
+                }
+
+                options?.signal?.addEventListener('abort', abortRequest, {
+                    once: true,
+                });
+
+                request.upload.addEventListener('progress', (event) => {
+                    if (!event.lengthComputable) return;
+                    const progress = Math.round(
+                        (event.loaded / event.total) * 100
+                    );
+                    options?.onProgress?.(progress);
+                });
+
+                request.addEventListener('load', () => {
+                    let data: CloudinaryUploadResponse & {
+                        error?: { message?: string };
+                    };
+
+                    try {
+                        data = JSON.parse(request.responseText);
+                    } catch {
+                        finish(() =>
+                            reject(
+                                new Error(
+                                    'Cloudinary returned an invalid response'
+                                )
+                            )
+                        );
+                        return;
+                    }
+
+                    if (request.status >= 200 && request.status < 300) {
+                        options?.onProgress?.(100);
+                        finish(() => resolve(data));
+                        return;
+                    }
+
+                    finish(() =>
+                        reject(
+                            new Error(
+                                data.error?.message || 'Failed to upload file'
+                            )
+                        )
+                    );
+                });
+
+                request.addEventListener('error', () => {
+                    finish(() =>
+                        reject(new Error('Unable to connect to Cloudinary'))
+                    );
+                });
+
+                request.addEventListener('abort', () => {
+                    finish(() => reject(createAbortError()));
+                });
+
+                request.addEventListener('timeout', () => {
+                    finish(() =>
+                        reject(
+                            new Error(
+                                'Upload timed out. Check your connection and try again.'
+                            )
+                        )
+                    );
+                });
+
+                request.open('POST', url);
+                request.timeout = options?.timeoutMs ?? 5 * 60 * 1000;
+                request.send(formData);
+            }
+        );
     } catch (error) {
-        console.error('Error uploading file to Cloudinary:', error);
+        if (!(error instanceof Error && error.name === 'AbortError')) {
+            console.error('Error uploading file to Cloudinary:', error);
+        }
         throw error;
     }
 }

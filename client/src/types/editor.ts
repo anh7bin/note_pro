@@ -48,13 +48,13 @@ export type AddEditorBlockHandler = (
     position: number,
     type: BlockType,
     content?: BlockContent,
-    focusAt?: EditorFocusPosition
-) => Promise<void> | void;
+    focusAt?: EditorFocusPosition | null
+) => Promise<boolean> | boolean | void;
 
 export type ConvertToFileHandler = (
     blockId: string,
     fileData: FileBlockContent
-) => Promise<void> | void;
+) => Promise<boolean> | boolean | void;
 
 const BLOCK_TYPES = new Set<string>(Object.values(BlockType));
 const SEPARATOR_STYLES = new Set<string>([

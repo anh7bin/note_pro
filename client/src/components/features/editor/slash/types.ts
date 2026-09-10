@@ -7,7 +7,7 @@ import type { ReactElement } from 'react';
 
 export interface SlashCommandOptions {
     blockId?: string;
-    onToggleUploading?: (isUploading: boolean) => void;
+    onUploadStateChange?: (upload: FileUploadState | null) => void;
     onConvertToTask?: (blockId: string) => Promise<void> | void;
     onConvertToFile?: ConvertToFileHandler;
     onConvertToTable?: (
@@ -19,6 +19,16 @@ export interface SlashCommandOptions {
     position?: number;
     isTitle?: boolean;
     totalBlocks?: number;
+}
+
+export interface FileUploadState {
+    fileName: string;
+    fileType: string;
+    fileSize: number;
+    progress: number;
+    insertBelow: boolean;
+    status: 'uploading' | 'finishing' | 'error';
+    errorMessage?: string;
 }
 
 export interface CommandHandlers {

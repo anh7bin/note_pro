@@ -1,8 +1,8 @@
 'use client';
 
-import { ChangeEvent, useCallback, useMemo, useRef } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { Editor } from '@tiptap/react';
-import { useLoading } from '@/contexts/LoadingContext';
+import { toast } from 'sonner';
 import {
     handleFileUpload,
     handleTableInsert,
@@ -12,9 +12,11 @@ import type { CommandHandlers, SlashCommandState } from '../slash/types';
 import type {
     AddEditorBlockHandler,
     ConvertToFileHandler,
+    FileBlockContent,
     SeparatorStyle,
 } from '@/types/editor';
 import { BlockType } from '@/types/types';
+import type { FileUploadState } from '../slash/types';
 
 interface UseCommandHandlersOptions {
     editor: Editor | null;
@@ -24,7 +26,7 @@ interface UseCommandHandlersOptions {
     onAddBlock?: AddEditorBlockHandler;
     onConvertToFile?: ConvertToFileHandler;
     onConvertToTable?: (blockId: string, tableHTML: string) => void;
-    onToggleUploading?: (isUploading: boolean) => void;
+    onUploadStateChange?: (upload: FileUploadState | null) => void;
     updateState: (updates: Partial<SlashCommandState>) => void;
 }
 
@@ -36,11 +38,15 @@ export function useCommandHandlers({
     onAddBlock,
     onConvertToFile,
     onConvertToTable,
-    onToggleUploading,
+    onUploadStateChange,
     updateState,
 }: UseCommandHandlersOptions) {
-    const { startLoading, stopLoading } = useLoading();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const activeUploadRef = useRef<AbortController | null>(null);
+    const retryUploadRef = useRef<{
+        file: File;
+        uploadedFileData?: FileBlockContent;
+    } | null>(null);
 
     const positionRef = useRef(position);
     const onAddBlockRef = useRef(onAddBlock);
@@ -51,6 +57,13 @@ export function useCommandHandlers({
     onAddBlockRef.current = onAddBlock;
     onConvertToFileRef.current = onConvertToFile;
     onConvertToTableRef.current = onConvertToTable;
+
+    useEffect(
+        () => () => {
+            activeUploadRef.current?.abort();
+        },
+        []
+    );
 
     const getPopoverPositionFromEditor = useCallback(() => {
         if (!editor) return { top: 0, left: 0 };
@@ -90,26 +103,75 @@ export function useCommandHandlers({
         [editor, isTitle, getPopoverPositionFromEditor, updateState]
     );
 
+    const runFileUpload = useCallback(
+        async (
+            file: File,
+            uploadedFileData?: FileBlockContent
+        ): Promise<void> => {
+            if (activeUploadRef.current) {
+                toast.info('Another file is already uploading in this block.');
+                return;
+            }
+
+            const controller = new AbortController();
+            activeUploadRef.current = controller;
+
+            try {
+                const result = await handleFileUpload({
+                    file,
+                    blockId,
+                    editor,
+                    onAddBlock: onAddBlockRef.current,
+                    onConvertToFile: onConvertToFileRef.current,
+                    getPosition: () => positionRef.current,
+                    onUploadStateChange,
+                    signal: controller.signal,
+                    uploadedFileData,
+                });
+
+                if (result.status === 'error') {
+                    retryUploadRef.current = {
+                        file,
+                        uploadedFileData: result.uploadedFileData,
+                    };
+                } else {
+                    retryUploadRef.current = null;
+                }
+            } finally {
+                if (activeUploadRef.current === controller) {
+                    activeUploadRef.current = null;
+                }
+            }
+        },
+        [blockId, editor, onUploadStateChange]
+    );
+
     const handleFileChange = useCallback(
         async (event: ChangeEvent<HTMLInputElement>) => {
             const file = event.target.files?.[0];
             event.target.value = '';
             if (!file) return;
 
-            await handleFileUpload({
-                file,
-                blockId,
-                editor,
-                onAddBlock: onAddBlockRef.current,
-                onConvertToFile: onConvertToFileRef.current,
-                position: positionRef.current,
-                onToggleUploading,
-                startLoading,
-                stopLoading,
-            });
+            await runFileUpload(file);
         },
-        [blockId, editor, onToggleUploading, startLoading, stopLoading]
+        [runFileUpload]
     );
+
+    const cancelFileUpload = useCallback(() => {
+        activeUploadRef.current?.abort();
+    }, []);
+
+    const retryFileUpload = useCallback(() => {
+        const retryUpload = retryUploadRef.current;
+        if (!retryUpload) return;
+        void runFileUpload(retryUpload.file, retryUpload.uploadedFileData);
+    }, [runFileUpload]);
+
+    const dismissFileUpload = useCallback(() => {
+        activeUploadRef.current?.abort();
+        retryUploadRef.current = null;
+        onUploadStateChange?.(null);
+    }, [onUploadStateChange]);
 
     const onCommandSelect = useCallback(
         (cmd: string) => {
@@ -171,6 +233,9 @@ export function useCommandHandlers({
         fileInputRef,
         commandHandlers,
         handleFileChange,
+        cancelFileUpload,
+        retryFileUpload,
+        dismissFileUpload,
         onCommandSelect,
         onEmojiSelect,
         onTableSelect,

@@ -59,7 +59,7 @@ export interface EditorConversions {
     handleConvertToFile: (
         blockId: string,
         fileData: FileBlockContent
-    ) => Promise<void>;
+    ) => Promise<boolean>;
     handleConvertToTable: (blockId: string, tableHTML: string) => Promise<void>;
 }
 

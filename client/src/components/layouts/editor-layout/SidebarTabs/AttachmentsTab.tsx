@@ -1,6 +1,6 @@
+import { FileTypeIcon } from '@/components/ui/file-type-icon';
 import { getFileBadge, getFileExtension } from '@/lib/fileUtils';
 import { Paperclip } from 'lucide-react';
-import Image from 'next/image';
 import { EmptyState } from './EmptyState';
 import { SidebarAttachment } from './types';
 
@@ -63,23 +63,17 @@ function AttachmentRow({
                     ? 'border-border bg-muted/60'
                     : 'border-transparent hover:border-border hover:bg-muted/50'
             }`}>
-            <div className="relative flex h-10 w-8 items-center justify-center">
-                <Image
-                    src="/images/file-badge-base.png"
-                    alt=""
-                    width={32}
-                    height={40}
-                    className="pointer-events-none select-none object-contain"
-                />
-                <span
-                    className={`pointer-events-none absolute text-[10px] font-semibold uppercase tracking-[0.08em] ${badge.textClass}`}>
-                    {badge.label}
-                </span>
+            <div
+                className="flex h-10 w-8 shrink-0 items-center justify-center"
+                aria-hidden="true">
+                <FileTypeIcon extension={extension} className="h-9 w-7" />
             </div>
             <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold truncate">{file.name}</p>
+                <p className="truncate text-xs font-semibold" title={file.name}>
+                    {file.name}
+                </p>
                 <p className="truncate text-xs text-muted-foreground">
-                    {file.type}
+                    {extension?.toUpperCase() ?? badge.label}
                     {file.size ? ` · ${file.size}` : ''}
                 </p>
             </div>

@@ -19,12 +19,18 @@ type UpdateBlockContent = (
     content: BlockContent
 ) => Promise<Block | null>;
 
+type ConvertBlockToFile = (
+    blockId: string,
+    fileData: FileBlockContent
+) => Promise<Block | null>;
+
 interface UseEditorConversionsOptions {
     setBlocks: Dispatch<SetStateAction<Block[]>>;
     flushPendingChanges: () => void;
     waitForPendingBlockWrites: (blockId: string) => Promise<boolean>;
     updateBlockType: UpdateBlockType;
     updateBlockContent: UpdateBlockContent;
+    convertBlockToFile: ConvertBlockToFile;
 }
 
 export function useEditorConversions({
@@ -33,6 +39,7 @@ export function useEditorConversions({
     waitForPendingBlockWrites,
     updateBlockType,
     updateBlockContent,
+    convertBlockToFile,
 }: UseEditorConversionsOptions): EditorConversions {
     const userId = useUserId();
     const [createTask] = useCreateTaskMutation();
@@ -127,10 +134,10 @@ export function useEditorConversions({
             flushPendingChanges();
 
             try {
-                if (!(await waitForPendingBlockWrites(blockId))) return;
-                if (!(await updateBlockType(blockId, BlockType.FILE))) return;
-
-                await updateBlockContent(blockId, fileData);
+                if (!(await waitForPendingBlockWrites(blockId))) return false;
+                if (!(await convertBlockToFile(blockId, fileData))) {
+                    return false;
+                }
 
                 setBlocks((blocks) =>
                     blocks.map((block) =>
@@ -143,15 +150,16 @@ export function useEditorConversions({
                             : block
                     )
                 );
+                return true;
             } catch (error) {
                 console.error('Failed to convert block to file:', error);
+                return false;
             }
         },
         [
+            convertBlockToFile,
             flushPendingChanges,
             setBlocks,
-            updateBlockContent,
-            updateBlockType,
             waitForPendingBlockWrites,
         ]
     );

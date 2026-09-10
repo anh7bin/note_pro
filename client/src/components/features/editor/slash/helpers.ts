@@ -8,6 +8,7 @@ import type {
 import type { Editor } from '@tiptap/react';
 import { toast } from 'sonner';
 import { MAX_FILE_SIZE_BYTES } from './constants';
+import type { FileUploadState } from './types';
 
 interface FileUploadOptions {
     file: File;
@@ -15,10 +16,15 @@ interface FileUploadOptions {
     editor: Editor | null;
     onAddBlock?: AddEditorBlockHandler;
     onConvertToFile?: ConvertToFileHandler;
-    position: number;
-    onToggleUploading?: (isUploading: boolean) => void;
-    startLoading: () => void;
-    stopLoading: () => void;
+    getPosition: () => number;
+    onUploadStateChange?: (upload: FileUploadState | null) => void;
+    signal?: AbortSignal;
+    uploadedFileData?: FileBlockContent;
+}
+
+export interface FileUploadResult {
+    status: 'success' | 'error' | 'cancelled';
+    uploadedFileData?: FileBlockContent;
 }
 
 export const handleFileUpload = async ({
@@ -27,60 +33,115 @@ export const handleFileUpload = async ({
     editor,
     onAddBlock,
     onConvertToFile,
-    position,
-    onToggleUploading,
-    startLoading,
-    stopLoading,
-}: FileUploadOptions): Promise<void> => {
+    getPosition,
+    onUploadStateChange,
+    signal,
+    uploadedFileData: existingUpload,
+}: FileUploadOptions): Promise<FileUploadResult> => {
     if (!blockId) {
         toast.error('Cannot upload file to this block.');
-        return;
+        return { status: 'error' };
     }
 
     if (file.size > MAX_FILE_SIZE_BYTES) {
         toast.error('File is too large. Maximum size is 25MB.');
-        return;
+        return { status: 'error' };
     }
 
-    try {
-        startLoading();
-        onToggleUploading?.(true);
+    const currentText = (editor?.getText() || '').trim();
+    const insertBelow = currentText.length > 0 && Boolean(onAddBlock);
+    const pendingFile: Omit<
+        FileUploadState,
+        'progress' | 'status' | 'errorMessage'
+    > = {
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        insertBelow,
+    };
+    let uploadedFileData = existingUpload;
+    let lastProgress = existingUpload ? 100 : 0;
 
-        const uploadResult = await uploadFileToCloudinary(file, {
-            folder: 'note_pro/files',
-            tags: ['note_pro', 'file'],
-            resourceType: 'auto',
+    try {
+        onUploadStateChange?.({
+            ...pendingFile,
+            progress: lastProgress,
+            status: existingUpload ? 'finishing' : 'uploading',
         });
 
-        const fileData: FileBlockContent = {
-            fileUrl: uploadResult.secure_url,
-            fileName: file.name,
-            fileType: file.type,
-            fileSize: file.size,
-            publicId: uploadResult.public_id,
-        };
+        if (!uploadedFileData) {
+            const uploadResult = await uploadFileToCloudinary(file, {
+                folder: 'note_pro/files',
+                tags: ['note_pro', 'file'],
+                resourceType: 'auto',
+                signal,
+                onProgress: (progress) => {
+                    if (progress === lastProgress) return;
+                    lastProgress = progress;
+                    onUploadStateChange?.({
+                        ...pendingFile,
+                        progress,
+                        status: progress === 100 ? 'finishing' : 'uploading',
+                    });
+                },
+            });
 
-        const currentText = (editor?.getText() || '').trim();
-
-        if (currentText.length > 0 && onAddBlock) {
-            await onAddBlock(position + 1, BlockType.FILE, fileData);
-        } else if (onConvertToFile) {
-            await onConvertToFile(blockId, fileData);
-        } else {
-            toast.error('Cannot upload file: missing required handlers.');
-            return;
+            uploadedFileData = {
+                fileUrl: uploadResult.secure_url,
+                fileName: file.name,
+                fileType: file.type,
+                fileSize: file.size,
+                publicId: uploadResult.public_id,
+            };
         }
 
+        onUploadStateChange?.({
+            ...pendingFile,
+            progress: 100,
+            status: 'finishing',
+        });
+
+        let persisted: boolean | void;
+        if (currentText.length > 0 && onAddBlock) {
+            persisted = await onAddBlock(
+                getPosition() + 1,
+                BlockType.FILE,
+                uploadedFileData,
+                null
+            );
+        } else if (onConvertToFile) {
+            persisted = await onConvertToFile(blockId, uploadedFileData);
+        } else {
+            throw new Error('Cannot add the uploaded file to this page.');
+        }
+
+        if (persisted === false) {
+            throw new Error(
+                'The file was uploaded, but could not be saved to this page.'
+            );
+        }
+
+        onUploadStateChange?.(null);
         toast.success('File uploaded successfully');
+        return { status: 'success' };
     } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+            onUploadStateChange?.(null);
+            return { status: 'cancelled' };
+        }
+
         const message =
             error instanceof Error
                 ? error.message
                 : 'Failed to upload file. Please try again.';
+        onUploadStateChange?.({
+            ...pendingFile,
+            progress: lastProgress,
+            status: 'error',
+            errorMessage: message,
+        });
         toast.error(message);
-    } finally {
-        stopLoading();
-        onToggleUploading?.(false);
+        return { status: 'error', uploadedFileData };
     }
 };
 

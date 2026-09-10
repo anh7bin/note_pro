@@ -21,6 +21,8 @@ import { useEditorRefs } from '../hooks/useEditorRefs';
 import { useEditorConfig } from '../hooks/useEditorConfig';
 import { useSlashCommand } from '../hooks/useSlashCommand';
 import { EditorContainer } from '../EditorContainer';
+import { FileUploadPreview } from '../../blocks/FileBlock/FileUploadPreview';
+import type { FileUploadState } from '../slash/types';
 
 const EditorBubbleMenu = lazy(() =>
     import('../EditorBubbleMenu').then((mod) => ({
@@ -153,7 +155,9 @@ export const TiptapEditor = memo(
         focusPosition = 'end',
     }: TiptapEditorProps) {
         const [isUpdating, setIsUpdating] = useState(false);
-        const [isUploading, setIsUploading] = useState(false);
+        const [fileUpload, setFileUpload] = useState<FileUploadState | null>(
+            null
+        );
         const prevValueRef = useRef(value);
         const keyboardHandlerRef = useRef<
             (
@@ -190,7 +194,13 @@ export const TiptapEditor = memo(
             content: value,
         } as UseEditorOptions);
 
-        const { handleKeyDown, menus } = useSlashCommand(editor, {
+        const {
+            handleKeyDown,
+            menus,
+            cancelFileUpload,
+            retryFileUpload,
+            dismissFileUpload,
+        } = useSlashCommand(editor, {
             blockId,
             onConvertToTask,
             onConvertToFile,
@@ -198,7 +208,7 @@ export const TiptapEditor = memo(
             onAddBlock,
             onDeleteBlock,
             position,
-            onToggleUploading: setIsUploading,
+            onUploadStateChange: setFileUpload,
             isTitle,
             totalBlocks,
         });
@@ -261,26 +271,56 @@ export const TiptapEditor = memo(
             );
         }
 
+        if (fileUpload && !fileUpload.insertBelow) {
+            return (
+                <FileUploadPreview
+                    {...fileUpload}
+                    dragHandle={editable ? dragHandle : undefined}
+                    onCancel={cancelFileUpload}
+                    onRetry={retryFileUpload}
+                    onDismiss={dismissFileUpload}
+                />
+            );
+        }
+
         return (
-            <EditorContainer
-                blockId={blockId || ''}
-                editable={editable}
-                dragHandle={dragHandle}
-                isTask={isTask}
-                task={task || null}
-                isUpdating={isUpdating || isUploading}
-                setIsUpdating={setIsUpdating}
-                onDeleteBlock={onDeleteBlock ? handleDelete : undefined}
-                onInsertAbove={onInsertAbove}
-                onInsertBelow={onInsertBelow}>
-                {showBubbleMenu && (
-                    <Suspense fallback={null}>
-                        <EditorBubbleMenu editor={editor} />
-                    </Suspense>
+            <>
+                <EditorContainer
+                    blockId={blockId || ''}
+                    editable={editable}
+                    dragHandle={dragHandle}
+                    isTask={isTask}
+                    task={task || null}
+                    isUpdating={
+                        isUpdating ||
+                        fileUpload?.status === 'uploading' ||
+                        fileUpload?.status === 'finishing'
+                    }
+                    setIsUpdating={setIsUpdating}
+                    onDeleteBlock={onDeleteBlock ? handleDelete : undefined}
+                    onInsertAbove={onInsertAbove}
+                    onInsertBelow={onInsertBelow}>
+                    {showBubbleMenu && (
+                        <Suspense fallback={null}>
+                            <EditorBubbleMenu editor={editor} />
+                        </Suspense>
+                    )}
+                    <EditorContent
+                        editor={editor}
+                        className={editorClassName}
+                    />
+                    {menus}
+                </EditorContainer>
+                {fileUpload?.insertBelow && (
+                    <FileUploadPreview
+                        {...fileUpload}
+                        className="pl-7"
+                        onCancel={cancelFileUpload}
+                        onRetry={retryFileUpload}
+                        onDismiss={dismissFileUpload}
+                    />
                 )}
-                <EditorContent editor={editor} className={editorClassName} />
-                {menus}
-            </EditorContainer>
+            </>
         );
     },
     (prevProps, nextProps) => {

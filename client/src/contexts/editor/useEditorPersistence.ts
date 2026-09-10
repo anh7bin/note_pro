@@ -126,7 +126,7 @@ export function useEditorPersistence({
             position: number,
             type: BlockType = BlockType.PARAGRAPH,
             content: BlockContent = { text: '' },
-            focusAt: EditorFocusPosition = 'end'
+            focusAt: EditorFocusPosition | null = 'end'
         ) => {
             isCreatingBlockRef.current = true;
             const blockId = crypto.randomUUID();
@@ -174,8 +174,10 @@ export function useEditorPersistence({
                 return nextBlocks;
             });
 
-            setFocusPosition(focusAt);
-            setFocusedBlock(blockId);
+            if (focusAt) {
+                setFocusPosition(focusAt);
+                setFocusedBlock(blockId);
+            }
             requestAnimationFrame(() => {
                 isCreatingBlockRef.current = false;
             });
@@ -191,7 +193,25 @@ export function useEditorPersistence({
 
             void creationPromise.then((createdBlock) => {
                 pendingCreationsRef.current.delete(blockId);
-                if (!createdBlock) return;
+                if (!createdBlock) {
+                    locallyCreatedIdsRef.current.delete(blockId);
+                    dirtyContentRef.current.delete(blockId);
+                    setBlocks((currentBlocks) => {
+                        const nextBlocks = currentBlocks
+                            .filter((block) => block.id !== blockId)
+                            .map((block) =>
+                                (block.position ?? 0) > position
+                                    ? {
+                                          ...block,
+                                          position: (block.position ?? 0) - 1,
+                                      }
+                                    : block
+                            );
+                        blocksRef.current = nextBlocks;
+                        return nextBlocks;
+                    });
+                    return;
+                }
 
                 setBlocks((currentBlocks) => {
                     const localText = dirtyContentRef.current.get(blockId);
@@ -217,7 +237,7 @@ export function useEditorPersistence({
                 });
             });
 
-            return creationPromise.then(() => undefined);
+            return creationPromise.then(Boolean);
         },
         [
             blocksRef,

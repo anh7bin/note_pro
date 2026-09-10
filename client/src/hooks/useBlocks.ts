@@ -16,6 +16,7 @@ import {
     type Block as EditorBlock,
     type BlockContent,
     type BlockPositionUpdate,
+    type FileBlockContent,
     isBlockType,
     normalizeBlockContent,
 } from '@/types/editor';
@@ -51,6 +52,10 @@ export interface BlockRepository {
     updateBlockType: (
         id: string,
         type: BlockType
+    ) => Promise<EditorBlock | null>;
+    convertBlockToFile: (
+        id: string,
+        content: FileBlockContent
     ) => Promise<EditorBlock | null>;
     updateBlockCoverImage: (
         id: string,
@@ -192,6 +197,7 @@ export function useBlocks(): BlockRepository {
                                 ...newBlock,
                                 workspace_id: workspace.id,
                                 user_id: userId,
+                                link_access: null,
                                 tasks: [],
                             };
 
@@ -342,6 +348,58 @@ export function useBlocks(): BlockRepository {
         [updateBlock]
     );
 
+    const convertBlockToFile = useCallback(
+        async (
+            id: string,
+            content: FileBlockContent
+        ): Promise<EditorBlock | null> => {
+            try {
+                const res = await updateBlock({
+                    variables: {
+                        id,
+                        input: {
+                            type: BlockType.FILE,
+                            content,
+                            updated_at: new Date().toISOString(),
+                        },
+                    },
+                    update: (cache, { data }) => {
+                        const updatedBlock = data?.update_blocks_by_pk;
+                        if (!updatedBlock) return;
+
+                        cache.modify({
+                            id: cache.identify({ __typename: 'blocks', id }),
+                            fields: {
+                                type: () => updatedBlock.type,
+                                content: () => updatedBlock.content,
+                                updated_at: () => updatedBlock.updated_at,
+                            },
+                        });
+                    },
+                });
+
+                const result = res.data?.update_blocks_by_pk;
+                if (!result || !isBlockType(result.type)) return null;
+
+                return {
+                    id: result.id,
+                    content: normalizeBlockContent(result.content),
+                    position: result.position || 0,
+                    parent_id: result.parent_id || undefined,
+                    page_id: result.page_id || undefined,
+                    type: result.type,
+                    created_at: result.created_at || new Date().toISOString(),
+                    updated_at: result.updated_at || new Date().toISOString(),
+                    tasks: [],
+                };
+            } catch (error) {
+                console.error('Failed to convert block to file:', error);
+                return null;
+            }
+        },
+        [updateBlock]
+    );
+
     const updateBlockCoverImage = useCallback(
         async (id: string, coverImage: string | null): Promise<boolean> => {
             try {
@@ -380,6 +438,7 @@ export function useBlocks(): BlockRepository {
         updateBlockContent,
         updateBlocksPositionsBatch,
         updateBlockType,
+        convertBlockToFile,
         updateBlockCoverImage,
         removeBlock,
     };

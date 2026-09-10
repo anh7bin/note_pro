@@ -12,6 +12,7 @@ import {
 } from '@/lib/fileUtils';
 import { BlockActionMenu } from '@/components/features/page/BlockActionMenu';
 import { ImageModal } from '@/components/features/page/ImageModal';
+import { FileTypeIcon } from '@/components/ui/file-type-icon';
 import type { FileBlockProps } from '../types';
 
 export const FileBlock = memo(
@@ -107,9 +108,9 @@ export const FileBlock = memo(
                         {!isImageFile && (
                             <FilePreview
                                 fileName={fileName}
-                                fileType={fileType}
                                 fileSize={fileSize}
                                 fileBadge={fileBadge}
+                                fileExtension={fileExtension}
                             />
                         )}
                         {isImageFile && fileUrl && (
@@ -140,6 +141,12 @@ export const FileBlock = memo(
             prevProps.block.id === nextProps.block.id &&
             prevProps.block.content?.fileUrl ===
                 nextProps.block.content?.fileUrl &&
+            prevProps.block.content?.fileName ===
+                nextProps.block.content?.fileName &&
+            prevProps.block.content?.fileType ===
+                nextProps.block.content?.fileType &&
+            prevProps.block.content?.fileSize ===
+                nextProps.block.content?.fileSize &&
             prevProps.editable === nextProps.editable
         );
     }
@@ -147,39 +154,30 @@ export const FileBlock = memo(
 
 const FilePreview = memo(function FilePreview({
     fileName,
-    fileType,
     fileSize,
     fileBadge,
+    fileExtension,
 }: {
     fileName: string;
-    fileType: string;
     fileSize: string | null;
     fileBadge: ReturnType<typeof getFileBadge>;
+    fileExtension: string | null;
 }) {
+    const fileKind = fileExtension?.toUpperCase() ?? fileBadge.label;
+
     return (
-        <div className="flex items-center gap-4">
-            <div className="relative flex h-14 w-12 items-center justify-center">
-                <Image
-                    src="/images/file-badge-base.png"
-                    alt=""
-                    width={48}
-                    height={60}
-                    className="pointer-events-none select-none object-contain"
-                />
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                    <span
-                        className={cn(
-                            'text-[11px] font-semibold uppercase tracking-[0.08em]',
-                            fileBadge.textClass
-                        )}>
-                        {fileBadge.label}
-                    </span>
-                </div>
+        <div className="flex min-h-14 items-center gap-3 px-1">
+            <div
+                className="relative flex h-12 w-10 shrink-0 items-center justify-center"
+                aria-hidden="true">
+                <FileTypeIcon extension={fileExtension} className="h-11 w-9" />
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate">{fileName}</p>
-                <p className="text-xs text-muted-foreground truncate">
-                    {fileType}
+                <p className="truncate text-sm font-semibold" title={fileName}>
+                    {fileName}
+                </p>
+                <p className="truncate text-xs text-muted-foreground">
+                    {fileKind}
                     {fileSize ? ` · ${fileSize}` : ''}
                 </p>
             </div>

@@ -15,7 +15,7 @@ export function useSlashCommand(
     editor: Editor | null,
     {
         blockId,
-        onToggleUploading,
+        onUploadStateChange,
         onConvertToTask,
         onConvertToFile,
         onConvertToTable,
@@ -34,6 +34,9 @@ export function useSlashCommand(
     const {
         fileInputRef,
         handleFileChange,
+        cancelFileUpload,
+        retryFileUpload,
+        dismissFileUpload,
         onCommandSelect,
         onEmojiSelect,
         onTableSelect,
@@ -46,7 +49,7 @@ export function useSlashCommand(
         onAddBlock,
         onConvertToFile,
         onConvertToTable,
-        onToggleUploading,
+        onUploadStateChange,
         updateState,
     });
 
@@ -130,5 +133,11 @@ export function useSlashCommand(
         ]
     );
 
-    return { handleKeyDown, menus };
+    return {
+        handleKeyDown,
+        menus,
+        cancelFileUpload,
+        retryFileUpload,
+        dismissFileUpload,
+    };
 }
