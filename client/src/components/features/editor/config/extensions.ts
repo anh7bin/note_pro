@@ -1,4 +1,5 @@
 import { CustomCode } from '@/lib/tiptap/extensions/custom-code';
+import { TrailingParagraphCleanup } from '@/lib/tiptap/extensions/trailing-paragraph-cleanup';
 import { EnterHandler } from '@/lib/tiptap/handlers/enter';
 import type { AddEditorBlockHandler } from '@/types/editor';
 import Highlight from '@tiptap/extension-highlight';
@@ -37,6 +38,10 @@ export const createExtensions = ({
             keepMarks: true,
             keepAttributes: false,
         },
+        // Each Tiptap instance is already one application block. StarterKit's
+        // trailing paragraph would otherwise render as an extra empty line
+        // after headings, lists, blockquotes, and code blocks.
+        trailingNode: false,
         blockquote: {
             HTMLAttributes: {
                 class: 'border-l-4 border-border-strong pl-4 italic',
@@ -48,6 +53,7 @@ export const createExtensions = ({
             },
         },
     }),
+    TrailingParagraphCleanup,
     Markdown.configure(MARKDOWN_CONFIG),
     CustomCode,
     Underline,

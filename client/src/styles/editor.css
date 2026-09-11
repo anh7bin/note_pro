@@ -105,25 +105,6 @@
     margin-top: 0 !important;
 }
 
-/* Empty paragraphs */
-.ProseMirror ul + p:empty,
-.ProseMirror ol + p:empty,
-.ProseMirror ul + p.is-empty,
-.ProseMirror ol + p.is-empty {
-    display: none !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.ProseMirror ul + p:has(> br.ProseMirror-trailingBreak:only-child),
-.ProseMirror ol + p:has(> br.ProseMirror-trailingBreak:only-child) {
-    display: none !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
 /* Prose integration */
 .prose ul,
 .prose ol,

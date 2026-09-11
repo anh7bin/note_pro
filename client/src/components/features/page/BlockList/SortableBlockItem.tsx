@@ -97,9 +97,9 @@ export const SortableBlockItem = memo(
             willChange: isDragging ? 'transform, opacity' : 'auto',
         };
 
-        const dragHandle = (
+        const dragHandle = editable ? (
             <DragHandle attributes={attributes} listeners={listeners} />
-        );
+        ) : null;
 
         const deleteBlock = useCallback(
             () => handleDeleteBlock(block.id),
@@ -203,9 +203,14 @@ export const SortableBlockItem = memo(
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                     focusedBlock === block.id && 'bg-primary/5'
                 )}>
+                {dragHandle && (
+                    <div className="absolute left-1.5 top-0 z-10 -ml-1 -translate-x-full text-muted-foreground">
+                        {dragHandle}
+                    </div>
+                )}
                 <BlockRenderer
                     block={block}
-                    dragHandle={dragHandle}
+                    dragHandle={undefined}
                     task={task}
                     commonDeleteHandler={commonDeleteHandler}
                     commonInsertHandlers={commonInsertHandlers}
