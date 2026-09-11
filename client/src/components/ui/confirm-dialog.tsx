@@ -1,15 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
 
 interface ConfirmDialogProps {
     open: boolean;
@@ -48,15 +41,15 @@ export const ConfirmDialog = ({
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-sm">
-                <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription className="pt-1 leading-relaxed">
-                        {description}
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
+        <Modal
+            open={open}
+            onOpenChange={onOpenChange}
+            title={title}
+            description={description}
+            descriptionClassName="pt-1 leading-relaxed"
+            contentProps={{ className: 'sm:max-w-sm' }}
+            footer={
+                <>
                     <Button
                         size="sm"
                         variant="outline"
@@ -72,8 +65,8 @@ export const ConfirmDialog = ({
                         aria-busy={isBusy}>
                         {isBusy ? 'Processing...' : confirmText}
                     </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </>
+            }
+        />
     );
 };

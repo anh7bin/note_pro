@@ -1,9 +1,5 @@
 import { Button } from '@/components/ui/button';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
+import { PopoverPanel } from '@/components/ui/popover-panel';
 import { cn } from '@/lib/utils';
 import { EmojiPickerPopover } from '@/components/shared/EmojiPickerPopover';
 import React, { useState } from 'react';
@@ -27,8 +23,18 @@ export const IconPicker: React.FC<IconPickerProps> = ({
 
     return (
         <div>
-            <Popover open={isOpen} onOpenChange={setIsOpen}>
-                <PopoverTrigger asChild>
+            <PopoverPanel
+                open={isOpen}
+                onOpenChange={setIsOpen}
+                contentProps={{
+                    align: 'end',
+                    side: 'right',
+                    sideOffset: 12,
+                    collisionPadding: 8,
+                    onOpenAutoFocus: (event) => event.preventDefault(),
+                    className: 'z-[9999] w-auto border-0 p-0 shadow-none',
+                }}
+                trigger={
                     <Button
                         type="button"
                         variant="outline"
@@ -43,21 +49,13 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                             Choose Icon
                         </span>
                     </Button>
-                </PopoverTrigger>
-                <PopoverContent
-                    className="w-auto p-0 border-0 shadow-none z-[9999]"
-                    align="end"
-                    side="right"
-                    sideOffset={12}
-                    collisionPadding={8}
-                    onOpenAutoFocus={(e) => e.preventDefault()}>
-                    <EmojiPickerPopover
-                        show={isOpen}
-                        onSelect={handleEmojiSelect}
-                        onClose={() => setIsOpen(false)}
-                    />
-                </PopoverContent>
-            </Popover>
+                }>
+                <EmojiPickerPopover
+                    show={isOpen}
+                    onSelect={handleEmojiSelect}
+                    onClose={() => setIsOpen(false)}
+                />
+            </PopoverPanel>
         </div>
     );
 };

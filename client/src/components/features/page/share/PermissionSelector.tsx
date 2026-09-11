@@ -1,11 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
+import { PopoverPanel } from '@/components/ui/popover-panel';
 import { Check, ChevronsUpDown, Eye, LockKeyhole, Pencil } from 'lucide-react';
 import { PermissionType } from '@/types/types';
 import { useState } from 'react';
@@ -51,8 +47,14 @@ export function PermissionSelector({
     const selectedOption = permissionOptions.find((opt) => opt.value === value);
 
     return (
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-            <PopoverTrigger asChild>
+        <PopoverPanel
+            open={isOpen}
+            onOpenChange={setIsOpen}
+            contentProps={{
+                align: 'start',
+                className: 'w-[min(400px,calc(100vw-2rem))] p-2',
+            }}
+            trigger={
                 <Button
                     variant="outline"
                     aria-expanded={isOpen}
@@ -68,46 +70,39 @@ export function PermissionSelector({
                     </div>
                     <ChevronsUpDown className="opacity-50" aria-hidden="true" />
                 </Button>
-            </PopoverTrigger>
-            <PopoverContent
-                className="w-[min(400px,calc(100vw-2rem))] p-2"
-                align="start">
-                {permissionOptions.map((option) => (
-                    <button
-                        type="button"
-                        aria-pressed={value === option.value}
-                        key={option.value}
-                        onClick={() => {
-                            onChange(option.value as LinkPermissionType);
-                            setIsOpen(false);
-                        }}
-                        className="flex min-h-11 w-full items-start gap-3 rounded-md p-3 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
-                        <option.icon className="h-5 w-5 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium">
-                                    {option.label}
-                                </span>
-                                {value === option.value && (
-                                    <Check
-                                        className="h-4 w-4"
-                                        aria-hidden="true"
-                                    />
-                                )}
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-1">
-                                {option.description}
-                            </p>
+            }>
+            {permissionOptions.map((option) => (
+                <button
+                    type="button"
+                    aria-pressed={value === option.value}
+                    key={option.value}
+                    onClick={() => {
+                        onChange(option.value as LinkPermissionType);
+                        setIsOpen(false);
+                    }}
+                    className="flex min-h-11 w-full items-start gap-3 rounded-md p-3 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
+                    <option.icon className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium">
+                                {option.label}
+                            </span>
+                            {value === option.value && (
+                                <Check className="h-4 w-4" aria-hidden="true" />
+                            )}
                         </div>
-                    </button>
-                ))}
-                <div className="border-t border-border mt-2 pt-2 px-3 pb-2">
-                    <p className="text-xs text-muted-foreground">
-                        Choose whether the link is restricted or grants view or
-                        edit access.
-                    </p>
-                </div>
-            </PopoverContent>
-        </Popover>
+                        <p className="text-xs text-muted-foreground mt-1">
+                            {option.description}
+                        </p>
+                    </div>
+                </button>
+            ))}
+            <div className="border-t border-border mt-2 pt-2 px-3 pb-2">
+                <p className="text-xs text-muted-foreground">
+                    Choose whether the link is restricted or grants view or edit
+                    access.
+                </p>
+            </div>
+        </PopoverPanel>
     );
 }

@@ -31,6 +31,16 @@ const eslintConfig = [
                             message:
                                 'Use the shared SimpleTooltip component instead.',
                         },
+                        {
+                            name: '@/components/ui/dialog',
+                            message:
+                                'Use Modal for standard dialogs. Use the primitive only for specialized overlays.',
+                        },
+                        {
+                            name: '@/components/ui/popover',
+                            message:
+                                'Use the shared PopoverPanel component instead.',
+                        },
                     ],
                 },
             ],
@@ -46,7 +56,12 @@ const eslintConfig = [
         },
     },
     {
-        files: ['src/components/features/page/SimpleTooltip.tsx'],
+        files: [
+            'src/components/features/page/SimpleTooltip.tsx',
+            'src/components/features/page/ImageModal.tsx',
+            'src/components/ui/modal.tsx',
+            'src/components/ui/popover-panel.tsx',
+        ],
         rules: {
             'no-restricted-imports': 'off',
         },

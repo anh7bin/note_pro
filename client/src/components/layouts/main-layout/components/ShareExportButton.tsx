@@ -1,11 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
+import { PopoverPanel } from '@/components/ui/popover-panel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FaShare } from 'react-icons/fa';
 import { ShareTab } from '@/components/features/page/share/ShareTab';
@@ -33,13 +29,17 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
     }, [searchParams]);
 
     return (
-        <Popover
+        <PopoverPanel
             open={open}
             onOpenChange={(nextOpen) => {
                 setOpen(nextOpen);
                 if (!nextOpen) setInviteMode(false);
-            }}>
-            <PopoverTrigger asChild>
+            }}
+            contentProps={{
+                align: 'end',
+                className: 'w-[min(30rem,calc(100vw-1rem))] p-3',
+            }}
+            trigger={
                 <Button
                     variant="outline"
                     size="sm"
@@ -47,28 +47,24 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
                     <FaShare />
                     <span className="hidden lg:inline">Share</span>
                 </Button>
-            </PopoverTrigger>
-            <PopoverContent
-                className="w-[min(30rem,calc(100vw-1rem))] p-3"
-                align="end">
-                <Tabs defaultValue="share" className="w-full">
-                    {!inviteMode && (
-                        <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="share">Share</TabsTrigger>
-                            <TabsTrigger value="export">Export</TabsTrigger>
-                        </TabsList>
-                    )}
-                    <TabsContent value="share" className="m-0">
-                        <ShareTab
-                            documentId={documentId}
-                            onInviteModeChange={setInviteMode}
-                        />
-                    </TabsContent>
-                    <TabsContent value="export" className="m-0">
-                        <ExportTab />
-                    </TabsContent>
-                </Tabs>
-            </PopoverContent>
-        </Popover>
+            }>
+            <Tabs defaultValue="share" className="w-full">
+                {!inviteMode && (
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="share">Share</TabsTrigger>
+                        <TabsTrigger value="export">Export</TabsTrigger>
+                    </TabsList>
+                )}
+                <TabsContent value="share" className="m-0">
+                    <ShareTab
+                        documentId={documentId}
+                        onInviteModeChange={setInviteMode}
+                    />
+                </TabsContent>
+                <TabsContent value="export" className="m-0">
+                    <ExportTab />
+                </TabsContent>
+            </Tabs>
+        </PopoverPanel>
     );
 }

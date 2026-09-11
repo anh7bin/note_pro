@@ -12,11 +12,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PanelLeft, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
+import { PopoverPanel } from '@/components/ui/popover-panel';
 import { useState } from 'react';
 import { NotificationButton } from './components/NotificationButton';
 import { RequestEditButton } from './components/RequestEditButton';
@@ -109,8 +105,14 @@ function MobileSearch() {
     const [open, setOpen] = useState(false);
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
+        <PopoverPanel
+            open={open}
+            onOpenChange={setOpen}
+            contentProps={{
+                align: 'end',
+                className: 'w-[calc(100vw-1rem)] p-2 lg:hidden',
+            }}
+            trigger={
                 <Button
                     type="button"
                     variant="ghost"
@@ -118,12 +120,8 @@ function MobileSearch() {
                     aria-label="Search">
                     <Search />
                 </Button>
-            </PopoverTrigger>
-            <PopoverContent
-                align="end"
-                className="w-[calc(100vw-1rem)] p-2 lg:hidden">
-                <SearchInputField onResultClick={() => setOpen(false)} />
-            </PopoverContent>
-        </Popover>
+            }>
+            <SearchInputField onResultClick={() => setOpen(false)} />
+        </PopoverPanel>
     );
 }

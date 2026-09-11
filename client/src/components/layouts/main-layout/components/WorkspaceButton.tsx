@@ -1,16 +1,8 @@
 'use client';
 import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
 import { InputField } from '@/components/ui/input-field';
+import { Modal } from '@/components/ui/modal';
 import { useUpdateWorkspaceMutation } from '@/graphql/mutations/__generated__/workspace.generated';
 import { useGetWorkspaceByIdQuery } from '@/graphql/queries/__generated__/workspace.generated';
 import { useImageUpload } from '@/hooks/useImageUpload';
@@ -122,8 +114,33 @@ export const WorkspaceButton = () => {
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
+        <Modal
+            open={isOpen}
+            onOpenChange={setIsOpen}
+            title="Workspace settings"
+            description="Update the workspace name and image shown to members."
+            contentProps={{
+                className: 'max-h-[90vh] overflow-y-auto sm:max-w-[500px]',
+            }}
+            footer={
+                <Button
+                    onClick={handleSave}
+                    className="w-full sm:w-auto"
+                    disabled={
+                        isUploading ||
+                        isSaving ||
+                        !tempName.trim() ||
+                        (tempName === data?.workspaces_by_pk?.name &&
+                            !hasImageChanged)
+                    }>
+                    {isUploading
+                        ? 'Uploading...'
+                        : isSaving
+                          ? 'Saving...'
+                          : 'Save changes'}
+                </Button>
+            }
+            trigger={
                 <Button
                     variant="ghost"
                     className="group h-9 w-full cursor-pointer justify-start gap-2 px-2 text-xs">
@@ -150,121 +167,91 @@ export const WorkspaceButton = () => {
                         </TruncatedTooltip>
                     </div>
                 </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>Workspace settings</DialogTitle>
-                    <DialogDescription>
-                        Update the workspace name and image shown to members.
-                    </DialogDescription>
-                </DialogHeader>
-
-                <div className="space-y-6 py-4">
-                    <div className="space-y-3">
-                        <div className="flex items-center justify-center">
-                            <div className="group relative">
-                                <button
-                                    type="button"
-                                    aria-label="Change workspace image"
-                                    className={cn(
-                                        'relative h-24 w-24 cursor-pointer overflow-hidden rounded-lg transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2',
+            }>
+            <div className="space-y-6 py-4">
+                <div className="space-y-3">
+                    <div className="flex items-center justify-center">
+                        <div className="group relative">
+                            <button
+                                type="button"
+                                aria-label="Change workspace image"
+                                className={cn(
+                                    'relative h-24 w-24 cursor-pointer overflow-hidden rounded-lg transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2',
+                                    tempImageUrl ? 'bg-muted' : 'bg-muted/50'
+                                )}
+                                onClick={() =>
+                                    !isUploading &&
+                                    fileInputRef.current?.click()
+                                }>
+                                <Image
+                                    src={
                                         tempImageUrl
-                                            ? 'bg-muted'
-                                            : 'bg-muted/50'
-                                    )}
-                                    onClick={() =>
-                                        !isUploading &&
-                                        fileInputRef.current?.click()
-                                    }>
-                                    <Image
-                                        src={
-                                            tempImageUrl
-                                                ? tempImageUrl
-                                                : DEFAULT_WORKSPACE_IMAGE
-                                        }
-                                        alt="Workspace"
-                                        fill
-                                        className="object-cover"
-                                        sizes="96px"
-                                    />
-                                </button>
+                                            ? tempImageUrl
+                                            : DEFAULT_WORKSPACE_IMAGE
+                                    }
+                                    alt="Workspace"
+                                    fill
+                                    className="object-cover"
+                                    sizes="96px"
+                                />
+                            </button>
 
-                                <button
-                                    type="button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        fileInputRef.current?.click();
-                                    }}
-                                    disabled={isUploading}
-                                    className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-background shadow-md transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50"
-                                    aria-label={
-                                        tempImageUrl
-                                            ? 'Change image'
-                                            : 'Upload image'
-                                    }>
-                                    <Camera className="w-3.5 h-3.5 text-foreground" />
-                                </button>
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    fileInputRef.current?.click();
+                                }}
+                                disabled={isUploading}
+                                className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-background shadow-md transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50"
+                                aria-label={
+                                    tempImageUrl
+                                        ? 'Change image'
+                                        : 'Upload image'
+                                }>
+                                <Camera className="w-3.5 h-3.5 text-foreground" />
+                            </button>
 
-                                {hasImageChanged &&
-                                    tempImageUrl !== originalImageUrl &&
-                                    !isUploading && (
-                                        <button
-                                            type="button"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleRemoveImage();
-                                            }}
-                                            className="absolute -right-1 -top-1 flex h-8 w-8 items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-100 shadow-md transition-all hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
-                                            aria-label="Restore original workspace image">
-                                            <X className="w-3 h-3" />
-                                        </button>
-                                    )}
-                            </div>
+                            {hasImageChanged &&
+                                tempImageUrl !== originalImageUrl &&
+                                !isUploading && (
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleRemoveImage();
+                                        }}
+                                        className="absolute -right-1 -top-1 flex h-8 w-8 items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-100 shadow-md transition-all hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
+                                        aria-label="Restore original workspace image">
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                )}
                         </div>
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
-                            onChange={handleFileSelect}
-                            className="hidden"
-                            disabled={isUploading}
-                        />
                     </div>
-
-                    <div className="space-y-2">
-                        <label
-                            htmlFor="workspace-name"
-                            className="text-sm font-medium">
-                            Workspace Name
-                        </label>
-                        <InputField
-                            id="workspace-name"
-                            value={tempName}
-                            onChange={(e) => setTempName(e.target.value)}
-                            placeholder="My Workspace"
-                        />
-                    </div>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                        disabled={isUploading}
+                    />
                 </div>
 
-                <DialogFooter>
-                    <Button
-                        onClick={handleSave}
-                        className="w-full sm:w-auto"
-                        disabled={
-                            isUploading ||
-                            isSaving ||
-                            !tempName.trim() ||
-                            (tempName === data?.workspaces_by_pk?.name &&
-                                !hasImageChanged)
-                        }>
-                        {isUploading
-                            ? 'Uploading...'
-                            : isSaving
-                              ? 'Saving...'
-                              : 'Save changes'}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                <div className="space-y-2">
+                    <label
+                        htmlFor="workspace-name"
+                        className="text-sm font-medium">
+                        Workspace Name
+                    </label>
+                    <InputField
+                        id="workspace-name"
+                        value={tempName}
+                        onChange={(e) => setTempName(e.target.value)}
+                        placeholder="My Workspace"
+                    />
+                </div>
+            </div>
+        </Modal>
     );
 };

@@ -5,7 +5,7 @@ import { format, isToday, isTomorrow } from 'date-fns';
 import { CalendarDays } from 'lucide-react';
 import { Calendar } from './calendar';
 import { Button } from './button';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import { PopoverPanel } from './popover-panel';
 
 interface DatePickerProps {
     value?: string;
@@ -71,8 +71,17 @@ export const DatePicker = ({
     };
 
     return (
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-            <PopoverTrigger asChild>
+        <PopoverPanel
+            open={isOpen}
+            onOpenChange={setIsOpen}
+            contentProps={{
+                align: 'start',
+                side: 'bottom',
+                sideOffset: 4,
+                collisionPadding: 16,
+                className: 'w-auto p-0',
+            }}
+            trigger={
                 <Button
                     variant="ghost"
                     aria-label={
@@ -86,69 +95,62 @@ export const DatePicker = ({
                         ? getDateDisplayText(value)
                         : textContent || placeholder}
                 </Button>
-            </PopoverTrigger>
-            <PopoverContent
-                className="w-auto p-0"
-                side="bottom"
-                align="start"
-                sideOffset={4}
-                collisionPadding={16}>
-                <div className="p-2">
-                    {quickActions && (
-                        <div className="flex gap-1 pb-2 border-b border-border">
+            }>
+            <div className="p-2">
+                {quickActions && (
+                    <div className="flex gap-1 pb-2 border-b border-border">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="font-normal"
+                            onClick={(event) =>
+                                handleQuickActionClick(event, 0)
+                            }>
+                            Today
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="font-normal"
+                            onClick={(event) =>
+                                handleQuickActionClick(event, 1)
+                            }>
+                            Tomorrow
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="font-normal"
+                            onClick={(event) =>
+                                handleQuickActionClick(event, -1)
+                            }>
+                            Weekend
+                        </Button>
+                        {value && (
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="font-normal"
-                                onClick={(event) =>
-                                    handleQuickActionClick(event, 0)
-                                }>
-                                Today
+                                className="ml-auto font-normal text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                onClick={handleClearClick}>
+                                Clear
                             </Button>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="font-normal"
-                                onClick={(event) =>
-                                    handleQuickActionClick(event, 1)
-                                }>
-                                Tomorrow
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="font-normal"
-                                onClick={(event) =>
-                                    handleQuickActionClick(event, -1)
-                                }>
-                                Weekend
-                            </Button>
-                            {value && (
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="ml-auto font-normal text-destructive hover:bg-destructive/10 hover:text-destructive"
-                                    onClick={handleClearClick}>
-                                    Clear
-                                </Button>
-                            )}
-                        </div>
-                    )}
+                        )}
+                    </div>
+                )}
 
-                    <Calendar
-                        mode="single"
-                        selected={value ? new Date(value) : undefined}
-                        defaultMonth={value ? new Date(value) : new Date()}
-                        onSelect={(date) => {
-                            if (date) {
-                                handleDateSelect(date);
-                            }
-                        }}
-                        initialFocus
-                        className="rounded-md [--cell-size:2rem] p-1"
-                    />
-                </div>
-            </PopoverContent>
-        </Popover>
+                <Calendar
+                    mode="single"
+                    selected={value ? new Date(value) : undefined}
+                    defaultMonth={value ? new Date(value) : new Date()}
+                    onSelect={(date) => {
+                        if (date) {
+                            handleDateSelect(date);
+                        }
+                    }}
+                    initialFocus
+                    className="rounded-md [--cell-size:2rem] p-1"
+                />
+            </div>
+        </PopoverPanel>
     );
 };

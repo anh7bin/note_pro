@@ -1,17 +1,10 @@
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import { IconPicker } from '@/components/ui/icon-picker';
 import { InputField } from '@/components/ui/input-field';
 import { Label } from '@/components/ui/label';
+import { Modal } from '@/components/ui/modal';
 import { Textarea } from '@/components/ui/textarea';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export enum FolderMode {
     CREATE = 'create',
@@ -47,7 +40,6 @@ export const FolderDialog = ({
         icon: initialData?.icon || IconDefault,
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const dialogContentRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (open && initialData) {
@@ -86,66 +78,18 @@ export const FolderDialog = ({
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent ref={dialogContentRef} className="sm:max-w-[400px]">
-                <DialogHeader>
-                    <DialogTitle>
-                        {mode === FolderMode.CREATE
-                            ? 'Create New Folder'
-                            : 'Edit'}
-                    </DialogTitle>
-                    <DialogDescription>
-                        {mode === FolderMode.CREATE
-                            ? 'Create a folder to keep related work together.'
-                            : 'Update the folder name, description, or icon.'}
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="title" className="text-sm font-medium">
-                            Name <span className="text-destructive">*</span>
-                        </Label>
-                        <InputField
-                            id="title"
-                            placeholder="Folder Name"
-                            value={folderData.name}
-                            onChange={(e) =>
-                                handleInputChange('name', e.target.value)
-                            }
-                            required
-                            aria-required="true"
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label
-                            htmlFor="description"
-                            className="text-sm font-medium">
-                            Description
-                        </Label>
-                        <Textarea
-                            id="description"
-                            placeholder="Enter folder description..."
-                            value={folderData.description}
-                            onChange={(e) =>
-                                handleInputChange('description', e.target.value)
-                            }
-                            className="resize-none"
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label className="text-sm font-medium">Icon</Label>
-                        <IconPicker
-                            selectedIcon={folderData.icon}
-                            onIconChange={(icon) =>
-                                handleInputChange('icon', icon)
-                            }
-                        />
-                    </div>
-                </div>
-
-                <DialogFooter>
+        <Modal
+            open={open}
+            onOpenChange={onOpenChange}
+            title={mode === FolderMode.CREATE ? 'Create New Folder' : 'Edit'}
+            description={
+                mode === FolderMode.CREATE
+                    ? 'Create a folder to keep related work together.'
+                    : 'Update the folder name, description, or icon.'
+            }
+            contentProps={{ className: 'sm:max-w-[400px]' }}
+            footer={
+                <>
                     <Button
                         type="button"
                         variant="outline"
@@ -164,8 +108,50 @@ export const FolderDialog = ({
                               ? 'Create'
                               : 'Update'}
                     </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </>
+            }>
+            <div className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="title" className="text-sm font-medium">
+                        Name <span className="text-destructive">*</span>
+                    </Label>
+                    <InputField
+                        id="title"
+                        placeholder="Folder Name"
+                        value={folderData.name}
+                        onChange={(e) =>
+                            handleInputChange('name', e.target.value)
+                        }
+                        required
+                        aria-required="true"
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <Label
+                        htmlFor="description"
+                        className="text-sm font-medium">
+                        Description
+                    </Label>
+                    <Textarea
+                        id="description"
+                        placeholder="Enter folder description..."
+                        value={folderData.description}
+                        onChange={(e) =>
+                            handleInputChange('description', e.target.value)
+                        }
+                        className="resize-none"
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <Label className="text-sm font-medium">Icon</Label>
+                    <IconPicker
+                        selectedIcon={folderData.icon}
+                        onIconChange={(icon) => handleInputChange('icon', icon)}
+                    />
+                </div>
+            </div>
+        </Modal>
     );
 };
