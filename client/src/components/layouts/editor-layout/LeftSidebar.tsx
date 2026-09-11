@@ -8,7 +8,7 @@ import { showToast } from '@/lib/toast';
 import { formatDate } from '@/lib/utils';
 import { BlockType } from '@/types/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { getPlainText } from '@/components/features/page/CardDocument';
+import { getPlainText } from '@/lib/text';
 import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
 import { Loading } from '@/components/ui/loading';
 import { CardDocumentPreview } from '@/components/features/page/CardDocumentPreview';

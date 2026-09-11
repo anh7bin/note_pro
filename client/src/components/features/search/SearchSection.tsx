@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPlainText } from 'components/features/page/CardDocument';
+import { getPlainText } from '@/lib/text';
 import { SearchItem } from './SearchItem';
 import { SearchItemType } from 'types/app';
 import { SearchAllQuery } from 'graphql/queries/__generated__/search.generated';

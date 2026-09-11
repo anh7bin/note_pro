@@ -2,7 +2,7 @@ import { Block } from '@/hooks';
 import { Check, Calendar } from 'lucide-react';
 import { cn, formatDate } from '@/lib/utils';
 import { TASK_STATUS } from '@/lib/constants';
-import { getPlainText } from '../CardDocument';
+import { getPlainText } from '@/lib/text';
 
 export const TaskPreview = ({ block }: { block: Block }) => {
     const task = block.tasks?.[0];

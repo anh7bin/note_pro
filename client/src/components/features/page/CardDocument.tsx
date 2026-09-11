@@ -16,6 +16,7 @@ import { useUserId } from '@/hooks/useAuth';
 import { useLoading } from '@/contexts/LoadingContext';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { ROUTES } from '@/lib/routes';
+import { getPlainText } from '@/lib/text';
 import { formatDate } from '@/lib/utils';
 import { Document } from '@/types/app';
 import { Folder, Check } from 'lucide-react';
@@ -23,15 +24,6 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo } from 'react';
 import { CardDocumentPreview } from './CardDocumentPreview';
 import { Button } from '@/components/ui/button';
-
-export const getPlainText = (html?: string | null) => {
-    if (!html) return '';
-    if (typeof window !== 'undefined') {
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        return doc.body.textContent || '';
-    }
-    return html.replace(/<[^>]*>/g, '');
-};
 
 const CardDocumentComponent = ({ document }: { document: Document }) => {
     const router = useRouter();

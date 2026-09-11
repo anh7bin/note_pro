@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Block } from '@/hooks';
 import { BlockType } from '@/types/types';
-import { getPlainText } from '@/components/features/page/CardDocument';
+import { getPlainText } from '@/lib/text';
 import { EmptyState } from './EmptyState';
 import { Search, Sparkles } from 'lucide-react';
 

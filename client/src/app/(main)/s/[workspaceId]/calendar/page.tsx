@@ -1,7 +1,7 @@
 'use client';
 
 import { Calendar } from '@/components/features/calendar';
-import { getPlainText } from '@/components/features/page/CardDocument';
+import { getPlainText } from '@/lib/text';
 import { PageLoading } from '@/components/ui/loading';
 import { TASK_STATUS } from '@/lib/constants';
 import { useGetAllScheduledTasksQuery } from '@/graphql/queries/__generated__/task.generated';

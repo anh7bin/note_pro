@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useMemo, useRef } from 'react';
 import { useDocumentBlocksData } from './useDocumentBlocksData';
-import { getPlainText } from '@/components/features/page/CardDocument';
+import { getPlainText } from '@/lib/text';
 
 interface UseDocumentTitleOptions {
     enabled?: boolean;

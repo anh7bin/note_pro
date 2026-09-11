@@ -1,6 +1,6 @@
 'use client';
 
-import { getPlainText } from '@/components/features/page/CardDocument';
+import { getPlainText } from '@/lib/text';
 import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';

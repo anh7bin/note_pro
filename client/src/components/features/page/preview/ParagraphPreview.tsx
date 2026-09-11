@@ -1,5 +1,5 @@
 import { Block } from '@/hooks';
-import { getPlainText } from '../CardDocument';
+import { getPlainText } from '@/lib/text';
 
 export const ParagraphPreview = ({ block }: { block: Block }) => {
     const text = getPlainText(block.content?.text);
