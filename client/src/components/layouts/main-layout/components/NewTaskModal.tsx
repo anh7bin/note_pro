@@ -210,16 +210,17 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="min-w-0 overflow-hidden sm:max-w-[500px]">
                 <DialogHeader>
                     <DialogTitle>Create Task</DialogTitle>
                     <DialogDescription>
                         Add a task to your inbox or connect it to a document.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="space-y-2">
+                <div className="min-w-0 space-y-2">
                     <Label htmlFor="task-destination">Destination</Label>
                     <Popover
+                        modal
                         open={isDocumentPopoverOpen}
                         onOpenChange={handleDocumentPopoverOpenChange}>
                         <PopoverTrigger asChild>
@@ -227,15 +228,17 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                                 id="task-destination"
                                 variant="outline"
                                 aria-expanded={isDocumentPopoverOpen}
-                                className="w-full justify-start text-left font-normal text-muted-foreground">
-                                <Inbox />
+                                className="min-w-0 max-w-full overflow-hidden w-full justify-start text-left font-normal text-muted-foreground">
+                                <Inbox className="shrink-0" />
                                 <span className="min-w-0 flex-1 truncate">
                                     {selectedDocumentTitle}
                                 </span>
-                                <ChevronDown />
+                                <ChevronDown className="ml-auto shrink-0" />
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-[min(20rem,calc(100vw-3rem))] p-0">
+                        <PopoverContent
+                            align="start"
+                            className="w-[var(--radix-popover-trigger-width)] max-w-[calc(100vw-3rem)] overflow-hidden p-0">
                             <div className="p-3">
                                 <InputField
                                     type="search"
@@ -249,7 +252,9 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                                     icon={<Search />}
                                 />
                             </div>
-                            <div className="max-h-48 overflow-y-auto">
+                            <div
+                                className="max-h-48 overflow-x-hidden overflow-y-auto overscroll-contain"
+                                onWheel={(event) => event.stopPropagation()}>
                                 {docsLoading ? (
                                     <div className="px-3 py-8 text-sm text-muted-foreground text-center">
                                         Loading documents...
@@ -262,7 +267,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                                             <button
                                                 type="button"
                                                 key={doc.id}
-                                                className="flex min-h-11 w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40"
+                                                className="flex min-h-11 min-w-0 w-full items-center gap-2 overflow-hidden px-3 py-2 text-left transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40"
                                                 onClick={() => {
                                                     handleInputChange(
                                                         'selectedDocumentId',
@@ -273,13 +278,17 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                                                     );
                                                     setSearchTerm('');
                                                 }}>
-                                                <NewDocumentIcon size={24} />
-                                                <div className="flex-1 min-w-0">
+                                                <span className="shrink-0">
+                                                    <NewDocumentIcon
+                                                        size={24}
+                                                    />
+                                                </span>
+                                                <div className="min-w-0 flex-1">
                                                     <div className="text-sm font-medium truncate">
                                                         {getPlainText(title)}
                                                     </div>
                                                     {doc.folder && (
-                                                        <div className="text-xs text-muted-foreground">
+                                                        <div className="truncate text-xs text-muted-foreground">
                                                             in {doc.folder.name}
                                                         </div>
                                                     )}
