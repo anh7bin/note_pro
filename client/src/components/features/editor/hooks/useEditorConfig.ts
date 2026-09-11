@@ -27,9 +27,8 @@ export function useEditorConfig({
                 onAddBlock: (...args) => onAddBlockRef.current?.(...args),
                 onBackspaceAtStart: (content) =>
                     onBackspaceAtStartRef.current?.(content) ?? false,
-                onFlush: () => onSaveImmediateRef.current?.(),
             }),
-        [getPosition, onAddBlockRef, onBackspaceAtStartRef, onSaveImmediateRef]
+        [getPosition, onAddBlockRef, onBackspaceAtStartRef]
     );
 
     const eventHandlers = useMemo(

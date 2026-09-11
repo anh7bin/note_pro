@@ -94,6 +94,29 @@ mutation InsertBlockAndUpdatePosition(
     }
 }
 
+mutation InsertBlocksAndUpdatePositions(
+    $blocks: [blocks_insert_input!]!
+    $updates: [blocks_updates!]!
+) {
+    update_blocks_many(updates: $updates) {
+        affected_rows
+    }
+
+    insert_blocks(objects: $blocks) {
+        returning {
+            id
+            content
+            cover_image
+            position
+            parent_id
+            page_id
+            type
+            created_at
+            updated_at
+        }
+    }
+}
+
 mutation UpdateBlocksPositions($updates: [blocks_updates!]!) {
     update_blocks_many(updates: $updates) {
         returning {

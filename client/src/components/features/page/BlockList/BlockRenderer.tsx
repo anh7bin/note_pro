@@ -15,6 +15,7 @@ import type {
     AddEditorBlockHandler,
     ConvertToFileHandler,
     EditorFocusPosition,
+    InsertBlockAction,
 } from '@/types/editor';
 
 interface BlockRendererProps {
@@ -27,8 +28,8 @@ interface BlockRendererProps {
     } | null;
     commonDeleteHandler?: () => void;
     commonInsertHandlers: {
-        onInsertAbove: () => void;
-        onInsertBelow: () => void;
+        onInsertAbove: InsertBlockAction;
+        onInsertBelow: InsertBlockAction;
     };
     focusedBlockId: string | null;
     onFocus: (blockId: string) => void;

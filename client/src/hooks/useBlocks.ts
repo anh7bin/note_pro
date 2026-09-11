@@ -2,7 +2,7 @@
 
 import {
     useDeleteBlockMutation,
-    useInsertBlockAndUpdatePositionMutation,
+    useInsertBlocksAndUpdatePositionsMutation,
     useUpdateBlockMutation,
     useUpdateBlocksPositionsMutation,
 } from '@/graphql/mutations/__generated__/document.generated';
@@ -34,14 +34,19 @@ export interface CreateBlockInput {
     page_id?: string;
 }
 
+export interface CreateBlockBatchInput {
+    id: string;
+    pageId: string;
+    position: number;
+    type: BlockType;
+    content: BlockContent;
+}
+
 export interface BlockRepository {
-    createBlockWithPositionUpdate: (
-        id: string,
-        pageId: string,
-        position: number,
-        type: BlockType,
-        content?: BlockContent
-    ) => Promise<EditorBlock | null>;
+    createBlocksWithPositionUpdate: (
+        blocks: CreateBlockBatchInput[],
+        positionUpdates: BlockPositionUpdate[]
+    ) => Promise<EditorBlock[]>;
     updateBlockContent: (
         id: string,
         content: BlockContent
@@ -65,8 +70,8 @@ export interface BlockRepository {
 }
 
 export function useBlocks(): BlockRepository {
-    const [insertBlockAndUpdatePosition] =
-        useInsertBlockAndUpdatePositionMutation();
+    const [insertBlocksAndUpdatePositions] =
+        useInsertBlocksAndUpdatePositionsMutation();
     const [updateBlock] = useUpdateBlockMutation();
     const [deleteBlock] = useDeleteBlockMutation();
     const [updateBlocksPositions] = useUpdateBlocksPositionsMutation();
@@ -155,129 +160,111 @@ export function useBlocks(): BlockRepository {
         [deleteBlock]
     );
 
-    const createBlockWithPositionUpdate = useCallback(
+    const createBlocksWithPositionUpdate = useCallback(
         async (
-            id: string,
-            pageId: string,
-            position: number,
-            type: BlockType,
-            content: BlockContent = { text: '' }
-        ): Promise<EditorBlock | null> => {
-            if (!workspace?.id || !userId) return null;
+            blocks: CreateBlockBatchInput[],
+            positionUpdates: BlockPositionUpdate[]
+        ): Promise<EditorBlock[]> => {
+            if (!blocks.length || !workspace?.id || !userId) return [];
 
             const now = new Date().toISOString();
+            const pageId = blocks[0]?.pageId;
+            if (!pageId) return [];
 
             try {
-                const res = await insertBlockAndUpdatePosition({
+                const res = await insertBlocksAndUpdatePositions({
                     variables: {
-                        id,
-                        pageId,
-                        position,
-                        type,
-                        workspaceId: workspace.id,
-                        userId: userId,
-                        content,
+                        blocks: blocks.map((block) => ({
+                            id: block.id,
+                            page_id: block.pageId,
+                            position: block.position,
+                            type: block.type,
+                            workspace_id: workspace.id,
+                            user_id: userId,
+                            content: block.content,
+                        })),
+                        updates: positionUpdates.map(({ id, position }) => ({
+                            where: { id: { _eq: id } },
+                            _set: {
+                                position,
+                                updated_at: now,
+                            },
+                        })),
                     },
                     update: (cache, { data }) => {
-                        const newBlock = data?.insert_blocks_one;
-                        if (!newBlock) return;
+                        const insertedBlocks =
+                            data?.insert_blocks?.returning ?? [];
+                        if (!insertedBlocks.length) return;
 
                         const existingData =
                             cache.readQuery<GetDocumentBlocksQuery>({
                                 query: GetDocumentBlocksDocument,
                                 variables: { pageId },
                             });
+                        if (!existingData?.blocks) return;
 
-                        if (existingData?.blocks) {
-                            const blockExists = existingData.blocks.some(
-                                (b) => b.id === newBlock.id
-                            );
-
-                            const fullNewBlock = {
-                                ...newBlock,
+                        const positions = new Map(
+                            positionUpdates.map(({ id, position }) => [
+                                id,
+                                position,
+                            ])
+                        );
+                        const insertedIds = new Set(
+                            insertedBlocks.map((block) => block.id)
+                        );
+                        const existingBlocks = existingData.blocks
+                            .filter((block) => !insertedIds.has(block.id))
+                            .map((block) => {
+                                const position = positions.get(block.id);
+                                return position === undefined
+                                    ? block
+                                    : { ...block, position };
+                            });
+                        const fullInsertedBlocks = insertedBlocks.map(
+                            (block) => ({
+                                ...block,
                                 workspace_id: workspace.id,
                                 user_id: userId,
                                 link_access: null,
                                 tasks: [],
-                            };
+                            })
+                        );
 
-                            if (blockExists) {
-                                const updatedBlocks = existingData.blocks.map(
-                                    (block) => {
-                                        if (block.id === newBlock.id) {
-                                            return fullNewBlock;
-                                        }
-                                        if ((block.position ?? 0) >= position) {
-                                            return {
-                                                ...block,
-                                                position:
-                                                    (block.position ?? 0) + 1,
-                                            };
-                                        }
-                                        return block;
-                                    }
-                                );
-
-                                cache.writeQuery({
-                                    query: GetDocumentBlocksDocument,
-                                    variables: { pageId },
-                                    data: { blocks: updatedBlocks },
-                                });
-                            } else {
-                                const updatedBlocks = existingData.blocks.map(
-                                    (block) => {
-                                        if ((block.position ?? 0) >= position) {
-                                            return {
-                                                ...block,
-                                                position:
-                                                    (block.position ?? 0) + 1,
-                                            };
-                                        }
-                                        return block;
-                                    }
-                                );
-
-                                const allBlocks = [
-                                    ...updatedBlocks,
-                                    fullNewBlock,
+                        cache.writeQuery({
+                            query: GetDocumentBlocksDocument,
+                            variables: { pageId },
+                            data: {
+                                blocks: [
+                                    ...existingBlocks,
+                                    ...fullInsertedBlocks,
                                 ].sort(
                                     (a, b) =>
-                                        (a.position || 0) - (b.position || 0)
-                                );
-
-                                cache.writeQuery({
-                                    query: GetDocumentBlocksDocument,
-                                    variables: { pageId },
-                                    data: { blocks: allBlocks },
-                                });
-                            }
-                        }
+                                        (a.position ?? 0) - (b.position ?? 0)
+                                ),
+                            },
+                        });
                     },
                 });
 
-                const result = res.data?.insert_blocks_one;
-                if (!result || !isBlockType(result.type)) return null;
-
-                return {
-                    id: result.id,
-                    content: normalizeBlockContent(result.content),
-                    position: result.position || 0,
-                    parent_id: result.parent_id || undefined,
-                    page_id: result.page_id || undefined,
-                    type: result.type,
-                    created_at: result.created_at || now,
-                    updated_at: result.updated_at || now,
-                    tasks: [],
-                };
+                return (res.data?.insert_blocks?.returning ?? [])
+                    .filter((block) => isBlockType(block.type))
+                    .map((block) => ({
+                        id: block.id,
+                        content: normalizeBlockContent(block.content),
+                        position: block.position ?? 0,
+                        parent_id: block.parent_id || undefined,
+                        page_id: block.page_id || undefined,
+                        type: block.type as BlockType,
+                        created_at: block.created_at || now,
+                        updated_at: block.updated_at || now,
+                        tasks: [],
+                    }));
             } catch (error) {
-                console.error(
-                    'Failed to create block with position update:',
-                    error
-                );
-                return null;
+                console.error('Failed to create block batch:', error);
+                return [];
             }
         },
-        [insertBlockAndUpdatePosition, userId, workspace?.id]
+        [insertBlocksAndUpdatePositions, userId, workspace?.id]
     );
 
     const updateBlocksPositionsBatch = useCallback(
@@ -434,7 +421,7 @@ export function useBlocks(): BlockRepository {
     );
 
     return {
-        createBlockWithPositionUpdate,
+        createBlocksWithPositionUpdate,
         updateBlockContent,
         updateBlocksPositionsBatch,
         updateBlockType,

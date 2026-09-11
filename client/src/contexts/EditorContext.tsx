@@ -36,7 +36,7 @@ export function EditorProvider({ children, pageId }: EditorProviderProps) {
         workspaceId: processedRootBlock?.workspace_id,
         state: editorState,
         debounce,
-        createBlock: blockRepository.createBlockWithPositionUpdate,
+        createBlocks: blockRepository.createBlocksWithPositionUpdate,
         updateBlockContent: blockRepository.updateBlockContent,
     });
 

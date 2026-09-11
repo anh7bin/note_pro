@@ -2,6 +2,7 @@
 
 import { memo, useEffect, useRef, useCallback } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
+import type { InsertBlockAction } from '@/types/editor';
 import { useTableEditorConfig } from '../hooks/useTableEditorConfig';
 import { BlockActionMenu } from '@/components/features/page/BlockActionMenu';
 import '@/styles/table.css';
@@ -14,8 +15,8 @@ interface TableEditorProps {
     onBlur: () => void;
     onSaveImmediate: () => void;
     onDeleteBlock?: () => void;
-    onInsertAbove?: () => void;
-    onInsertBelow?: () => void;
+    onInsertAbove?: InsertBlockAction;
+    onInsertBelow?: InsertBlockAction;
     isFocused: boolean;
     dragHandle?: React.ReactNode;
     editable?: boolean;
@@ -39,6 +40,7 @@ export const TableEditor = memo(function TableEditor({
     const onFocusRef = useRef(onFocus);
     const onBlurRef = useRef(onBlur);
     const onSaveImmediateRef = useRef(onSaveImmediate);
+    const onDeleteBlockRef = useRef(onDeleteBlock);
     const prevValueRef = useRef(value);
 
     // Update refs
@@ -47,7 +49,8 @@ export const TableEditor = memo(function TableEditor({
         onFocusRef.current = onFocus;
         onBlurRef.current = onBlur;
         onSaveImmediateRef.current = onSaveImmediate;
-    }, [onChange, onFocus, onBlur, onSaveImmediate]);
+        onDeleteBlockRef.current = onDeleteBlock;
+    }, [onChange, onFocus, onBlur, onSaveImmediate, onDeleteBlock]);
 
     const editorConfig = useTableEditorConfig({
         editable,
@@ -55,6 +58,7 @@ export const TableEditor = memo(function TableEditor({
         onFocusRef,
         onBlurRef,
         onSaveImmediateRef,
+        onDeleteBlockRef,
         prevValueRef,
     });
 

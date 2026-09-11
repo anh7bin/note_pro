@@ -5,6 +5,7 @@ import type {
     AddEditorBlockHandler,
     ConvertToFileHandler,
     EditorFocusPosition,
+    InsertBlockAction,
 } from '@/types/editor';
 import { EditorContent, useEditor, UseEditorOptions } from '@tiptap/react';
 import {
@@ -47,8 +48,8 @@ interface TiptapEditorProps {
     onNavigateBlock?: (direction: 'previous' | 'next') => boolean;
     onSaveImmediate?: () => void;
     onDeleteBlock?: () => void;
-    onInsertAbove?: () => void;
-    onInsertBelow?: () => void;
+    onInsertAbove?: InsertBlockAction;
+    onInsertBelow?: InsertBlockAction;
     isTitle?: boolean;
     isTask?: boolean;
     task?: Task | null;

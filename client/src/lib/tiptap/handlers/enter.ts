@@ -22,7 +22,11 @@ function splitContentAtSelection(editor: Editor): string {
     const before = serializeRange(editor, 0, selection.from);
     const after = serializeRange(editor, selection.to, doc.content.size);
 
-    editor.commands.setContent(before, { emitUpdate: true });
+    // Empty blocks and cursors at the end already contain the exact `before`
+    // value. Avoid dispatching a redundant transaction for every Enter press.
+    if (before !== editor.getHTML()) {
+        editor.commands.setContent(before, { emitUpdate: true });
+    }
     return after;
 }
 
@@ -30,7 +34,6 @@ interface EnterHandlerOptions {
     onAddBlock?: AddEditorBlockHandler;
     onBackspaceAtStart?: (currentContent: string) => boolean;
     getPosition: () => number;
-    onFlush?: () => Promise<void> | void;
 }
 
 export const EnterHandler = Extension.create<EnterHandlerOptions>({
@@ -41,7 +44,6 @@ export const EnterHandler = Extension.create<EnterHandlerOptions>({
             onAddBlock: undefined,
             onBackspaceAtStart: undefined,
             getPosition: () => 0,
-            onFlush: undefined,
         };
     },
 
@@ -76,13 +78,13 @@ export const EnterHandler = Extension.create<EnterHandlerOptions>({
                         const nextContent = splitContentAtSelection(
                             this.editor
                         );
-                        this.options.onFlush?.();
-                        this.options.onAddBlock(
+                        const creation = this.options.onAddBlock(
                             currentPosition + 1,
                             BlockType.PARAGRAPH,
                             { text: nextContent },
                             'start'
                         );
+                        if (creation) this.editor.commands.blur();
                         return true;
                     }
 
@@ -95,13 +97,13 @@ export const EnterHandler = Extension.create<EnterHandlerOptions>({
 
                 if (this.options.onAddBlock) {
                     const nextContent = splitContentAtSelection(this.editor);
-                    this.options.onFlush?.();
-                    this.options.onAddBlock(
+                    const creation = this.options.onAddBlock(
                         currentPosition + 1,
                         BlockType.PARAGRAPH,
                         { text: nextContent },
                         'start'
                     );
+                    if (creation) this.editor.commands.blur();
                     return true;
                 }
 

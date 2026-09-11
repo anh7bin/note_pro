@@ -103,12 +103,13 @@ export const handleFileUpload = async ({
 
         let persisted: boolean | void;
         if (currentText.length > 0 && onAddBlock) {
-            persisted = await onAddBlock(
+            const creation = onAddBlock(
                 getPosition() + 1,
                 BlockType.FILE,
                 uploadedFileData,
                 null
             );
+            persisted = creation ? await creation.persisted : false;
         } else if (onConvertToFile) {
             persisted = await onConvertToFile(blockId, uploadedFileData);
         } else {
@@ -182,9 +183,10 @@ export const handleTableInsert = async ({
         .join('')}</tbody></table>`;
 
     if (currentText.length > 0 && onAddBlock && blockId) {
-        await onAddBlock(position + 1, BlockType.TABLE, {
+        const creation = onAddBlock(position + 1, BlockType.TABLE, {
             text: tableHTML,
         });
+        await creation?.persisted;
     } else if (onConvertToTable && blockId) {
         await onConvertToTable(blockId, tableHTML);
     } else {

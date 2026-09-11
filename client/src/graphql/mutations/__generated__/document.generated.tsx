@@ -45,6 +45,14 @@ export type InsertBlockAndUpdatePositionMutationVariables = Types.Exact<{
 
 export type InsertBlockAndUpdatePositionMutation = { __typename?: 'mutation_root', update_blocks?: { __typename?: 'blocks_mutation_response', affected_rows: number } | null, insert_blocks_one?: { __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, created_at?: string | null, updated_at?: string | null } | null };
 
+export type InsertBlocksAndUpdatePositionsMutationVariables = Types.Exact<{
+  blocks: Array<Types.BlocksInsertInput> | Types.BlocksInsertInput;
+  updates: Array<Types.BlocksUpdates> | Types.BlocksUpdates;
+}>;
+
+
+export type InsertBlocksAndUpdatePositionsMutation = { __typename?: 'mutation_root', update_blocks_many?: Array<{ __typename?: 'blocks_mutation_response', affected_rows: number } | null> | null, insert_blocks?: { __typename?: 'blocks_mutation_response', returning: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, created_at?: string | null, updated_at?: string | null }> } | null };
+
 export type UpdateBlocksPositionsMutationVariables = Types.Exact<{
   updates: Array<Types.BlocksUpdates> | Types.BlocksUpdates;
 }>;
@@ -302,6 +310,53 @@ export function useInsertBlockAndUpdatePositionMutation(baseOptions?: Apollo.Mut
 export type InsertBlockAndUpdatePositionMutationHookResult = ReturnType<typeof useInsertBlockAndUpdatePositionMutation>;
 export type InsertBlockAndUpdatePositionMutationResult = Apollo.MutationResult<InsertBlockAndUpdatePositionMutation>;
 export type InsertBlockAndUpdatePositionMutationOptions = Apollo.BaseMutationOptions<InsertBlockAndUpdatePositionMutation, InsertBlockAndUpdatePositionMutationVariables>;
+export const InsertBlocksAndUpdatePositionsDocument = gql`
+    mutation InsertBlocksAndUpdatePositions($blocks: [blocks_insert_input!]!, $updates: [blocks_updates!]!) {
+  update_blocks_many(updates: $updates) {
+    affected_rows
+  }
+  insert_blocks(objects: $blocks) {
+    returning {
+      id
+      content
+      cover_image
+      position
+      parent_id
+      page_id
+      type
+      created_at
+      updated_at
+    }
+  }
+}
+    `;
+export type InsertBlocksAndUpdatePositionsMutationFn = Apollo.MutationFunction<InsertBlocksAndUpdatePositionsMutation, InsertBlocksAndUpdatePositionsMutationVariables>;
+
+/**
+ * __useInsertBlocksAndUpdatePositionsMutation__
+ *
+ * To run a mutation, you first call `useInsertBlocksAndUpdatePositionsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertBlocksAndUpdatePositionsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertBlocksAndUpdatePositionsMutation, { data, loading, error }] = useInsertBlocksAndUpdatePositionsMutation({
+ *   variables: {
+ *      blocks: // value for 'blocks'
+ *      updates: // value for 'updates'
+ *   },
+ * });
+ */
+export function useInsertBlocksAndUpdatePositionsMutation(baseOptions?: Apollo.MutationHookOptions<InsertBlocksAndUpdatePositionsMutation, InsertBlocksAndUpdatePositionsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InsertBlocksAndUpdatePositionsMutation, InsertBlocksAndUpdatePositionsMutationVariables>(InsertBlocksAndUpdatePositionsDocument, options);
+      }
+export type InsertBlocksAndUpdatePositionsMutationHookResult = ReturnType<typeof useInsertBlocksAndUpdatePositionsMutation>;
+export type InsertBlocksAndUpdatePositionsMutationResult = Apollo.MutationResult<InsertBlocksAndUpdatePositionsMutation>;
+export type InsertBlocksAndUpdatePositionsMutationOptions = Apollo.BaseMutationOptions<InsertBlocksAndUpdatePositionsMutation, InsertBlocksAndUpdatePositionsMutationVariables>;
 export const UpdateBlocksPositionsDocument = gql`
     mutation UpdateBlocksPositions($updates: [blocks_updates!]!) {
   update_blocks_many(updates: $updates) {

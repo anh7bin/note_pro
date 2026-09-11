@@ -17,14 +17,12 @@ interface ExtensionsConfig {
     getPosition: () => number;
     onAddBlock?: AddEditorBlockHandler;
     onBackspaceAtStart?: (currentContent: string) => boolean;
-    onFlush?: () => void;
 }
 
 export const createExtensions = ({
     getPosition,
     onAddBlock,
     onBackspaceAtStart,
-    onFlush,
 }: ExtensionsConfig) => [
     StarterKit.configure({
         code: false,
@@ -74,6 +72,5 @@ export const createExtensions = ({
         onAddBlock,
         onBackspaceAtStart,
         getPosition,
-        onFlush,
     }),
 ];

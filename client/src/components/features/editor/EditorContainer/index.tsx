@@ -6,6 +6,7 @@ import { Task } from '@/types/app';
 import { TASK_STATUS } from '@/lib/constants';
 import { CheckTask } from '../CheckTask';
 import { BlockActionMenu } from '@/components/features/page/BlockActionMenu';
+import type { InsertBlockAction } from '@/types/editor';
 
 interface EditorContainerProps {
     blockId: string;
@@ -16,8 +17,8 @@ interface EditorContainerProps {
     isUpdating: boolean;
     setIsUpdating: (value: boolean) => void;
     onDeleteBlock?: () => void;
-    onInsertAbove?: () => void;
-    onInsertBelow?: () => void;
+    onInsertAbove?: InsertBlockAction;
+    onInsertBelow?: InsertBlockAction;
     children: ReactNode;
 }
 
@@ -41,8 +42,8 @@ const BlockActions = memo(function BlockActions({
 }: {
     blockId: string;
     onDelete?: () => void;
-    onInsertAbove?: () => void;
-    onInsertBelow?: () => void;
+    onInsertAbove?: InsertBlockAction;
+    onInsertBelow?: InsertBlockAction;
 }) {
     return (
         <div className="absolute left-full top-0 ml-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">

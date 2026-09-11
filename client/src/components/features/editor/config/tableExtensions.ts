@@ -13,14 +13,25 @@ import Text from '@tiptap/extension-text';
 import Bold from '@tiptap/extension-bold';
 import Italic from '@tiptap/extension-italic';
 import Strike from '@tiptap/extension-strike';
+import { TextSelection } from '@tiptap/pm/state';
 import { TABLE_CONFIG } from './constants';
 
 const TableDocument = Document.extend({
     content: 'table',
 });
 
-const TableKeyHandler = Extension.create({
+interface TableKeyHandlerOptions {
+    onBackspaceAtStart: () => boolean;
+}
+
+const TableKeyHandler = Extension.create<TableKeyHandlerOptions>({
     name: 'tableKeyHandler',
+
+    addOptions() {
+        return {
+            onBackspaceAtStart: () => true,
+        };
+    },
 
     addKeyboardShortcuts() {
         return {
@@ -51,13 +62,15 @@ const TableKeyHandler = Extension.create({
             // Prevent Backspace from deleting the table structure
             Backspace: ({ editor }) => {
                 const { selection } = editor.state;
-                const { empty, $from } = selection;
+                const { empty } = selection;
 
                 if (!empty) return false;
 
-                // If at the very start of the document, don't delete
-                if ($from.pos <= 1) {
-                    return true;
+                const firstTextPosition = TextSelection.atStart(
+                    editor.state.doc
+                ).from;
+                if (selection.from === firstTextPosition) {
+                    return this.options.onBackspaceAtStart();
                 }
 
                 return false;
@@ -66,7 +79,7 @@ const TableKeyHandler = Extension.create({
     },
 });
 
-export const createTableExtensions = () => [
+export const createTableExtensions = (onBackspaceAtStart: () => boolean) => [
     TableDocument,
     Paragraph,
     Text,
@@ -95,5 +108,5 @@ export const createTableExtensions = () => [
             class: 'table-cell',
         },
     }),
-    TableKeyHandler,
+    TableKeyHandler.configure({ onBackspaceAtStart }),
 ];

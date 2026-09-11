@@ -12,14 +12,15 @@ import { Download, MoreVertical, Trash2 } from 'lucide-react';
 import { useCallback, useRef } from 'react';
 import { InsertBlockAboveIcon } from '@/components/shared/icons/InsertBlockAboveIcon';
 import { InsertBlockBelowIcon } from '@/components/shared/icons/InsertBlockBelowIcon';
+import type { InsertBlockAction } from '@/types/editor';
 
 interface BlockActionMenuProps {
     blockId?: string;
     onDelete?: () => void;
     downloadUrl?: string | null;
     downloadFileName?: string | null;
-    onInsertAbove?: () => void;
-    onInsertBelow?: () => void;
+    onInsertAbove?: InsertBlockAction;
+    onInsertBelow?: InsertBlockAction;
 }
 
 export function BlockActionMenu({
@@ -31,6 +32,7 @@ export function BlockActionMenu({
     onInsertBelow,
 }: BlockActionMenuProps) {
     const cleanupHighlightRef = useRef<(() => void) | null>(null);
+    const insertedBlockIdRef = useRef<string | null>(null);
 
     const hasActions =
         Boolean(downloadUrl) ||
@@ -86,6 +88,41 @@ export function BlockActionMenu({
         }
     }, [downloadFileName, downloadUrl]);
 
+    const handleInsertAbove = useCallback(() => {
+        const blockId = onInsertAbove?.();
+        insertedBlockIdRef.current =
+            typeof blockId === 'string' ? blockId : null;
+    }, [onInsertAbove]);
+
+    const handleInsertBelow = useCallback(() => {
+        const blockId = onInsertBelow?.();
+        insertedBlockIdRef.current =
+            typeof blockId === 'string' ? blockId : null;
+    }, [onInsertBelow]);
+
+    const handleCloseAutoFocus = useCallback((event: Event) => {
+        const insertedBlockId = insertedBlockIdRef.current;
+        if (!insertedBlockId) return;
+
+        event.preventDefault();
+        insertedBlockIdRef.current = null;
+
+        // Radix keeps focus inside the dropdown until it has closed, so the
+        // editor's mount-time autofocus can be ignored. Restore focus only
+        // after the portal has been removed and the new block is in the DOM.
+        requestAnimationFrame(() => {
+            const insertedBlock = document.querySelector<HTMLElement>(
+                `[data-block-id="${CSS.escape(insertedBlockId)}"]`
+            );
+            const focusTarget =
+                insertedBlock?.querySelector<HTMLElement>(
+                    '.ProseMirror[contenteditable="true"]'
+                ) ?? insertedBlock;
+
+            focusTarget?.focus({ preventScroll: true });
+        });
+    }, []);
+
     if (!hasActions) return null;
 
     return (
@@ -100,15 +137,18 @@ export function BlockActionMenu({
                     <MoreVertical />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48" align="start">
+            <DropdownMenuContent
+                className="w-48"
+                align="start"
+                onCloseAutoFocus={handleCloseAutoFocus}>
                 {onInsertAbove && (
-                    <DropdownMenuItem onClick={onInsertAbove}>
+                    <DropdownMenuItem onClick={handleInsertAbove}>
                         <InsertBlockAboveIcon />
                         Insert block above
                     </DropdownMenuItem>
                 )}
                 {onInsertBelow && (
-                    <DropdownMenuItem onClick={onInsertBelow}>
+                    <DropdownMenuItem onClick={handleInsertBelow}>
                         <InsertBlockBelowIcon />
                         Insert block below
                     </DropdownMenuItem>

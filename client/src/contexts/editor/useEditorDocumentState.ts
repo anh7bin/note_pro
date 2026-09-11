@@ -31,6 +31,9 @@ export function useEditorDocumentState({
 
     useEffect(() => {
         const remoteIds = new Set(processedBlocks.map((block) => block.id));
+        const currentBlocksById = new Map(
+            blocksRef.current.map((block) => [block.id, block])
+        );
 
         locallyCreatedIdsRef.current.forEach((id) => {
             if (remoteIds.has(id)) locallyCreatedIdsRef.current.delete(id);
@@ -44,10 +47,19 @@ export function useEditorDocumentState({
                 .filter((block) => !deletedBlockIdsRef.current.has(block.id))
                 .map((block) => {
                     const localText = dirtyContentRef.current.get(block.id);
-                    if (localText === undefined) return block;
+                    const currentBlock = currentBlocksById.get(block.id);
+                    const position = locallyCreatedIdsRef.current.size
+                        ? (currentBlock?.position ?? block.position)
+                        : block.position;
+                    if (localText === undefined) {
+                        return position === block.position
+                            ? block
+                            : { ...block, position };
+                    }
 
                     return {
                         ...block,
+                        position,
                         content: { ...block.content, text: localText },
                     };
                 });

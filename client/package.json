@@ -54,7 +54,7 @@
         "@tiptap/extension-typography": "^3.13.0",
         "@tiptap/extension-underline": "^3.3.0",
         "@tiptap/pm": "^3.3.0",
-        "@tiptap/react": "^3.3.0",
+        "@tiptap/react": "^3.14.0",
         "@tiptap/starter-kit": "^3.3.0",
         "axios": "^1.11.0",
         "change-case": "^5.4.4",

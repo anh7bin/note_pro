@@ -4,7 +4,7 @@ import { useCallback, type MutableRefObject } from 'react';
 import type { DebounceController } from '@/hooks/useDebounce';
 import type { Block, BlockPositionUpdate } from '@/types/editor';
 import { BlockType } from '@/types/types';
-import { mergeBlockHtml } from './blockHtml';
+import { isBlockHtmlEmpty, mergeBlockHtml } from './blockHtml';
 import type {
     BlockNavigationDirection,
     EditorBlockActions,
@@ -83,7 +83,12 @@ export function useEditorBlockActions({
             }
 
             if (!isCreatingBlockRef.current && !isDeletingBlockRef.current) {
-                setFocusedBlock(null);
+                // A blur from the previous editor can arrive after a newly
+                // inserted editor has already focused. Only clear the focus
+                // state when this block is still the active one.
+                setFocusedBlock((focusedBlockId) =>
+                    focusedBlockId === blockId ? null : focusedBlockId
+                );
             }
         },
         [
@@ -96,19 +101,78 @@ export function useEditorBlockActions({
         ]
     );
 
+    const deleteBlockAndFocusNeighbor = useCallback(
+        (blockId: string) => {
+            const currentBlocks = blocksRef.current;
+            if (currentBlocks.length <= 1) return false;
+
+            const currentIndex = currentBlocks.findIndex(
+                (block) => block.id === blockId
+            );
+            if (currentIndex < 0) return false;
+
+            const previousBlock =
+                currentIndex > 0 ? currentBlocks[currentIndex - 1] : null;
+            const nextBlock = currentBlocks[currentIndex + 1] ?? null;
+            const focusTarget = previousBlock ?? nextBlock;
+
+            isDeletingBlockRef.current = true;
+            deletedBlockIdsRef.current.add(blockId);
+            locallyCreatedIdsRef.current.delete(blockId);
+            dirtyContentRef.current.delete(blockId);
+            cancel(`block-${blockId}`);
+
+            const nextBlocks = currentBlocks.filter(
+                (block) => block.id !== blockId
+            );
+            blocksRef.current = nextBlocks;
+            setBlocks(nextBlocks);
+
+            if (focusTarget) {
+                setFocusPosition(previousBlock ? 'end' : 'start');
+                setFocusedBlock(focusTarget.id);
+            }
+
+            isDeletingBlockRef.current = false;
+            const pendingCreation =
+                pendingCreationsRef.current.get(blockId) ?? Promise.resolve();
+            void pendingCreation.then(() => removeBlock(blockId));
+            return true;
+        },
+        [
+            blocksRef,
+            cancel,
+            deletedBlockIdsRef,
+            dirtyContentRef,
+            isDeletingBlockRef,
+            locallyCreatedIdsRef,
+            pendingCreationsRef,
+            removeBlock,
+            setBlocks,
+            setFocusedBlock,
+            setFocusPosition,
+        ]
+    );
+
     const handleBackspaceAtStart = useCallback(
         (blockId: string, currentContent: string) => {
             const currentBlocks = blocksRef.current;
             const currentIndex = currentBlocks.findIndex(
                 (block) => block.id === blockId
             );
-            if (currentIndex <= 0) return false;
+            if (currentIndex < 0) return false;
+
+            if (isBlockHtmlEmpty(currentContent)) {
+                return deleteBlockAndFocusNeighbor(blockId);
+            }
 
             const previousBlock = currentBlocks[currentIndex - 1];
+            if (!previousBlock) return false;
+
             const isPreviousBlockText =
                 previousBlock?.type === BlockType.PARAGRAPH ||
                 previousBlock?.type === BlockType.TASK;
-            if (!previousBlock || !isPreviousBlockText) return false;
+            if (!isPreviousBlockText) return false;
 
             const previousContent =
                 dirtyContentRef.current.get(previousBlock.id) ??
@@ -156,6 +220,7 @@ export function useEditorBlockActions({
             blocksRef,
             cancel,
             debounced,
+            deleteBlockAndFocusNeighbor,
             deletedBlockIdsRef,
             dirtyContentRef,
             enqueueBlockSave,
@@ -203,51 +268,8 @@ export function useEditorBlockActions({
     const handleSaveImmediate = useCallback(() => flush(), [flush]);
 
     const handleDeleteBlock = useCallback(
-        (blockId: string) => {
-            const currentBlocks = blocksRef.current;
-            if (currentBlocks.length <= 1) return;
-
-            isDeletingBlockRef.current = true;
-            deletedBlockIdsRef.current.add(blockId);
-            locallyCreatedIdsRef.current.delete(blockId);
-            dirtyContentRef.current.delete(blockId);
-            cancel(`block-${blockId}`);
-
-            const currentIndex = currentBlocks.findIndex(
-                (block) => block.id === blockId
-            );
-            const previousBlock =
-                currentIndex > 0 ? currentBlocks[currentIndex - 1] : null;
-            const nextBlocks = currentBlocks.filter(
-                (block) => block.id !== blockId
-            );
-
-            blocksRef.current = nextBlocks;
-            setBlocks(nextBlocks);
-
-            if (previousBlock) {
-                setFocusPosition('end');
-                setFocusedBlock(previousBlock.id);
-            }
-
-            isDeletingBlockRef.current = false;
-            const pendingCreation =
-                pendingCreationsRef.current.get(blockId) ?? Promise.resolve();
-            void pendingCreation.then(() => removeBlock(blockId));
-        },
-        [
-            blocksRef,
-            cancel,
-            deletedBlockIdsRef,
-            dirtyContentRef,
-            isDeletingBlockRef,
-            locallyCreatedIdsRef,
-            pendingCreationsRef,
-            removeBlock,
-            setBlocks,
-            setFocusedBlock,
-            setFocusPosition,
-        ]
+        (blockId: string) => void deleteBlockAndFocusNeighbor(blockId),
+        [deleteBlockAndFocusNeighbor]
     );
 
     const handleReorderBlocks = useCallback(

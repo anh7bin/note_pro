@@ -124,12 +124,6 @@
     padding: 0 !important;
 }
 
-.ProseMirror p:has(> br.ProseMirror-trailingBreak:only-child):last-child {
-    display: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
 /* Prose integration */
 .prose ul,
 .prose ol,
@@ -167,6 +161,7 @@
 [data-editor-container] .ProseMirror {
     padding: 0;
     margin: 0;
+    min-height: 1.5em;
 }
 
 [data-editor-container] .ProseMirror > * {

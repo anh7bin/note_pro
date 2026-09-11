@@ -2,6 +2,7 @@ import type {
     AddEditorBlockHandler,
     Block,
     ConvertToFileHandler,
+    InsertBlockAction,
 } from '@/types/editor';
 import { ReactNode } from 'react';
 
@@ -10,8 +11,8 @@ export interface BaseBlockProps {
     dragHandle?: ReactNode;
     editable?: boolean;
     onDeleteBlock?: () => void;
-    onInsertAbove?: () => void;
-    onInsertBelow?: () => void;
+    onInsertAbove?: InsertBlockAction;
+    onInsertBelow?: InsertBlockAction;
 }
 
 export interface TextBlockProps extends BaseBlockProps {
@@ -45,8 +46,8 @@ export interface SeparatorBlockProps {
     dragHandle?: ReactNode;
     editable?: boolean;
     onDeleteBlock?: () => void;
-    onInsertAbove?: () => void;
-    onInsertBelow?: () => void;
+    onInsertAbove?: InsertBlockAction;
+    onInsertBelow?: InsertBlockAction;
 }
 
 export interface TableBlockProps extends BaseBlockProps {

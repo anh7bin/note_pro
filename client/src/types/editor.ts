@@ -43,13 +43,19 @@ export interface BlockPositionUpdate {
 }
 
 export type EditorFocusPosition = 'start' | 'end';
+export type InsertBlockAction = () => string | null;
+
+export interface BlockCreationHandle {
+    blockId: string;
+    persisted: Promise<boolean>;
+}
 
 export type AddEditorBlockHandler = (
     position: number,
     type: BlockType,
     content?: BlockContent,
     focusAt?: EditorFocusPosition | null
-) => Promise<boolean> | boolean | void;
+) => BlockCreationHandle | void;
 
 export type ConvertToFileHandler = (
     blockId: string,

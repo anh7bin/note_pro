@@ -1,18 +1,36 @@
 'use client';
 
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type { DebounceController } from '@/hooks/useDebounce';
-import type { Block, BlockContent, EditorFocusPosition } from '@/types/editor';
+import type {
+    Block,
+    BlockContent,
+    BlockPositionUpdate,
+    EditorFocusPosition,
+} from '@/types/editor';
 import { BlockType } from '@/types/types';
 import type { EditorDocumentState, EditorPersistenceController } from './types';
 
-type CreateBlock = (
-    id: string,
-    pageId: string,
-    position: number,
-    type: BlockType,
-    content: BlockContent
-) => Promise<Block | null>;
+interface CreateBlockBatchInput {
+    id: string;
+    pageId: string;
+    position: number;
+    type: BlockType;
+    content: BlockContent;
+}
+
+type CreateBlocks = (
+    blocks: CreateBlockBatchInput[],
+    positionUpdates: BlockPositionUpdate[]
+) => Promise<Block[]>;
+
+interface QueuedBlockCreation {
+    blockId: string;
+    resolve: (block: Block | null) => void;
+}
+
+const CREATION_BATCH_DELAY_MS = 75;
+const CREATION_BATCH_MAX_WAIT_MS = 300;
 
 type UpdateBlockContent = (
     id: string,
@@ -39,7 +57,7 @@ interface UseEditorPersistenceOptions {
     workspaceId?: string | null;
     state: PersistenceState;
     debounce: DebounceController;
-    createBlock: CreateBlock;
+    createBlocks: CreateBlocks;
     updateBlockContent: UpdateBlockContent;
 }
 
@@ -49,14 +67,21 @@ export function useEditorPersistence({
     workspaceId,
     state,
     debounce,
-    createBlock,
+    createBlocks,
     updateBlockContent,
 }: UseEditorPersistenceOptions): EditorPersistenceController {
-    const { debounced, flush } = debounce;
+    const { debounced, flush, cancel } = debounce;
     const pendingCreationsRef = useRef<Map<string, Promise<Block | null>>>(
         new Map()
     );
     const creationQueueRef = useRef<Promise<void>>(Promise.resolve());
+    const creationBatchRef = useRef<Map<string, QueuedBlockCreation>>(
+        new Map()
+    );
+    const creationBatchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null
+    );
+    const creationBatchStartedAtRef = useRef<number | null>(null);
     const saveQueuesRef = useRef<Map<string, Promise<void>>>(new Map());
     const titleSaveQueueRef = useRef<Promise<void>>(Promise.resolve());
 
@@ -121,6 +146,91 @@ export function useEditorPersistence({
         [debounced, dirtyContentRef, enqueueBlockSave]
     );
 
+    const flushCreationBatch = useCallback(() => {
+        if (creationBatchTimerRef.current) {
+            clearTimeout(creationBatchTimerRef.current);
+            creationBatchTimerRef.current = null;
+        }
+
+        const queuedCreations = Array.from(creationBatchRef.current.values());
+        if (!queuedCreations.length) return;
+
+        creationBatchRef.current.clear();
+        creationBatchStartedAtRef.current = null;
+
+        const queuedIds = new Set(
+            queuedCreations.map(({ blockId }) => blockId)
+        );
+        const batchExecution = creationQueueRef.current
+            .catch(() => undefined)
+            .then(async () => {
+                const currentBlocks = blocksRef.current;
+                const blocksToCreate = queuedCreations
+                    .map(({ blockId }) =>
+                        currentBlocks.find((block) => block.id === blockId)
+                    )
+                    .filter((block): block is Block => Boolean(block))
+                    .map((block) => {
+                        const localText = dirtyContentRef.current.get(block.id);
+                        return {
+                            id: block.id,
+                            pageId,
+                            position: block.position ?? 0,
+                            type: block.type,
+                            content:
+                                localText === undefined
+                                    ? block.content
+                                    : { ...block.content, text: localText },
+                        };
+                    });
+                const positionUpdates = currentBlocks
+                    .filter((block) => !queuedIds.has(block.id))
+                    .map((block) => ({
+                        id: block.id,
+                        position: block.position ?? 0,
+                    }));
+                const createdBlocks = blocksToCreate.length
+                    ? await createBlocks(blocksToCreate, positionUpdates)
+                    : [];
+                const createdById = new Map(
+                    createdBlocks.map((block) => [block.id, block])
+                );
+
+                queuedCreations.forEach(({ blockId, resolve }) => {
+                    resolve(createdById.get(blockId) ?? null);
+                });
+            })
+            .catch(() => {
+                queuedCreations.forEach(({ resolve }) => resolve(null));
+            });
+
+        creationQueueRef.current = batchExecution;
+    }, [blocksRef, createBlocks, dirtyContentRef, pageId]);
+
+    const scheduleCreationBatch = useCallback(() => {
+        const now = Date.now();
+        creationBatchStartedAtRef.current ??= now;
+        const elapsed = now - creationBatchStartedAtRef.current;
+        const delay = Math.min(
+            CREATION_BATCH_DELAY_MS,
+            Math.max(0, CREATION_BATCH_MAX_WAIT_MS - elapsed)
+        );
+
+        if (creationBatchTimerRef.current) {
+            clearTimeout(creationBatchTimerRef.current);
+        }
+        creationBatchTimerRef.current = setTimeout(flushCreationBatch, delay);
+    }, [flushCreationBatch]);
+
+    useEffect(() => {
+        window.addEventListener('pagehide', flushCreationBatch);
+
+        return () => {
+            window.removeEventListener('pagehide', flushCreationBatch);
+            flushCreationBatch();
+        };
+    }, [flushCreationBatch]);
+
     const handleAddBlock = useCallback(
         (
             position: number,
@@ -146,29 +256,34 @@ export function useEditorPersistence({
 
             locallyCreatedIdsRef.current.add(blockId);
             setBlocks((currentBlocks) => {
-                const nextBlocks = currentBlocks
-                    .map((block) => {
-                        const localText = dirtyContentRef.current.get(block.id);
-                        const latestBlock =
-                            localText === undefined
-                                ? block
-                                : {
-                                      ...block,
-                                      content: {
-                                          ...block.content,
-                                          text: localText,
-                                      },
-                                  };
+                const nextBlocks = currentBlocks.map((block) => {
+                    const localText = dirtyContentRef.current.get(block.id);
+                    const latestBlock =
+                        localText === undefined
+                            ? block
+                            : {
+                                  ...block,
+                                  content: {
+                                      ...block.content,
+                                      text: localText,
+                                  },
+                              };
 
-                        return (block.position ?? 0) >= position
-                            ? {
-                                  ...latestBlock,
-                                  position: (block.position ?? 0) + 1,
-                              }
-                            : latestBlock;
-                    })
-                    .concat(optimisticBlock)
-                    .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+                    return (block.position ?? 0) >= position
+                        ? {
+                              ...latestBlock,
+                              position: (block.position ?? 0) + 1,
+                          }
+                        : latestBlock;
+                });
+                const insertionIndex = nextBlocks.findIndex(
+                    (block) => (block.position ?? 0) > position
+                );
+                nextBlocks.splice(
+                    insertionIndex < 0 ? nextBlocks.length : insertionIndex,
+                    0,
+                    optimisticBlock
+                );
 
                 blocksRef.current = nextBlocks;
                 return nextBlocks;
@@ -182,14 +297,17 @@ export function useEditorPersistence({
                 isCreatingBlockRef.current = false;
             });
 
-            const creationPromise = creationQueueRef.current
-                .catch(() => undefined)
-                .then(() =>
-                    createBlock(blockId, pageId, position, type, content)
-                );
+            let resolveCreation: (block: Block | null) => void = () => {};
+            const creationPromise = new Promise<Block | null>((resolve) => {
+                resolveCreation = resolve;
+            });
 
             pendingCreationsRef.current.set(blockId, creationPromise);
-            creationQueueRef.current = creationPromise.then(() => undefined);
+            creationBatchRef.current.set(blockId, {
+                blockId,
+                resolve: resolveCreation,
+            });
+            scheduleCreationBatch();
 
             void creationPromise.then((createdBlock) => {
                 pendingCreationsRef.current.delete(blockId);
@@ -213,8 +331,17 @@ export function useEditorPersistence({
                     return;
                 }
 
+                const localText = dirtyContentRef.current.get(blockId);
+                if (
+                    localText !== undefined &&
+                    createdBlock.content.text === localText
+                ) {
+                    dirtyContentRef.current.delete(blockId);
+                    cancel(`block-${blockId}`);
+                }
+
                 setBlocks((currentBlocks) => {
-                    const localText = dirtyContentRef.current.get(blockId);
+                    const pendingText = dirtyContentRef.current.get(blockId);
                     const nextBlocks = currentBlocks.map((block) =>
                         block.id === blockId
                             ? {
@@ -223,11 +350,11 @@ export function useEditorPersistence({
                                   workspace_id: block.workspace_id,
                                   user_id: block.user_id,
                                   content:
-                                      localText === undefined
+                                      pendingText === undefined
                                           ? createdBlock.content
                                           : {
                                                 ...createdBlock.content,
-                                                text: localText,
+                                                text: pendingText,
                                             },
                               }
                             : block
@@ -237,15 +364,19 @@ export function useEditorPersistence({
                 });
             });
 
-            return creationPromise.then(Boolean);
+            return {
+                blockId,
+                persisted: creationPromise.then(Boolean),
+            };
         },
         [
             blocksRef,
-            createBlock,
+            cancel,
             dirtyContentRef,
             isCreatingBlockRef,
             locallyCreatedIdsRef,
             pageId,
+            scheduleCreationBatch,
             setBlocks,
             setFocusedBlock,
             setFocusPosition,

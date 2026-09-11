@@ -103,7 +103,7 @@ export const FileBlock = memo(
                             'w-full min-w-0 rounded-md border border-transparent bg-muted/30 p-1.5 text-left transition-[border-color,box-shadow] duration-150 hover:border-border hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                             !fileUrl && 'cursor-not-allowed opacity-70'
                         )}
-                        disabled={!fileUrl}
+                        aria-disabled={!fileUrl}
                         data-editor-container>
                         {!isImageFile && (
                             <FilePreview

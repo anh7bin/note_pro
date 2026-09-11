@@ -8,6 +8,7 @@ interface UseTableEditorConfigProps {
     onFocusRef: React.MutableRefObject<(() => void) | undefined>;
     onBlurRef: React.MutableRefObject<(() => void) | undefined>;
     onSaveImmediateRef: React.MutableRefObject<(() => void) | undefined>;
+    onDeleteBlockRef: React.MutableRefObject<(() => void) | undefined>;
     prevValueRef: React.MutableRefObject<string>;
 }
 
@@ -17,11 +18,21 @@ export function useTableEditorConfig({
     onFocusRef,
     onBlurRef,
     onSaveImmediateRef,
+    onDeleteBlockRef,
     prevValueRef,
 }: UseTableEditorConfigProps) {
     const isComposingRef = useRef(false);
 
-    const extensions = useMemo(() => createTableExtensions(), []);
+    const extensions = useMemo(
+        () =>
+            createTableExtensions(() => {
+                onDeleteBlockRef.current?.();
+                // Always consume Backspace here so the table structure is not
+                // modified when this is the document's final block.
+                return true;
+            }),
+        [onDeleteBlockRef]
+    );
 
     const handleDOMEvents = useMemo(
         () => ({
