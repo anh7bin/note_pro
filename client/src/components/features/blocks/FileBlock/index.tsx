@@ -12,6 +12,7 @@ import {
 } from '@/lib/fileUtils';
 import { BlockActionMenu } from '@/components/features/page/BlockActionMenu';
 import { ImageModal } from '@/components/features/page/ImageModal';
+import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
 import { FileTypeIcon } from '@/components/ui/file-type-icon';
 import type { FileBlockProps } from '../types';
 
@@ -173,9 +174,9 @@ const FilePreview = memo(function FilePreview({
                 <FileTypeIcon extension={fileExtension} className="h-11 w-9" />
             </div>
             <div className="flex-1 min-w-0">
-                <p className="truncate text-sm font-semibold" title={fileName}>
-                    {fileName}
-                </p>
+                <TruncatedTooltip text={fileName}>
+                    <p className="truncate text-sm font-semibold">{fileName}</p>
+                </TruncatedTooltip>
                 <p className="truncate text-xs text-muted-foreground">
                     {fileKind}
                     {fileSize ? ` · ${fileSize}` : ''}

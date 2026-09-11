@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
 import { FileTypeIcon } from '@/components/ui/file-type-icon';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -69,28 +70,30 @@ export function FileUploadPreview({
                         />
                     </div>
                     <div className="min-w-0 flex-1">
-                        <p
-                            className="truncate text-sm font-semibold"
-                            title={fileName}>
-                            {fileName}
-                        </p>
+                        <TruncatedTooltip text={fileName}>
+                            <p className="truncate text-sm font-semibold">
+                                {fileName}
+                            </p>
+                        </TruncatedTooltip>
                         <div
                             className={cn(
                                 'mt-0.5 flex items-center gap-2 text-xs text-muted-foreground',
                                 hasError && 'text-destructive'
                             )}>
-                            <span className="truncate" title={statusText}>
-                                {statusText}
-                                {!hasError && (
-                                    <>
-                                        {' · '}
-                                        {extension?.toUpperCase() || 'FILE'}
-                                        {readableSize
-                                            ? ` · ${readableSize}`
-                                            : ''}
-                                    </>
-                                )}
-                            </span>
+                            <TruncatedTooltip text={statusText}>
+                                <span className="truncate">
+                                    {statusText}
+                                    {!hasError && (
+                                        <>
+                                            {' · '}
+                                            {extension?.toUpperCase() || 'FILE'}
+                                            {readableSize
+                                                ? ` · ${readableSize}`
+                                                : ''}
+                                        </>
+                                    )}
+                                </span>
+                            </TruncatedTooltip>
                             {!hasError && (
                                 <span className="ml-auto shrink-0 tabular-nums">
                                     {normalizedProgress}%

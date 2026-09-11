@@ -1,5 +1,6 @@
 'use client';
 
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -70,18 +71,22 @@ export const BlockInteractions = memo(function BlockInteractions({
     const reactionGroups = useMemo(() => {
         const groups = new Map<
             string,
-            { count: number; reactedByCurrentUser: boolean; names: string[] }
+            {
+                count: number;
+                reactedByCurrentUser: boolean;
+                users: (typeof reactions)[number]['user'][];
+            }
         >();
 
         reactions.forEach((reaction) => {
             const group = groups.get(reaction.emoji) ?? {
                 count: 0,
                 reactedByCurrentUser: false,
-                names: [],
+                users: [],
             };
             group.count += 1;
             group.reactedByCurrentUser ||= reaction.user_id === currentUser.id;
-            group.names.push(reaction.user.name || 'Someone');
+            group.users.push(reaction.user);
             groups.set(reaction.emoji, group);
         });
 
@@ -322,26 +327,70 @@ export const BlockInteractions = memo(function BlockInteractions({
             {(reactionGroups.length > 0 || latestComment) && (
                 <div className="flex flex-wrap items-center gap-1.5 pb-0.5 pt-1">
                     {reactionGroups.map(
-                        ([emoji, { count, reactedByCurrentUser, names }]) => (
-                            <button
-                                key={emoji}
-                                type="button"
-                                aria-pressed={reactedByCurrentUser}
-                                aria-label={`${emoji} reaction from ${names.join(', ')}`}
-                                title={names.join(', ')}
-                                className={cn(
-                                    'inline-flex h-7 cursor-pointer items-center gap-1 rounded-full border px-2 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
-                                    reactedByCurrentUser
-                                        ? 'border-primary/40 bg-primary/10 text-foreground'
-                                        : 'border-border bg-muted/60 hover:bg-accent'
-                                )}
-                                onClick={() =>
-                                    void toggleReaction(blockId, emoji)
-                                }>
-                                <span aria-hidden="true">{emoji}</span>
-                                <span>{count}</span>
-                            </button>
-                        )
+                        ([emoji, { count, reactedByCurrentUser, users }]) => {
+                            const names = users.map(
+                                (user) => user.name || 'Unknown user'
+                            );
+
+                            return (
+                                <SimpleTooltip
+                                    key={emoji}
+                                    side="bottom"
+                                    className="max-h-72 min-w-44 overflow-y-auto rounded-lg border border-border bg-popover p-2 text-popover-foreground shadow-lg"
+                                    title={
+                                        <>
+                                            <p className="px-1 pb-1.5 text-[11px] font-medium text-muted-foreground">
+                                                {count}{' '}
+                                                {count === 1
+                                                    ? 'reaction'
+                                                    : 'reactions'}
+                                            </p>
+                                            <div className="space-y-1">
+                                                {users.map((user) => (
+                                                    <div
+                                                        key={user.id}
+                                                        className="flex items-center gap-2 rounded-md px-1 py-1">
+                                                        <Avatar className="h-6 w-6">
+                                                            <AvatarImage
+                                                                src={
+                                                                    user.avatar_url ||
+                                                                    undefined
+                                                                }
+                                                            />
+                                                            <AvatarFallback className="text-[9px]">
+                                                                {getInitials(
+                                                                    user.name
+                                                                )}
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="max-w-56 truncate text-xs font-medium">
+                                                            {user.name ||
+                                                                'Unknown user'}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </>
+                                    }>
+                                    <button
+                                        type="button"
+                                        aria-pressed={reactedByCurrentUser}
+                                        aria-label={`${emoji} reaction from ${names.join(', ')}`}
+                                        className={cn(
+                                            'inline-flex h-7 cursor-pointer items-center gap-1 rounded-full border px-2 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                                            reactedByCurrentUser
+                                                ? 'border-primary/40 bg-primary/10 text-foreground'
+                                                : 'border-border bg-muted/60 hover:bg-accent'
+                                        )}
+                                        onClick={() =>
+                                            void toggleReaction(blockId, emoji)
+                                        }>
+                                        <span aria-hidden="true">{emoji}</span>
+                                        <span>{count}</span>
+                                    </button>
+                                </SimpleTooltip>
+                            );
+                        }
                     )}
 
                     {latestComment && (

@@ -1,5 +1,6 @@
 'use client';
 
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import {
     Download,
@@ -126,68 +127,76 @@ export function ImageModal({
                 <DialogTitle className="sr-only">{fileName}</DialogTitle>
                 <div className="absolute inset-x-2 top-2 z-50 flex items-start justify-between gap-2 animate-in fade-in-50 slide-in-from-top-2 sm:inset-x-4 sm:top-4">
                     <div className="flex flex-wrap items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={handleDownload}
-                            className={controlClassName}
-                            aria-label="Download image"
-                            title="Download">
-                            <Download size={20} />
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleZoomOut}
-                            disabled={zoom <= 0.5}
-                            className={controlClassName}
-                            aria-label="Zoom out"
-                            title="Zoom out">
-                            <ZoomOut size={20} />
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleZoomReset}
-                            className={`${controlClassName} min-w-14 text-sm font-medium tabular-nums`}
-                            aria-label="Reset zoom"
-                            title="Reset zoom">
-                            {Math.round(zoom * 100)}%
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleZoomIn}
-                            disabled={zoom >= 3}
-                            className={controlClassName}
-                            aria-label="Zoom in"
-                            title="Zoom in">
-                            <ZoomIn size={20} />
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleFullscreen}
-                            className={controlClassName}
-                            aria-label={
-                                isFullscreen
-                                    ? 'Exit fullscreen'
-                                    : 'Enter fullscreen'
-                            }
+                        <SimpleTooltip title="Download" side="bottom">
+                            <button
+                                type="button"
+                                onClick={handleDownload}
+                                className={controlClassName}
+                                aria-label="Download image">
+                                <Download size={20} />
+                            </button>
+                        </SimpleTooltip>
+                        <SimpleTooltip title="Zoom out" side="bottom">
+                            <button
+                                type="button"
+                                onClick={handleZoomOut}
+                                disabled={zoom <= 0.5}
+                                className={controlClassName}
+                                aria-label="Zoom out">
+                                <ZoomOut size={20} />
+                            </button>
+                        </SimpleTooltip>
+                        <SimpleTooltip title="Reset zoom" side="bottom">
+                            <button
+                                type="button"
+                                onClick={handleZoomReset}
+                                className={`${controlClassName} min-w-14 text-sm font-medium tabular-nums`}
+                                aria-label="Reset zoom">
+                                {Math.round(zoom * 100)}%
+                            </button>
+                        </SimpleTooltip>
+                        <SimpleTooltip title="Zoom in" side="bottom">
+                            <button
+                                type="button"
+                                onClick={handleZoomIn}
+                                disabled={zoom >= 3}
+                                className={controlClassName}
+                                aria-label="Zoom in">
+                                <ZoomIn size={20} />
+                            </button>
+                        </SimpleTooltip>
+                        <SimpleTooltip
                             title={
                                 isFullscreen ? 'Exit fullscreen' : 'Fullscreen'
-                            }>
-                            {isFullscreen ? (
-                                <Minimize2 size={20} />
-                            ) : (
-                                <Maximize2 size={20} />
-                            )}
-                        </button>
+                            }
+                            side="bottom">
+                            <button
+                                type="button"
+                                onClick={handleFullscreen}
+                                className={controlClassName}
+                                aria-label={
+                                    isFullscreen
+                                        ? 'Exit fullscreen'
+                                        : 'Enter fullscreen'
+                                }>
+                                {isFullscreen ? (
+                                    <Minimize2 size={20} />
+                                ) : (
+                                    <Maximize2 size={20} />
+                                )}
+                            </button>
+                        </SimpleTooltip>
                     </div>
 
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className={controlClassName}
-                        aria-label="Close modal"
-                        title="Close">
-                        <X size={24} />
-                    </button>
+                    <SimpleTooltip title="Close" side="bottom">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className={controlClassName}
+                            aria-label="Close modal">
+                            <X size={24} />
+                        </button>
+                    </SimpleTooltip>
                 </div>
 
                 <div className="relative flex h-full w-full items-center justify-center overflow-auto p-4 pt-16 animate-in fade-in-50 zoom-in-95 sm:p-8 sm:pt-20">

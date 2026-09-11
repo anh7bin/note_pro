@@ -1,3 +1,4 @@
+import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
 import { FileTypeIcon } from '@/components/ui/file-type-icon';
 import { getFileBadge, getFileExtension } from '@/lib/fileUtils';
 import { Paperclip } from 'lucide-react';
@@ -69,9 +70,11 @@ function AttachmentRow({
                 <FileTypeIcon extension={extension} className="h-9 w-7" />
             </div>
             <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-semibold" title={file.name}>
-                    {file.name}
-                </p>
+                <TruncatedTooltip text={file.name}>
+                    <p className="truncate text-xs font-semibold">
+                        {file.name}
+                    </p>
+                </TruncatedTooltip>
                 <p className="truncate text-xs text-muted-foreground">
                     {extension?.toUpperCase() ?? badge.label}
                     {file.size ? ` · ${file.size}` : ''}
