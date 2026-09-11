@@ -3,6 +3,7 @@
 - "!include public_block_comments.yaml"
 - "!include public_block_reactions.yaml"
 - "!include public_document_link_access.yaml"
+- "!include public_document_presence.yaml"
 - "!include public_block_tags.yaml"
 - "!include public_blocks.yaml"
 - "!include public_files.yaml"

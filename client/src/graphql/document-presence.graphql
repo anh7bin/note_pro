@@ -1,0 +1,38 @@
+subscription DocumentPresence($documentId: uuid!) {
+    document_presence(
+        where: { document_id: { _eq: $documentId } }
+        order_by: { last_seen: desc }
+    ) {
+        user_id
+        last_seen
+        user {
+            id
+            name
+            email
+            avatar_url
+        }
+    }
+}
+
+mutation HeartbeatDocumentPresence($sessionId: uuid!, $documentId: uuid!) {
+    insert_document_presence_one(
+        object: { session_id: $sessionId, document_id: $documentId }
+        on_conflict: {
+            constraint: document_presence_pkey
+            update_columns: [last_seen]
+        }
+    ) {
+        session_id
+    }
+}
+
+mutation LeaveDocumentPresence($sessionId: uuid!, $documentId: uuid!) {
+    delete_document_presence(
+        where: {
+            session_id: { _eq: $sessionId }
+            document_id: { _eq: $documentId }
+        }
+    ) {
+        affected_rows
+    }
+}

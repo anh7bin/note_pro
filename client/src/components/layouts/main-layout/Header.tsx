@@ -24,6 +24,7 @@ import { SettingButton } from './components/SettingButton';
 import { ShareExportButton } from './components/ShareExportButton';
 import { useDocumentPermission } from '@/hooks/useDocumentPermission';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
+import { DocumentPresence } from './components/DocumentPresence';
 
 interface Props {
     workspaceSlug: string;
@@ -90,6 +91,7 @@ export default function Header({ workspaceSlug }: Props) {
                         {isDocumentPage && documentId && permissionType && (
                             <>
                                 <RequestEditButton documentId={documentId} />
+                                <DocumentPresence documentId={documentId} />
                                 <ShareExportButton documentId={documentId} />
                             </>
                         )}

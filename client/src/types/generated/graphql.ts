@@ -2145,6 +2145,186 @@ export type DocumentLinkAccessUpdates = {
   where: DocumentLinkAccessBoolExp;
 };
 
+/** columns and relationships of "document_presence" */
+export type DocumentPresence = {
+  __typename?: 'document_presence';
+  created_at: Scalars['timestamptz']['output'];
+  /** An object relationship */
+  document: Blocks;
+  document_id: Scalars['uuid']['output'];
+  last_seen: Scalars['timestamptz']['output'];
+  session_id: Scalars['uuid']['output'];
+  /** An object relationship */
+  user: Users;
+  user_id: Scalars['uuid']['output'];
+};
+
+/** aggregated selection of "document_presence" */
+export type DocumentPresenceAggregate = {
+  __typename?: 'document_presence_aggregate';
+  aggregate?: Maybe<DocumentPresenceAggregateFields>;
+  nodes: Array<DocumentPresence>;
+};
+
+/** aggregate fields of "document_presence" */
+export type DocumentPresenceAggregateFields = {
+  __typename?: 'document_presence_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<DocumentPresenceMaxFields>;
+  min?: Maybe<DocumentPresenceMinFields>;
+};
+
+
+/** aggregate fields of "document_presence" */
+export type DocumentPresenceAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<DocumentPresenceSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "document_presence". All fields are combined with a logical 'AND'. */
+export type DocumentPresenceBoolExp = {
+  _and?: InputMaybe<Array<DocumentPresenceBoolExp>>;
+  _not?: InputMaybe<DocumentPresenceBoolExp>;
+  _or?: InputMaybe<Array<DocumentPresenceBoolExp>>;
+  created_at?: InputMaybe<TimestamptzComparisonExp>;
+  document?: InputMaybe<BlocksBoolExp>;
+  document_id?: InputMaybe<UuidComparisonExp>;
+  last_seen?: InputMaybe<TimestamptzComparisonExp>;
+  session_id?: InputMaybe<UuidComparisonExp>;
+  user?: InputMaybe<UsersBoolExp>;
+  user_id?: InputMaybe<UuidComparisonExp>;
+};
+
+/** unique or primary key constraints on table "document_presence" */
+export enum DocumentPresenceConstraint {
+  /** unique or primary key constraint on columns "session_id" */
+  DocumentPresencePkey = 'document_presence_pkey'
+}
+
+/** input type for inserting data into table "document_presence" */
+export type DocumentPresenceInsertInput = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document?: InputMaybe<BlocksObjRelInsertInput>;
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  session_id?: InputMaybe<Scalars['uuid']['input']>;
+  user?: InputMaybe<UsersObjRelInsertInput>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type DocumentPresenceMaxFields = {
+  __typename?: 'document_presence_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  document_id?: Maybe<Scalars['uuid']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  session_id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** aggregate min on columns */
+export type DocumentPresenceMinFields = {
+  __typename?: 'document_presence_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  document_id?: Maybe<Scalars['uuid']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  session_id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** response of any mutation on the table "document_presence" */
+export type DocumentPresenceMutationResponse = {
+  __typename?: 'document_presence_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<DocumentPresence>;
+};
+
+/** on_conflict condition type for table "document_presence" */
+export type DocumentPresenceOnConflict = {
+  constraint: DocumentPresenceConstraint;
+  update_columns?: Array<DocumentPresenceUpdateColumn>;
+  where?: InputMaybe<DocumentPresenceBoolExp>;
+};
+
+/** Ordering options when selecting data from "document_presence". */
+export type DocumentPresenceOrderBy = {
+  created_at?: InputMaybe<OrderBy>;
+  document?: InputMaybe<BlocksOrderBy>;
+  document_id?: InputMaybe<OrderBy>;
+  last_seen?: InputMaybe<OrderBy>;
+  session_id?: InputMaybe<OrderBy>;
+  user?: InputMaybe<UsersOrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: document_presence */
+export type DocumentPresencePkColumnsInput = {
+  session_id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "document_presence" */
+export enum DocumentPresenceSelectColumn {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DocumentId = 'document_id',
+  /** column name */
+  LastSeen = 'last_seen',
+  /** column name */
+  SessionId = 'session_id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** input type for updating data in table "document_presence" */
+export type DocumentPresenceSetInput = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  session_id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** Streaming cursor of the table "document_presence" */
+export type DocumentPresenceStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: DocumentPresenceStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type DocumentPresenceStreamCursorValueInput = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  session_id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "document_presence" */
+export enum DocumentPresenceUpdateColumn {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DocumentId = 'document_id',
+  /** column name */
+  LastSeen = 'last_seen',
+  /** column name */
+  SessionId = 'session_id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+export type DocumentPresenceUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<DocumentPresenceSetInput>;
+  /** filter the rows which have to be updated */
+  where: DocumentPresenceBoolExp;
+};
+
 /** columns and relationships of "files" */
 export type Files = {
   __typename?: 'files';
@@ -2769,6 +2949,10 @@ export type MutationRoot = {
   delete_document_link_access?: Maybe<DocumentLinkAccessMutationResponse>;
   /** delete single row from the table: "document_link_access" */
   delete_document_link_access_by_pk?: Maybe<DocumentLinkAccess>;
+  /** delete data from the table: "document_presence" */
+  delete_document_presence?: Maybe<DocumentPresenceMutationResponse>;
+  /** delete single row from the table: "document_presence" */
+  delete_document_presence_by_pk?: Maybe<DocumentPresence>;
   /** delete data from the table: "files" */
   delete_files?: Maybe<FilesMutationResponse>;
   /** delete single row from the table: "files" */
@@ -2825,6 +3009,10 @@ export type MutationRoot = {
   insert_document_link_access?: Maybe<DocumentLinkAccessMutationResponse>;
   /** insert a single row into the table: "document_link_access" */
   insert_document_link_access_one?: Maybe<DocumentLinkAccess>;
+  /** insert data into the table: "document_presence" */
+  insert_document_presence?: Maybe<DocumentPresenceMutationResponse>;
+  /** insert a single row into the table: "document_presence" */
+  insert_document_presence_one?: Maybe<DocumentPresence>;
   /** insert data into the table: "files" */
   insert_files?: Maybe<FilesMutationResponse>;
   /** insert a single row into the table: "files" */
@@ -2895,6 +3083,12 @@ export type MutationRoot = {
   update_document_link_access_by_pk?: Maybe<DocumentLinkAccess>;
   /** update multiples rows of table: "document_link_access" */
   update_document_link_access_many?: Maybe<Array<Maybe<DocumentLinkAccessMutationResponse>>>;
+  /** update data of the table: "document_presence" */
+  update_document_presence?: Maybe<DocumentPresenceMutationResponse>;
+  /** update single row of the table: "document_presence" */
+  update_document_presence_by_pk?: Maybe<DocumentPresence>;
+  /** update multiples rows of table: "document_presence" */
+  update_document_presence_many?: Maybe<Array<Maybe<DocumentPresenceMutationResponse>>>;
   /** update data of the table: "files" */
   update_files?: Maybe<FilesMutationResponse>;
   /** update single row of the table: "files" */
@@ -3023,6 +3217,18 @@ export type MutationRootDeleteDocumentLinkAccessArgs = {
 /** mutation root */
 export type MutationRootDeleteDocumentLinkAccessByPkArgs = {
   document_id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type MutationRootDeleteDocumentPresenceArgs = {
+  where: DocumentPresenceBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootDeleteDocumentPresenceByPkArgs = {
+  session_id: Scalars['uuid']['input'];
 };
 
 
@@ -3205,6 +3411,20 @@ export type MutationRootInsertDocumentLinkAccessArgs = {
 export type MutationRootInsertDocumentLinkAccessOneArgs = {
   object: DocumentLinkAccessInsertInput;
   on_conflict?: InputMaybe<DocumentLinkAccessOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertDocumentPresenceArgs = {
+  objects: Array<DocumentPresenceInsertInput>;
+  on_conflict?: InputMaybe<DocumentPresenceOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertDocumentPresenceOneArgs = {
+  object: DocumentPresenceInsertInput;
+  on_conflict?: InputMaybe<DocumentPresenceOnConflict>;
 };
 
 
@@ -3455,6 +3675,26 @@ export type MutationRootUpdateDocumentLinkAccessByPkArgs = {
 /** mutation root */
 export type MutationRootUpdateDocumentLinkAccessManyArgs = {
   updates: Array<DocumentLinkAccessUpdates>;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateDocumentPresenceArgs = {
+  _set?: InputMaybe<DocumentPresenceSetInput>;
+  where: DocumentPresenceBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateDocumentPresenceByPkArgs = {
+  _set?: InputMaybe<DocumentPresenceSetInput>;
+  pk_columns: DocumentPresencePkColumnsInput;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateDocumentPresenceManyArgs = {
+  updates: Array<DocumentPresenceUpdates>;
 };
 
 
@@ -3941,6 +4181,12 @@ export type QueryRoot = {
   document_link_access_aggregate: DocumentLinkAccessAggregate;
   /** fetch data from the table: "document_link_access" using primary key columns */
   document_link_access_by_pk?: Maybe<DocumentLinkAccess>;
+  /** fetch data from the table: "document_presence" */
+  document_presence: Array<DocumentPresence>;
+  /** fetch aggregated fields from the table: "document_presence" */
+  document_presence_aggregate: DocumentPresenceAggregate;
+  /** fetch data from the table: "document_presence" using primary key columns */
+  document_presence_by_pk?: Maybe<DocumentPresence>;
   /** An array relationship */
   files: Array<Files>;
   /** An aggregate relationship */
@@ -4146,6 +4392,29 @@ export type QueryRootDocumentLinkAccessAggregateArgs = {
 
 export type QueryRootDocumentLinkAccessByPkArgs = {
   document_id: Scalars['uuid']['input'];
+};
+
+
+export type QueryRootDocumentPresenceArgs = {
+  distinct_on?: InputMaybe<Array<DocumentPresenceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentPresenceOrderBy>>;
+  where?: InputMaybe<DocumentPresenceBoolExp>;
+};
+
+
+export type QueryRootDocumentPresenceAggregateArgs = {
+  distinct_on?: InputMaybe<Array<DocumentPresenceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentPresenceOrderBy>>;
+  where?: InputMaybe<DocumentPresenceBoolExp>;
+};
+
+
+export type QueryRootDocumentPresenceByPkArgs = {
+  session_id: Scalars['uuid']['input'];
 };
 
 
@@ -4367,6 +4636,14 @@ export type SubscriptionRoot = {
   document_link_access_by_pk?: Maybe<DocumentLinkAccess>;
   /** fetch data from the table in a streaming manner: "document_link_access" */
   document_link_access_stream: Array<DocumentLinkAccess>;
+  /** fetch data from the table: "document_presence" */
+  document_presence: Array<DocumentPresence>;
+  /** fetch aggregated fields from the table: "document_presence" */
+  document_presence_aggregate: DocumentPresenceAggregate;
+  /** fetch data from the table: "document_presence" using primary key columns */
+  document_presence_by_pk?: Maybe<DocumentPresence>;
+  /** fetch data from the table in a streaming manner: "document_presence" */
+  document_presence_stream: Array<DocumentPresence>;
   /** An array relationship */
   files: Array<Files>;
   /** An aggregate relationship */
@@ -4635,6 +4912,36 @@ export type SubscriptionRootDocumentLinkAccessStreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<DocumentLinkAccessStreamCursorInput>>;
   where?: InputMaybe<DocumentLinkAccessBoolExp>;
+};
+
+
+export type SubscriptionRootDocumentPresenceArgs = {
+  distinct_on?: InputMaybe<Array<DocumentPresenceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentPresenceOrderBy>>;
+  where?: InputMaybe<DocumentPresenceBoolExp>;
+};
+
+
+export type SubscriptionRootDocumentPresenceAggregateArgs = {
+  distinct_on?: InputMaybe<Array<DocumentPresenceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentPresenceOrderBy>>;
+  where?: InputMaybe<DocumentPresenceBoolExp>;
+};
+
+
+export type SubscriptionRootDocumentPresenceByPkArgs = {
+  session_id: Scalars['uuid']['input'];
+};
+
+
+export type SubscriptionRootDocumentPresenceStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<DocumentPresenceStreamCursorInput>>;
+  where?: InputMaybe<DocumentPresenceBoolExp>;
 };
 
 

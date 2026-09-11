@@ -1,0 +1,89 @@
+table:
+  name: document_presence
+  schema: public
+object_relationships:
+  - name: document
+    using:
+      foreign_key_constraint_on: document_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - document:
+              _and:
+                - type:
+                    _eq: page
+                - deleted_at:
+                    _is_null: true
+                - _or:
+                    - workspace:
+                        created_by:
+                          _eq: X-Hasura-User-Id
+                    - access_requests:
+                        requester_id:
+                          _eq: X-Hasura-User-Id
+                        status:
+                          _eq: approved
+                    - link_access:
+                        permission_type:
+                          _in:
+                            - read
+                            - write
+      set:
+        user_id: X-Hasura-User-Id
+      columns:
+        - document_id
+        - session_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - created_at
+        - document_id
+        - last_seen
+        - session_id
+        - user_id
+      filter:
+        document:
+          _and:
+            - type:
+                _eq: page
+            - deleted_at:
+                _is_null: true
+            - _or:
+                - workspace:
+                    created_by:
+                      _eq: X-Hasura-User-Id
+                - access_requests:
+                    requester_id:
+                      _eq: X-Hasura-User-Id
+                    status:
+                      _eq: approved
+                - link_access:
+                    permission_type:
+                      _in:
+                        - read
+                        - write
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - last_seen
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
