@@ -4,12 +4,13 @@ import { DocumentGrid } from '@/components/features/page/DocumentGrid';
 import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import { Button } from '@/components/ui/button';
 import { PageLoading } from '@/components/ui/loading';
+import { Separator } from '@/components/ui/separator';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useGetAllDocsQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useCreateDocument, useWorkspace } from '@/hooks';
 import { Document } from '@/types/app';
 import { useMemo, useEffect } from 'react';
-import { FilePlus2, Files } from 'lucide-react';
+import { FilePlus2, Files, Plus } from 'lucide-react';
 import {
     EmptyState,
     PageContent,
@@ -41,19 +42,24 @@ export default function AllDocsPage() {
     ) : (
         <PageShell>
             <PageHeader>
-                <PageTitle>All Docs</PageTitle>
-                <div className="flex flex-wrap items-center justify-end gap-2">
-                    <SelectionActionBar
-                        documentIds={allDocs.map((document) => document.id)}
-                    />
+                <div className="flex items-center gap-2">
                     <Button
-                        size="sm"
+                        variant="outline"
+                        size="icon"
                         onClick={createNewDocument}
-                        disabled={!canCreate || isCreating}>
-                        <FilePlus2 />
-                        {isCreating ? 'Creating…' : 'New Doc'}
+                        disabled={!canCreate || isCreating}
+                        aria-label={
+                            isCreating ? 'Creating document' : 'Create document'
+                        }
+                        aria-busy={isCreating}>
+                        <Plus />
                     </Button>
+                    <Separator orientation="vertical" />
+                    <PageTitle>All Docs</PageTitle>
                 </div>
+                <SelectionActionBar
+                    documentIds={allDocs.map((document) => document.id)}
+                />
             </PageHeader>
 
             <PageContent>
