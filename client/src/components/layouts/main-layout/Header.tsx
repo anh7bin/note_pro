@@ -1,5 +1,11 @@
 'use client';
 
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
+import { Button } from '@/components/ui/button';
+import { LanguageMenu } from '@/components/ui/language-switcher';
+import { PopoverPanel } from '@/components/ui/popover-panel';
+import { useI18n } from '@/contexts/I18nContext';
+import { useDocumentPermission } from '@/hooks/useDocumentPermission';
 import { SearchInputField } from 'components/features/search/SearchInputField';
 import { ThemeToggle } from 'components/ui/theme-toggle';
 import { TopLoadingBar } from 'components/ui/TopLoadingBar';
@@ -7,22 +13,17 @@ import { useDocumentAccess } from 'contexts/DocumentAccessContext';
 import { useLoading } from 'contexts/LoadingContext';
 import { useSidebar } from 'contexts/SidebarContext';
 import { ROUTES } from 'lib/routes';
+import { Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { PanelLeft, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { PopoverPanel } from '@/components/ui/popover-panel';
 import { useState } from 'react';
+import { PiSidebar } from 'react-icons/pi';
+import { DocumentPresence } from './components/DocumentPresence';
 import { NotificationButton } from './components/NotificationButton';
 import { RequestEditButton } from './components/RequestEditButton';
 import { SettingButton } from './components/SettingButton';
 import { ShareExportButton } from './components/ShareExportButton';
-import { useDocumentPermission } from '@/hooks/useDocumentPermission';
-import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
-import { DocumentPresence } from './components/DocumentPresence';
-import { useI18n } from '@/contexts/I18nContext';
-import { LanguageMenu } from '@/components/ui/language-switcher';
 
 interface Props {
     workspaceSlug: string;
@@ -54,7 +55,7 @@ export default function Header({ workspaceSlug }: Props) {
             <>
                 <TopLoadingBar isLoading={isLoading} />
                 <header className="fixed inset-x-0 top-0 z-50 grid h-[var(--header-height)] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 border-b border-border-subtle bg-background/95 px-3 backdrop-blur-sm sm:px-4">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-0.5">
                         <Button asChild variant="ghost" size="icon">
                             <Link
                                 href={ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug)}
@@ -62,8 +63,8 @@ export default function Header({ workspaceSlug }: Props) {
                                 <Image
                                     src="/images/logo.png"
                                     alt={t('homePage')}
-                                    width={24}
-                                    height={24}
+                                    width={20}
+                                    height={20}
                                     priority
                                 />
                             </Link>
@@ -74,7 +75,7 @@ export default function Header({ workspaceSlug }: Props) {
                                 variant="ghost"
                                 size="icon"
                                 onClick={toggle}>
-                                <PanelLeft />
+                                <PiSidebar />
                             </Button>
                         </SimpleTooltip>
                     </div>
