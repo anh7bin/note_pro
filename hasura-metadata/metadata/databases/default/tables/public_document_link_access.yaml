@@ -9,9 +9,18 @@ insert_permissions:
   - role: user
     permission:
       check:
-        document:
-          user_id:
-            _eq: X-Hasura-User-Id
+        _or:
+          - document:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - document:
+              access_requests:
+                permission_type:
+                  _eq: write
+                requester_id:
+                  _eq: X-Hasura-User-Id
+                status:
+                  _eq: approved
       columns:
         - document_id
         - permission_type
@@ -31,13 +40,31 @@ update_permissions:
         - permission_type
         - updated_at
       filter:
-        document:
-          user_id:
-            _eq: X-Hasura-User-Id
+        _or:
+          - document:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - document:
+              access_requests:
+                permission_type:
+                  _eq: write
+                requester_id:
+                  _eq: X-Hasura-User-Id
+                status:
+                  _eq: approved
       check:
-        document:
-          user_id:
-            _eq: X-Hasura-User-Id
+        _or:
+          - document:
+              user_id:
+                _eq: X-Hasura-User-Id
+          - document:
+              access_requests:
+                permission_type:
+                  _eq: write
+                requester_id:
+                  _eq: X-Hasura-User-Id
+                status:
+                  _eq: approved
 delete_permissions:
   - role: user
     permission:

@@ -26,6 +26,7 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
     const {
         currentUserId,
         isOwner,
+        canManageLinkAccess,
         isLoading,
         sharedUsers,
         owner,
@@ -118,7 +119,9 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_9rem]">
                     <PermissionSelector
                         value={linkPermission}
-                        disabled={!isOwner || isUpdatingLinkPermission}
+                        disabled={
+                            !canManageLinkAccess || isUpdatingLinkPermission
+                        }
                         onChange={(value: LinkPermissionType) =>
                             void onLinkPermissionChange(value)
                         }
@@ -132,7 +135,9 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
                     </Button>
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">
-                    {isOwner ? t('chooseLinkAccess') : t('ownerOnlyLinkAccess')}
+                    {canManageLinkAccess
+                        ? t('chooseLinkAccess')
+                        : t('editAccessRequiredForLinkAccess')}
                 </p>
             </section>
         </div>

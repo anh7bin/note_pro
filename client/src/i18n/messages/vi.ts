@@ -289,8 +289,8 @@ export const vi: Messages = {
     addEmails: 'Thêm email để mời',
     linkAccess: 'Quyền truy cập liên kết',
     chooseLinkAccess: 'Chọn người có thể mở liên kết này.',
-    ownerOnlyLinkAccess:
-        'Chỉ chủ sở hữu tài liệu mới có thể thay đổi quyền truy cập liên kết.',
+    editAccessRequiredForLinkAccess:
+        'Bạn cần quyền chỉnh sửa để thay đổi quyền truy cập liên kết.',
     restrictedAccess: 'Chỉ người được cấp quyền',
     restrictedAccessDescription:
         'Chỉ người được mời mới có thể mở tài liệu này.',

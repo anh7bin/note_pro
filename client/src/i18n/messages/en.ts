@@ -295,7 +295,8 @@ export const en = {
     addEmails: 'Add emails to invite',
     linkAccess: 'Link access',
     chooseLinkAccess: 'Choose who can open this link.',
-    ownerOnlyLinkAccess: 'Only the document owner can change link access.',
+    editAccessRequiredForLinkAccess:
+        'You need edit access to change link access.',
     restrictedAccess: 'Only collaborators with access',
     restrictedAccessDescription: 'Only invited people can open this document.',
     anyoneCanView: 'Anyone with the link can view',

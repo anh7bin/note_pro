@@ -69,6 +69,12 @@ export function useDocumentSharing(documentId: string) {
     const linkPermission =
         (data?.blocks_by_pk?.link_access
             ?.permission_type as LinkPermissionType) || 'restricted';
+    const isOwner = permissionType === PermissionType.OWNER;
+    const canManageLinkAccess =
+        isOwner ||
+        sharedUsers.some(
+            (user) => user.id === currentUserId && user.role === 'editor'
+        );
 
     const onInviteUsers = useCallback(
         async (
@@ -229,7 +235,8 @@ export function useDocumentSharing(documentId: string) {
 
     return {
         currentUserId: currentUserId || undefined,
-        isOwner: permissionType === PermissionType.OWNER,
+        isOwner,
+        canManageLinkAccess,
         isLoading: !data,
         sharedUsers,
         owner,
