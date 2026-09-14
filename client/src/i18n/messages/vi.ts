@@ -64,8 +64,7 @@ export const vi: Messages = {
     accessAlreadyRequested: 'Bạn đã yêu cầu quyền truy cập tài liệu này',
 
     homePage: 'Trang chủ',
-    toggleSidebar: 'Ẩn hoặc hiện thanh bên',
-    closeSidebar: 'Đóng thanh bên',
+    toggleSidebar: 'Bật/tắt hiển thị thanh bên • Ctrl-\\',
     workspaceNavigation: 'Điều hướng không gian làm việc',
     skipToContent: 'Đi đến nội dung chính',
     allDocs: 'Tất cả tài liệu',

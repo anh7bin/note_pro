@@ -66,8 +66,7 @@ export const en = {
 
     // Navigation
     homePage: 'Home page',
-    toggleSidebar: 'Toggle sidebar visibility',
-    closeSidebar: 'Close sidebar',
+    toggleSidebar: 'Toggle sidebar visibility • Ctrl-\\',
     workspaceNavigation: 'Workspace navigation',
     skipToContent: 'Skip to main content',
     allDocs: 'All Docs',

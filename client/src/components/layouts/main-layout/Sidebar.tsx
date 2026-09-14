@@ -60,7 +60,6 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
             {isOpen && (
                 <button
                     type="button"
-                    aria-label={t('closeSidebar')}
                     className="fixed inset-x-0 bottom-0 top-[var(--header-height)] z-30 bg-black/35 md:hidden"
                     onClick={toggle}
                 />
