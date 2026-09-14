@@ -263,6 +263,7 @@ export const vi: Messages = {
 
     shareAndExport: 'Chia sẻ và xuất',
     share: 'Chia sẻ',
+    shared: 'Đã chia sẻ',
     export: 'Xuất',
     notifications: 'Thông báo',
     caughtUp: 'Bạn đã xem hết thông báo',

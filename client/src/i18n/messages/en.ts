@@ -270,6 +270,7 @@ export const en = {
     // Sharing and notifications
     shareAndExport: 'Share and export',
     share: 'Share',
+    shared: 'Shared',
     export: 'Export',
     notifications: 'Notifications',
     caughtUp: 'You are all caught up',
