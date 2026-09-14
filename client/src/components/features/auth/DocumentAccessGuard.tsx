@@ -2,7 +2,6 @@
 
 import { useGetDocumentBlocksQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useGetAccessRequestByDocumentQuery } from '@/graphql/queries/__generated__/access-request.generated';
-import { useWorkspace } from '@/hooks/useWorkspace';
 import { useAuth, useUserId } from '@/hooks/useAuth';
 import { useMemo, useEffect } from 'react';
 import { Loading } from '@/components/ui/loading';
@@ -21,7 +20,6 @@ export function DocumentAccessGuard({
 }: DocumentAccessGuardProps) {
     const { isAuthenticated } = useAuth();
     const userId = useUserId();
-    const { workspace } = useWorkspace();
     const { setHasAccess, setDocumentId } = useDocumentAccess();
 
     const { data, loading, error } = useGetDocumentBlocksQuery({
@@ -37,14 +35,14 @@ export function DocumentAccessGuard({
         );
     }, [data?.blocks, documentId]);
 
-    const isOwnDocument = rootBlock?.workspace_id === workspace?.id;
+    const isDocumentOwner = rootBlock?.user_id === userId;
     const linkPermission = rootBlock?.link_access?.permission_type;
     const hasLinkAccess =
         linkPermission === PermissionType.READ ||
         linkPermission === PermissionType.WRITE;
 
     const shouldFetchAccessRequests =
-        !loading && data?.blocks && rootBlock && !isOwnDocument;
+        !loading && data?.blocks && rootBlock && !isDocumentOwner;
 
     const { data: accessRequestData, loading: accessRequestLoading } =
         useGetAccessRequestByDocumentQuery({
@@ -61,7 +59,7 @@ export function DocumentAccessGuard({
             return false;
         }
 
-        if (!data?.blocks || !workspace?.id || !isAuthenticated) {
+        if (!data?.blocks || !userId || !isAuthenticated) {
             return false;
         }
 
@@ -69,7 +67,7 @@ export function DocumentAccessGuard({
             return false;
         }
 
-        if (isOwnDocument) {
+        if (isDocumentOwner) {
             return true;
         }
 
@@ -96,12 +94,12 @@ export function DocumentAccessGuard({
         return false;
     }, [
         data?.blocks,
-        workspace?.id,
+        userId,
         isAuthenticated,
         error,
         accessRequestData,
         rootBlock,
-        isOwnDocument,
+        isDocumentOwner,
         hasLinkAccess,
     ]);
 

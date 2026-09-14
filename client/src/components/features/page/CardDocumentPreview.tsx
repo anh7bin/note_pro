@@ -35,21 +35,6 @@ export const CardDocumentPreview = memo(function CardDocumentPreview({
         .filter(isPreviewableBlock)
         .slice(0, MAX_PREVIEW_BLOCKS);
 
-    if (previewBlocks.length === 0) {
-        return (
-            <div
-                aria-hidden="true"
-                className="pointer-events-none flex h-full min-w-0 select-none items-center justify-center rounded-md border border-dashed border-border/60 bg-muted/15">
-                <div className="flex flex-col items-center gap-1.5 text-muted-foreground/60">
-                    <FileText className="h-4 w-4" />
-                    <span className="text-[11px] font-medium">
-                        Empty document
-                    </span>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div
             aria-hidden="true"

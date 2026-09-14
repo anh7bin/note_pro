@@ -14,6 +14,7 @@ import type { EditorDocumentState, EditorPersistenceController } from './types';
 interface CreateBlockBatchInput {
     id: string;
     pageId: string;
+    workspaceId?: string | null;
     position: number;
     type: BlockType;
     content: BlockContent;
@@ -175,6 +176,7 @@ export function useEditorPersistence({
                         return {
                             id: block.id,
                             pageId,
+                            workspaceId,
                             position: block.position ?? 0,
                             type: block.type,
                             content:
@@ -205,7 +207,7 @@ export function useEditorPersistence({
             });
 
         creationQueueRef.current = batchExecution;
-    }, [blocksRef, createBlocks, dirtyContentRef, pageId]);
+    }, [blocksRef, createBlocks, dirtyContentRef, pageId, workspaceId]);
 
     const scheduleCreationBatch = useCallback(() => {
         const now = Date.now();

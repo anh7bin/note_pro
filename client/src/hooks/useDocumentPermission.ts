@@ -2,14 +2,12 @@
 
 import { useUserId } from './useAuth';
 import { useGetAccessRequestByDocumentQuery } from '@/graphql/queries/__generated__/access-request.generated';
-import { useWorkspace } from './useWorkspace';
 import { useGetDocumentBlocksQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useMemo } from 'react';
 import { AccessRequestStatus, BlockType, PermissionType } from '@/types/types';
 
 export function useDocumentPermission(documentId: string) {
     const userId = useUserId();
-    const { workspace } = useWorkspace();
 
     // Use cache-first to reuse data from DocumentAccessGuard query
     const { data: documentData, loading: documentLoading } =
@@ -26,11 +24,14 @@ export function useDocumentPermission(documentId: string) {
         );
     }, [documentData?.blocks, documentId]);
 
-    const isOwnDocument = rootBlock?.workspace_id === workspace?.id;
+    const isDocumentOwner = rootBlock?.user_id === userId;
     const linkPermission = rootBlock?.link_access?.permission_type;
 
     const shouldFetchAccessRequests =
-        !documentLoading && documentData?.blocks && rootBlock && !isOwnDocument;
+        !documentLoading &&
+        documentData?.blocks &&
+        rootBlock &&
+        !isDocumentOwner;
 
     const { data: accessRequestData } = useGetAccessRequestByDocumentQuery({
         variables: {
@@ -50,7 +51,7 @@ export function useDocumentPermission(documentId: string) {
             return { canView: false, canEdit: false, permissionType: null };
         }
 
-        if (isOwnDocument) {
+        if (isDocumentOwner) {
             return {
                 canView: true,
                 canEdit: true,
@@ -105,7 +106,7 @@ export function useDocumentPermission(documentId: string) {
         userId,
         accessRequestData,
         rootBlock,
-        isOwnDocument,
+        isDocumentOwner,
         linkPermission,
     ]);
 

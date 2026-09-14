@@ -11,7 +11,6 @@ import {
     GetDocumentBlocksQuery,
 } from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
-import { useWorkspace } from '@/hooks/useWorkspace';
 import {
     type Block as EditorBlock,
     type BlockContent,
@@ -37,6 +36,7 @@ export interface CreateBlockInput {
 export interface CreateBlockBatchInput {
     id: string;
     pageId: string;
+    workspaceId?: string | null;
     position: number;
     type: BlockType;
     content: BlockContent;
@@ -76,7 +76,6 @@ export function useBlocks(): BlockRepository {
     const [deleteBlock] = useDeleteBlockMutation();
     const [updateBlocksPositions] = useUpdateBlocksPositionsMutation();
     const userId = useUserId();
-    const { workspace } = useWorkspace();
     const updateBlockContent = useCallback(
         async (
             id: string,
@@ -165,11 +164,12 @@ export function useBlocks(): BlockRepository {
             blocks: CreateBlockBatchInput[],
             positionUpdates: BlockPositionUpdate[]
         ): Promise<EditorBlock[]> => {
-            if (!blocks.length || !workspace?.id || !userId) return [];
+            if (!blocks.length || !userId) return [];
 
             const now = new Date().toISOString();
             const pageId = blocks[0]?.pageId;
-            if (!pageId) return [];
+            const documentWorkspaceId = blocks[0]?.workspaceId;
+            if (!pageId || !documentWorkspaceId) return [];
 
             try {
                 const res = await insertBlocksAndUpdatePositions({
@@ -179,7 +179,7 @@ export function useBlocks(): BlockRepository {
                             page_id: block.pageId,
                             position: block.position,
                             type: block.type,
-                            workspace_id: workspace.id,
+                            workspace_id: documentWorkspaceId,
                             user_id: userId,
                             content: block.content,
                         })),
@@ -223,7 +223,7 @@ export function useBlocks(): BlockRepository {
                         const fullInsertedBlocks = insertedBlocks.map(
                             (block) => ({
                                 ...block,
-                                workspace_id: workspace.id,
+                                workspace_id: documentWorkspaceId,
                                 user_id: userId,
                                 link_access: null,
                                 tasks: [],
@@ -264,7 +264,7 @@ export function useBlocks(): BlockRepository {
                 return [];
             }
         },
-        [insertBlocksAndUpdatePositions, userId, workspace?.id]
+        [insertBlocksAndUpdatePositions, userId]
     );
 
     const updateBlocksPositionsBatch = useCallback(
