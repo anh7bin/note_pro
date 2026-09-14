@@ -18,11 +18,13 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function FolderPage() {
     const params = useParams();
     const folderId = params.folderId as string;
     const { clearSelection, setMode } = useDocumentSelection();
+    const { t } = useI18n();
 
     const { loading, data } = useGetFolderByIdQuery({
         variables: { folderId },
@@ -48,8 +50,8 @@ export default function FolderPage() {
         return (
             <EmptyState
                 icon={<FolderOpen />}
-                title="Folder not found"
-                description="It may have been moved, deleted, or you may no longer have access."
+                title={t('folderNotFound')}
+                description={t('folderNotFoundDescription')}
             />
         );
     }
@@ -72,8 +74,8 @@ export default function FolderPage() {
                 {subFolders.length === 0 && documents.length === 0 ? (
                     <EmptyState
                         icon={<FolderOpen />}
-                        title="This folder is empty"
-                        description="Add a document or subfolder to organize your work."
+                        title={t('emptyFolder')}
+                        description={t('emptyFolderDescription')}
                         action={<NewItemMenu folderId={folderId} />}
                     />
                 ) : (

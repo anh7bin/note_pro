@@ -6,6 +6,7 @@ import { TaskItem } from '@/components/features/page/TaskItem';
 import { Button } from '@/components/ui/button';
 import { CheckCircle } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface CompletedTask {
     id: string;
@@ -32,6 +33,7 @@ export const CompletedTasksModal = ({
 }: CompletedTasksModalProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const hasLoadedDataRef = useRef(false);
+    const { t } = useI18n();
 
     useEffect(() => {
         if (isOpen && onModalOpen && !hasLoadedDataRef.current) {
@@ -56,7 +58,7 @@ export const CompletedTasksModal = ({
             title={
                 <span className="flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-primary" />
-                    Completed Tasks
+                    {t('completedTasks')}
                     <span className="text-sm font-normal text-muted-foreground">
                         ({completedTasks.length})
                     </span>
@@ -71,17 +73,17 @@ export const CompletedTasksModal = ({
                     <div className="flex flex-col items-center justify-center py-12 text-center">
                         <Spinner className="w-8 h-8 mb-3" />
                         <p className="text-sm text-muted-foreground">
-                            Loading completed tasks...
+                            {t('loadingCompletedTasks')}
                         </p>
                     </div>
                 ) : completedTasks.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
                         <CheckCircle className="w-12 h-12 text-muted-foreground mb-3" />
                         <h3 className="text-lg font-medium text-muted-foreground mb-1">
-                            No completed tasks
+                            {t('noCompletedTasks')}
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                            Tasks you complete will appear here
+                            {t('completedTasksDescription')}
                         </p>
                     </div>
                 ) : (
@@ -109,7 +111,7 @@ export const CompletedTasksModal = ({
                         variant="outline"
                         size="sm"
                         onClick={() => setIsOpen(false)}>
-                        Close
+                        {t('close')}
                     </Button>
                 </div>
             )}

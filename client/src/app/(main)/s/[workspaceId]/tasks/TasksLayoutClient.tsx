@@ -16,6 +16,7 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface TasksLayoutClientProps {
     children: React.ReactNode;
@@ -26,25 +27,26 @@ export function TasksLayoutClient({ children }: TasksLayoutClientProps) {
     const router = useRouter();
     const pathname = usePathname();
     const { startLoading } = useLoading();
+    const { t } = useI18n();
 
     const navItems = [
         {
             id: 'inbox',
-            label: 'Inbox',
+            label: t('inbox'),
             icon: Inbox,
             href: ROUTES.WORKSPACE_TASKS_INBOX(workspaceSlug || ''),
             active: pathname.includes('/inbox'),
         },
         {
             id: 'today',
-            label: 'Today',
+            label: t('today'),
             icon: Sun,
             href: ROUTES.WORKSPACE_TASKS_TODAY(workspaceSlug || ''),
             active: pathname.includes('/today'),
         },
         {
             id: 'all',
-            label: 'All Tasks',
+            label: t('allTasks'),
             icon: ListTodo,
             href: ROUTES.WORKSPACE_TASKS_ALL(workspaceSlug || ''),
             active: pathname.includes('/all'),
@@ -67,18 +69,18 @@ export function TasksLayoutClient({ children }: TasksLayoutClientProps) {
                             <Button
                                 variant="outline"
                                 size="icon"
-                                aria-label="Create task">
+                                aria-label={t('createTask')}>
                                 <Plus />
                             </Button>
                         </NewTaskModal>
                         <Separator orientation="vertical" />
-                        <PageTitle>Tasks</PageTitle>
+                        <PageTitle>{t('tasks')}</PageTitle>
                     </div>
                     <Setting />
                 </PageHeader>
 
                 <nav
-                    aria-label="Task views"
+                    aria-label={t('taskViews')}
                     className="flex w-fit gap-1 overflow-x-auto rounded-md bg-muted p-1">
                     {navItems.map(({ id, label, icon: Icon, href, active }) => (
                         <Button

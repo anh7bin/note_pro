@@ -13,6 +13,7 @@ import {
 import { SharedUsersList } from './SharedUsersList';
 import { UserEmailAutocomplete } from './UserEmailAutocomplete';
 import { useDocumentSharing } from './hooks/useDocumentSharing';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface ShareTabProps {
     documentId: string;
@@ -21,6 +22,7 @@ interface ShareTabProps {
 
 export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
     const [inviteOpen, setInviteOpen] = useState(false);
+    const { t } = useI18n();
     const {
         currentUserId,
         isOwner,
@@ -75,19 +77,18 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
                     <h3
                         id="invite-collaborators-heading"
                         className="text-sm font-semibold">
-                        Invite collaborators
+                        {t('inviteCollaborators')}
                     </h3>
                 </div>
                 <p className="mb-2 mt-1 text-sm text-muted-foreground">
-                    For easy collaboration with anyone, even without a Bin Craft
-                    account
+                    {t('inviteCollaboratorsDescription')}
                 </p>
 
                 {isOwner && (
                     <Input
                         readOnly
-                        aria-label="Add people to this document"
-                        placeholder="Add emails to invite"
+                        aria-label={t('addPeople')}
+                        placeholder={t('addEmails')}
                         className="cursor-text bg-background"
                         onClick={() => {
                             setInviteOpen(true);
@@ -112,9 +113,9 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
             </section>
 
             <section
-                aria-label="Link access"
+                aria-label={t('linkAccess')}
                 className="rounded-lg bg-muted/40 p-3">
-                <div className="flex gap-2">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_9rem]">
                     <PermissionSelector
                         value={linkPermission}
                         disabled={!isOwner || isUpdatingLinkPermission}
@@ -124,16 +125,14 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
                     />
                     <Button
                         type="button"
-                        className="shrink-0"
+                        className="w-full px-3"
                         onClick={() => void onCopyLink()}>
                         <Copy aria-hidden="true" />
-                        Copy link
+                        {t('copyLink')}
                     </Button>
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">
-                    {isOwner
-                        ? 'Choose who can open this link.'
-                        : 'Only the document owner can change link access.'}
+                    {isOwner ? t('chooseLinkAccess') : t('ownerOnlyLinkAccess')}
                 </p>
             </section>
         </div>

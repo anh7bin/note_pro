@@ -6,6 +6,7 @@ import { InputField } from 'components/ui/input-field';
 import { SearchResults } from './SearchResults';
 import { useSearch } from 'hooks/useSearch';
 import { cn } from 'lib/utils';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     onResultClick?: () => void;
@@ -13,6 +14,7 @@ interface Props {
 
 export function SearchInputField({ onResultClick }: Props) {
     const { searchTerm, setSearchTerm, results } = useSearch();
+    const { t } = useI18n();
 
     const handleResultClickInternal = () => {
         setSearchTerm('');
@@ -32,13 +34,13 @@ export function SearchInputField({ onResultClick }: Props) {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             type="search"
-            aria-label="Search documents and folders"
-            placeholder="Search documents and folders"
+            aria-label={t('searchPlaceholder')}
+            placeholder={t('searchPlaceholder')}
             className={cn('h-8 w-full bg-background')}
             icon={<Search className="h-4 w-4" />}
             iconPosition="left"
             popoverHeight="auto"
-            popoverLabel="Search results"
+            popoverLabel={t('searchResults')}
             popoverClassName="max-h-[60vh] max-w-full overflow-hidden"
             popoverContent={popoverContent}
         />

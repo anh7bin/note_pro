@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface TableSizePickerProps {
     show: boolean;
@@ -24,6 +25,7 @@ export const TableSizePicker = ({
         row: number;
         col: number;
     } | null>(null);
+    const { t } = useI18n();
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -59,16 +61,18 @@ export const TableSizePicker = ({
         <div
             ref={ref}
             role="dialog"
-            aria-label="Choose table size"
+            aria-label={t('chooseTableSize')}
             className="fixed z-50 min-w-60 rounded-md border border-border bg-popover p-3 text-popover-foreground shadow-md"
             style={{ top: position.top, left: position.left }}>
             <div className="mb-3 text-center text-xs font-semibold">
                 {hoveredCell ? (
                     <span className="text-primary">
-                        {rows} × {cols} table
+                        {t('tableDimensions', { rows, cols })}
                     </span>
                 ) : (
-                    <span className="text-muted-foreground">Insert table</span>
+                    <span className="text-muted-foreground">
+                        {t('insertTable')}
+                    </span>
                 )}
             </div>
             <div
@@ -98,7 +102,10 @@ export const TableSizePicker = ({
                                     ? 'bg-primary/90 border-primary scale-105 shadow-sm'
                                     : 'bg-background border-border/50 hover:border-primary/30 hover:bg-accent/50'
                             )}
-                            aria-label={`Insert a ${row + 1} by ${col + 1} table`}
+                            aria-label={t('tableDimensions', {
+                                rows: row + 1,
+                                cols: col + 1,
+                            })}
                         />
                     );
                 })}

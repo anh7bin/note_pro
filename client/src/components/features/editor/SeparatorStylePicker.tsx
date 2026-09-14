@@ -3,6 +3,8 @@
 import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import type { SeparatorStyle } from '@/types/editor';
+import { useI18n } from '@/contexts/I18nContext';
+import type { TranslationKey } from '@/i18n/messages';
 
 interface SeparatorStylePickerProps {
     show: boolean;
@@ -13,27 +15,27 @@ interface SeparatorStylePickerProps {
 
 const separatorStyles: Array<{
     style: SeparatorStyle;
-    label: string;
+    labelKey: TranslationKey;
     previewClass: string;
 }> = [
     {
         style: 'strong',
-        label: 'Strong',
+        labelKey: 'strong',
         previewClass: 'border-t-[3px] border-solid border-foreground',
     },
     {
         style: 'regular',
-        label: 'Regular',
+        labelKey: 'regular',
         previewClass: 'border-t-2 border-solid border-foreground/80',
     },
     {
         style: 'light',
-        label: 'Light',
+        labelKey: 'light',
         previewClass: 'border-t border-solid border-border-strong',
     },
     {
         style: 'extralight',
-        label: 'Extralight',
+        labelKey: 'extraLight',
         previewClass: 'border-t border-dotted border-border-strong',
     },
 ];
@@ -45,6 +47,7 @@ export const SeparatorStylePicker = ({
     position,
 }: SeparatorStylePickerProps) => {
     const ref = useRef<HTMLDivElement>(null);
+    const { t } = useI18n();
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -77,14 +80,14 @@ export const SeparatorStylePicker = ({
         <div
             ref={ref}
             role="dialog"
-            aria-label="Choose separator style"
+            aria-label={t('chooseSeparatorStyle')}
             className="fixed z-50 min-w-52 rounded-md border border-border bg-popover p-2 text-popover-foreground shadow-md"
             style={{ top: position.top, left: position.left }}>
             <div className="mb-2 px-2 pt-1 text-xs font-semibold text-muted-foreground">
-                Insert separator
+                {t('insertSeparator')}
             </div>
             <div className="space-y-1">
-                {separatorStyles.map(({ style, label, previewClass }) => (
+                {separatorStyles.map(({ style, labelKey, previewClass }) => (
                     <button
                         type="button"
                         key={style}
@@ -94,7 +97,7 @@ export const SeparatorStylePicker = ({
                         }}
                         className="group min-h-11 w-full rounded-md px-3 py-2.5 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
                         <div className="mb-1.5 text-sm font-medium text-foreground group-hover:text-primary">
-                            {label}
+                            {t(labelKey)}
                         </div>
                         <div className={cn('w-full', previewClass)} />
                     </button>

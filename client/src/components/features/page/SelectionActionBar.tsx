@@ -12,12 +12,12 @@ import { useUserId } from '@/hooks/useAuth';
 import {
     handleBulkDeleteDocumentsAndFolders,
     handleBulkRemoveShared,
-    pluralize,
 } from '@/lib/bulk-actions';
 import { Check, FolderInput, Minus, Trash2 } from 'lucide-react';
 import showToast from '@/lib/toast';
 import { useCallback, useState } from 'react';
 import { MoveToDialog } from './MoveToDialog';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface SelectionActionBarProps {
     mode?: 'default' | 'shared';
@@ -49,6 +49,7 @@ export function SelectionActionBar({
     const userId = useUserId();
     const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const { t } = useI18n();
 
     const totalSelected = selectedDocuments.size + selectedFolders.size;
     const totalItems = documentIds.length + folderIds.length;
@@ -102,14 +103,14 @@ export function SelectionActionBar({
             }
             showToast.success(
                 mode === 'shared'
-                    ? 'Removed selected items from Shared'
-                    : 'Moved selected items to Recently Deleted'
+                    ? t('removedSelectedItems')
+                    : t('movedSelectedItemsToTrash')
             );
         } catch {
             showToast.error(
                 mode === 'shared'
-                    ? 'Failed to remove selected items'
-                    : 'Failed to delete selected items'
+                    ? t('removeSelectedItemsError')
+                    : t('deleteSelectedItemsError')
             );
         }
     }, [
@@ -120,6 +121,7 @@ export function SelectionActionBar({
         bulkDeleteAccessRequests,
         clearSelection,
         userId,
+        t,
     ]);
 
     const handleMove = useCallback(
@@ -133,13 +135,13 @@ export function SelectionActionBar({
                 });
                 setIsMoveDialogOpen(false);
                 clearSelection();
-                showToast.success('Moved selected documents');
+                showToast.success(t('movedSelectedDocuments'));
             } catch {
-                showToast.error('Failed to move selected documents');
+                showToast.error(t('moveSelectedDocumentsError'));
                 throw new Error('Bulk move failed');
             }
         },
-        [selectedDocuments, bulkMoveDocuments, clearSelection]
+        [selectedDocuments, bulkMoveDocuments, clearSelection, t]
     );
 
     if (totalSelected === 0) return null;
@@ -157,7 +159,7 @@ export function SelectionActionBar({
                     role="checkbox"
                     aria-checked={allSelected ? true : 'mixed'}
                     aria-label={
-                        allSelected ? 'Clear selection' : 'Select all items'
+                        allSelected ? t('clearSelection') : t('selectAllItems')
                     }
                     className="h-6 w-6 rounded-full"
                     onClick={handleSelectAllChange}>
@@ -171,7 +173,7 @@ export function SelectionActionBar({
                 </Button>
 
                 <span className="px-1 text-sm font-medium tabular-nums text-foreground">
-                    {totalSelected} selected
+                    {t('selectedCount', { count: totalSelected })}
                 </span>
 
                 {mode !== 'shared' && (
@@ -179,7 +181,7 @@ export function SelectionActionBar({
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 hover:bg-accent-foreground/10"
-                        aria-label="Move selected items"
+                        aria-label={t('moveSelectedItems')}
                         onClick={() => setIsMoveDialogOpen(true)}>
                         <FolderInput className="h-4 w-4" />
                     </Button>
@@ -191,8 +193,8 @@ export function SelectionActionBar({
                     className="h-8 w-8 hover:bg-accent-foreground/10 hover:text-destructive"
                     aria-label={
                         mode === 'shared'
-                            ? 'Remove selected items'
-                            : 'Delete selected items'
+                            ? t('removeSelectedItems')
+                            : t('deleteSelectedItems')
                     }
                     onClick={handleDeleteClick}>
                     <Trash2 className="h-4 w-4" />
@@ -212,16 +214,26 @@ export function SelectionActionBar({
                 onOpenChange={setIsDeleteDialogOpen}
                 title={
                     mode === 'shared'
-                        ? `Remove ${totalSelected} ${pluralize(totalSelected, 'item')} from Shared`
-                        : `Move ${totalSelected} ${pluralize(totalSelected, 'item')} to Recently Deleted`
+                        ? t(
+                              totalSelected === 1
+                                  ? 'removeItemsFromShared'
+                                  : 'removeItemsFromSharedPlural',
+                              { count: totalSelected }
+                          )
+                        : t(
+                              totalSelected === 1
+                                  ? 'moveItemsToTrash'
+                                  : 'moveItemsToTrashPlural',
+                              { count: totalSelected }
+                          )
                 }
                 description={
                     mode === 'shared'
-                        ? 'These items will be removed from your shared list.'
-                        : 'These items will be moved to Recently Deleted.'
+                        ? t('removeItemsDescription')
+                        : t('moveItemsToTrashDescription')
                 }
-                confirmText={mode === 'shared' ? 'Remove' : 'Delete'}
-                cancelText="Cancel"
+                confirmText={mode === 'shared' ? t('remove') : t('delete')}
+                cancelText={t('cancel')}
                 variant="destructive"
                 onConfirm={handleDeleteConfirm}
             />

@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { useWorkspace } from '@/hooks/useWorkspace';
+import { useI18n } from '@/contexts/I18nContext';
+import { LanguageMenu } from '@/components/ui/language-switcher';
 
 export default function LoginPage() {
     const { data: session, status } = useSession();
@@ -27,6 +29,7 @@ export default function LoginPage() {
     } = useWorkspace();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const { t } = useI18n();
     const hasValidSession =
         status === AUTHENTICATED && !!session?.token && !session.error;
     const hasWorkspaceError =
@@ -35,9 +38,9 @@ export default function LoginPage() {
         (!!workspaceError || !workspaceSlug);
     const errorMessage =
         status === AUTHENTICATED && !hasValidSession
-            ? 'Google sign-in succeeded, but the app could not create a secure session. Please try again.'
+            ? t('secureSessionError')
             : hasWorkspaceError
-              ? 'Your session is ready, but your workspace could not be loaded. Please try signing in again.'
+              ? t('workspaceLoadError')
               : null;
 
     useEffect(() => {
@@ -66,11 +69,14 @@ export default function LoginPage() {
         <div
             className="flex min-h-dvh items-center justify-center"
             role="status"
-            aria-label="Loading">
+            aria-label={t('loading')}>
             <PageLoading />
         </div>
     ) : (
-        <main className="flex min-h-dvh items-center justify-center bg-background px-4 py-10">
+        <main className="relative flex min-h-dvh items-center justify-center bg-background px-4 py-10">
+            <div className="absolute right-4 top-4">
+                <LanguageMenu />
+            </div>
             <Card className="w-full max-w-sm border-border-subtle bg-card shadow-md">
                 <CardHeader className="items-center space-y-3 p-6 pb-4 text-center">
                     <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10">
@@ -83,7 +89,7 @@ export default function LoginPage() {
                         />
                     </div>
                     <CardTitle className="text-xl font-semibold">
-                        Welcome to Bin Craft
+                        {t('welcome')}
                     </CardTitle>
                     {errorMessage ? (
                         <CardDescription
@@ -93,8 +99,7 @@ export default function LoginPage() {
                         </CardDescription>
                     ) : (
                         <CardDescription className="max-w-xs leading-relaxed">
-                            Sign in to continue to your notes, tasks, and shared
-                            work.
+                            {t('signInDescription')}
                         </CardDescription>
                     )}
                 </CardHeader>
@@ -105,13 +110,13 @@ export default function LoginPage() {
                         disabled={isLoading}
                         className="w-full">
                         {isLoading ? (
-                            <ButtonLoading>Signing in...</ButtonLoading>
+                            <ButtonLoading>{t('signingIn')}</ButtonLoading>
                         ) : (
                             <>
                                 <FcGoogle size={20} />
                                 {errorMessage
-                                    ? 'Try Google again'
-                                    : 'Continue with Google'}
+                                    ? t('tryGoogleAgain')
+                                    : t('continueWithGoogle')}
                             </>
                         )}
                     </Button>

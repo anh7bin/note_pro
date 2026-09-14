@@ -24,12 +24,14 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo } from 'react';
 import { CardDocumentPreview } from './CardDocumentPreview';
 import { Button } from '@/components/ui/button';
+import { useI18n } from '@/contexts/I18nContext';
 
 const CardDocumentComponent = ({ document }: { document: Document }) => {
     const router = useRouter();
     const { workspace } = useWorkspace();
     const currentUserId = useUserId();
     const { startLoading } = useLoading();
+    const { locale, t } = useI18n();
     const {
         toggleDocument,
         isSelected,
@@ -38,7 +40,8 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
         mode,
     } = useDocumentSelection();
 
-    const plainTitle = getPlainText(document.content?.title) || 'Untitled';
+    const plainTitle =
+        getPlainText(document.content?.title) || t('untitledPage');
     const selected = isSelected(document.id);
     const hasMultipleSelected = selectedDocuments.size > 1;
     const isSelectionActive = selectedDocuments.size + selectedFolders.size > 0;
@@ -115,8 +118,10 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
             tabIndex={0}
             aria-label={
                 isSelectionActive
-                    ? `${selected ? 'Deselect' : 'Select'} document “${plainTitle}”`
-                    : `Open document “${plainTitle}”`
+                    ? t(selected ? 'deselectDocument' : 'selectDocument', {
+                          title: plainTitle,
+                      })
+                    : t('openDocument', { title: plainTitle })
             }
             aria-pressed={isSelectionActive ? selected : undefined}
             className={`group relative flex h-[304px] w-full cursor-pointer flex-col overflow-hidden transition-[border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 ${
@@ -132,8 +137,8 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
                     size="icon"
                     aria-label={
                         selected
-                            ? `Deselect “${plainTitle}”`
-                            : `Select “${plainTitle}”`
+                            ? t('deselectItem', { name: plainTitle })
+                            : t('selectItem', { name: plainTitle })
                     }
                     aria-pressed={selected}
                     className={`h-5 w-5 rounded-full border transition-all focus-visible:opacity-100 ${
@@ -163,9 +168,14 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
                                 </span>
                             )}
                             <span className="truncate">
-                                Updated{' '}
-                                {formatDate(document?.updated_at || '', {
-                                    relative: true,
+                                {t('updated', {
+                                    time: formatDate(
+                                        document?.updated_at || '',
+                                        {
+                                            relative: true,
+                                            locale,
+                                        }
+                                    ),
                                 })}
                             </span>
                         </CardDescription>

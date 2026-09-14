@@ -17,6 +17,7 @@ import { SidebarButton } from './components/SidebarButton';
 import { WorkspaceButton } from './components/WorkspaceButton';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useI18n } from '@/contexts/I18nContext';
 interface Props {
     workspaceSlug: string;
     workspaceId: string;
@@ -26,6 +27,13 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
     const { isOpen, toggle } = useSidebar();
     const pathname = usePathname();
     const [isFoldersCollapsed, setIsFoldersCollapsed] = useState(false);
+    const { t } = useI18n();
+
+    const menuLabels: Record<string, string> = {
+        'All Docs': t('allDocs'),
+        Tasks: t('tasks'),
+        Calendar: t('calendar'),
+    };
 
     const { data: docsCount, loading: docsCountLoading } = useGetDocsCountQuery(
         {
@@ -51,14 +59,14 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
             {isOpen && (
                 <button
                     type="button"
-                    aria-label="Close sidebar"
+                    aria-label={t('closeSidebar')}
                     className="fixed inset-x-0 bottom-0 top-[var(--header-height)] z-30 bg-black/35 md:hidden"
                     onClick={toggle}
                 />
             )}
             <aside
                 id="app-sidebar"
-                aria-label="Workspace navigation"
+                aria-label={t('workspaceNavigation')}
                 aria-hidden={!isOpen}
                 className={cn(
                     'fixed bottom-0 left-0 top-[var(--header-height)] z-40 w-[var(--sidebar-width)] border-r border-border-subtle bg-background text-foreground shadow-md transition-[transform,visibility] duration-300 ease-out md:shadow-none',
@@ -70,7 +78,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                     <NewDocumentButton />
                     <SidebarButton
                         icon={<RiUserVoiceLine className="h-4 w-4" />}
-                        label="Shared with Me"
+                        label={t('sharedWithMe')}
                         href={ROUTES.SHARED_WITH_ME}
                     />
                     <Separator />
@@ -89,7 +97,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                 <SidebarButton
                                     key={item.href}
                                     icon={<item.icon className="w-4 h-4" />}
-                                    label={item.label}
+                                    label={menuLabels[item.label] ?? item.label}
                                     href={item.href}
                                     isActive={isActive}
                                     count={item.count}
@@ -108,7 +116,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                     </div>
                     <div className="flex min-h-8 items-center justify-between px-1">
                         <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Folders
+                            {t('folders')}
                         </span>
                         <div className="flex items-center gap-1">
                             <NewFolderButton />
@@ -117,8 +125,8 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                 size="icon"
                                 aria-label={
                                     isFoldersCollapsed
-                                        ? 'Expand folders'
-                                        : 'Collapse folders'
+                                        ? t('expandFolders')
+                                        : t('collapseFolders')
                                 }
                                 aria-expanded={!isFoldersCollapsed}
                                 onClick={() =>

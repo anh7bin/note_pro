@@ -11,6 +11,7 @@ import { NotificationItem } from './NotificationItem';
 import { NotificationMenuProps } from './notification.types';
 import { NOTIFICATION_LIMIT } from './notification.utils';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
+import { useI18n } from '@/contexts/I18nContext';
 
 export const NotificationMenu = ({
     notifications,
@@ -20,6 +21,7 @@ export const NotificationMenu = ({
     onNotificationSelect,
     onMarkAllAsRead,
 }: NotificationMenuProps) => {
+    const { t } = useI18n();
     if (isInitialLoading) {
         return (
             <Button variant="ghost" size="icon">
@@ -30,7 +32,7 @@ export const NotificationMenu = ({
 
     return (
         <DropdownMenu modal={false}>
-            <SimpleTooltip title="Notifications">
+            <SimpleTooltip title={t('notifications')}>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="relative">
                         <Bell />
@@ -52,12 +54,12 @@ export const NotificationMenu = ({
                     <div className="flex items-center justify-between gap-3">
                         <div>
                             <p className="text-sm font-semibold">
-                                Notifications
+                                {t('notifications')}
                             </p>
                             <p className="text-xs font-normal text-muted-foreground">
                                 {unreadCount === 0
-                                    ? 'You are all caught up'
-                                    : `${unreadCount} unread`}
+                                    ? t('caughtUp')
+                                    : t('unreadCount', { count: unreadCount })}
                             </p>
                         </div>
                         {unreadCount > 0 && (
@@ -66,7 +68,7 @@ export const NotificationMenu = ({
                                 size="sm"
                                 onClick={onMarkAllAsRead}
                                 disabled={isMarkingAll}>
-                                {isMarkingAll ? 'Marking…' : 'Mark all read'}
+                                {isMarkingAll ? t('marking') : t('markAllRead')}
                             </Button>
                         )}
                     </div>
@@ -79,10 +81,10 @@ export const NotificationMenu = ({
                         <div className="px-4 py-10 text-center">
                             <Bell className="mx-auto mb-3 h-6 w-6 text-muted-foreground" />
                             <p className="text-sm font-medium">
-                                No notifications
+                                {t('noNotifications')}
                             </p>
                             <p className="mt-1 text-xs text-muted-foreground">
-                                Access requests and sharing updates appear here.
+                                {t('notificationsDescription')}
                             </p>
                         </div>
                     ) : (
@@ -100,8 +102,9 @@ export const NotificationMenu = ({
 
                 {notifications.length === NOTIFICATION_LIMIT && (
                     <div className="border-t px-3 py-2 text-center text-xs text-muted-foreground">
-                        Showing the {NOTIFICATION_LIMIT} most recent
-                        notifications
+                        {t('recentNotifications', {
+                            count: NOTIFICATION_LIMIT,
+                        })}
                     </div>
                 )}
             </DropdownMenuContent>

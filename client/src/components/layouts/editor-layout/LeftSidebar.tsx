@@ -18,6 +18,7 @@ import {
     SidebarTabs,
     SidebarTask,
 } from './SidebarTabs';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     pageId: string;
@@ -34,6 +35,7 @@ export const LeftSidebar = ({ pageId }: Props) => {
     );
     const [updateTask] = useUpdateTaskMutation();
     const cleanupHighlightRef = useRef<(() => void) | null>(null);
+    const { locale, t } = useI18n();
 
     const sectionItems = useMemo<SectionItem[]>(() => {
         const headingBlocks = (blocks || []).filter((block) => {
@@ -80,11 +82,12 @@ export const LeftSidebar = ({ pageId }: Props) => {
                 return {
                     blockId: block.id,
                     task,
-                    title: getPlainText(block.content?.text) || 'Untitled task',
+                    title:
+                        getPlainText(block.content?.text) || t('untitledTask'),
                 };
             })
             .filter(Boolean) as SidebarTask[];
-    }, [taskBlocks]);
+    }, [taskBlocks, t]);
 
     const attachmentBlocks = useMemo(
         () => (blocks || []).filter((block) => block.type === BlockType.FILE),
@@ -102,14 +105,14 @@ export const LeftSidebar = ({ pageId }: Props) => {
             return {
                 id: block.id,
                 blockId: block.id,
-                name: content.fileName ?? 'Untitled file',
+                name: content.fileName ?? t('untitledPage'),
                 type: content.fileType ?? 'application/octet-stream',
                 size: sizeLabel,
                 url: content.fileUrl ?? null,
                 uploadedAt,
             };
         });
-    }, [attachmentBlocks]);
+    }, [attachmentBlocks, t]);
 
     const handleScrollToBlock = useCallback((blockId: string) => {
         if (cleanupHighlightRef.current) {
@@ -209,6 +212,7 @@ export const LeftSidebar = ({ pageId }: Props) => {
                                 <span className="text-xs text-muted-foreground truncate">
                                     {formatDate(rootBlock?.updated_at || '', {
                                         relative: true,
+                                        locale,
                                     })}
                                 </span>
                             </>

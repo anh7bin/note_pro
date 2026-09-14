@@ -17,6 +17,7 @@ import { TASK_STATUS } from '@/lib/constants';
 import { showToast } from '@/lib/toast';
 import React, { useMemo, useRef, useState } from 'react';
 import { ChevronDown, Flag, Inbox, Search } from 'lucide-react';
+import { useI18n } from '@/contexts/I18nContext';
 interface NewTaskModalProps {
     children: React.ReactElement;
 }
@@ -45,6 +46,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
     const [createTask] = useCreateTaskMutation();
     const [searchTerm, setSearchTerm] = useState('');
     const [isDocumentPopoverOpen, setIsDocumentPopoverOpen] = useState(false);
+    const { t } = useI18n();
 
     const [fetchDocs, { data: docsData, loading: docsLoading }] =
         useGetAllDocsLazyQuery();
@@ -65,12 +67,12 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
 
     const handleCreate = async () => {
         if (!taskData.text.trim()) {
-            showToast.error('Please enter a task title');
+            showToast.error(t('enterTaskTitle'));
             return;
         }
 
         if (!userId || !workspace?.id) {
-            showToast.error('Authentication required');
+            showToast.error(t('authenticationRequired'));
             return;
         }
 
@@ -153,11 +155,11 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                 },
             });
 
-            showToast.success('Task created successfully');
+            showToast.success(t('taskCreated'));
             setIsOpen(false);
         } catch (error) {
             console.error('Failed to create task:', error);
-            showToast.error('Failed to create task');
+            showToast.error(t('taskCreateError'));
         } finally {
             setIsCreating(false);
             resetForm();
@@ -184,18 +186,18 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
     const filteredDocuments = useMemo(() => {
         const normalizedSearch = searchTerm.trim().toLowerCase();
         return (docsData?.blocks || []).filter((doc) => {
-            const title = getPlainText(doc.content?.title || 'Untitled');
+            const title = getPlainText(doc.content?.title || t('untitledPage'));
             return title.toLowerCase().includes(normalizedSearch);
         });
-    }, [docsData?.blocks, searchTerm]);
+    }, [docsData?.blocks, searchTerm, t]);
 
     const selectedDocumentTitle = useMemo(() => {
-        if (!taskData.selectedDocumentId) return 'Inbox';
+        if (!taskData.selectedDocumentId) return t('inbox');
         const document = docsData?.blocks.find(
             (item) => item.id === taskData.selectedDocumentId
         );
-        return getPlainText(document?.content?.title || 'Untitled');
-    }, [docsData?.blocks, taskData.selectedDocumentId]);
+        return getPlainText(document?.content?.title || t('untitledPage'));
+    }, [docsData?.blocks, taskData.selectedDocumentId, t]);
 
     return (
         <Modal
@@ -203,13 +205,13 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
             open={isOpen}
             onOpenChange={handleOpenChange}
             trigger={children}
-            title="Create Task"
-            description="Add a task to your inbox or connect it to a document."
+            title={t('createTaskTitle')}
+            description={t('createTaskDescription')}
             contentProps={{
                 className: 'min-w-0 overflow-visible sm:max-w-[500px]',
             }}>
             <div className="min-w-0 space-y-2">
-                <Label htmlFor="task-destination">Destination</Label>
+                <Label htmlFor="task-destination">{t('destination')}</Label>
                 <PopoverPanel
                     open={isDocumentPopoverOpen}
                     onOpenChange={handleDocumentPopoverOpenChange}
@@ -235,8 +237,8 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                     <div className="p-3">
                         <InputField
                             type="search"
-                            aria-label="Search documents"
-                            placeholder="Search documents"
+                            aria-label={t('searchDocuments')}
+                            placeholder={t('searchDocuments')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="h-9"
@@ -248,11 +250,12 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                         onWheel={(event) => event.stopPropagation()}>
                         {docsLoading ? (
                             <div className="px-3 py-8 text-sm text-muted-foreground text-center">
-                                Loading documents...
+                                {t('loadingDocuments')}
                             </div>
                         ) : (
                             filteredDocuments.map((doc) => {
-                                const title = doc.content?.title || 'Untitled';
+                                const title =
+                                    doc.content?.title || t('untitledPage');
                                 return (
                                     <button
                                         type="button"
@@ -277,7 +280,9 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                                             </div>
                                             {doc.folder && (
                                                 <div className="truncate text-xs text-muted-foreground">
-                                                    in {doc.folder.name}
+                                                    {t('inFolder', {
+                                                        folder: doc.folder.name,
+                                                    })}
                                                 </div>
                                             )}
                                         </div>
@@ -287,7 +292,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                         )}
                         {!docsLoading && filteredDocuments.length === 0 && (
                             <div className="px-3 py-2 text-sm text-muted-foreground">
-                                No documents found
+                                {t('noDocumentsFound')}
                             </div>
                         )}
                     </div>
@@ -295,11 +300,11 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
             </div>
             <div className="space-y-2">
                 <Label htmlFor="task-title">
-                    Task title <span className="text-destructive">*</span>
+                    {t('taskTitle')} <span className="text-destructive">*</span>
                 </Label>
                 <InputField
                     id="task-title"
-                    placeholder="What needs to be done?"
+                    placeholder={t('taskTitlePlaceholder')}
                     value={taskData.text}
                     onChange={(e) => handleInputChange('text', e.target.value)}
                     autoComplete="off"
@@ -313,8 +318,8 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                         onChange={(date) =>
                             handleInputChange('scheduleDate', date)
                         }
-                        placeholder="Schedule"
-                        textContent="Schedule"
+                        placeholder={t('schedule')}
+                        textContent={t('schedule')}
                         quickActions={true}
                     />
 
@@ -323,7 +328,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                         onChange={(date) =>
                             handleInputChange('deadlineDate', date)
                         }
-                        placeholder="Deadline"
+                        placeholder={t('deadline')}
                         icon={<Flag />}
                         quickActions={true}
                     />
@@ -334,7 +339,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                     onClick={handleCreate}
                     disabled={!taskData.text.trim() || isCreating}
                     aria-busy={isCreating}>
-                    {isCreating ? 'Creating…' : 'Create'}
+                    {isCreating ? t('creating') : t('create')}
                 </Button>
             </div>
         </Modal>

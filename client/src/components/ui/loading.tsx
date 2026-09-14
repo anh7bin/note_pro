@@ -1,6 +1,9 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 import { Skeleton } from './skeleton';
 import { Spinner } from './spinner';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface LoadingProps {
     variant?: 'spinner' | 'skeleton' | 'dots';
@@ -68,6 +71,7 @@ export function LoadingSkeleton({
 }
 
 export function LoadingDots({ size = 'md', className }: LoadingDotsProps) {
+    const { t } = useI18n();
     const sizeClasses = {
         sm: 'w-1 h-1',
         md: 'w-2 h-2',
@@ -77,7 +81,7 @@ export function LoadingDots({ size = 'md', className }: LoadingDotsProps) {
     return (
         <div
             role="status"
-            aria-label="Loading"
+            aria-label={t('loading')}
             className={cn('flex items-center justify-center gap-1', className)}>
             {[0, 1, 2].map((i) => (
                 <div
@@ -96,10 +100,16 @@ export function LoadingDots({ size = 'md', className }: LoadingDotsProps) {
     );
 }
 
-export function PageLoading({ text = 'Loading...' }: { text?: string }) {
+export function PageLoading({ text }: { text?: string }) {
+    const { t } = useI18n();
+
     return (
         <div className="flex h-full min-h-40 items-center justify-center">
-            <Loading variant="spinner" size="lg" text={text} />
+            <Loading
+                variant="spinner"
+                size="lg"
+                text={text ?? t('loadingEllipsis')}
+            />
         </div>
     );
 }

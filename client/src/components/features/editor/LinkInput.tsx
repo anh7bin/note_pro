@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     onSubmit: (url: string) => void;
@@ -12,6 +13,7 @@ interface Props {
 
 export const LinkInput = ({ onSubmit, onCancel }: Props) => {
     const [url, setUrl] = useState('');
+    const { t } = useI18n();
 
     return (
         <form
@@ -22,7 +24,7 @@ export const LinkInput = ({ onSubmit, onCancel }: Props) => {
             }}>
             <Input
                 type="url"
-                aria-label="Link URL"
+                aria-label={t('linkUrl')}
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://"
@@ -42,7 +44,7 @@ export const LinkInput = ({ onSubmit, onCancel }: Props) => {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8"
-                aria-label="Cancel link editing"
+                aria-label={t('cancelLinkEditing')}
                 onClick={onCancel}>
                 <X />
             </Button>

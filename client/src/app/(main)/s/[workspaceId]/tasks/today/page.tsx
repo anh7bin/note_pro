@@ -12,9 +12,11 @@ import { Task } from '@/types/app';
 import { VirtualizedTaskList } from '@/components/features/page/VirtualizedTaskList';
 import { showToast } from '@/lib/toast';
 import { TASK_STATUS } from '@/lib/constants';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function TodayPage() {
     const { workspace } = useWorkspace();
+    const { t } = useI18n();
 
     const today = useMemo(() => {
         const now = new Date();
@@ -60,15 +62,15 @@ export default function TodayPage() {
                     awaitRefetchQueries: true,
                 });
                 showToast.success(
-                    completed ? 'Task completed' : 'Task reopened'
+                    completed ? t('taskCompleted') : t('taskReopened')
                 );
             } catch (error) {
                 console.error('Failed to update task:', error);
-                showToast.error('Failed to update task');
+                showToast.error(t('updateTaskError'));
                 throw error;
             }
         },
-        [updateTask, workspace?.id, today]
+        [updateTask, workspace?.id, today, t]
     );
 
     const handleMoreClick = useCallback((taskId: string) => {
@@ -80,8 +82,8 @@ export default function TodayPage() {
     ) : (
         <VirtualizedTaskList
             tasks={tasks}
-            emptyTitle="Nothing scheduled for today"
-            emptyDescription="Tasks scheduled for today will appear here."
+            emptyTitle={t('nothingToday')}
+            emptyDescription={t('todayEmptyDescription')}
             onToggleComplete={handleToggleComplete}
             onMoreClick={handleMoreClick}
         />

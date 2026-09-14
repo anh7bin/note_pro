@@ -8,6 +8,7 @@ import {
     LogOut,
     Trash2,
 } from 'lucide-react';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface MenuItemsProps {
     isOwner: boolean;
@@ -24,6 +25,7 @@ export const MenuItems = ({
     onMove,
     onDeleteOrRemove,
 }: MenuItemsProps) => {
+    const { t } = useI18n();
     const deleteMenuClassName = isOwner
         ? 'text-destructive focus:bg-destructive/10 focus:text-destructive'
         : 'text-warning-foreground focus:bg-warning-subtle focus:text-warning-foreground';
@@ -32,17 +34,17 @@ export const MenuItems = ({
         <div className="flex flex-col gap-1">
             <ContextMenuItem onClick={onOpenInNewTab}>
                 <ExternalLink />
-                Open in new tab
+                {t('openInNewTab')}
             </ContextMenuItem>
             <Separator />
             <ContextMenuItem onClick={onCopyLink}>
                 <Clipboard />
-                Copy link
+                {t('copyLink')}
             </ContextMenuItem>
             {isOwner && (
                 <ContextMenuItem onClick={onMove}>
                     <FolderInput />
-                    Move to
+                    {t('moveTo')}
                 </ContextMenuItem>
             )}
             <Separator />
@@ -52,12 +54,12 @@ export const MenuItems = ({
                 {isOwner ? (
                     <>
                         <Trash2 />
-                        Delete
+                        {t('delete')}
                     </>
                 ) : (
                     <>
                         <LogOut />
-                        Remove
+                        {t('remove')}
                     </>
                 )}
             </ContextMenuItem>

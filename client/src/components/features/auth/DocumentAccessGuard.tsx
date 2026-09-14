@@ -8,6 +8,7 @@ import { Loading } from '@/components/ui/loading';
 import { RequestAccessView } from './RequestAccessView';
 import { AccessRequestStatus, BlockType, PermissionType } from '@/types/types';
 import { useDocumentAccess } from '@/contexts/DocumentAccessContext';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface DocumentAccessGuardProps {
     documentId: string;
@@ -21,6 +22,7 @@ export function DocumentAccessGuard({
     const { isAuthenticated } = useAuth();
     const userId = useUserId();
     const { setHasAccess, setDocumentId } = useDocumentAccess();
+    const { t } = useI18n();
 
     const { data, loading, error } = useGetDocumentBlocksQuery({
         variables: { pageId: documentId },
@@ -115,7 +117,7 @@ export function DocumentAccessGuard({
     if (loading || accessRequestLoading) {
         return (
             <div className="flex h-full min-h-40 items-center justify-center">
-                <Loading text="Checking document access…" />
+                <Loading text={t('checkingDocumentAccess')} />
             </div>
         );
     }

@@ -10,6 +10,7 @@ import { createSlashCommands } from '../slash/constants';
 import type { SlashCommandOptions } from '../slash/types';
 import { useMenuState, useSlashKeyHandler } from './useMenuState';
 import { useCommandHandlers } from './useCommandHandlers';
+import { useI18n } from '@/contexts/I18nContext';
 
 export function useSlashCommand(
     editor: Editor | null,
@@ -25,10 +26,11 @@ export function useSlashCommand(
     }: SlashCommandOptions = {}
 ) {
     const { state, updateState } = useMenuState();
+    const { t } = useI18n();
 
     const availableCommands = useMemo(
-        () => createSlashCommands(isTitle),
-        [isTitle]
+        () => createSlashCommands(isTitle, t),
+        [isTitle, t]
     );
 
     const {

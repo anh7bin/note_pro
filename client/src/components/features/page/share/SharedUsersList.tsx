@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { UserAvatar } from '@/components/shared';
+import { useI18n } from '@/contexts/I18nContext';
 
 export type SharedUser = {
     id: string;
@@ -29,8 +30,8 @@ interface SharedUsersListProps {
     isLoading?: boolean;
 }
 
-const getDisplayName = (user: SharedUser) =>
-    user.name || user.email?.split('@')[0] || 'Unknown';
+const getDisplayName = (user: SharedUser, fallback: string) =>
+    user.name || user.email?.split('@')[0] || fallback;
 
 interface UserCardProps {
     user: SharedUser;
@@ -51,6 +52,8 @@ function UserCard({
 }: UserCardProps) {
     const isCurrentUser = currentUserId === user.id;
     const canOpenPermissionMenu = canManageUsers || isCurrentUser;
+    const { t } = useI18n();
+    const displayName = getDisplayName(user, t('unknown'));
 
     return (
         <div
@@ -68,10 +71,10 @@ function UserCard({
                 />
                 <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">
-                        {getDisplayName(user)}
+                        {displayName}
                         {isCurrentUser && (
                             <span className="text-muted-foreground ml-1">
-                                (You)
+                                ({t('you')})
                             </span>
                         )}
                     </p>
@@ -83,7 +86,7 @@ function UserCard({
 
             {isOwner ? (
                 <span className="text-sm font-medium text-muted-foreground px-3 py-1.5 rounded-md bg-background/50">
-                    Owner
+                    {t('owner')}
                 </span>
             ) : (
                 <Select
@@ -100,26 +103,30 @@ function UserCard({
                     }}
                     disabled={!canOpenPermissionMenu}>
                     <SelectTrigger
-                        className="h-8 w-[120px] text-sm"
+                        className="h-9 w-32 shrink-0 text-sm"
                         aria-label={
                             isCurrentUser
-                                ? 'Manage your document access'
-                                : `Change access for ${getDisplayName(user)}`
+                                ? t('manageYourAccess')
+                                : t('changeUserAccess', {
+                                      name: displayName,
+                                  })
                         }>
                         <SelectValue>
-                            {user.role === 'editor' ? 'Editor' : 'Viewer'}
+                            {user.role === 'editor' ? t('editor') : t('viewer')}
                         </SelectValue>
                     </SelectTrigger>
-                    <SelectContent className="w-[200px]">
+                    <SelectContent className="w-56">
                         {(!isCurrentUser || user.role === 'viewer') && (
                             <SelectItem
                                 value="viewer"
-                                textValue="Viewer"
+                                textValue={t('viewer')}
                                 className="py-2">
                                 <span className="flex flex-col items-start">
-                                    <span className="font-medium">Viewer</span>
+                                    <span className="font-medium">
+                                        {t('viewer')}
+                                    </span>
                                     <span className="text-xs font-normal text-muted-foreground">
-                                        Can view and comment
+                                        {t('canViewComment')}
                                     </span>
                                 </span>
                             </SelectItem>
@@ -127,12 +134,14 @@ function UserCard({
                         {(!isCurrentUser || user.role === 'editor') && (
                             <SelectItem
                                 value="editor"
-                                textValue="Editor"
+                                textValue={t('editor')}
                                 className="py-2">
                                 <span className="flex flex-col items-start">
-                                    <span className="font-medium">Editor</span>
+                                    <span className="font-medium">
+                                        {t('editor')}
+                                    </span>
                                     <span className="text-xs font-normal text-muted-foreground">
-                                        Can edit and comment
+                                        {t('canEditComment')}
                                     </span>
                                 </span>
                             </SelectItem>
@@ -143,10 +152,10 @@ function UserCard({
                                 <SelectItem
                                     value={isCurrentUser ? 'leave' : 'remove'}
                                     textValue={
-                                        isCurrentUser ? 'Leave' : 'Remove'
+                                        isCurrentUser ? t('leave') : t('remove')
                                     }
                                     className="py-2 text-destructive focus:bg-destructive/10 focus:text-destructive">
-                                    {isCurrentUser ? 'Leave' : 'Remove'}
+                                    {isCurrentUser ? t('leave') : t('remove')}
                                 </SelectItem>
                             </>
                         )}
@@ -166,11 +175,12 @@ export function SharedUsersList({
     canManageUsers = false,
     isLoading = false,
 }: SharedUsersListProps) {
+    const { t } = useI18n();
     if (isLoading) {
         return (
             <div className="mt-4 space-y-2">
                 <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    People with access
+                    {t('peopleWithAccess')}
                 </h3>
                 <div className="flex items-center justify-center p-8">
                     <Spinner />
@@ -184,7 +194,7 @@ export function SharedUsersList({
     return (
         <div className="mt-4 space-y-2">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                People with access
+                {t('peopleWithAccess')}
             </h3>
 
             {owner && (

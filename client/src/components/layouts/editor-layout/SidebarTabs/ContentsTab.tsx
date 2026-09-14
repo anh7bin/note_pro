@@ -1,6 +1,7 @@
 import { SectionItem } from './types';
 import { EmptyState } from './EmptyState';
 import { ListTree } from 'lucide-react';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface ContentsTabProps {
     sections: SectionItem[];
@@ -13,17 +14,18 @@ export const ContentsTab = ({
     onScrollToBlock,
     activeBlockId,
 }: ContentsTabProps) => {
+    const { t } = useI18n();
     return (
         <div className="flex flex-col h-full">
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Table of Contents
+                {t('tableOfContents')}
             </h2>
             <div className="text-sm space-y-1.5">
                 {sections.length === 0 ? (
                     <EmptyState
                         icon={<ListTree className="h-4 w-4" />}
-                        title="No headings yet"
-                        description="Add headings to build a table of contents."
+                        title={t('noHeadings')}
+                        description={t('noHeadingsDescription')}
                     />
                 ) : (
                     sections.map((section) => {

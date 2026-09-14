@@ -13,10 +13,12 @@ import { VirtualizedTaskList } from '@/components/features/page/VirtualizedTaskL
 import { showToast } from '@/lib/toast';
 import { TASK_STATUS } from '@/lib/constants';
 import { useTaskSettings } from '@/contexts/TaskSettingsProvider';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function AllTasksPage() {
     const { workspace } = useWorkspace();
     const { settings } = useTaskSettings();
+    const { t } = useI18n();
 
     const { loading, data } = useGetAllTasksQuery({
         variables: { workspaceId: workspace?.id || '' },
@@ -60,15 +62,15 @@ export default function AllTasksPage() {
                     awaitRefetchQueries: true,
                 });
                 showToast.success(
-                    completed ? 'Task completed' : 'Task reopened'
+                    completed ? t('taskCompleted') : t('taskReopened')
                 );
             } catch (error) {
                 console.error('Failed to update task:', error);
-                showToast.error('Failed to update task');
+                showToast.error(t('updateTaskError'));
                 throw error;
             }
         },
-        [updateTask, workspace?.id]
+        [updateTask, workspace?.id, t]
     );
 
     const handleMoreClick = useCallback((taskId: string) => {
@@ -82,10 +84,10 @@ export default function AllTasksPage() {
             tasks={tasks}
             emptyTitle={
                 settings.showScheduledTasks
-                    ? 'No tasks found'
-                    : 'No unscheduled tasks found'
+                    ? t('noTasks')
+                    : t('noUnscheduledTasksFound')
             }
-            emptyDescription="Create a task to start planning your work."
+            emptyDescription={t('allTasksEmptyDescription')}
             onToggleComplete={handleToggleComplete}
             onMoreClick={handleMoreClick}
         />

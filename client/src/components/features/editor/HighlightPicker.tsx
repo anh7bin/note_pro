@@ -3,6 +3,7 @@
 import { useRef, useEffect, CSSProperties } from 'react';
 import { ChevronDown, Highlighter } from 'lucide-react';
 import { HIGHLIGHT_COLORS } from '@/lib/constants';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     show: boolean;
@@ -22,6 +23,7 @@ export const HighlightPicker = ({
     close,
 }: Props) => {
     const ref = useRef<HTMLDivElement>(null);
+    const { t } = useI18n();
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -40,7 +42,7 @@ export const HighlightPicker = ({
         <div className="relative" ref={ref}>
             <button
                 type="button"
-                aria-label="Choose highlight color"
+                aria-label={t('chooseHighlightColor')}
                 aria-expanded={show}
                 onClick={toggle}
                 className="flex h-8 items-center gap-1 rounded-sm px-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40">
@@ -62,7 +64,7 @@ export const HighlightPicker = ({
             {show && (
                 <div
                     role="group"
-                    aria-label="Highlight colors"
+                    aria-label={t('highlightColors')}
                     className="absolute left-0 top-full z-50 mt-1 w-max rounded-md border border-border bg-popover p-3 shadow-md">
                     <div className="grid grid-cols-6 gap-3">
                         {HIGHLIGHT_COLORS.map((colorOption, i) => {

@@ -17,6 +17,7 @@ import debounce from 'lodash/debounce';
 import differenceBy from 'lodash/differenceBy';
 import { Loader2, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 
 export type UserSearchResult = {
     id: string;
@@ -37,8 +38,8 @@ interface UserEmailAutocompleteProps {
     excludeUserIds?: string[];
 }
 
-const getDisplayName = (user: UserSearchResult) =>
-    user.name || user.email?.split('@')[0] || 'Unknown';
+const getDisplayName = (user: UserSearchResult, fallback: string) =>
+    user.name || user.email?.split('@')[0] || fallback;
 
 export function UserEmailAutocomplete({
     documentTitle,
@@ -55,6 +56,7 @@ export function UserEmailAutocomplete({
     );
     const [isInviting, setIsInviting] = useState(false);
     const [searchUsers, { data, loading }] = useSearchUsersByEmailLazyQuery();
+    const { t } = useI18n();
 
     const debouncedSearch = useMemo(
         () =>
@@ -108,29 +110,31 @@ export function UserEmailAutocomplete({
         <div className="flex min-h-[340px] flex-col">
             <div className="flex items-center justify-between border-b border-border px-1 pb-3">
                 <h2 className="min-w-0 truncate pr-3 text-sm font-semibold">
-                    Share &ldquo;{documentTitle || 'Untitled'}&rdquo;
+                    {t('shareDocument', {
+                        title: documentTitle || t('untitledPage'),
+                    })}
                 </h2>
                 <Button
                     type="button"
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 shrink-0"
-                    aria-label="Back to share settings"
+                    aria-label={t('backToShare')}
                     onClick={onClose}>
                     <X aria-hidden="true" />
                 </Button>
             </div>
 
-            <div className="flex gap-2 py-3">
+            <div className="grid grid-cols-[minmax(0,1fr)_8rem] gap-2 py-3">
                 <Input
                     autoFocus
                     type="search"
                     value={inputValue}
                     onChange={(event) => setInputValue(event.target.value)}
-                    placeholder="Add emails to invite"
-                    aria-label="Search users by email"
+                    placeholder={t('addEmails')}
+                    aria-label={t('searchUsersByEmail')}
                     autoComplete="off"
-                    className="min-w-0 flex-1"
+                    className="min-w-0"
                 />
                 <Select
                     value={permission}
@@ -143,20 +147,20 @@ export function UserEmailAutocomplete({
                         }
                     }}>
                     <SelectTrigger
-                        className="w-[112px]"
-                        aria-label="Permission for invited users">
+                        className="w-full"
+                        aria-label={t('invitedUserPermission')}>
                         <SelectValue>
                             {permission === PermissionType.WRITE
-                                ? 'Editor'
-                                : 'Viewer'}
+                                ? t('editor')
+                                : t('viewer')}
                         </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value={PermissionType.WRITE}>
-                            Editor
+                            {t('editor')}
                         </SelectItem>
                         <SelectItem value={PermissionType.READ}>
-                            Viewer
+                            {t('viewer')}
                         </SelectItem>
                     </SelectContent>
                 </Select>
@@ -171,11 +175,11 @@ export function UserEmailAutocomplete({
                             className="mr-2 h-4 w-4 animate-spin"
                             aria-hidden="true"
                         />
-                        Searching users…
+                        {t('searchingUsers')}
                     </div>
                 ) : filteredUsers.length === 0 ? (
                     <div className="flex min-h-32 items-center justify-center text-sm text-muted-foreground">
-                        No users found
+                        {t('noUsersFound')}
                     </div>
                 ) : (
                     filteredUsers.map((user) => {
@@ -194,7 +198,7 @@ export function UserEmailAutocomplete({
                                 />
                                 <span className="min-w-0 flex-1">
                                     <span className="block truncate text-sm font-medium">
-                                        {getDisplayName(user)}
+                                        {getDisplayName(user, t('unknown'))}
                                     </span>
                                     <span className="block truncate text-xs text-muted-foreground">
                                         {user.email}
@@ -206,10 +210,15 @@ export function UserEmailAutocomplete({
                                     onCheckedChange={(value) =>
                                         toggleUser(user, value === true)
                                     }
-                                    aria-label={
-                                        (checked ? 'Deselect ' : 'Select ') +
-                                        getDisplayName(user)
-                                    }
+                                    aria-label={t(
+                                        checked ? 'deselectUser' : 'selectUser',
+                                        {
+                                            name: getDisplayName(
+                                                user,
+                                                t('unknown')
+                                            ),
+                                        }
+                                    )}
                                     className="h-5 w-5"
                                 />
                             </label>
@@ -230,12 +239,12 @@ export function UserEmailAutocomplete({
                             className="h-4 w-4 animate-spin"
                             aria-hidden="true"
                         />
-                        Inviting…
+                        {t('inviting')}
                     </>
                 ) : selectedUsers.size > 1 ? (
-                    'Invite ' + selectedUsers.size + ' people'
+                    t('invitePeople', { count: selectedUsers.size })
                 ) : (
-                    'Invite'
+                    t('invite')
                 )}
             </Button>
         </div>

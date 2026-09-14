@@ -4,18 +4,20 @@ import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { useTheme } from '@/contexts/ThemeProvider';
+import { useI18n } from '@/contexts/I18nContext';
 
 type ThemePreference = 'light' | 'dark';
 
 export function ThemeToggle() {
     const { theme, setTheme, mounted } = useTheme();
+    const { t } = useI18n();
 
     if (!mounted) {
         return (
             <Button
                 variant="ghost"
                 size="icon"
-                aria-label="Loading theme preference"
+                aria-label={t('loadingTheme')}
                 disabled>
                 <div className="h-4 w-4" />
             </Button>
@@ -36,19 +38,13 @@ export function ThemeToggle() {
 
     return (
         <SimpleTooltip
-            title={
-                theme === 'light'
-                    ? 'Switch to dark mode'
-                    : 'Switch to light mode'
-            }>
+            title={theme === 'light' ? t('switchToDark') : t('switchToLight')}>
             <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleTheme}
                 aria-label={
-                    theme === 'light'
-                        ? 'Switch to dark mode'
-                        : 'Switch to light mode'
+                    theme === 'light' ? t('switchToDark') : t('switchToLight')
                 }>
                 {getIcon()}
             </Button>

@@ -9,12 +9,14 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import showToast from '@/lib/toast';
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
+import { useI18n } from '@/contexts/I18nContext';
 
 export const NewFolderButton = () => {
     const userId = useUserId();
     const { workspace } = useWorkspace();
     const [isOpen, setIsOpen] = useState(false);
     const [insertFolder] = useInsertFolderMutation();
+    const { t } = useI18n();
 
     const handleCreate = async (folderData: {
         name: string;
@@ -46,10 +48,10 @@ export const NewFolderButton = () => {
                     });
                 },
             });
-            showToast.success('Folder created successfully');
+            showToast.success(t('folderCreated'));
             setIsOpen(false);
         } catch {
-            showToast.error('Failed to create folder');
+            showToast.error(t('folderCreateError'));
         }
     };
 
@@ -58,7 +60,7 @@ export const NewFolderButton = () => {
             <Button
                 variant="ghost"
                 size="icon"
-                aria-label="Create folder"
+                aria-label={t('createFolder')}
                 onClick={() => setIsOpen(true)}>
                 <Plus />
             </Button>

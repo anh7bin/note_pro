@@ -18,8 +18,8 @@ import { FolderInput, LogOut, Trash2 } from 'lucide-react';
 import {
     handleBulkDeleteDocuments,
     handleBulkRemoveShared,
-    pluralize,
 } from '@/lib/bulk-actions';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface BulkDocumentMenuProps {
     children: React.ReactNode;
@@ -39,6 +39,7 @@ export const BulkDocumentMenu = ({
     const userId = useUserId();
     const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const { t } = useI18n();
 
     const [bulkDeleteDocuments] = useBulkDeleteDocumentsMutation({
         refetchQueries: [
@@ -71,15 +72,20 @@ export const BulkDocumentMenu = ({
                 });
 
                 showToast.success(
-                    `Moved ${selectedDocuments.size} ${pluralize(selectedDocuments.size, 'document')}`
+                    t(
+                        selectedDocuments.size === 1
+                            ? 'movedDocuments'
+                            : 'movedDocumentsPlural',
+                        { count: selectedDocuments.size }
+                    )
                 );
                 setIsMoveDialogOpen(false);
                 clearSelection();
             } catch {
-                showToast.error('Failed to move documents');
+                showToast.error(t('moveDocumentsError'));
             }
         },
-        [selectedDocuments, bulkMoveDocuments, clearSelection]
+        [selectedDocuments, bulkMoveDocuments, clearSelection, t]
     );
 
     const handleDelete = useCallback(async () => {
@@ -100,14 +106,14 @@ export const BulkDocumentMenu = ({
             }
             showToast.success(
                 mode === 'shared'
-                    ? 'Removed selected documents from Shared'
-                    : 'Moved selected documents to Recently Deleted'
+                    ? t('removedSelectedDocuments')
+                    : t('movedSelectedDocumentsToTrash')
             );
         } catch {
             showToast.error(
                 mode === 'shared'
-                    ? 'Failed to remove selected documents'
-                    : 'Failed to delete selected documents'
+                    ? t('removeSelectedDocumentsError')
+                    : t('deleteSelectedDocumentsError')
             );
         }
     }, [
@@ -117,6 +123,7 @@ export const BulkDocumentMenu = ({
         clearSelection,
         mode,
         userId,
+        t,
     ]);
 
     const menuContent = (
@@ -130,7 +137,7 @@ export const BulkDocumentMenu = ({
                             setIsMoveDialogOpen(true);
                         }}>
                         <FolderInput />
-                        Move to
+                        {t('moveTo')}
                     </ContextMenuItem>
                     <Separator />
                 </>
@@ -142,9 +149,13 @@ export const BulkDocumentMenu = ({
                     setIsDeleteDialogOpen(true);
                 }}>
                 {mode === 'shared' ? <LogOut /> : <Trash2 />}
-                {mode === 'shared' ? 'Remove' : 'Delete'}{' '}
-                {selectedDocuments.size}{' '}
-                {pluralize(selectedDocuments.size, 'item')}
+                {mode === 'shared' ? t('remove') : t('delete')}{' '}
+                {t(
+                    selectedDocuments.size === 1
+                        ? 'itemCount'
+                        : 'itemCountPlural',
+                    { count: selectedDocuments.size }
+                )}
             </ContextMenuItem>
         </div>
     );
@@ -168,16 +179,26 @@ export const BulkDocumentMenu = ({
                 onOpenChange={setIsDeleteDialogOpen}
                 title={
                     mode === 'shared'
-                        ? `Remove ${selectedDocuments.size} ${pluralize(selectedDocuments.size, 'item')} from Shared`
-                        : `Move ${selectedDocuments.size} ${pluralize(selectedDocuments.size, 'item')} to Recently Deleted`
+                        ? t(
+                              selectedDocuments.size === 1
+                                  ? 'removeItemsFromShared'
+                                  : 'removeItemsFromSharedPlural',
+                              { count: selectedDocuments.size }
+                          )
+                        : t(
+                              selectedDocuments.size === 1
+                                  ? 'moveItemsToTrash'
+                                  : 'moveItemsToTrashPlural',
+                              { count: selectedDocuments.size }
+                          )
                 }
                 description={
                     mode === 'shared'
-                        ? 'These items will be removed from your shared list.'
-                        : 'These items will be moved to Recently Deleted.'
+                        ? t('removeItemsDescription')
+                        : t('moveItemsToTrashDescription')
                 }
-                confirmText={mode === 'shared' ? 'Remove' : 'Delete'}
-                cancelText="Cancel"
+                confirmText={mode === 'shared' ? t('remove') : t('delete')}
+                cancelText={t('cancel')}
                 variant="destructive"
                 onConfirm={handleDelete}
             />

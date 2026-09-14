@@ -2,9 +2,12 @@ import { ROUTES } from '@/lib/routes';
 import showToast from '@/lib/toast';
 import { signOut } from 'next-auth/react';
 import { useCallback, useState } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
+import { LOCALE_STORAGE_KEY } from '@/i18n/config';
 
 export function useLogout() {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const { t } = useI18n();
 
     const logout = useCallback(async () => {
         try {
@@ -17,6 +20,8 @@ export function useLogout() {
                         themePreferences[key] = localStorage.getItem(key) || '';
                     }
                 }
+                const localePreference =
+                    localStorage.getItem(LOCALE_STORAGE_KEY);
 
                 localStorage.clear();
                 sessionStorage.clear();
@@ -24,6 +29,9 @@ export function useLogout() {
                 Object.entries(themePreferences).forEach(([key, value]) => {
                     localStorage.setItem(key, value);
                 });
+                if (localePreference) {
+                    localStorage.setItem(LOCALE_STORAGE_KEY, localePreference);
+                }
 
                 document.documentElement.removeAttribute('data-auth-ready');
             }
@@ -33,14 +41,14 @@ export function useLogout() {
                 redirect: true,
             });
 
-            showToast.success('Successfully signed out');
+            showToast.success(t('logoutSuccess'));
         } catch (error) {
             console.error('Logout error:', error);
-            showToast.error('Failed to sign out. Redirecting to login...');
+            showToast.error(t('logoutError'));
         } finally {
             setIsLoggingOut(false);
         }
-    }, []);
+    }, [t]);
 
     return {
         logout,

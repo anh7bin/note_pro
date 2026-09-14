@@ -11,10 +11,13 @@ import { useSession } from 'next-auth/react';
 import { useLogout } from '@/hooks/useLogout';
 import { UserAvatar } from '@/components/shared';
 import { Button } from '@/components/ui/button';
+import { LanguageSwitcher } from '@/components/ui/language-switcher';
+import { useI18n } from '@/contexts/I18nContext';
 
 export const SettingButton = () => {
     const { data: session } = useSession();
     const { logout, isLoggingOut } = useLogout();
+    const { t } = useI18n();
 
     return (
         <div className="relative">
@@ -42,14 +45,16 @@ export const SettingButton = () => {
                                 {session?.user?.name}
                             </p>
                             <p className="text-xs leading-none text-muted-foreground">
-                                {session?.user?.email ?? 'No email'}
+                                {session?.user?.email ?? t('noEmail')}
                             </p>
                         </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
+                    <LanguageSwitcher />
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logout} disabled={isLoggingOut}>
                         <LogOut />
-                        Logout
+                        {t('logout')}
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

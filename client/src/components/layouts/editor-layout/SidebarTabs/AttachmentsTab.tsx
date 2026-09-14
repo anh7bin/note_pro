@@ -4,6 +4,7 @@ import { getFileBadge, getFileExtension } from '@/lib/fileUtils';
 import { Paperclip } from 'lucide-react';
 import { EmptyState } from './EmptyState';
 import { SidebarAttachment } from './types';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface AttachmentsTabProps {
     attachments: SidebarAttachment[];
@@ -16,17 +17,18 @@ export const AttachmentsTab = ({
     onScrollToBlock,
     activeBlockId,
 }: AttachmentsTabProps) => {
+    const { t } = useI18n();
     return (
         <div className="flex flex-col h-full">
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Attachments
+                {t('attachments')}
             </h2>
             <div className="text-sm space-y-1.5">
                 {attachments.length === 0 ? (
                     <EmptyState
                         icon={<Paperclip className="h-4 w-4" />}
-                        title="No attachments yet"
-                        description="Upload files directly from the editor."
+                        title={t('noAttachments')}
+                        description={t('noAttachmentsDescription')}
                     />
                 ) : (
                     attachments.map((file) => (

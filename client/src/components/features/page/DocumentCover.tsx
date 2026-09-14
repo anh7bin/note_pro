@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { ImagePlus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface DocumentCoverProps {
     imageUrl: string;
@@ -21,6 +22,7 @@ export function DocumentCover({
     isUploading,
 }: DocumentCoverProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { t } = useI18n();
 
     const handleChangeCover = () => {
         fileInputRef.current?.click();
@@ -40,7 +42,7 @@ export function DocumentCover({
         <div className="group relative h-[265px] w-full overflow-hidden bg-muted">
             <Image
                 src={imageUrl}
-                alt="Document cover"
+                alt={t('documentCover')}
                 fill
                 className="object-cover"
                 priority
@@ -54,7 +56,7 @@ export function DocumentCover({
                             aria-busy={isUploading}
                             disabled={isUploading}>
                             <ImagePlus />
-                            {isUploading ? 'Uploading…' : 'Change cover'}
+                            {isUploading ? t('uploading') : t('changeCover')}
                         </Button>
                         <Button
                             size="sm"
@@ -62,7 +64,7 @@ export function DocumentCover({
                             onClick={onRemove}
                             disabled={isUploading}>
                             <Trash2 />
-                            Remove cover
+                            {t('removeCover')}
                         </Button>
                     </div>
                     <input
@@ -71,7 +73,7 @@ export function DocumentCover({
                         accept="image/*"
                         onChange={handleFileChange}
                         className="hidden"
-                        aria-label="Choose a document cover image"
+                        aria-label={t('chooseCover')}
                     />
                 </>
             )}

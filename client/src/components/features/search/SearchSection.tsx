@@ -1,8 +1,11 @@
+'use client';
+
 import React from 'react';
 import { getPlainText } from '@/lib/text';
 import { SearchItem } from './SearchItem';
 import { SearchItemType } from 'types/app';
 import { SearchAllQuery } from 'graphql/queries/__generated__/search.generated';
+import { useI18n } from '@/contexts/I18nContext';
 
 type SearchDocument = SearchAllQuery['documents'][number];
 type SearchFolder = SearchAllQuery['folders'][number];
@@ -29,6 +32,7 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
     renderSubtitle,
     getWorkspaceId,
 }: Props<T>) => {
+    const { t } = useI18n();
     if (items.length === 0) {
         return null;
     }
@@ -70,7 +74,9 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
                     } else if (isFolder(item)) {
                         href = `/s/${itemWorkspaceId}/f/${item.id}`;
                         itemTitle = item.name;
-                        subtitle = `In ${item.workspace?.name ?? ''}`;
+                        subtitle = t('inWorkspace', {
+                            workspace: item.workspace?.name ?? '',
+                        });
                     }
 
                     const avatarUrl =

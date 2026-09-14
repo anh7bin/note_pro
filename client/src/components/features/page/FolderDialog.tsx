@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Modal } from '@/components/ui/modal';
 import { Textarea } from '@/components/ui/textarea';
 import React, { useEffect, useState } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 
 export enum FolderMode {
     CREATE = 'create',
@@ -40,6 +41,7 @@ export const FolderDialog = ({
         icon: initialData?.icon || IconDefault,
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { t } = useI18n();
 
     useEffect(() => {
         if (open && initialData) {
@@ -81,11 +83,13 @@ export const FolderDialog = ({
         <Modal
             open={open}
             onOpenChange={onOpenChange}
-            title={mode === FolderMode.CREATE ? 'Create New Folder' : 'Edit'}
+            title={
+                mode === FolderMode.CREATE ? t('createFolderTitle') : t('edit')
+            }
             description={
                 mode === FolderMode.CREATE
-                    ? 'Create a folder to keep related work together.'
-                    : 'Update the folder name, description, or icon.'
+                    ? t('createFolderDescription')
+                    : t('editFolderDescription')
             }
             contentProps={{ className: 'sm:max-w-[400px]' }}
             footer={
@@ -95,7 +99,7 @@ export const FolderDialog = ({
                         variant="outline"
                         onClick={() => onOpenChange(false)}
                         disabled={isSubmitting}>
-                        Cancel
+                        {t('cancel')}
                     </Button>
                     <Button
                         type="button"
@@ -103,21 +107,21 @@ export const FolderDialog = ({
                         disabled={!folderData.name.trim() || isSubmitting}
                         aria-busy={isSubmitting}>
                         {isSubmitting
-                            ? 'Saving…'
+                            ? t('saving')
                             : mode === FolderMode.CREATE
-                              ? 'Create'
-                              : 'Update'}
+                              ? t('create')
+                              : t('update')}
                     </Button>
                 </>
             }>
             <div className="space-y-4">
                 <div className="space-y-2">
                     <Label htmlFor="title" className="text-sm font-medium">
-                        Name <span className="text-destructive">*</span>
+                        {t('name')} <span className="text-destructive">*</span>
                     </Label>
                     <InputField
                         id="title"
-                        placeholder="Folder Name"
+                        placeholder={t('folderName')}
                         value={folderData.name}
                         onChange={(e) =>
                             handleInputChange('name', e.target.value)
@@ -131,11 +135,11 @@ export const FolderDialog = ({
                     <Label
                         htmlFor="description"
                         className="text-sm font-medium">
-                        Description
+                        {t('description')}
                     </Label>
                     <Textarea
                         id="description"
-                        placeholder="Enter folder description..."
+                        placeholder={t('folderDescriptionPlaceholder')}
                         value={folderData.description}
                         onChange={(e) =>
                             handleInputChange('description', e.target.value)
@@ -145,7 +149,7 @@ export const FolderDialog = ({
                 </div>
 
                 <div className="space-y-2">
-                    <Label className="text-sm font-medium">Icon</Label>
+                    <Label className="text-sm font-medium">{t('icon')}</Label>
                     <IconPicker
                         selectedIcon={folderData.icon}
                         onIconChange={(icon) => handleInputChange('icon', icon)}

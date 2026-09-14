@@ -1,6 +1,7 @@
 import { useSidebar } from '@/contexts/SidebarContext';
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface LayoutEditorProps {
     left?: React.ReactNode;
@@ -12,13 +13,14 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
     children,
 }) => {
     const { isOpen, toggle } = useSidebar();
+    const { t } = useI18n();
 
     return (
         <div className="flex h-full min-h-0 w-full flex-row">
             {isOpen && (
                 <button
                     type="button"
-                    aria-label="Close document sidebar"
+                    aria-label={t('closeDocumentSidebar')}
                     className="fixed inset-x-0 bottom-0 top-[var(--header-height)] z-30 bg-black/35 md:hidden"
                     onClick={toggle}
                 />

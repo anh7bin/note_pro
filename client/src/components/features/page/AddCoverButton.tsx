@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { ImagePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface AddCoverButtonProps {
     onAddCover: (file: File) => void;
@@ -14,6 +15,7 @@ export function AddCoverButton({
     isUploading,
 }: AddCoverButtonProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { t } = useI18n();
 
     const handleClick = () => {
         fileInputRef.current?.click();
@@ -37,7 +39,7 @@ export function AddCoverButton({
                 aria-busy={isUploading}
                 disabled={isUploading}>
                 <ImagePlus />
-                {isUploading ? 'Uploading…' : 'Add cover'}
+                {isUploading ? t('uploading') : t('addCover')}
             </Button>
             <input
                 ref={fileInputRef}
@@ -45,7 +47,7 @@ export function AddCoverButton({
                 accept="image/*"
                 onChange={handleFileChange}
                 className="hidden"
-                aria-label="Choose a document cover image"
+                aria-label={t('chooseCover')}
             />
         </>
     );

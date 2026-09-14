@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { PendingAccessRequest } from './share.types';
 import { getUserInitials } from './share.utils';
+import { useI18n } from '@/contexts/I18nContext';
 
 type PendingAccessRequestsProps = {
     requests: PendingAccessRequest[];
@@ -15,62 +16,74 @@ export const PendingAccessRequests = ({
     processingRequestId,
     onApprove,
     onDecline,
-}: PendingAccessRequestsProps) => (
-    <section className="space-y-2" aria-labelledby="pending-requests-heading">
-        <h3
-            id="pending-requests-heading"
-            className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Pending requests
-        </h3>
-        {requests.map((request) => {
-            const isProcessing = processingRequestId === request.id;
+}: PendingAccessRequestsProps) => {
+    const { t } = useI18n();
 
-            return (
-                <div
-                    key={request.id}
-                    className="flex flex-col gap-3 rounded-md border border-info/20 bg-info-subtle p-3 sm:flex-row sm:items-center">
-                    <Avatar className="h-10 w-10 shrink-0">
-                        <AvatarImage
-                            src={request.requester?.avatar_url || ''}
-                            alt={request.requester?.name || 'User'}
-                        />
-                        <AvatarFallback className="bg-primary text-primary-foreground">
-                            {getUserInitials(
-                                request.requester?.name,
-                                request.requester?.email
-                            )}
-                        </AvatarFallback>
-                    </Avatar>
+    return (
+        <section
+            className="space-y-2"
+            aria-labelledby="pending-requests-heading">
+            <h3
+                id="pending-requests-heading"
+                className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {t('pendingRequests')}
+            </h3>
+            {requests.map((request) => {
+                const isProcessing = processingRequestId === request.id;
 
-                    <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-foreground">
-                            {request.requester?.name || 'User'} wants to{' '}
-                            {request.permission_type === 'write'
-                                ? 'edit'
-                                : 'view'}
-                        </p>
-                        <p className="truncate text-xs text-muted-foreground">
-                            {request.requester?.email}
-                        </p>
+                return (
+                    <div
+                        key={request.id}
+                        className="flex flex-col gap-3 rounded-md border border-info/20 bg-info-subtle p-3 sm:flex-row sm:items-center">
+                        <Avatar className="h-10 w-10 shrink-0">
+                            <AvatarImage
+                                src={request.requester?.avatar_url || ''}
+                                alt={request.requester?.name || t('user')}
+                            />
+                            <AvatarFallback className="bg-primary text-primary-foreground">
+                                {getUserInitials(
+                                    request.requester?.name,
+                                    request.requester?.email
+                                )}
+                            </AvatarFallback>
+                        </Avatar>
+
+                        <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-foreground">
+                                {t(
+                                    request.permission_type === 'write'
+                                        ? 'wantsToEdit'
+                                        : 'wantsToView',
+                                    {
+                                        name:
+                                            request.requester?.name ||
+                                            t('user'),
+                                    }
+                                )}
+                            </p>
+                            <p className="truncate text-xs text-muted-foreground">
+                                {request.requester?.email}
+                            </p>
+                        </div>
+
+                        <div className="flex shrink-0 gap-2 self-end sm:self-auto">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => void onDecline(request)}
+                                disabled={isProcessing}>
+                                {t('decline')}
+                            </Button>
+                            <Button
+                                size="sm"
+                                onClick={() => void onApprove(request)}
+                                disabled={isProcessing}>
+                                {isProcessing ? t('processing') : t('approve')}
+                            </Button>
+                        </div>
                     </div>
-
-                    <div className="flex shrink-0 gap-2 self-end sm:self-auto">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => void onDecline(request)}
-                            disabled={isProcessing}>
-                            Decline
-                        </Button>
-                        <Button
-                            size="sm"
-                            onClick={() => void onApprove(request)}
-                            disabled={isProcessing}>
-                            {isProcessing ? 'Processing...' : 'Approve'}
-                        </Button>
-                    </div>
-                </div>
-            );
-        })}
-    </section>
-);
+                );
+            })}
+        </section>
+    );
+};

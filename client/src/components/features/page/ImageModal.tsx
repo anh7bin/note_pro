@@ -13,6 +13,7 @@ import {
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface ImageModalProps {
     isOpen: boolean;
@@ -29,6 +30,7 @@ export function ImageModal({
 }: ImageModalProps) {
     const [zoom, setZoom] = useState(1);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const { t } = useI18n();
 
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
@@ -79,13 +81,13 @@ export function ImageModal({
             link.click();
             link.remove();
             window.URL.revokeObjectURL(blobUrl);
-            toast.success('Image downloaded successfully');
+            toast.success(t('imageDownloaded'));
         } catch (error) {
             console.error('Error downloading image:', error);
-            toast.error('Failed to download image');
+            toast.error(t('imageDownloadError'));
             window.open(imageUrl, '_blank', 'noopener,noreferrer');
         }
-    }, [imageUrl, fileName]);
+    }, [imageUrl, fileName, t]);
 
     const handleZoomIn = useCallback(() => {
         setZoom((prev) => Math.min(prev + 0.25, 3));
@@ -112,9 +114,9 @@ export function ImageModal({
                 await document.exitFullscreen();
             }
         } catch {
-            toast.error('Fullscreen not supported');
+            toast.error(t('fullscreenUnsupported'));
         }
-    }, []);
+    }, [t]);
 
     const controlClassName =
         'inline-flex h-10 min-w-10 items-center justify-center rounded-md border border-white/25 bg-black/60 px-2 text-white transition-colors hover:border-white/40 hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 disabled:cursor-not-allowed disabled:opacity-50';
@@ -127,47 +129,49 @@ export function ImageModal({
                 <DialogTitle className="sr-only">{fileName}</DialogTitle>
                 <div className="absolute inset-x-2 top-2 z-50 flex items-start justify-between gap-2 animate-in fade-in-50 slide-in-from-top-2 sm:inset-x-4 sm:top-4">
                     <div className="flex flex-wrap items-center gap-2">
-                        <SimpleTooltip title="Download" side="bottom">
+                        <SimpleTooltip title={t('download')} side="bottom">
                             <button
                                 type="button"
                                 onClick={handleDownload}
                                 className={controlClassName}
-                                aria-label="Download image">
+                                aria-label={t('downloadImage')}>
                                 <Download size={20} />
                             </button>
                         </SimpleTooltip>
-                        <SimpleTooltip title="Zoom out" side="bottom">
+                        <SimpleTooltip title={t('zoomOut')} side="bottom">
                             <button
                                 type="button"
                                 onClick={handleZoomOut}
                                 disabled={zoom <= 0.5}
                                 className={controlClassName}
-                                aria-label="Zoom out">
+                                aria-label={t('zoomOut')}>
                                 <ZoomOut size={20} />
                             </button>
                         </SimpleTooltip>
-                        <SimpleTooltip title="Reset zoom" side="bottom">
+                        <SimpleTooltip title={t('resetZoom')} side="bottom">
                             <button
                                 type="button"
                                 onClick={handleZoomReset}
                                 className={`${controlClassName} min-w-14 text-sm font-medium tabular-nums`}
-                                aria-label="Reset zoom">
+                                aria-label={t('resetZoom')}>
                                 {Math.round(zoom * 100)}%
                             </button>
                         </SimpleTooltip>
-                        <SimpleTooltip title="Zoom in" side="bottom">
+                        <SimpleTooltip title={t('zoomIn')} side="bottom">
                             <button
                                 type="button"
                                 onClick={handleZoomIn}
                                 disabled={zoom >= 3}
                                 className={controlClassName}
-                                aria-label="Zoom in">
+                                aria-label={t('zoomIn')}>
                                 <ZoomIn size={20} />
                             </button>
                         </SimpleTooltip>
                         <SimpleTooltip
                             title={
-                                isFullscreen ? 'Exit fullscreen' : 'Fullscreen'
+                                isFullscreen
+                                    ? t('exitFullscreen')
+                                    : t('fullscreen')
                             }
                             side="bottom">
                             <button
@@ -176,8 +180,8 @@ export function ImageModal({
                                 className={controlClassName}
                                 aria-label={
                                     isFullscreen
-                                        ? 'Exit fullscreen'
-                                        : 'Enter fullscreen'
+                                        ? t('exitFullscreen')
+                                        : t('enterFullscreen')
                                 }>
                                 {isFullscreen ? (
                                     <Minimize2 size={20} />
@@ -188,12 +192,12 @@ export function ImageModal({
                         </SimpleTooltip>
                     </div>
 
-                    <SimpleTooltip title="Close" side="bottom">
+                    <SimpleTooltip title={t('close')} side="bottom">
                         <button
                             type="button"
                             onClick={onClose}
                             className={controlClassName}
-                            aria-label="Close modal">
+                            aria-label={t('closeModal')}>
                             <X size={24} />
                         </button>
                     </SimpleTooltip>

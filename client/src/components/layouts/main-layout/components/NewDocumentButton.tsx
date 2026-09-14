@@ -4,6 +4,7 @@ import { useCreateDocument } from '@/hooks';
 import { useParams } from 'next/navigation';
 import { FilePlus2 } from 'lucide-react';
 import { SidebarButton } from './SidebarButton';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function NewDocumentButton() {
     const params = useParams();
@@ -11,11 +12,12 @@ export default function NewDocumentButton() {
     const { createNewDocument, isCreating, canCreate } = useCreateDocument({
         folderId,
     });
+    const { t } = useI18n();
 
     return (
         <SidebarButton
             icon={<FilePlus2 className="h-4 w-4" />}
-            label="New Document"
+            label={t('newDocument')}
             onClick={createNewDocument}
             disabled={!canCreate || isCreating}
             isLoading={isCreating}

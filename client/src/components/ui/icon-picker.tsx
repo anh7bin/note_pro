@@ -1,5 +1,8 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { PopoverPanel } from '@/components/ui/popover-panel';
+import { useI18n } from '@/contexts/I18nContext';
 import { cn } from '@/lib/utils';
 import { EmojiPickerPopover } from '@/components/shared/EmojiPickerPopover';
 import React, { useState } from 'react';
@@ -15,6 +18,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
     onIconChange,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const { t } = useI18n();
 
     const handleEmojiSelect = (emoji: string) => {
         onIconChange(emoji);
@@ -38,6 +42,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                     <Button
                         type="button"
                         variant="outline"
+                        aria-label={t('chooseIcon')}
                         className="w-full justify-start gap-3 p-3 bg-card border-border text-foreground">
                         <span
                             className={cn(
@@ -46,7 +51,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                             {selectedIcon || IconDefault}
                         </span>
                         <span className="text-sm text-muted-foreground">
-                            Choose Icon
+                            {t('chooseIcon')}
                         </span>
                     </Button>
                 }>

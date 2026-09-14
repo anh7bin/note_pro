@@ -11,12 +11,14 @@ import { useEffect } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/contexts/I18nContext';
 
 function LayoutMain({ children }: { children: React.ReactNode }) {
     const { workspaceSlug, loading, workspace } = useWorkspace();
     const { isOpen } = useSidebar();
     const pathname = usePathname();
     const router = useRouter();
+    const { t } = useI18n();
 
     const isGlobalRoute =
         !pathname.startsWith('/s/') && !pathname.startsWith('/editor/');
@@ -41,7 +43,7 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
                 <a
                     href="#main-content"
                     className="sr-only fixed left-3 top-3 z-[100] rounded-md bg-background px-3 py-2 text-sm font-medium text-foreground shadow-md focus:not-sr-only focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                    Skip to main content
+                    {t('skipToContent')}
                 </a>
                 {loading && !isGlobalRoute ? (
                     <PageLoading />

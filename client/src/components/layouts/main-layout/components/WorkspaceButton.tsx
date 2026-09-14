@@ -13,6 +13,7 @@ import showToast from '@/lib/toast';
 import { Camera, Settings, X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 
 export const WorkspaceButton = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +25,7 @@ export const WorkspaceButton = () => {
     const [hasImageChanged, setHasImageChanged] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { t } = useI18n();
 
     const [updateWorkspace] = useUpdateWorkspaceMutation();
     const { workspace } = useWorkspace();
@@ -102,11 +104,11 @@ export const WorkspaceButton = () => {
 
             await refetch();
             setIsOpen(false);
-            showToast.success('Workspace updated successfully');
+            showToast.success(t('workspaceUpdated'));
         } catch (error) {
-            showToast.error('Error updating workspace', {
+            showToast.error(t('workspaceUpdateError'), {
                 description:
-                    error instanceof Error ? error.message : 'Unknown error',
+                    error instanceof Error ? error.message : t('unknownError'),
             });
         } finally {
             setIsSaving(false);
@@ -117,8 +119,8 @@ export const WorkspaceButton = () => {
         <Modal
             open={isOpen}
             onOpenChange={setIsOpen}
-            title="Workspace settings"
-            description="Update the workspace name and image shown to members."
+            title={t('workspaceSettings')}
+            description={t('workspaceSettingsDescription')}
             contentProps={{
                 className: 'max-h-[90vh] overflow-y-auto sm:max-w-[500px]',
             }}
@@ -134,10 +136,10 @@ export const WorkspaceButton = () => {
                             !hasImageChanged)
                     }>
                     {isUploading
-                        ? 'Uploading...'
+                        ? t('uploading')
                         : isSaving
-                          ? 'Saving...'
-                          : 'Save changes'}
+                          ? t('saving')
+                          : t('saveChanges')}
                 </Button>
             }
             trigger={
@@ -148,7 +150,7 @@ export const WorkspaceButton = () => {
                         <div className="absolute inset-0 flex items-center justify-center transition-all duration-200 group-hover:scale-75 group-hover:opacity-0 group-focus-visible:scale-75 group-focus-visible:opacity-0">
                             <Image
                                 src={workspaceImage}
-                                alt="Workspace"
+                                alt={t('workspace')}
                                 fill
                                 className="object-cover"
                                 sizes="20px"
@@ -174,7 +176,7 @@ export const WorkspaceButton = () => {
                         <div className="group relative">
                             <button
                                 type="button"
-                                aria-label="Change workspace image"
+                                aria-label={t('changeWorkspaceImage')}
                                 className={cn(
                                     'relative h-24 w-24 cursor-pointer overflow-hidden rounded-lg transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2',
                                     tempImageUrl ? 'bg-muted' : 'bg-muted/50'
@@ -189,7 +191,7 @@ export const WorkspaceButton = () => {
                                             ? tempImageUrl
                                             : DEFAULT_WORKSPACE_IMAGE
                                     }
-                                    alt="Workspace"
+                                    alt={t('workspace')}
                                     fill
                                     className="object-cover"
                                     sizes="96px"
@@ -206,8 +208,8 @@ export const WorkspaceButton = () => {
                                 className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-background shadow-md transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50"
                                 aria-label={
                                     tempImageUrl
-                                        ? 'Change image'
-                                        : 'Upload image'
+                                        ? t('changeImage')
+                                        : t('uploadImage')
                                 }>
                                 <Camera className="w-3.5 h-3.5 text-foreground" />
                             </button>
@@ -222,7 +224,7 @@ export const WorkspaceButton = () => {
                                             handleRemoveImage();
                                         }}
                                         className="absolute -right-1 -top-1 flex h-8 w-8 items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-100 shadow-md transition-all hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
-                                        aria-label="Restore original workspace image">
+                                        aria-label={t('restoreWorkspaceImage')}>
                                         <X className="w-3 h-3" />
                                     </button>
                                 )}
@@ -242,13 +244,13 @@ export const WorkspaceButton = () => {
                     <label
                         htmlFor="workspace-name"
                         className="text-sm font-medium">
-                        Workspace Name
+                        {t('workspaceName')}
                     </label>
                     <InputField
                         id="workspace-name"
                         value={tempName}
                         onChange={(e) => setTempName(e.target.value)}
-                        placeholder="My Workspace"
+                        placeholder={t('workspaceNamePlaceholder')}
                     />
                 </div>
             </div>

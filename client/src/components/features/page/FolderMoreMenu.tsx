@@ -16,6 +16,7 @@ import { FilePlus2, FolderPlus, Pencil, Trash2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { FolderDialog, FolderMode } from './FolderDialog';
 import { ContextDropdownMenu } from './ContextDropdownMenu';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     folder: FolderNode;
@@ -41,6 +42,7 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
     const { createNewDocument } = useCreateDocument({ folderId: id });
     const userId = useUserId();
     const { workspace } = useWorkspace();
+    const { t } = useI18n();
 
     const handleMenuItemClick = useCallback(
         (e: React.MouseEvent<HTMLDivElement>, action: () => void) => {
@@ -63,13 +65,13 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
                         },
                     },
                 });
-                showToast.success('Folder updated successfully');
+                showToast.success(t('folderUpdated'));
                 setIsEditDialogOpen(false);
             } catch {
-                showToast.error('Failed to update folder');
+                showToast.error(t('folderUpdateError'));
             }
         },
-        [id, updateFolder]
+        [id, updateFolder, t]
     );
 
     const handleCreateFolder = useCallback(
@@ -114,13 +116,13 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
                         });
                     },
                 });
-                showToast.success('Folder created successfully');
+                showToast.success(t('folderCreated'));
                 setIsNewFolderDialogOpen(false);
             } catch {
-                showToast.error('Failed to create folder');
+                showToast.error(t('folderCreateError'));
             }
         },
-        [id, userId, workspace?.id, insertFolder]
+        [id, userId, workspace?.id, insertFolder, t]
     );
 
     const handleConfirmDelete = useCallback(async () => {
@@ -150,13 +152,13 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
                     cache.gc();
                 },
             });
-            showToast.success('Folder deleted successfully');
+            showToast.success(t('folderDeleted'));
         } catch {
-            showToast.error('Failed to delete folder');
+            showToast.error(t('folderDeleteError'));
         } finally {
             setIsDeleting(false);
         }
-    }, [id, deleteFolder]);
+    }, [id, deleteFolder, t]);
 
     const menuContent = (
         <div className="flex flex-col gap-1">
@@ -165,13 +167,13 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
                     handleMenuItemClick(e, () => setIsEditDialogOpen(true))
                 }>
                 <Pencil />
-                Edit
+                {t('edit')}
             </ContextMenuItem>
             <Separator />
             <ContextMenuItem
                 onClick={(e) => handleMenuItemClick(e, createNewDocument)}>
                 <FilePlus2 />
-                New document
+                {t('newDocument')}
             </ContextMenuItem>
             <ContextMenuItem
                 className="cursor-pointer"
@@ -179,7 +181,7 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
                     handleMenuItemClick(e, () => setIsNewFolderDialogOpen(true))
                 }>
                 <FolderPlus />
-                New folder
+                {t('newFolder')}
             </ContextMenuItem>
             <Separator />
             <ContextMenuItem
@@ -188,7 +190,7 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
                     handleMenuItemClick(e, () => setIsDeleteDialogOpen(true))
                 }>
                 <Trash2 />
-                Delete
+                {t('delete')}
             </ContextMenuItem>
         </div>
     );
@@ -217,10 +219,10 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
             <ConfirmDialog
                 open={isDeleteDialogOpen}
                 onOpenChange={setIsDeleteDialogOpen}
-                title="Delete Folder"
-                description={`Are you sure you want to delete "${name}"? This action cannot be undone.`}
-                confirmText="Delete"
-                cancelText="Cancel"
+                title={t('deleteFolderTitle')}
+                description={t('deleteFolderDescription', { name })}
+                confirmText={t('delete')}
+                cancelText={t('cancel')}
                 variant="destructive"
                 onConfirm={handleConfirmDelete}
                 loading={isDeleting}

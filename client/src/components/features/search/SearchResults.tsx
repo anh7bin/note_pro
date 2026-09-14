@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import { SearchEmptyState } from './SearchEmptyState';
 import { SearchSection } from './SearchSection';
 import { SearchSkeleton } from './SearchSkeleton';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     results: SearchResult;
@@ -15,6 +16,7 @@ interface Props {
 export function SearchResults({ results, onResultClick }: Props) {
     const { folders, documents, sharedDocuments, isLoading } = results;
     const { workspace } = useWorkspace();
+    const { t } = useI18n();
 
     const counts = useMemo(
         () => ({
@@ -28,43 +30,51 @@ export function SearchResults({ results, onResultClick }: Props) {
     }
 
     if (counts.all === 0) {
-        return <SearchEmptyState message="No Results Found" />;
+        return <SearchEmptyState />;
     }
 
     return (
         <div className="max-h-[calc(60vh-4rem)] overflow-y-auto p-2">
             {documents.length > 0 && (
                 <SearchSection
-                    title="Documents"
+                    title={t('documents')}
                     items={documents}
                     type="document"
                     workspaceId={workspace?.id ?? ''}
                     onResultClick={onResultClick}
-                    renderSubtitle={(doc) => `In ${doc.workspace?.name ?? ''}`}
+                    renderSubtitle={(doc) =>
+                        t('inWorkspace', {
+                            workspace: doc.workspace?.name ?? '',
+                        })
+                    }
                 />
             )}
 
             {folders.length > 0 && (
                 <SearchSection
-                    title="Folders"
+                    title={t('folders')}
                     items={folders}
                     type="folder"
                     workspaceId={workspace?.id ?? ''}
                     onResultClick={onResultClick}
                     renderSubtitle={(folder) =>
-                        `In ${folder.workspace?.name ?? ''}`
+                        t('inWorkspace', {
+                            workspace: folder.workspace?.name ?? '',
+                        })
                     }
                 />
             )}
 
             {sharedDocuments.length > 0 && (
                 <SearchSection
-                    title="Shared Documents"
+                    title={t('sharedDocuments')}
                     items={sharedDocuments}
                     type="sharedDocument"
                     getWorkspaceId={(doc) => doc.workspace_id ?? ''}
                     onResultClick={onResultClick}
-                    renderSubtitle={(doc) => `By ${doc.user?.name ?? ''}`}
+                    renderSubtitle={(doc) =>
+                        t('byUser', { user: doc.user?.name ?? '' })
+                    }
                 />
             )}
         </div>

@@ -6,12 +6,15 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { SchedulerAppointment } from '@/types/app';
+import { useI18n } from '@/contexts/I18nContext';
+import viLocale from '@fullcalendar/core/locales/vi';
 
 interface Props {
     appointments: SchedulerAppointment[];
 }
 
 export const Calendar = ({ appointments }: Props) => {
+    const { locale } = useI18n();
     const events = useMemo(
         () =>
             appointments.map((a) => ({
@@ -31,6 +34,7 @@ export const Calendar = ({ appointments }: Props) => {
 
     return (
         <FullCalendar
+            locale={locale === 'vi' ? viLocale : 'en'}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             headerToolbar={{

@@ -8,6 +8,7 @@ import { BlockType } from '@/types/types';
 import { getPlainText } from '@/lib/text';
 import { EmptyState } from './EmptyState';
 import { Search, Sparkles } from 'lucide-react';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface SearchTabProps {
     blocks: Block[];
@@ -22,16 +23,17 @@ type SearchResult = {
 };
 
 const searchFilters = [
-    { label: 'All', value: 'all' as const },
-    { label: 'Text', value: 'text' as const },
-    { label: 'Tasks', value: 'task' as const },
-    { label: 'Files', value: 'attachment' as const },
+    { labelKey: 'all' as const, value: 'all' as const },
+    { labelKey: 'text' as const, value: 'text' as const },
+    { labelKey: 'tasks' as const, value: 'task' as const },
+    { labelKey: 'files' as const, value: 'attachment' as const },
 ];
 
 export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchFilter, setSearchFilter] =
         useState<(typeof searchFilters)[number]['value']>('all');
+    const { t } = useI18n();
 
     const searchResults = useMemo(() => {
         if (!searchQuery.trim()) return [] as SearchResult[];
@@ -61,16 +63,16 @@ export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
     return (
         <div className="flex flex-col h-full">
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Search
+                {t('search')}
             </h2>
             <div className="text-sm space-y-3">
                 <div className="space-y-2">
                     <Input
                         type="search"
-                        aria-label="Search in document"
+                        aria-label={t('searchInDocument')}
                         value={searchQuery}
                         onChange={(event) => setSearchQuery(event.target.value)}
-                        placeholder="Search in document"
+                        placeholder={t('searchInDocument')}
                         className="h-9"
                     />
                     <div className="flex flex-wrap gap-1">
@@ -88,7 +90,7 @@ export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
                                         ? 'border-primary bg-primary/10 text-primary'
                                         : 'border-transparent bg-muted/60 text-muted-foreground'
                                 )}>
-                                {filter.label}
+                                {t(filter.labelKey)}
                             </Button>
                         ))}
                     </div>
@@ -97,16 +99,16 @@ export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
                 {!searchQuery && (
                     <EmptyState
                         icon={<Sparkles className="h-4 w-4" />}
-                        title="Search anything"
-                        description="Look up text, tasks or attachments"
+                        title={t('searchAnything')}
+                        description={t('searchAnythingDescription')}
                     />
                 )}
 
                 {searchQuery && searchResults.length === 0 && (
                     <EmptyState
                         icon={<Search className="h-4 w-4" />}
-                        title="No matches"
-                        description="Try a different keyword"
+                        title={t('noMatches')}
+                        description={t('differentKeyword')}
                     />
                 )}
 

@@ -9,8 +9,11 @@ import { useBlockInteractions } from '@/contexts/BlockInteractionsContext';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
+import { enUS, vi } from 'date-fns/locale';
 import { MessageCirclePlus, Send, SmilePlus, Trash2, X } from 'lucide-react';
 import { FormEvent, memo, useMemo, useRef, useState } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
+import { Locale } from '@/i18n/config';
 
 const QUICK_REACTIONS = ['👍', '❤️', '🎉', '😂', '😮', '😢'] as const;
 
@@ -30,9 +33,12 @@ function getInitials(name?: string | null) {
     return initials || '?';
 }
 
-function getRelativeTime(value: string) {
+function getRelativeTime(value: string, locale: Locale) {
     try {
-        return formatDistanceToNow(new Date(value), { addSuffix: true });
+        return formatDistanceToNow(new Date(value), {
+            addSuffix: true,
+            locale: locale === 'vi' ? vi : enUS,
+        });
     } catch {
         return '';
     }
@@ -63,6 +69,7 @@ export const BlockInteractions = memo(function BlockInteractions({
     const [commentText, setCommentText] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const { locale, t } = useI18n();
 
     const reactionGroups = useMemo(() => {
         const groups = new Map<
@@ -143,7 +150,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                             variant="ghost"
                             size="icon"
                             className="h-7 w-7"
-                            aria-label="Add reaction">
+                            aria-label={t('addReaction')}>
                             <SmilePlus aria-hidden="true" />
                         </Button>
                     }>
@@ -152,7 +159,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                             key={emoji}
                             type="button"
                             className="flex h-9 w-9 items-center justify-center rounded-md text-lg transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
-                            aria-label={`React with ${emoji}`}
+                            aria-label={t('reactWith', { emoji })}
                             onClick={() => {
                                 void toggleReaction(blockId, emoji);
                                 setReactionOpen(false);
@@ -184,7 +191,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                             variant="ghost"
                             size="icon"
                             className="relative h-7 w-7"
-                            aria-label="Add comment">
+                            aria-label={t('addComment')}>
                             <MessageCirclePlus aria-hidden="true" />
                             {comments.length > 0 && (
                                 <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
@@ -196,12 +203,14 @@ export const BlockInteractions = memo(function BlockInteractions({
                         </Button>
                     }>
                     <div className="flex h-11 items-center justify-between border-b border-border px-3">
-                        <h3 className="text-sm font-semibold">Comments</h3>
+                        <h3 className="text-sm font-semibold">
+                            {t('comments')}
+                        </h3>
                         <Button
                             type="button"
                             variant="ghost"
                             size="icon"
-                            aria-label="Close comments"
+                            aria-label={t('closeComments')}
                             onClick={() => setCommentOpen(false)}>
                             <X />
                         </Button>
@@ -212,7 +221,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                         aria-live="polite">
                         {comments.length === 0 ? (
                             <div className="flex min-h-20 items-center justify-center text-center text-sm text-muted-foreground">
-                                Start a conversation about this block.
+                                {t('startConversation')}
                             </div>
                         ) : (
                             <div className="space-y-4">
@@ -235,7 +244,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                                             <div className="flex items-center gap-1.5">
                                                 <span className="truncate text-sm font-medium">
                                                     {comment.user.name ||
-                                                        'Unknown user'}
+                                                        t('unknownUser')}
                                                 </span>
                                                 <time
                                                     className="shrink-0 text-xs text-muted-foreground"
@@ -243,7 +252,8 @@ export const BlockInteractions = memo(function BlockInteractions({
                                                         comment.created_at
                                                     }>
                                                     {getRelativeTime(
-                                                        comment.created_at
+                                                        comment.created_at,
+                                                        locale
                                                     )}
                                                 </time>
                                                 {comment.user_id ===
@@ -256,7 +266,9 @@ export const BlockInteractions = memo(function BlockInteractions({
                                                             variant="ghost"
                                                             size="icon"
                                                             className="ml-auto h-6 w-6 opacity-0 group-hover/comment:opacity-100 focus-visible:opacity-100"
-                                                            aria-label="Delete comment"
+                                                            aria-label={t(
+                                                                'deleteComment'
+                                                            )}
                                                             onClick={() =>
                                                                 void deleteComment(
                                                                     comment.id
@@ -297,8 +309,8 @@ export const BlockInteractions = memo(function BlockInteractions({
                                 }}
                                 rows={1}
                                 maxLength={2000}
-                                aria-label="Comment"
-                                placeholder="Type your comment"
+                                aria-label={t('comment')}
+                                placeholder={t('commentPlaceholder')}
                                 className="min-h-9 max-h-28 resize-none border-0 px-2 py-2 shadow-none focus-visible:ring-0"
                             />
                             <Button
@@ -306,13 +318,13 @@ export const BlockInteractions = memo(function BlockInteractions({
                                 size="icon"
                                 className="h-9 w-9 shrink-0"
                                 disabled={!commentText.trim() || isSubmitting}
-                                aria-label="Send comment"
+                                aria-label={t('sendComment')}
                                 aria-busy={isSubmitting}>
                                 <Send aria-hidden="true" />
                             </Button>
                         </div>
                         <p className="px-1 pt-1 text-[11px] text-muted-foreground">
-                            Enter to send · Shift + Enter for a new line
+                            {t('commentKeyboardHint')}
                         </p>
                     </form>
                 </PopoverPanel>
@@ -323,7 +335,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                     {reactionGroups.map(
                         ([emoji, { count, reactedByCurrentUser, users }]) => {
                             const names = users.map(
-                                (user) => user.name || 'Unknown user'
+                                (user) => user.name || t('unknownUser')
                             );
 
                             return (
@@ -334,10 +346,12 @@ export const BlockInteractions = memo(function BlockInteractions({
                                     title={
                                         <>
                                             <p className="px-1 pb-1.5 text-[11px] font-medium text-muted-foreground">
-                                                {count}{' '}
-                                                {count === 1
-                                                    ? 'reaction'
-                                                    : 'reactions'}
+                                                {t(
+                                                    count === 1
+                                                        ? 'reactionCount'
+                                                        : 'reactionCountPlural',
+                                                    { count }
+                                                )}
                                             </p>
                                             <div className="space-y-1">
                                                 {users.map((user) => (
@@ -359,7 +373,9 @@ export const BlockInteractions = memo(function BlockInteractions({
                                                         </Avatar>
                                                         <span className="max-w-56 truncate text-xs font-medium">
                                                             {user.name ||
-                                                                'Unknown user'}
+                                                                t(
+                                                                    'unknownUser'
+                                                                )}
                                                         </span>
                                                     </div>
                                                 ))}
@@ -415,7 +431,10 @@ export const BlockInteractions = memo(function BlockInteractions({
                             </span>
                             <span aria-hidden="true">·</span>
                             <time dateTime={latestComment.created_at}>
-                                {getRelativeTime(latestComment.created_at)}
+                                {getRelativeTime(
+                                    latestComment.created_at,
+                                    locale
+                                )}
                             </time>
                         </button>
                     )}

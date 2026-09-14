@@ -5,6 +5,7 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
 import { Folder, FolderOpen } from 'lucide-react';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     open: boolean;
@@ -19,6 +20,7 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
         null
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { t } = useI18n();
 
     const { data, loading } = useGetFoldersQuery({
         variables: { workspaceId: workspaceId || '' },
@@ -41,8 +43,8 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
         <Modal
             open={open}
             onOpenChange={onOpenChange}
-            title="Move items"
-            description="Choose the destination folder for the selected items."
+            title={t('moveItems')}
+            description={t('moveItemsDescription')}
             contentProps={{ className: 'sm:max-w-[500px]' }}
             footer={
                 <>
@@ -50,19 +52,19 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
                         variant="outline"
                         onClick={() => onOpenChange(false)}
                         disabled={isSubmitting}>
-                        Cancel
+                        {t('cancel')}
                     </Button>
                     <Button
                         onClick={handleSelect}
                         disabled={isSubmitting}
                         aria-busy={isSubmitting}>
-                        {isSubmitting ? 'Moving…' : 'Move'}
+                        {isSubmitting ? t('moving') : t('move')}
                     </Button>
                 </>
             }>
             <div className="flex flex-col min-h-0">
                 <p className="flex-shrink-0 px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Folders
+                    {t('folders')}
                 </p>
                 <div className="max-h-72 space-y-1 overflow-y-auto pr-1">
                     <button
@@ -77,14 +79,14 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
                         onClick={() => setSelectedFolderId(null)}>
                         <FolderOpen className="h-5 w-5" />
                         <span className="text-sm font-medium">
-                            Workspace root
+                            {t('workspaceRoot')}
                         </span>
                     </button>
                     {loading && (
                         <p
                             role="status"
                             className="px-3 py-4 text-center text-sm text-muted-foreground">
-                            Loading folders…
+                            {t('loadingFolders')}
                         </p>
                     )}
                     {data?.folders.map((folder) => {

@@ -16,6 +16,7 @@ import { Folder, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { FolderMoreMenu } from './FolderMoreMenu';
+import { useI18n } from '@/contexts/I18nContext';
 
 type FolderType = NonNullable<
     GetFolderByIdQuery['folders_by_pk']
@@ -29,6 +30,7 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
     const router = useRouter();
     const { workspace } = useWorkspace();
     const { startLoading } = useLoading();
+    const { t } = useI18n();
     const { toggleFolder, isSelected, selectedDocuments, selectedFolders } =
         useDocumentSelection();
 
@@ -94,8 +96,10 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
                 tabIndex={0}
                 aria-label={
                     isSelectionActive
-                        ? `${selected ? 'Deselect' : 'Select'} folder “${folder.name}”`
-                        : `Open folder “${folder.name}”`
+                        ? t(selected ? 'deselectFolder' : 'selectFolder', {
+                              name: folder.name,
+                          })
+                        : t('openFolder', { name: folder.name })
                 }
                 aria-pressed={isSelectionActive ? selected : undefined}
                 className={`group relative flex h-[140px] w-full cursor-pointer flex-col bg-primary/5 transition-[border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 ${
@@ -112,8 +116,8 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
                             size="icon"
                             aria-label={
                                 selected
-                                    ? `Deselect “${folder.name}”`
-                                    : `Select “${folder.name}”`
+                                    ? t('deselectItem', { name: folder.name })
+                                    : t('selectItem', { name: folder.name })
                             }
                             aria-pressed={selected}
                             className={`h-5 w-5 rounded-full border transition-all focus-visible:opacity-100 ${
@@ -138,8 +142,12 @@ const CardFolderComponent = ({ folder }: CardFolderProps) => {
                                 {folder.name}
                             </CardTitle>
                             <CardDescription className="text-xs">
-                                {docCount}{' '}
-                                {docCount <= 1 ? 'document' : 'documents'}
+                                {t(
+                                    docCount === 1
+                                        ? 'documentCount'
+                                        : 'documentCountPlural',
+                                    { count: docCount }
+                                )}
                             </CardDescription>
                         </div>
                     </div>

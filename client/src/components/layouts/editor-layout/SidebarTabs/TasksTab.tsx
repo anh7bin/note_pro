@@ -4,6 +4,7 @@ import { TaskItem } from '@/components/features/page/TaskItem';
 import { TASK_STATUS } from '@/lib/constants';
 import { SidebarTask } from './types';
 import { EmptyState } from './EmptyState';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface TasksTabProps {
     tasks: SidebarTask[];
@@ -20,17 +21,18 @@ export const TasksTab = ({
     onScrollToBlock,
     activeBlockId,
 }: TasksTabProps) => {
+    const { t } = useI18n();
     return (
         <div className="flex flex-col h-full">
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Tasks
+                {t('tasks')}
             </h2>
             <div className="text-sm space-y-1.5">
                 {tasks.length === 0 ? (
                     <EmptyState
                         icon={<ListChecks className="h-4 w-4" />}
-                        title="No tasks yet"
-                        description="Tasks inside this document will appear here."
+                        title={t('noDocumentTasks')}
+                        description={t('noDocumentTasksDescription')}
                     />
                 ) : (
                     tasks.map(({ blockId, task, title }) => (

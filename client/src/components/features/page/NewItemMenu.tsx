@@ -16,6 +16,7 @@ import { useInsertFolderMutation } from '@/graphql/mutations/__generated__/folde
 import { useWorkspace } from '@/hooks/useWorkspace';
 import showToast from '@/lib/toast';
 import { NewFolderIcon } from '@/components/shared/icons/NewFolderIcon';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface NewItemMenuProps {
     folderId?: string;
@@ -29,6 +30,7 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
         folderId,
     });
     const [insertFolder] = useInsertFolderMutation();
+    const { t } = useI18n();
 
     const handleCreateFolder = async (data: {
         name: string;
@@ -76,11 +78,11 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                 },
                 refetchQueries: ['GetFolderById'],
             });
-            showToast.success('Folder created successfully');
+            showToast.success(t('folderCreated'));
             setIsDialogOpen(false);
         } catch (error) {
             console.error('Error creating folder:', error);
-            showToast.error('Failed to create folder');
+            showToast.error(t('folderCreateError'));
         }
     };
 
@@ -105,7 +107,7 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                     <Button
                         variant="outline"
                         size="icon"
-                        aria-label="Create document or folder">
+                        aria-label={t('createDocumentOrFolder')}>
                         <PlusIcon />
                     </Button>
                 </DropdownMenuTrigger>
@@ -120,9 +122,9 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                             <NewDocumentIcon size={48} />
                         </div>
                         <div className="flex flex-col justify-center gap-1">
-                            <span className="font-medium">New Doc</span>
+                            <span className="font-medium">{t('newDoc')}</span>
                             <span className="text-sm text-muted-foreground">
-                                Start something new
+                                {t('startSomethingNew')}
                             </span>
                         </div>
                     </DropdownMenuItem>
@@ -133,9 +135,11 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                             <NewFolderIcon size={48} />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <span className="font-medium">New Folder</span>
+                            <span className="font-medium">
+                                {t('newFolder')}
+                            </span>
                             <span className="text-sm text-muted-foreground">
-                                Keep things tidy
+                                {t('keepThingsTidy')}
                             </span>
                         </div>
                     </DropdownMenuItem>

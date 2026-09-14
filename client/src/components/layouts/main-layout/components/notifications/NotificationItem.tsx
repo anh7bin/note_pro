@@ -6,6 +6,7 @@ import {
     getNotificationTime,
     getNotificationTitle,
 } from './notification.utils';
+import { useI18n } from '@/contexts/I18nContext';
 
 type NotificationItemProps = {
     notification: Notification;
@@ -16,6 +17,7 @@ export const NotificationItem = ({
     notification,
     onSelect,
 }: NotificationItemProps) => {
+    const { locale, t } = useI18n();
     const presentation = getNotificationPresentation(notification);
     const Icon = presentation.icon;
     const initial = getNotificationInitial(presentation.actor);
@@ -45,7 +47,7 @@ export const NotificationItem = ({
                         {getNotificationTitle(notification)}
                     </span>
                     <span className="shrink-0 text-xs text-muted-foreground">
-                        {getNotificationTime(notification.created_at)}
+                        {getNotificationTime(notification.created_at, locale)}
                     </span>
                 </span>
                 {notification.message && (
@@ -58,7 +60,7 @@ export const NotificationItem = ({
             {!notification.is_read && (
                 <span
                     className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-info"
-                    aria-label="Unread"
+                    aria-label={t('unreadCount', { count: 1 })}
                 />
             )}
         </button>

@@ -3,6 +3,7 @@
 import { UserAvatar } from '@/components/shared';
 import { PopoverPanel } from '@/components/ui/popover-panel';
 import { useDocumentPresence } from '@/hooks/useDocumentPresence';
+import { useI18n } from '@/contexts/I18nContext';
 
 const MAX_VISIBLE_USERS = 3;
 
@@ -10,7 +11,11 @@ export function DocumentPresence({ documentId }: { documentId: string }) {
     const users = useDocumentPresence(documentId);
     const visibleUsers = users.slice(0, MAX_VISIBLE_USERS);
     const overflowCount = Math.max(0, users.length - visibleUsers.length);
-    const statusText = `${users.length} ${users.length === 1 ? 'person is' : 'people are'} viewing this document`;
+    const { t } = useI18n();
+    const statusText = t(
+        users.length === 1 ? 'viewingStatus' : 'viewingStatusPlural',
+        { count: users.length }
+    );
 
     if (users.length === 0) return null;
 
@@ -57,7 +62,7 @@ export function DocumentPresence({ documentId }: { documentId: string }) {
                 </button>
             }>
             <div className="px-2 pb-2 pt-1">
-                <p className="text-sm font-semibold">Currently viewing</p>
+                <p className="text-sm font-semibold">{t('currentlyViewing')}</p>
                 <p className="text-xs text-muted-foreground">{statusText}</p>
             </div>
             <div className="max-h-72 overflow-y-auto">
@@ -84,7 +89,7 @@ export function DocumentPresence({ documentId }: { documentId: string }) {
                                 </span>
                                 {user.isCurrentUser && (
                                     <span className="shrink-0 text-xs text-muted-foreground">
-                                        You
+                                        {t('you')}
                                     </span>
                                 )}
                             </span>

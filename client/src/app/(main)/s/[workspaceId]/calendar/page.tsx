@@ -14,9 +14,11 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function CalendarPage() {
     const { workspace } = useWorkspace();
+    const { t } = useI18n();
 
     const { loading, data } = useGetAllScheduledTasksQuery({
         variables: {
@@ -37,7 +39,7 @@ export default function CalendarPage() {
             const endDate = new Date(scheduleDate);
             endDate.setHours(23, 59, 59);
 
-            const taskTitle = task.block?.content?.text || 'Untitled Task';
+            const taskTitle = task.block?.content?.text || t('untitledTask');
             const documentTitle = getPlainText(
                 task.block?.page?.content?.title
             );
@@ -57,14 +59,14 @@ export default function CalendarPage() {
                 deadlineDate: task.deadline_date,
             };
         });
-    }, [tasks]);
+    }, [tasks, t]);
 
     return loading && tasks.length === 0 ? (
         <PageLoading />
     ) : (
         <PageShell>
             <PageHeader>
-                <PageTitle>Calendar</PageTitle>
+                <PageTitle>{t('calendar')}</PageTitle>
             </PageHeader>
             <PageContent className="overflow-hidden rounded-lg border border-border-subtle bg-card p-2 sm:p-3">
                 <Calendar appointments={appointments} />

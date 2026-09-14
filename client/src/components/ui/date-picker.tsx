@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { format, isToday, isTomorrow } from 'date-fns';
+import { format, isToday, isTomorrow, parseISO } from 'date-fns';
+import { enUS, vi } from 'date-fns/locale';
 import { CalendarDays } from 'lucide-react';
 import { Calendar } from './calendar';
 import { Button } from './button';
 import { PopoverPanel } from './popover-panel';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface DatePickerProps {
     value?: string;
@@ -19,24 +21,29 @@ interface DatePickerProps {
 export const DatePicker = ({
     value,
     onChange,
-    placeholder = 'Select date',
+    placeholder,
     quickActions = true,
     textContent,
     icon,
 }: DatePickerProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const { locale, t } = useI18n();
+    const dateLocale = locale === 'vi' ? vi : enUS;
+    const displayPlaceholder = placeholder ?? t('selectDate');
 
     const getDateDisplayText = (dateString: string) => {
-        if (!dateString) return placeholder;
+        if (!dateString) return displayPlaceholder;
 
-        const date = new Date(dateString);
+        const date = parseISO(dateString);
 
         if (isToday(date)) {
-            return 'Today';
+            return t('today');
         } else if (isTomorrow(date)) {
-            return 'Tomorrow';
+            return t('tomorrow');
         } else {
-            return format(date, 'MMM d');
+            return format(date, locale === 'vi' ? 'd MMM' : 'MMM d', {
+                locale: dateLocale,
+            });
         }
     };
 
@@ -86,14 +93,14 @@ export const DatePicker = ({
                     variant="ghost"
                     aria-label={
                         value
-                            ? `${placeholder}: ${getDateDisplayText(value)}`
-                            : placeholder
+                            ? `${displayPlaceholder}: ${getDateDisplayText(value)}`
+                            : displayPlaceholder
                     }
                     className="h-10 justify-start border border-input bg-background px-3 text-left font-normal text-muted-foreground hover:border-border-strong hover:bg-accent hover:text-foreground">
                     {icon ? icon : <CalendarDays className="h-4 w-4" />}
                     {value
                         ? getDateDisplayText(value)
-                        : textContent || placeholder}
+                        : textContent || displayPlaceholder}
                 </Button>
             }>
             <div className="p-2">
@@ -106,7 +113,7 @@ export const DatePicker = ({
                             onClick={(event) =>
                                 handleQuickActionClick(event, 0)
                             }>
-                            Today
+                            {t('today')}
                         </Button>
                         <Button
                             variant="ghost"
@@ -115,7 +122,7 @@ export const DatePicker = ({
                             onClick={(event) =>
                                 handleQuickActionClick(event, 1)
                             }>
-                            Tomorrow
+                            {t('tomorrow')}
                         </Button>
                         <Button
                             variant="ghost"
@@ -124,7 +131,7 @@ export const DatePicker = ({
                             onClick={(event) =>
                                 handleQuickActionClick(event, -1)
                             }>
-                            Weekend
+                            {t('weekend')}
                         </Button>
                         {value && (
                             <Button
@@ -132,7 +139,7 @@ export const DatePicker = ({
                                 size="sm"
                                 className="ml-auto font-normal text-destructive hover:bg-destructive/10 hover:text-destructive"
                                 onClick={handleClearClick}>
-                                Clear
+                                {t('clearDate')}
                             </Button>
                         )}
                     </div>
@@ -140,8 +147,9 @@ export const DatePicker = ({
 
                 <Calendar
                     mode="single"
-                    selected={value ? new Date(value) : undefined}
-                    defaultMonth={value ? new Date(value) : new Date()}
+                    locale={dateLocale}
+                    selected={value ? parseISO(value) : undefined}
+                    defaultMonth={value ? parseISO(value) : new Date()}
                     onSelect={(date) => {
                         if (date) {
                             handleDateSelect(date);

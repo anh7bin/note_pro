@@ -18,11 +18,13 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function AllDocsPage() {
     const { workspace } = useWorkspace();
     const { createNewDocument, isCreating, canCreate } = useCreateDocument();
     const { clearSelection, setMode } = useDocumentSelection();
+    const { t } = useI18n();
 
     const { loading, data } = useGetAllDocsQuery({
         variables: { workspaceId: workspace?.id || '' },
@@ -49,13 +51,15 @@ export default function AllDocsPage() {
                         onClick={createNewDocument}
                         disabled={!canCreate || isCreating}
                         aria-label={
-                            isCreating ? 'Creating document' : 'Create document'
+                            isCreating
+                                ? t('creatingDocument')
+                                : t('createDocument')
                         }
                         aria-busy={isCreating}>
                         <Plus />
                     </Button>
                     <Separator orientation="vertical" />
-                    <PageTitle>All Docs</PageTitle>
+                    <PageTitle>{t('allDocs')}</PageTitle>
                 </div>
                 <SelectionActionBar
                     documentIds={allDocs.map((document) => document.id)}
@@ -68,15 +72,15 @@ export default function AllDocsPage() {
                 ) : (
                     <EmptyState
                         icon={<Files />}
-                        title="No documents yet"
-                        description="Create your first document to start capturing notes and ideas."
+                        title={t('noDocuments')}
+                        description={t('noDocumentsDescription')}
                         action={
                             <Button
                                 size="sm"
                                 onClick={createNewDocument}
                                 disabled={!canCreate || isCreating}>
                                 <FilePlus2 />
-                                Create document
+                                {t('createDocument')}
                             </Button>
                         }
                     />

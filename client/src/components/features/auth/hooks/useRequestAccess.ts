@@ -8,12 +8,14 @@ import { showToast } from '@/lib/toast';
 import { AccessRequestStatus, PermissionType } from '@/types/types';
 import { useSession } from 'next-auth/react';
 import { useCallback, useState } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 
 export function useRequestAccess(documentId: string) {
     const { logout, isLoggingOut } = useLogout();
     const { data: session } = useSession();
     const userId = useUserId();
     const [isRequesting, setIsRequesting] = useState(false);
+    const { t } = useI18n();
 
     const { data, loading, refetch } = useGetAccessRequestByDocumentQuery({
         variables: {
@@ -41,21 +43,19 @@ export function useRequestAccess(documentId: string) {
                 },
             });
 
-            showToast.success('Access request sent successfully');
+            showToast.success(t('accessRequestSent'));
             await refetch();
         } catch (error) {
             const errorMessage =
                 error instanceof Error ? error.message : String(error);
 
             if (errorMessage.includes('Uniqueness violation')) {
-                showToast.error(
-                    'You have already requested access to this document'
-                );
+                showToast.error(t('accessAlreadyRequested'));
                 return;
             }
 
             console.error('Failed to send access request:', error);
-            showToast.error('Failed to send access request');
+            showToast.error(t('accessRequestError'));
         } finally {
             setIsRequesting(false);
         }
@@ -66,6 +66,7 @@ export function useRequestAccess(documentId: string) {
         refetch,
         session,
         userId,
+        t,
     ]);
 
     return {

@@ -20,10 +20,12 @@ import { showToast } from '@/lib/toast';
 import { TASK_STATUS } from '@/lib/constants';
 import { useCallback } from 'react';
 import { useTaskSettings } from '@/contexts/TaskSettingsProvider';
+import { useI18n } from '@/contexts/I18nContext';
 
 export const Setting = () => {
     const { settings, updateSetting } = useTaskSettings();
     const { workspace } = useWorkspace();
+    const { t } = useI18n();
 
     const [
         getCompletedTasks,
@@ -62,10 +64,12 @@ export const Setting = () => {
                     },
                 ],
             });
-            showToast.success(completed ? 'Task completed' : 'Task reopened');
+            showToast.success(
+                completed ? t('taskCompleted') : t('taskReopened')
+            );
         } catch (error) {
             console.error('Failed to update task:', error);
-            showToast.error('Failed to update task');
+            showToast.error(t('updateTaskError'));
         }
     };
 
@@ -76,7 +80,7 @@ export const Setting = () => {
                     <Button
                         variant="outline"
                         size="icon"
-                        aria-label="Task view settings">
+                        aria-label={t('taskViewSettings')}>
                         <SlidersHorizontal className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
@@ -87,7 +91,7 @@ export const Setting = () => {
                             updateSetting('showScheduledTasks', checked)
                         }
                         className="text-sm">
-                        Show Scheduled Tasks
+                        {t('showScheduledTasks')}
                     </DropdownMenuCheckboxItem>
                     <DropdownMenuSeparator />
 
@@ -100,7 +104,7 @@ export const Setting = () => {
                             className="text-sm"
                             onSelect={(e) => e.preventDefault()}>
                             <CheckCircle className="w-4 h-4 text-primary" />
-                            View Completed Tasks
+                            {t('viewCompletedTasks')}
                         </DropdownMenuItem>
                     </CompletedTasksModal>
                 </DropdownMenuContent>

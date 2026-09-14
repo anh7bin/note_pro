@@ -3,10 +3,12 @@ import { Check, Calendar } from 'lucide-react';
 import { cn, formatDate } from '@/lib/utils';
 import { TASK_STATUS } from '@/lib/constants';
 import { getPlainText } from '@/lib/text';
+import { useI18n } from '@/contexts/I18nContext';
 
 export const TaskPreview = ({ block }: { block: Block }) => {
+    const { locale, t } = useI18n();
     const task = block.tasks?.[0];
-    const text = getPlainText(block.content?.text) || 'Untitled task';
+    const text = getPlainText(block.content?.text) || t('untitledTask');
     const isCompleted = task?.status === TASK_STATUS.COMPLETED;
 
     return (
@@ -32,7 +34,10 @@ export const TaskPreview = ({ block }: { block: Block }) => {
                     <span className="flex items-center gap-0.5 text-muted-foreground/60 flex-shrink-0">
                         <Calendar className="w-2.5 h-2.5" />
                         <span className="text-[10px]">
-                            {formatDate(task.schedule_date, { relative: true })}
+                            {formatDate(task.schedule_date, {
+                                relative: true,
+                                locale,
+                            })}
                         </span>
                     </span>
                 )}

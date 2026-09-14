@@ -5,12 +5,14 @@ import { Button } from '@/components/ui/button';
 import { AccessRequestStatus } from '@/types/types';
 import { Loading } from '@/components/ui/loading';
 import { useRequestAccess } from './hooks/useRequestAccess';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface RequestAccessViewProps {
     documentId: string;
 }
 
 export function RequestAccessView({ documentId }: RequestAccessViewProps) {
+    const { t } = useI18n();
     const {
         requestStatus,
         isLoading,
@@ -23,7 +25,7 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
 
     return isLoading ? (
         <div className="flex h-full min-h-40 items-center justify-center">
-            <Loading text="Checking access…" />
+            <Loading text={t('checkingAccess')} />
         </div>
     ) : (
         <div className="flex h-full min-h-0 items-center justify-center overflow-y-auto bg-background p-4">
@@ -49,18 +51,18 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
 
                 <h1 className="text-xl font-medium text-foreground">
                     {requestStatus === AccessRequestStatus.PENDING
-                        ? 'Access request pending'
+                        ? t('accessRequestPending')
                         : requestStatus === AccessRequestStatus.REJECTED
-                          ? 'Access request denied'
-                          : 'Request access to this document'}
+                          ? t('accessRequestDenied')
+                          : t('requestDocumentAccess')}
                 </h1>
 
                 <p className="text-muted-foreground">
                     {requestStatus === AccessRequestStatus.PENDING
-                        ? "Your request is waiting for approval. You'll be notified once it's reviewed."
+                        ? t('accessPendingDescription')
                         : requestStatus === AccessRequestStatus.REJECTED
-                          ? 'Your access request was denied by the document owner.'
-                          : 'You can view this document once your request is approved.'}
+                          ? t('accessDeniedDescription')
+                          : t('accessRequestDescription')}
                 </p>
 
                 {!requestStatus && (
@@ -71,7 +73,9 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                         disabled={isRequesting}
                         aria-busy={isRequesting}>
                         <LockKeyhole />
-                        {isRequesting ? 'Sending request…' : 'Request access'}
+                        {isRequesting
+                            ? t('sendingRequest')
+                            : t('requestAccess')}
                     </Button>
                 )}
 
@@ -80,7 +84,7 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                         <div className="flex items-center gap-2 text-warning-foreground">
                             <Clock3 className="h-5 w-5" />
                             <p className="text-sm font-medium">
-                                Waiting for approval…
+                                {t('waitingForApproval')}
                             </p>
                         </div>
                     </div>
@@ -91,17 +95,14 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                         <div className="flex items-center gap-2 text-destructive">
                             <XCircle className="h-5 w-5" />
                             <p className="text-sm font-medium">
-                                Request was denied
+                                {t('requestWasDenied')}
                             </p>
                         </div>
                     </div>
                 )}
 
                 <div className="space-y-3 text-sm text-muted-foreground">
-                    <p>
-                        You are logged in as{' '}
-                        <span className="font-medium">{userEmail}</span>
-                    </p>
+                    <p>{t('loggedInAs', { email: userEmail || '' })}</p>
                     <Button
                         variant="outline"
                         size="sm"
@@ -109,7 +110,7 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                         disabled={isLoggingOut}
                         aria-busy={isLoggingOut}>
                         <LogOut />
-                        {isLoggingOut ? 'Signing out…' : 'Sign out'}
+                        {isLoggingOut ? t('signingOut') : t('signOut')}
                     </Button>
                 </div>
             </div>

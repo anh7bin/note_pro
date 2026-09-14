@@ -13,10 +13,12 @@ import { VirtualizedTaskList } from '@/components/features/page/VirtualizedTaskL
 import { showToast } from '@/lib/toast';
 import { TASK_STATUS } from '@/lib/constants';
 import { useTaskSettings } from '@/contexts/TaskSettingsProvider';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function InboxPage() {
     const { workspace } = useWorkspace();
     const { settings } = useTaskSettings();
+    const { t } = useI18n();
 
     const { loading, data } = useGetTodoTasksQuery({
         variables: { workspaceId: workspace?.id || '' },
@@ -55,15 +57,15 @@ export default function InboxPage() {
                     awaitRefetchQueries: true,
                 });
                 showToast.success(
-                    completed ? 'Task completed' : 'Task reopened'
+                    completed ? t('taskCompleted') : t('taskReopened')
                 );
             } catch (error) {
                 console.error('Failed to update task:', error);
-                showToast.error('Failed to update task');
+                showToast.error(t('updateTaskError'));
                 throw error;
             }
         },
-        [updateTask]
+        [updateTask, t]
     );
 
     const handleMoreClick = useCallback((taskId: string) => {
@@ -77,10 +79,10 @@ export default function InboxPage() {
             tasks={tasks}
             emptyTitle={
                 settings.showScheduledTasks
-                    ? 'No tasks in your inbox'
-                    : 'No unscheduled tasks'
+                    ? t('noInboxTasks')
+                    : t('noUnscheduledTasks')
             }
-            emptyDescription="New tasks without a date are kept here."
+            emptyDescription={t('inboxEmptyDescription')}
             onToggleComplete={handleToggleComplete}
             onMoreClick={handleMoreClick}
         />

@@ -8,6 +8,7 @@ import { ShareTab } from '@/components/features/page/share/ShareTab';
 import { ExportTab } from '@/components/features/page/share/ExportTab';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface ShareExportButtonProps {
     documentId: string;
@@ -17,6 +18,7 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
     const searchParams = useSearchParams();
     const [open, setOpen] = useState(false);
     const [inviteMode, setInviteMode] = useState(false);
+    const { t } = useI18n();
 
     useEffect(() => {
         const openShare = searchParams.get('openShare');
@@ -43,16 +45,16 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
                 <Button
                     variant="outline"
                     size="sm"
-                    aria-label="Share or export document">
+                    aria-label={t('shareAndExport')}>
                     <FaShare />
-                    <span className="hidden lg:inline">Share</span>
+                    <span className="hidden lg:inline">{t('share')}</span>
                 </Button>
             }>
             <Tabs defaultValue="share" className="w-full">
                 {!inviteMode && (
                     <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="share">Share</TabsTrigger>
-                        <TabsTrigger value="export">Export</TabsTrigger>
+                        <TabsTrigger value="share">{t('share')}</TabsTrigger>
+                        <TabsTrigger value="export">{t('export')}</TabsTrigger>
                     </TabsList>
                 )}
                 <TabsContent value="share" className="m-0">

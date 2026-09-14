@@ -10,27 +10,39 @@ import { DocumentAccessProvider } from '@/contexts/DocumentAccessContext';
 import { DocumentSelectionProvider } from '@/contexts/DocumentSelectionContext';
 import { LoadingProvider } from '@/contexts/LoadingContext';
 import ErrorBoundary from '@/components/shared/ErrorBoundary';
+import { I18nProvider } from '@/contexts/I18nContext';
+import { Locale } from '@/i18n/config';
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({
+    children,
+    initialLocale,
+}: {
+    children: React.ReactNode;
+    initialLocale: Locale;
+}) {
     return (
-        <ErrorBoundary>
-            <ApolloClientProvider>
-                <NextAuthProvider>
-                    <ThemeProvider>
-                        <ToastProvider>
-                            <LoadingProvider>
-                                <DocumentAccessProvider>
-                                    <DocumentSelectionProvider>
-                                        <AuthWrapper>
-                                            <MainLayout>{children}</MainLayout>
-                                        </AuthWrapper>
-                                    </DocumentSelectionProvider>
-                                </DocumentAccessProvider>
-                            </LoadingProvider>
-                        </ToastProvider>
-                    </ThemeProvider>
-                </NextAuthProvider>
-            </ApolloClientProvider>
-        </ErrorBoundary>
+        <I18nProvider initialLocale={initialLocale}>
+            <ErrorBoundary>
+                <ApolloClientProvider>
+                    <NextAuthProvider>
+                        <ThemeProvider>
+                            <ToastProvider>
+                                <LoadingProvider>
+                                    <DocumentAccessProvider>
+                                        <DocumentSelectionProvider>
+                                            <AuthWrapper>
+                                                <MainLayout>
+                                                    {children}
+                                                </MainLayout>
+                                            </AuthWrapper>
+                                        </DocumentSelectionProvider>
+                                    </DocumentAccessProvider>
+                                </LoadingProvider>
+                            </ToastProvider>
+                        </ThemeProvider>
+                    </NextAuthProvider>
+                </ApolloClientProvider>
+            </ErrorBoundary>
+        </I18nProvider>
     );
 }

@@ -7,6 +7,7 @@ import { TasksTab } from './TasksTab';
 import { AttachmentsTab } from './AttachmentsTab';
 import { SearchTab } from './SearchTab';
 import { SectionItem, SidebarAttachment, SidebarTask } from './types';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface SidebarTabsProps {
     sections: SectionItem[];
@@ -28,6 +29,7 @@ export function SidebarTabs({
     onToggleTask,
 }: SidebarTabsProps) {
     const [activeBlockId, setActiveBlockId] = useState<string>();
+    const { t } = useI18n();
 
     const handleScrollToBlock = (blockId: string) => {
         setActiveBlockId(blockId);
@@ -39,16 +41,18 @@ export function SidebarTabs({
             defaultValue="contents"
             className="flex h-full flex-1 flex-col overflow-hidden">
             <TabsList className="grid shrink-0 grid-cols-4">
-                <TabsTrigger value="contents" aria-label="Document contents">
+                <TabsTrigger
+                    value="contents"
+                    aria-label={t('documentContents')}>
                     <Menu className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="tasks" aria-label="Document tasks">
+                <TabsTrigger value="tasks" aria-label={t('documentTasks')}>
                     <CheckCircle className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="attachments" aria-label="Attachments">
+                <TabsTrigger value="attachments" aria-label={t('attachments')}>
                     <Paperclip className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="find" aria-label="Search in document">
+                <TabsTrigger value="find" aria-label={t('searchInDocument')}>
                     <Search className="h-4 w-4" />
                 </TabsTrigger>
             </TabsList>

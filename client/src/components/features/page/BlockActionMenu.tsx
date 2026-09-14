@@ -13,6 +13,7 @@ import { useCallback, useRef } from 'react';
 import { InsertBlockAboveIcon } from '@/components/shared/icons/InsertBlockAboveIcon';
 import { InsertBlockBelowIcon } from '@/components/shared/icons/InsertBlockBelowIcon';
 import type { InsertBlockAction } from '@/types/editor';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface BlockActionMenuProps {
     blockId?: string;
@@ -33,6 +34,7 @@ export function BlockActionMenu({
 }: BlockActionMenuProps) {
     const cleanupHighlightRef = useRef<(() => void) | null>(null);
     const insertedBlockIdRef = useRef<string | null>(null);
+    const { t } = useI18n();
 
     const hasActions =
         Boolean(downloadUrl) ||
@@ -131,7 +133,7 @@ export function BlockActionMenu({
                 <Button
                     variant="ghost"
                     size="icon"
-                    aria-label="Open block actions"
+                    aria-label={t('openBlockActions')}
                     className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
                     onClick={handleButtonClick}>
                     <MoreVertical />
@@ -144,13 +146,13 @@ export function BlockActionMenu({
                 {onInsertAbove && (
                     <DropdownMenuItem onClick={handleInsertAbove}>
                         <InsertBlockAboveIcon />
-                        Insert block above
+                        {t('insertBlockAbove')}
                     </DropdownMenuItem>
                 )}
                 {onInsertBelow && (
                     <DropdownMenuItem onClick={handleInsertBelow}>
                         <InsertBlockBelowIcon />
-                        Insert block below
+                        {t('insertBlockBelow')}
                     </DropdownMenuItem>
                 )}
                 {onDelete && (
@@ -158,13 +160,13 @@ export function BlockActionMenu({
                         className="text-destructive focus:bg-destructive/10 focus:text-destructive"
                         onClick={onDelete}>
                         <Trash2 />
-                        Delete
+                        {t('delete')}
                     </DropdownMenuItem>
                 )}
                 {downloadUrl && (
                     <DropdownMenuItem onClick={handleDownload}>
                         <Download />
-                        Download
+                        {t('download')}
                     </DropdownMenuItem>
                 )}
             </DropdownMenuContent>

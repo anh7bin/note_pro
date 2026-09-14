@@ -1,6 +1,8 @@
 import { format, formatDistanceToNow } from 'date-fns';
+import { enUS, vi } from 'date-fns/locale';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { Locale } from '@/i18n/config';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -36,7 +38,7 @@ export function getUserIdFromToken(token: string): string | null {
  */
 export function formatDate(
     date: string | Date = 'Unknown',
-    options: { relative?: boolean } = {}
+    options: { relative?: boolean; locale?: Locale } = {}
 ) {
     if (!date || date === 'Unknown') return 'Unknown';
 
@@ -44,10 +46,15 @@ export function formatDate(
     const parsed = typeof date === 'string' ? new Date(date) : date;
 
     if (options.relative) {
-        return formatDistanceToNow(parsed, { addSuffix: true });
+        return formatDistanceToNow(parsed, {
+            addSuffix: true,
+            locale: options.locale === 'vi' ? vi : enUS,
+        });
     }
 
-    return format(parsed, 'MMM d, yyyy');
+    return format(parsed, 'MMM d, yyyy', {
+        locale: options.locale === 'vi' ? vi : enUS,
+    });
 }
 export function stripHtmlTags(html: string | undefined | null): string {
     if (!html) return 'Untitled Document';

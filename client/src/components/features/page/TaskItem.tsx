@@ -4,7 +4,9 @@ import { cn } from '@/lib/utils';
 import { Calendar, Check, Flag, MoreHorizontal } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { isToday, isTomorrow, format } from 'date-fns';
+import { isToday, isTomorrow, format, parseISO } from 'date-fns';
+import { enUS, vi } from 'date-fns/locale';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface TaskItemProps {
     id: string;
@@ -42,6 +44,8 @@ export const TaskItem = ({
     const toggleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const onToggleCompleteRef = useRef(onToggleComplete);
     const isMountedRef = useRef(true);
+    const { locale, t } = useI18n();
+    const dateLocale = locale === 'vi' ? vi : enUS;
 
     useEffect(() => {
         onToggleCompleteRef.current = onToggleComplete;
@@ -109,14 +113,16 @@ export const TaskItem = ({
 
     const formatDate = (dateString?: string) => {
         if (!dateString) return null;
-        const date = new Date(dateString);
+        const date = parseISO(dateString);
 
         if (isToday(date)) {
-            return 'Today';
+            return t('today');
         } else if (isTomorrow(date)) {
-            return 'Tomorrow';
+            return t('tomorrow');
         } else {
-            return format(date, 'MMM d');
+            return format(date, locale === 'vi' ? 'd MMM' : 'MMM d', {
+                locale: dateLocale,
+            });
         }
     };
 
@@ -135,8 +141,8 @@ export const TaskItem = ({
                 aria-busy={isSaving}
                 aria-label={
                     tempCompleted
-                        ? `Mark “${title}” as incomplete`
-                        : `Mark “${title}” as complete`
+                        ? t('markTaskIncomplete', { title })
+                        : t('markTaskComplete', { title })
                 }
                 aria-pressed={tempCompleted}
                 className={cn(
@@ -201,7 +207,7 @@ export const TaskItem = ({
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
-                    aria-label={`More options for “${title}”`}
+                    aria-label={t('moreTaskOptions', { title })}
                     onClick={(event) => {
                         event.stopPropagation();
                         onMoreClick(id);

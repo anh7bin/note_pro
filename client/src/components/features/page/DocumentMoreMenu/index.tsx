@@ -6,6 +6,7 @@ import { MenuItems } from './MenuItems';
 import { useDocumentActions } from './hooks/useDocumentActions';
 import { useCopyDocumentLink } from './hooks/useCopyDocumentLink';
 import { ROUTES } from '@/lib/routes';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface DocumentMoreMenuProps {
     documentId: string;
@@ -27,6 +28,7 @@ export const DocumentMoreMenu = ({
     const { handleDelete, handleRemoveAccess, handleMove } =
         useDocumentActions(documentId);
     const copyLink = useCopyDocumentLink(documentId, workspaceId, folderId);
+    const { t } = useI18n();
 
     const handleCopyLink = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
@@ -103,17 +105,15 @@ export const DocumentMoreMenu = ({
                 open={isDeleteDialogOpen}
                 onOpenChange={setIsDeleteDialogOpen}
                 title={
-                    isOwner
-                        ? 'Move 1 item to Recently Deleted'
-                        : 'Remove document access'
+                    isOwner ? t('moveOneToTrash') : t('removeDocumentAccess')
                 }
                 description={
                     isOwner
-                        ? 'This item will be moved to Recently Deleted.'
-                        : 'Are you sure you want to remove your access to this document?'
+                        ? t('moveOneToTrashDescription')
+                        : t('removeDocumentAccessDescription')
                 }
-                confirmText={isOwner ? 'Delete' : 'Remove'}
-                cancelText="Cancel"
+                confirmText={isOwner ? t('delete') : t('remove')}
+                cancelText={t('cancel')}
                 variant="destructive"
                 onConfirm={handleConfirmDelete}
             />

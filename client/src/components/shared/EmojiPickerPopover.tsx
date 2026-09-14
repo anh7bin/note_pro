@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import EmojiPickerReact, { Theme, EmojiClickData } from 'emoji-picker-react';
+import { useI18n } from '@/contexts/I18nContext';
 import { useTheme } from '@/contexts/ThemeProvider';
 
 interface EmojiPickerPopoverProps {
@@ -19,9 +20,10 @@ export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
     onClose,
     width = 350,
     height = 400,
-    searchPlaceHolder = 'Search',
+    searchPlaceHolder,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
+    const { t } = useI18n();
     const { theme } = useTheme();
 
     useEffect(() => {
@@ -72,7 +74,8 @@ export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
                 theme={emojiTheme}
                 width={width}
                 height={height}
-                searchPlaceHolder={searchPlaceHolder}
+                searchPlaceHolder={searchPlaceHolder ?? t('searchEmoji')}
+                searchClearButtonLabel={t('clearEmojiSearch')}
                 previewConfig={{
                     showPreview: false,
                 }}

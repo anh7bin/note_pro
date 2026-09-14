@@ -13,6 +13,7 @@ import { BlockType } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import { useState, useCallback, useRef } from 'react';
 import { flushSync } from 'react-dom';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface CreateDocumentOptions {
     folderId?: string | null;
@@ -27,6 +28,7 @@ export function useCreateDocument(options: CreateDocumentOptions = {}) {
     const [createDocument] = useCreateUntitledPageMutation();
     const [isCreating, setIsCreating] = useState(false);
     const isCreatingRef = useRef(false);
+    const { t } = useI18n();
 
     const createNewDocument = useCallback(() => {
         if (isCreatingRef.current || isCreating || !workspace?.id || !userId) {
@@ -47,7 +49,7 @@ export function useCreateDocument(options: CreateDocumentOptions = {}) {
                     user_id: userId,
                     folder_id: folderId || null,
                     content: {
-                        title: 'Untitled Page',
+                        title: t('untitledPage'),
                     },
                     position: 0,
                     parent_id: null,
@@ -135,6 +137,7 @@ export function useCreateDocument(options: CreateDocumentOptions = {}) {
         router,
         startLoading,
         stopLoading,
+        t,
     ]);
 
     return {

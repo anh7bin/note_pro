@@ -1,8 +1,10 @@
 import { stripHtmlTags } from '@/lib/utils';
 import { Notification } from '@/types/app';
 import { formatDistanceToNow } from 'date-fns';
+import { enUS, vi } from 'date-fns/locale';
 import { Bell, CheckCircle2, CircleAlert, Clock3, Pencil } from 'lucide-react';
 import { NotificationData } from './notification.types';
+import { Locale } from '@/i18n/config';
 
 export const NOTIFICATION_LIMIT = 20;
 
@@ -69,8 +71,14 @@ export function getNotificationInitial(actor?: string): string | undefined {
     return actor?.trim().charAt(0).toUpperCase() || undefined;
 }
 
-export function getNotificationTime(createdAt?: string | null): string {
+export function getNotificationTime(
+    createdAt?: string | null,
+    locale: Locale = 'en'
+): string {
     return createdAt
-        ? formatDistanceToNow(new Date(createdAt), { addSuffix: true })
+        ? formatDistanceToNow(new Date(createdAt), {
+              addSuffix: true,
+              locale: locale === 'vi' ? vi : enUS,
+          })
         : '';
 }

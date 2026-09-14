@@ -17,10 +17,12 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function SharedWithMePage() {
     const userId = useUserId();
     const { setMode, clearSelection } = useDocumentSelection();
+    const { t } = useI18n();
 
     const { loading, data } = useGetSharedWithMeDocsQuery({
         variables: { userId: userId || '' },
@@ -41,15 +43,19 @@ export default function SharedWithMePage() {
     ) : (
         <PageShell>
             <PageHeader>
-                <PageTitle>Shared with Me</PageTitle>
+                <PageTitle>{t('sharedWithMe')}</PageTitle>
                 <div className="flex flex-wrap items-center justify-end gap-3">
                     <SelectionActionBar
                         mode="shared"
                         documentIds={sharedDocs.map((document) => document.id)}
                     />
                     <span className="text-sm tabular-nums text-muted-foreground">
-                        {sharedDocs.length}{' '}
-                        {pluralize(sharedDocs.length, 'document')}
+                        {t(
+                            sharedDocs.length === 1
+                                ? 'documentCount'
+                                : 'documentCountPlural',
+                            { count: sharedDocs.length }
+                        )}
                     </span>
                 </div>
             </PageHeader>
@@ -60,8 +66,8 @@ export default function SharedWithMePage() {
                 ) : (
                     <EmptyState
                         icon={<Users />}
-                        title="No shared documents"
-                        description="Documents other people share with you will appear here."
+                        title={t('noSharedDocuments')}
+                        description={t('noSharedDocumentsDescription')}
                     />
                 )}
             </PageContent>

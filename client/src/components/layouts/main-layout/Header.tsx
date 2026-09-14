@@ -21,6 +21,7 @@ import { ShareExportButton } from './components/ShareExportButton';
 import { useDocumentPermission } from '@/hooks/useDocumentPermission';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { DocumentPresence } from './components/DocumentPresence';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     workspaceSlug: string;
@@ -31,6 +32,7 @@ export default function Header({ workspaceSlug }: Props) {
     const { documentId } = useDocumentAccess();
     const { isLoading, startLoading } = useLoading();
     const pathname = usePathname();
+    const { t } = useI18n();
 
     // Check if we're on a document/editor page
     const isDocumentPage = pathname.startsWith('/editor/');
@@ -58,14 +60,14 @@ export default function Header({ workspaceSlug }: Props) {
                                 onClick={handleLogoClick}>
                                 <Image
                                     src="/images/logo.png"
-                                    alt="Home Page"
+                                    alt={t('homePage')}
                                     width={24}
                                     height={24}
                                     priority
                                 />
                             </Link>
                         </Button>
-                        <SimpleTooltip title="Toggle sidebar visibility">
+                        <SimpleTooltip title={t('toggleSidebar')}>
                             <Button
                                 type="button"
                                 variant="ghost"
@@ -103,6 +105,7 @@ export default function Header({ workspaceSlug }: Props) {
 
 function MobileSearch() {
     const [open, setOpen] = useState(false);
+    const { t } = useI18n();
 
     return (
         <PopoverPanel
@@ -117,7 +120,7 @@ function MobileSearch() {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    aria-label="Search">
+                    aria-label={t('search')}>
                     <Search />
                 </Button>
             }>
