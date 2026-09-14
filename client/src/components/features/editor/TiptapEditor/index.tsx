@@ -59,7 +59,8 @@ interface TiptapEditorProps {
     onConvertToTable?: (blockId: string, tableHTML: string) => void;
     dragHandle?: React.ReactNode;
     totalBlocks?: number;
-    focusPosition?: EditorFocusPosition;
+    focusPosition?: EditorFocusPosition | 'all';
+    placeholder?: string;
 }
 
 function useEditorContentSync(
@@ -82,7 +83,7 @@ function useEditorContentSync(
 function useEditorFocus(
     editor: ReturnType<typeof useEditor>,
     isFocused: boolean,
-    focusPosition: EditorFocusPosition
+    focusPosition: EditorFocusPosition | 'all'
 ) {
     useLayoutEffect(() => {
         if (!editor || !isFocused || editor.isFocused) return;
@@ -154,6 +155,7 @@ export const TiptapEditor = memo(
         dragHandle,
         totalBlocks = 1,
         focusPosition = 'end',
+        placeholder,
     }: TiptapEditorProps) {
         const [isUpdating, setIsUpdating] = useState(false);
         const [fileUpload, setFileUpload] = useState<FileUploadState | null>(
@@ -179,6 +181,7 @@ export const TiptapEditor = memo(
 
         const editorConfig = useEditorConfig({
             editable,
+            placeholder,
             positionRef: refs.positionRef,
             onChangeRef: refs.onChangeRef,
             onFocusRef: refs.onFocusRef,
@@ -339,6 +342,7 @@ export const TiptapEditor = memo(
             prevProps.isTask === nextProps.isTask &&
             prevProps.blockId === nextProps.blockId &&
             prevProps.focusPosition === nextProps.focusPosition &&
+            prevProps.placeholder === nextProps.placeholder &&
             prevProps.onKeyDown === nextProps.onKeyDown &&
             tasksEqual
         );

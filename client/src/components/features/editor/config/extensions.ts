@@ -4,6 +4,7 @@ import { EnterHandler } from '@/lib/tiptap/handlers/enter';
 import type { AddEditorBlockHandler } from '@/types/editor';
 import Highlight from '@tiptap/extension-highlight';
 import Link from '@tiptap/extension-link';
+import Placeholder from '@tiptap/extension-placeholder';
 import { Table } from '@tiptap/extension-table';
 import { TableCell } from '@tiptap/extension-table-cell';
 import { TableHeader } from '@tiptap/extension-table-header';
@@ -16,12 +17,14 @@ import { MARKDOWN_CONFIG, TABLE_CONFIG } from './constants';
 
 interface ExtensionsConfig {
     getPosition: () => number;
+    placeholder?: string;
     onAddBlock?: AddEditorBlockHandler;
     onBackspaceAtStart?: (currentContent: string) => boolean;
 }
 
 export const createExtensions = ({
     getPosition,
+    placeholder,
     onAddBlock,
     onBackspaceAtStart,
 }: ExtensionsConfig) => [
@@ -53,6 +56,15 @@ export const createExtensions = ({
             },
         },
     }),
+    ...(placeholder
+        ? [
+              Placeholder.configure({
+                  placeholder,
+                  showOnlyCurrent: true,
+                  showOnlyWhenEditable: true,
+              }),
+          ]
+        : []),
     TrailingParagraphCleanup,
     Markdown.configure(MARKDOWN_CONFIG),
     CustomCode,

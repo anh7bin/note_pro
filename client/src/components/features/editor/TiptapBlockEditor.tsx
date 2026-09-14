@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TiptapWrapper } from './TiptapWrapper';
 import { PageLoading } from '@/components/ui/loading';
 import { DocumentTitleInput } from '@/components/features/page/DocumentTitleInput';
@@ -12,6 +12,7 @@ import { useDocumentCover } from '@/hooks/useDocumentCover';
 import { EditorProvider, useEditor } from '@/contexts/EditorContext';
 import { BlockInteractionsProvider } from '@/contexts/BlockInteractionsContext';
 import { BlockInteractions } from './BlockInteractions';
+import { NEW_DOCUMENT_TITLE_FOCUS_KEY } from '@/lib/constants';
 
 interface Props {
     pageId: string;
@@ -30,6 +31,24 @@ function EditorContent() {
         useDocumentCover({
             rootBlock,
         });
+    const [shouldFocusTitle, setShouldFocusTitle] = useState(false);
+
+    useEffect(() => {
+        if (!editable || !rootBlock?.id) return;
+
+        try {
+            if (
+                sessionStorage.getItem(NEW_DOCUMENT_TITLE_FOCUS_KEY) ===
+                rootBlock.id
+            ) {
+                sessionStorage.removeItem(NEW_DOCUMENT_TITLE_FOCUS_KEY);
+                setShouldFocusTitle(true);
+            }
+        } catch {
+            // The editor remains fully usable when storage is unavailable.
+        }
+    }, [editable, rootBlock?.id]);
+
     const handleTitleKeyDown = useCallback(
         (event: KeyboardEvent) => {
             if (event.key !== 'Enter') return false;
@@ -76,6 +95,7 @@ function EditorContent() {
                                         onBlur={handleTitleBlur}
                                         onKeyDown={handleTitleKeyDown}
                                         editable={editable}
+                                        autoFocus={shouldFocusTitle}
                                     />
                                     <BlockInteractions
                                         blockId={rootBlock.id}

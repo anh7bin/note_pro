@@ -29,10 +29,15 @@
 /* Placeholder */
 .ProseMirror p.is-editor-empty:first-child::before {
     color: hsl(var(--muted-foreground));
-    content: attr(data-placeholder);
+    content: none;
     float: left;
     height: 0;
+    opacity: 0.72;
     pointer-events: none;
+}
+
+.ProseMirror.show-placeholder p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
 }
 
 /* Headings */

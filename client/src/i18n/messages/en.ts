@@ -17,6 +17,7 @@ export const en = {
     noEmail: 'No email',
     account: 'Account',
     untitledPage: 'Untitled Page',
+    blockPlaceholder: 'Type something, or press / for commands...',
     untitledTask: 'Untitled Task',
     documentCount: '{{count}} document',
     documentCountPlural: '{{count}} documents',

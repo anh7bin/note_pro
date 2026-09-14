@@ -11,6 +11,7 @@ interface Props {
     onBlur?: () => void;
     className?: string;
     editable?: boolean;
+    autoFocus?: boolean;
 }
 
 export const DocumentTitleInput = memo(
@@ -22,6 +23,7 @@ export const DocumentTitleInput = memo(
         onChange,
         className,
         editable = true,
+        autoFocus = false,
     }: Props) {
         return (
             <TiptapEditor
@@ -33,6 +35,8 @@ export const DocumentTitleInput = memo(
                 className={className}
                 editorClassName="prose prose-sm max-w-none focus:outline-none text-xl font-bold break-words"
                 isTitle={true}
+                isFocused={autoFocus}
+                focusPosition="end"
                 showBubbleMenu={true}
                 editable={editable}
             />
@@ -42,6 +46,7 @@ export const DocumentTitleInput = memo(
         return (
             prevProps.value === nextProps.value &&
             prevProps.editable === nextProps.editable &&
+            prevProps.autoFocus === nextProps.autoFocus &&
             prevProps.onKeyDown === nextProps.onKeyDown
         );
     }

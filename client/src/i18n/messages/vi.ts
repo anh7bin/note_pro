@@ -18,6 +18,7 @@ export const vi: Messages = {
     noEmail: 'Không có email',
     account: 'Tài khoản',
     untitledPage: 'Trang chưa có tiêu đề',
+    blockPlaceholder: 'Nhập nội dung hoặc gõ / để chèn...',
     untitledTask: 'Công việc chưa có tiêu đề',
     documentCount: '{{count}} tài liệu',
     documentCountPlural: '{{count}} tài liệu',

@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useCallback, useRef } from 'react';
 import { flushSync } from 'react-dom';
 import { useI18n } from '@/contexts/I18nContext';
+import { NEW_DOCUMENT_TITLE_FOCUS_KEY } from '@/lib/constants';
 
 interface CreateDocumentOptions {
     folderId?: string | null;
@@ -98,6 +99,16 @@ export function useCreateDocument(options: CreateDocumentOptions = {}) {
                           docId
                       )
                     : ROUTES.WORKSPACE_DOCUMENT(workspace.id, docId);
+
+                try {
+                    sessionStorage.setItem(
+                        NEW_DOCUMENT_TITLE_FOCUS_KEY,
+                        docId
+                    );
+                } catch {
+                    // Focusing the title is an enhancement; document creation
+                    // should still succeed when storage is unavailable.
+                }
 
                 router.push(route);
 

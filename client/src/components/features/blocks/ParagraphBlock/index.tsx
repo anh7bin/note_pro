@@ -3,6 +3,8 @@
 import { memo } from 'react';
 import { TiptapEditor } from '@/components/features/editor/TiptapEditor';
 import type { TextBlockProps } from '../types';
+import { useI18n } from '@/contexts/I18nContext';
+import { cn } from '@/lib/utils';
 
 export const ParagraphBlock = memo(
     function ParagraphBlock({
@@ -26,6 +28,8 @@ export const ParagraphBlock = memo(
         onConvertToTable,
         totalBlocks,
     }: TextBlockProps) {
+        const { t } = useI18n();
+
         return (
             <TiptapEditor
                 blockId={block.id}
@@ -43,7 +47,11 @@ export const ParagraphBlock = memo(
                 onInsertBelow={onInsertBelow}
                 isFocused={isFocused}
                 position={block.position || 0}
-                editorClassName="prose prose-sm max-w-none focus:outline-none text-base break-words text-sm leading-relaxed"
+                editorClassName={cn(
+                    'prose prose-sm max-w-none break-words text-sm leading-relaxed focus:outline-none',
+                    (totalBlocks === 1 || isFocused) && 'show-placeholder'
+                )}
+                placeholder={t('blockPlaceholder')}
                 showBubbleMenu={true}
                 dragHandle={dragHandle}
                 isTask={false}
