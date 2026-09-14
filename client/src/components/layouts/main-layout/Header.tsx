@@ -22,6 +22,7 @@ import { useDocumentPermission } from '@/hooks/useDocumentPermission';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { DocumentPresence } from './components/DocumentPresence';
 import { useI18n } from '@/contexts/I18nContext';
+import { LanguageMenu } from '@/components/ui/language-switcher';
 
 interface Props {
     workspaceSlug: string;
@@ -95,6 +96,7 @@ export default function Header({ workspaceSlug }: Props) {
                         )}
                         <ThemeToggle />
                         <NotificationButton />
+                        <LanguageMenu compact />
                         <SettingButton />
                     </div>
                 </header>

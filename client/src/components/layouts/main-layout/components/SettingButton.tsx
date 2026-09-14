@@ -11,8 +11,8 @@ import { useSession } from 'next-auth/react';
 import { useLogout } from '@/hooks/useLogout';
 import { UserAvatar } from '@/components/shared';
 import { Button } from '@/components/ui/button';
-import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { useI18n } from '@/contexts/I18nContext';
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 
 export const SettingButton = () => {
     const { data: session } = useSession();
@@ -22,16 +22,22 @@ export const SettingButton = () => {
     return (
         <div className="relative">
             <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild>
-                    <Button type="button" variant="ghost" size="icon">
-                        <UserAvatar
-                            avatarUrl={session?.user?.image}
-                            name={session?.user?.name}
-                            email={session?.user?.email || ''}
-                            size={24}
-                        />
-                    </Button>
-                </DropdownMenuTrigger>
+                <SimpleTooltip title={t('account')}>
+                    <DropdownMenuTrigger asChild>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            aria-label={t('account')}>
+                            <UserAvatar
+                                avatarUrl={session?.user?.image}
+                                name={session?.user?.name}
+                                email={session?.user?.email || ''}
+                                size={24}
+                            />
+                        </Button>
+                    </DropdownMenuTrigger>
+                </SimpleTooltip>
                 <DropdownMenuContent className="w-56 p-2" align="end">
                     <DropdownMenuLabel>
                         <div className="flex flex-col items-center gap-2">
@@ -49,8 +55,6 @@ export const SettingButton = () => {
                             </p>
                         </div>
                     </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <LanguageSwitcher />
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logout} disabled={isLoggingOut}>
                         <LogOut />

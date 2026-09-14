@@ -16,6 +16,7 @@ export const vi: Messages = {
     searchEmoji: 'Tìm biểu tượng cảm xúc',
     clearEmojiSearch: 'Xóa tìm kiếm biểu tượng cảm xúc',
     noEmail: 'Không có email',
+    account: 'Tài khoản',
     untitledPage: 'Trang chưa có tiêu đề',
     untitledTask: 'Công việc chưa có tiêu đề',
     documentCount: '{{count}} tài liệu',

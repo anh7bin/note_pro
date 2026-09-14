@@ -16,11 +16,11 @@ export function SimpleTooltip({
     title,
     children,
     side = 'bottom',
-    sideOffset = 8,
+    sideOffset = 6,
     className,
 }: Props) {
     return (
-        <TooltipPrimitive.Provider delayDuration={0}>
+        <TooltipPrimitive.Provider delayDuration={300} skipDelayDuration={100}>
             <TooltipPrimitive.Root>
                 <TooltipPrimitive.Trigger asChild>
                     {children}
@@ -32,10 +32,13 @@ export function SimpleTooltip({
                         avoidCollisions={true}
                         collisionPadding={8}
                         className={cn(
-                            'z-50 overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin] max-w-64 break-words',
+                            'z-[90] max-w-64 break-words rounded-lg bg-foreground px-2.5 py-1.5 text-xs font-medium leading-none text-background shadow-lg',
+                            'animate-in fade-in-0 zoom-in-95 duration-150 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+                            'data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1 origin-[--radix-tooltip-content-transform-origin]',
                             className
                         )}>
                         {title}
+                        <TooltipPrimitive.Arrow className="fill-foreground" />
                     </TooltipPrimitive.Content>
                 </TooltipPrimitive.Portal>
             </TooltipPrimitive.Root>

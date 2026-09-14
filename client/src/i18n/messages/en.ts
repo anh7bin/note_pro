@@ -15,6 +15,7 @@ export const en = {
     searchEmoji: 'Search emojis',
     clearEmojiSearch: 'Clear emoji search',
     noEmail: 'No email',
+    account: 'Account',
     untitledPage: 'Untitled Page',
     untitledTask: 'Untitled Task',
     documentCount: '{{count}} document',
