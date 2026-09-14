@@ -272,6 +272,8 @@ export const en = {
     share: 'Share',
     shared: 'Shared',
     export: 'Export',
+    askToEdit: 'Ask to Edit',
+    requestSent: 'Request Sent',
     notifications: 'Notifications',
     caughtUp: 'You are all caught up',
     markAllRead: 'Mark all read',
