@@ -90,8 +90,8 @@ export default function Header({ workspaceSlug }: Props) {
                     <div className="flex min-w-0 items-center justify-end gap-1">
                         {isDocumentPage && documentId && permissionType && (
                             <>
-                                <RequestEditButton documentId={documentId} />
                                 <DocumentPresence documentId={documentId} />
+                                <RequestEditButton documentId={documentId} />
                                 <ShareExportButton documentId={documentId} />
                             </>
                         )}

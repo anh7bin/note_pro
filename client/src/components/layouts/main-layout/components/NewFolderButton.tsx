@@ -10,6 +10,7 @@ import showToast from '@/lib/toast';
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useI18n } from '@/contexts/I18nContext';
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 
 export const NewFolderButton = () => {
     const userId = useUserId();
@@ -57,13 +58,15 @@ export const NewFolderButton = () => {
 
     return (
         <>
-            <Button
-                variant="ghost"
-                size="icon"
-                aria-label={t('createFolder')}
-                onClick={() => setIsOpen(true)}>
-                <Plus />
-            </Button>
+            <SimpleTooltip title={t('newFolder')}>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={t('createFolder')}
+                    onClick={() => setIsOpen(true)}>
+                    <Plus />
+                </Button>
+            </SimpleTooltip>
             <FolderDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}

@@ -18,6 +18,7 @@ import { WorkspaceButton } from './components/WorkspaceButton';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 interface Props {
     workspaceSlug: string;
     workspaceId: string;
@@ -120,27 +121,36 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                         </span>
                         <div className="flex items-center gap-1">
                             <NewFolderButton />
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                aria-label={
+                            <SimpleTooltip
+                                title={
                                     isFoldersCollapsed
                                         ? t('expandFolders')
                                         : t('collapseFolders')
-                                }
-                                aria-expanded={!isFoldersCollapsed}
-                                onClick={() =>
-                                    setIsFoldersCollapsed(!isFoldersCollapsed)
                                 }>
-                                <ChevronRight
-                                    className={cn(
-                                        'transition-transform duration-200',
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    aria-label={
                                         isFoldersCollapsed
-                                            ? 'rotate-0'
-                                            : 'rotate-90'
-                                    )}
-                                />
-                            </Button>
+                                            ? t('expandFolders')
+                                            : t('collapseFolders')
+                                    }
+                                    aria-expanded={!isFoldersCollapsed}
+                                    onClick={() =>
+                                        setIsFoldersCollapsed(
+                                            !isFoldersCollapsed
+                                        )
+                                    }>
+                                    <ChevronRight
+                                        className={cn(
+                                            'transition-transform duration-200',
+                                            isFoldersCollapsed
+                                                ? 'rotate-0'
+                                                : 'rotate-90'
+                                        )}
+                                    />
+                                </Button>
+                            </SimpleTooltip>
                         </div>
                     </div>
                     {!isFoldersCollapsed && (

@@ -2,15 +2,7 @@
 
 import { DocumentGrid } from '@/components/features/page/DocumentGrid';
 import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
-import { Button } from '@/components/ui/button';
-import { PageLoading } from '@/components/ui/loading';
-import { Separator } from '@/components/ui/separator';
-import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
-import { useGetAllDocsQuery } from '@/graphql/queries/__generated__/document.generated';
-import { useCreateDocument, useWorkspace } from '@/hooks';
-import { Document } from '@/types/app';
-import { useMemo, useEffect } from 'react';
-import { FilePlus2, Files, Plus } from 'lucide-react';
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import {
     EmptyState,
     PageContent,
@@ -18,7 +10,16 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
+import { Button } from '@/components/ui/button';
+import { PageLoading } from '@/components/ui/loading';
+import { Separator } from '@/components/ui/separator';
+import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useI18n } from '@/contexts/I18nContext';
+import { useGetAllDocsQuery } from '@/graphql/queries/__generated__/document.generated';
+import { useCreateDocument, useWorkspace } from '@/hooks';
+import { Document } from '@/types/app';
+import { FilePlus2, Files, Plus } from 'lucide-react';
+import { useEffect, useMemo } from 'react';
 
 export default function AllDocsPage() {
     const { workspace } = useWorkspace();
@@ -45,19 +46,21 @@ export default function AllDocsPage() {
         <PageShell>
             <PageHeader>
                 <div className="flex items-center gap-2">
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={createNewDocument}
-                        disabled={!canCreate || isCreating}
-                        aria-label={
-                            isCreating
-                                ? t('creatingDocument')
-                                : t('createDocument')
-                        }
-                        aria-busy={isCreating}>
-                        <Plus />
-                    </Button>
+                    <SimpleTooltip title={t('createDocument')}>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={createNewDocument}
+                            disabled={!canCreate || isCreating}
+                            aria-label={
+                                isCreating
+                                    ? t('creatingDocument')
+                                    : t('createDocument')
+                            }
+                            aria-busy={isCreating}>
+                            <Plus />
+                        </Button>
+                    </SimpleTooltip>
                     <Separator orientation="vertical" />
                     <PageTitle>{t('allDocs')}</PageTitle>
                 </div>
