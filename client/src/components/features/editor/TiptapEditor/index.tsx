@@ -68,15 +68,31 @@ function useEditorContentSync(
     value: string,
     prevValueRef: React.MutableRefObject<string>
 ) {
+    const latestValueRef = useRef(value);
+    latestValueRef.current = value;
+
     useEffect(() => {
         if (!editor) return;
 
-        if (value !== prevValueRef.current) {
-            if (editor.isFocused) return;
+        const applyExternalValue = (allowWhileBlurring = false) => {
+            const latestValue = latestValueRef.current;
+            if (latestValue === prevValueRef.current) return;
+            if (editor.isFocused && !allowWhileBlurring) return;
 
-            editor.commands.setContent(value, { emitUpdate: false });
-            prevValueRef.current = value;
-        }
+            editor.commands.setContent(latestValue, { emitUpdate: false });
+            prevValueRef.current = latestValue;
+        };
+
+        applyExternalValue();
+
+        // While focused, keep the local ProseMirror document stable so a remote
+        // update cannot move the caret. Apply the deferred value on blur.
+        const handleBlur = () => applyExternalValue(true);
+        editor.on('blur', handleBlur);
+
+        return () => {
+            editor.off('blur', handleBlur);
+        };
     }, [value, editor, prevValueRef]);
 }
 

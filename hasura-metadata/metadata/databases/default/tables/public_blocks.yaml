@@ -212,6 +212,18 @@ update_permissions:
                   _eq: X-Hasura-User-Id
                 status:
                   _eq: approved
+          - _and:
+              - type:
+                  _eq: page
+              - deleted_at:
+                  _is_null: true
+              - access_requests:
+                  permission_type:
+                    _eq: write
+                  requester_id:
+                    _eq: X-Hasura-User-Id
+                  status:
+                    _eq: approved
           - page:
               link_access:
                 permission_type:
@@ -237,6 +249,18 @@ update_permissions:
                   _eq: X-Hasura-User-Id
                 status:
                   _eq: approved
+          - _and:
+              - type:
+                  _eq: page
+              - deleted_at:
+                  _is_null: true
+              - access_requests:
+                  permission_type:
+                    _eq: write
+                  requester_id:
+                    _eq: X-Hasura-User-Id
+                  status:
+                    _eq: approved
           - page:
               link_access:
                 permission_type:

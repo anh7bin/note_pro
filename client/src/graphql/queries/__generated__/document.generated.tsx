@@ -17,6 +17,13 @@ export type GetDocumentBlocksQueryVariables = Types.Exact<{
 
 export type GetDocumentBlocksQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> };
 
+export type SubscribeToDocumentBlocksSubscriptionVariables = Types.Exact<{
+  pageId: Types.Scalars['uuid']['input'];
+}>;
+
+
+export type SubscribeToDocumentBlocksSubscription = { __typename?: 'subscription_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> };
+
 export type GetDocsCountQueryVariables = Types.Exact<{
   workspaceId: Types.Scalars['uuid']['input'];
 }>;
@@ -160,6 +167,60 @@ export type GetDocumentBlocksQueryHookResult = ReturnType<typeof useGetDocumentB
 export type GetDocumentBlocksLazyQueryHookResult = ReturnType<typeof useGetDocumentBlocksLazyQuery>;
 export type GetDocumentBlocksSuspenseQueryHookResult = ReturnType<typeof useGetDocumentBlocksSuspenseQuery>;
 export type GetDocumentBlocksQueryResult = Apollo.QueryResult<GetDocumentBlocksQuery, GetDocumentBlocksQueryVariables>;
+export const SubscribeToDocumentBlocksDocument = gql`
+    subscription SubscribeToDocumentBlocks($pageId: uuid!) {
+  blocks(
+    where: {_or: [{id: {_eq: $pageId}}, {page_id: {_eq: $pageId}}], deleted_at: {_is_null: true}}
+    order_by: {position: asc}
+  ) {
+    id
+    content
+    cover_image
+    position
+    parent_id
+    page_id
+    type
+    workspace_id
+    user_id
+    created_at
+    updated_at
+    link_access {
+      permission_type
+    }
+    tasks {
+      id
+      status
+      deadline_date
+      schedule_date
+      priority
+      user_id
+    }
+  }
+}
+    `;
+
+/**
+ * __useSubscribeToDocumentBlocksSubscription__
+ *
+ * To run a query within a React component, call `useSubscribeToDocumentBlocksSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeToDocumentBlocksSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscribeToDocumentBlocksSubscription({
+ *   variables: {
+ *      pageId: // value for 'pageId'
+ *   },
+ * });
+ */
+export function useSubscribeToDocumentBlocksSubscription(baseOptions: Apollo.SubscriptionHookOptions<SubscribeToDocumentBlocksSubscription, SubscribeToDocumentBlocksSubscriptionVariables> & ({ variables: SubscribeToDocumentBlocksSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubscribeToDocumentBlocksSubscription, SubscribeToDocumentBlocksSubscriptionVariables>(SubscribeToDocumentBlocksDocument, options);
+      }
+export type SubscribeToDocumentBlocksSubscriptionHookResult = ReturnType<typeof useSubscribeToDocumentBlocksSubscription>;
+export type SubscribeToDocumentBlocksSubscriptionResult = Apollo.SubscriptionResult<SubscribeToDocumentBlocksSubscription>;
 export const GetDocsCountDocument = gql`
     query GetDocsCount($workspaceId: uuid!) {
   blocks_aggregate(

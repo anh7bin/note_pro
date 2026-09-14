@@ -65,6 +65,39 @@ query GetDocumentBlocks($pageId: uuid!) {
     }
 }
 
+subscription SubscribeToDocumentBlocks($pageId: uuid!) {
+    blocks(
+        where: {
+            _or: [{ id: { _eq: $pageId } }, { page_id: { _eq: $pageId } }]
+            deleted_at: { _is_null: true }
+        }
+        order_by: { position: asc }
+    ) {
+        id
+        content
+        cover_image
+        position
+        parent_id
+        page_id
+        type
+        workspace_id
+        user_id
+        created_at
+        updated_at
+        link_access {
+            permission_type
+        }
+        tasks {
+            id
+            status
+            deadline_date
+            schedule_date
+            priority
+            user_id
+        }
+    }
+}
+
 query GetDocsCount($workspaceId: uuid!) {
     blocks_aggregate(
         where: {

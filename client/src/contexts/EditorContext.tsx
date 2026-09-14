@@ -19,7 +19,7 @@ const EditorContext = createContext<EditorContextValue | null>(null);
 export function EditorProvider({ children, pageId }: EditorProviderProps) {
     const userId = useUserId();
     const { loading, processedBlocks, processedRootBlock } =
-        useDocumentBlocksData(pageId);
+        useDocumentBlocksData(pageId, { realtime: true });
     const { canEdit } = useDocumentPermission(pageId);
     const blockRepository = useBlocks();
     const debounce = useDebounce(300);
