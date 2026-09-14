@@ -28,18 +28,39 @@ export function Loading({
     className,
     text,
 }: LoadingProps) {
+    const { t } = useI18n();
+
     if (variant === 'spinner') {
+        const iconContainerSizes = {
+            sm: 'h-8 w-8',
+            md: 'h-10 w-10',
+            lg: 'h-12 w-12',
+        };
+
         return (
             <div
-                role={text ? 'status' : undefined}
-                aria-live={text ? 'polite' : undefined}
+                role="status"
+                aria-live="polite"
+                aria-label={text ? undefined : t('loading')}
                 className={cn(
-                    'flex items-center justify-center gap-2',
+                    'flex items-center justify-center',
+                    text &&
+                        'flex-col gap-3 text-center animate-in fade-in-0 duration-300 motion-reduce:animate-none',
                     className
                 )}>
-                <Spinner size={size} />
+                {text ? (
+                    <span
+                        className={cn(
+                            'inline-flex shrink-0 items-center justify-center rounded-full bg-primary/10 ring-1 ring-primary/10',
+                            iconContainerSizes[size]
+                        )}>
+                        <Spinner size={size} />
+                    </span>
+                ) : (
+                    <Spinner size={size} />
+                )}
                 {text && (
-                    <span className="text-sm text-muted-foreground">
+                    <span className="max-w-xs text-sm font-medium leading-5 text-muted-foreground">
                         {text}
                     </span>
                 )}
@@ -87,7 +108,7 @@ export function LoadingDots({ size = 'md', className }: LoadingDotsProps) {
                 <div
                     key={i}
                     className={cn(
-                        'bg-current rounded-full animate-bounce',
+                        'animate-bounce rounded-full bg-current motion-reduce:animate-none',
                         sizeClasses[size]
                     )}
                     style={{
@@ -119,8 +140,8 @@ export function ButtonLoading({
     ...props
 }: React.ComponentProps<'div'>) {
     return (
-        <div className="flex items-center gap-2" {...props}>
-            <Spinner size="sm" />
+        <div role="status" className="flex items-center gap-2" {...props}>
+            <Spinner size="sm" className="text-current" />
             {children}
         </div>
     );

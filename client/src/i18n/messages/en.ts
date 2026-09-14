@@ -39,6 +39,7 @@ export const en = {
     logout: 'Log out',
     logoutSuccess: 'Successfully signed out',
     logoutError: 'Failed to sign out. Redirecting to login...',
+    openingDocument: 'Opening document...',
     checkingAccess: 'Checking access...',
     checkingDocumentAccess: 'Checking document access...',
     accessRequestPending: 'Access request pending',

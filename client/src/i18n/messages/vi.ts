@@ -39,6 +39,7 @@ export const vi: Messages = {
     logout: 'Đăng xuất',
     logoutSuccess: 'Đã đăng xuất thành công',
     logoutError: 'Không thể đăng xuất. Đang chuyển đến trang đăng nhập...',
+    openingDocument: 'Đang mở tài liệu...',
     checkingAccess: 'Đang kiểm tra quyền truy cập...',
     checkingDocumentAccess: 'Đang kiểm tra quyền truy cập tài liệu...',
     accessRequestPending: 'Yêu cầu truy cập đang chờ xử lý',

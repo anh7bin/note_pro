@@ -15,9 +15,11 @@ import { useSearchUsersByEmailLazyQuery } from '@/graphql/queries/__generated__/
 import { PermissionType } from '@/types/types';
 import debounce from 'lodash/debounce';
 import differenceBy from 'lodash/differenceBy';
-import { Loader2, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useI18n } from '@/contexts/I18nContext';
+import { Loading } from '@/components/ui/loading';
+import { Spinner } from '@/components/ui/spinner';
 
 export type UserSearchResult = {
     id: string;
@@ -170,12 +172,8 @@ export function UserEmailAutocomplete({
                 className="min-h-0 flex-1 space-y-1 overflow-y-auto pb-3"
                 aria-live="polite">
                 {loading && !data ? (
-                    <div className="flex min-h-32 items-center justify-center text-sm text-muted-foreground">
-                        <Loader2
-                            className="mr-2 h-4 w-4 animate-spin"
-                            aria-hidden="true"
-                        />
-                        {t('searchingUsers')}
+                    <div className="flex min-h-32 items-center justify-center">
+                        <Loading size="sm" text={t('searchingUsers')} />
                     </div>
                 ) : filteredUsers.length === 0 ? (
                     <div className="flex min-h-32 items-center justify-center text-sm text-muted-foreground">
@@ -235,10 +233,7 @@ export function UserEmailAutocomplete({
                 onClick={() => void handleInvite()}>
                 {isInviting ? (
                     <>
-                        <Loader2
-                            className="h-4 w-4 animate-spin"
-                            aria-hidden="true"
-                        />
+                        <Spinner size="sm" className="text-current" />
                         {t('inviting')}
                     </>
                 ) : selectedUsers.size > 1 ? (

@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import { Loader2 } from 'lucide-react';
 
 interface SpinnerProps {
     size?: 'sm' | 'md' | 'lg';
@@ -14,14 +13,16 @@ const sizeVariants = {
 
 export function Spinner({ size = 'md', className }: SpinnerProps) {
     return (
-        <Loader2
+        <span
             aria-hidden="true"
             className={cn(
-                'animate-spin text-muted-foreground',
+                'relative inline-flex shrink-0 rounded-full text-primary',
                 sizeVariants[size],
                 className
-            )}
-        />
+            )}>
+            <span className="absolute inset-0 rounded-full border-2 border-current opacity-[0.15]" />
+            <span className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-r-current border-t-current opacity-90 [animation-duration:800ms] motion-reduce:animate-none" />
+        </span>
     );
 }
 

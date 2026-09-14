@@ -5,7 +5,7 @@ import { Modal } from '@/components/ui/modal';
 import { TaskItem } from '@/components/features/page/TaskItem';
 import { Button } from '@/components/ui/button';
 import { CheckCircle } from 'lucide-react';
-import { Spinner } from '@/components/ui/spinner';
+import { Loading } from '@/components/ui/loading';
 import { useI18n } from '@/contexts/I18nContext';
 
 interface CompletedTask {
@@ -71,10 +71,7 @@ export const CompletedTasksModal = ({
             <div className="flex-1 overflow-y-auto overflow-x-hidden pr-1">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
-                        <Spinner className="w-8 h-8 mb-3" />
-                        <p className="text-sm text-muted-foreground">
-                            {t('loadingCompletedTasks')}
-                        </p>
+                        <Loading size="lg" text={t('loadingCompletedTasks')} />
                     </div>
                 ) : completedTasks.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">

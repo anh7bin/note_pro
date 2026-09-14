@@ -114,7 +114,15 @@ export function DocumentAccessGuard({
         };
     }, [hasAccess, setHasAccess, documentId, setDocumentId]);
 
-    if (loading || accessRequestLoading) {
+    if (loading) {
+        return (
+            <div className="flex h-full min-h-40 items-center justify-center">
+                <Loading text={t('openingDocument')} />
+            </div>
+        );
+    }
+
+    if (accessRequestLoading) {
         return (
             <div className="flex h-full min-h-40 items-center justify-center">
                 <Loading text={t('checkingDocumentAccess')} />
