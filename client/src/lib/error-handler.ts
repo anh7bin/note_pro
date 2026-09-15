@@ -3,10 +3,10 @@ import { showToast } from './toast';
 export function handleMutationError(
     error: unknown,
     context: string,
-    customMessage?: string
+    userMessage: string
 ) {
     console.error(`Error ${context}:`, error);
-    showToast.error(customMessage || `Failed to ${context}`);
+    showToast.error(userMessage);
 }
 
 export function handleMutationSuccess(message: string) {

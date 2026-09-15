@@ -6,7 +6,7 @@ import type {
     FileBlockContent,
 } from '@/types/editor';
 import type { Editor } from '@tiptap/react';
-import { toast } from 'sonner';
+import { showToast } from '@/lib/toast';
 import { MAX_FILE_SIZE_BYTES } from './constants';
 import type { FileUploadState } from './types';
 
@@ -20,6 +20,16 @@ interface FileUploadOptions {
     onUploadStateChange?: (upload: FileUploadState | null) => void;
     signal?: AbortSignal;
     uploadedFileData?: FileBlockContent;
+    messages: FileUploadMessages;
+}
+
+export interface FileUploadMessages {
+    cannotUploadToBlock: string;
+    fileTooLarge: string;
+    cannotAddToPage: string;
+    uploadedButNotSaved: string;
+    uploaded: string;
+    uploadError: string;
 }
 
 export interface FileUploadResult {
@@ -37,14 +47,15 @@ export const handleFileUpload = async ({
     onUploadStateChange,
     signal,
     uploadedFileData: existingUpload,
+    messages,
 }: FileUploadOptions): Promise<FileUploadResult> => {
     if (!blockId) {
-        toast.error('Cannot upload file to this block.');
+        showToast.error(messages.cannotUploadToBlock);
         return { status: 'error' };
     }
 
     if (file.size > MAX_FILE_SIZE_BYTES) {
-        toast.error('File is too large. Maximum size is 25MB.');
+        showToast.error(messages.fileTooLarge);
         return { status: 'error' };
     }
 
@@ -113,17 +124,15 @@ export const handleFileUpload = async ({
         } else if (onConvertToFile) {
             persisted = await onConvertToFile(blockId, uploadedFileData);
         } else {
-            throw new Error('Cannot add the uploaded file to this page.');
+            throw new Error(messages.cannotAddToPage);
         }
 
         if (persisted === false) {
-            throw new Error(
-                'The file was uploaded, but could not be saved to this page.'
-            );
+            throw new Error(messages.uploadedButNotSaved);
         }
 
         onUploadStateChange?.(null);
-        toast.success('File uploaded successfully');
+        showToast.success(messages.uploaded);
         return { status: 'success' };
     } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
@@ -131,17 +140,21 @@ export const handleFileUpload = async ({
             return { status: 'cancelled' };
         }
 
+        const knownErrors = new Set([
+            messages.cannotAddToPage,
+            messages.uploadedButNotSaved,
+        ]);
         const message =
-            error instanceof Error
+            error instanceof Error && knownErrors.has(error.message)
                 ? error.message
-                : 'Failed to upload file. Please try again.';
+                : messages.uploadError;
         onUploadStateChange?.({
             ...pendingFile,
             progress: lastProgress,
             status: 'error',
             errorMessage: message,
         });
-        toast.error(message);
+        showToast.error(message);
         return { status: 'error', uploadedFileData };
     }
 };

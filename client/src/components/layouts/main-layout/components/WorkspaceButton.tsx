@@ -106,10 +106,8 @@ export const WorkspaceButton = () => {
             setIsOpen(false);
             showToast.success(t('workspaceUpdated'));
         } catch (error) {
-            showToast.error(t('workspaceUpdateError'), {
-                description:
-                    error instanceof Error ? error.message : t('unknownError'),
-            });
+            console.error('Failed to update workspace:', error);
+            showToast.error(t('workspaceUpdateError'));
         } finally {
             setIsSaving(false);
         }

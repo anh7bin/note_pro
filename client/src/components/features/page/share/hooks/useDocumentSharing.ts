@@ -17,9 +17,10 @@ import {
 } from '@/lib/error-handler';
 import { AccessRequestStatus, PermissionType } from '@/types/types';
 import { ROUTES } from '@/lib/routes';
-import { commonToasts } from '@/lib/toast';
+import { showToast } from '@/lib/toast';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 import { UserSearchResult } from '../UserEmailAutocomplete';
 import type { LinkPermissionType } from '../PermissionSelector';
 import { PendingAccessRequest, SharedUserRole } from '../share.types';
@@ -32,6 +33,7 @@ import {
 export function useDocumentSharing(documentId: string) {
     const router = useRouter();
     const currentUserId = useUserId();
+    const { t } = useI18n();
     const { permissionType } = useDocumentPermission(documentId);
     const [processingRequestId, setProcessingRequestId] = useState<
         string | null
@@ -98,17 +100,25 @@ export function useDocumentSharing(documentId: string) {
 
                 handleMutationSuccess(
                     users.length === 1
-                        ? `Shared document with ${users[0]?.email || 'user'}`
-                        : `Shared document with ${users.length} people`
+                        ? t('sharedDocumentWithUser', {
+                              user: users[0]?.email || t('user'),
+                          })
+                        : t('sharedDocumentWithPeople', {
+                              count: users.length,
+                          })
                 );
                 await refetch();
                 return true;
             } catch (error) {
-                handleMutationError(error, 'share document');
+                handleMutationError(
+                    error,
+                    'share document',
+                    t('shareDocumentError')
+                );
                 return false;
             }
         },
-        [currentUserId, documentId, refetch, shareDocuments]
+        [currentUserId, documentId, refetch, shareDocuments, t]
     );
 
     const onLinkPermissionChange = useCallback(
@@ -122,15 +132,19 @@ export function useDocumentSharing(documentId: string) {
                         permissionType: permission,
                     },
                 });
-                handleMutationSuccess('Link access updated');
+                handleMutationSuccess(t('linkAccessUpdated'));
                 await refetch();
                 return true;
             } catch (error) {
-                handleMutationError(error, 'update link access');
+                handleMutationError(
+                    error,
+                    'update link access',
+                    t('linkAccessUpdateError')
+                );
                 return false;
             }
         },
-        [currentUserId, documentId, refetch, setDocumentLinkAccess]
+        [currentUserId, documentId, refetch, setDocumentLinkAccess, t]
     );
 
     const onCopyLink = useCallback(async () => {
@@ -138,11 +152,11 @@ export function useDocumentSharing(documentId: string) {
             const url = new URL(window.location.href);
             url.searchParams.delete('openShare');
             await navigator.clipboard.writeText(url.toString());
-            commonToasts.copied();
+            showToast.success(t('linkCopied'), { duration: 2000 });
         } catch (error) {
-            handleMutationError(error, 'copy link');
+            handleMutationError(error, 'copy link', t('copyLinkError'));
         }
-    }, []);
+    }, [t]);
 
     const onRoleChange = useCallback(
         async (userId: string, role: SharedUserRole) => {
@@ -158,13 +172,17 @@ export function useDocumentSharing(documentId: string) {
                     },
                 });
 
-                handleMutationSuccess('Permission updated');
+                handleMutationSuccess(t('permissionUpdated'));
                 await refetch();
             } catch (error) {
-                handleMutationError(error, 'update permission');
+                handleMutationError(
+                    error,
+                    'update permission',
+                    t('permissionUpdateError')
+                );
             }
         },
-        [documentId, refetch, updatePermission]
+        [documentId, refetch, t, updatePermission]
     );
 
     const onRemoveUser = useCallback(
@@ -173,18 +191,22 @@ export function useDocumentSharing(documentId: string) {
                 await removeAccess({ variables: { documentId, userId } });
 
                 if (userId === currentUserId) {
-                    handleMutationSuccess('You left the document');
+                    handleMutationSuccess(t('leftDocument'));
                     router.replace(ROUTES.SHARED_WITH_ME);
                     return;
                 }
 
-                handleMutationSuccess('Access removed');
+                handleMutationSuccess(t('documentAccessRemoved'));
                 await refetch();
             } catch (error) {
-                handleMutationError(error, 'remove access');
+                handleMutationError(
+                    error,
+                    'remove access',
+                    t('accessRemovalError')
+                );
             }
         },
-        [currentUserId, documentId, refetch, removeAccess, router]
+        [currentUserId, documentId, refetch, removeAccess, router, t]
     );
 
     const onApproveRequest = useCallback(
@@ -195,15 +217,19 @@ export function useDocumentSharing(documentId: string) {
                 await approveRequest({
                     variables: { requestId: request.id },
                 });
-                handleMutationSuccess('Request approved');
+                handleMutationSuccess(t('requestApproved'));
                 await refetch();
             } catch (error) {
-                handleMutationError(error, 'approve request');
+                handleMutationError(
+                    error,
+                    'approve request',
+                    t('requestApprovalError')
+                );
             } finally {
                 setProcessingRequestId(null);
             }
         },
-        [approveRequest, refetch]
+        [approveRequest, refetch, t]
     );
 
     const onDeclineRequest = useCallback(
@@ -222,15 +248,19 @@ export function useDocumentSharing(documentId: string) {
                             : AccessRequestStatus.REJECTED,
                     },
                 });
-                handleMutationSuccess('Request declined');
+                handleMutationSuccess(t('requestDeclined'));
                 await refetch();
             } catch (error) {
-                handleMutationError(error, 'decline request');
+                handleMutationError(
+                    error,
+                    'decline request',
+                    t('requestDeclineError')
+                );
             } finally {
                 setProcessingRequestId(null);
             }
         },
-        [declineRequest, refetch]
+        [declineRequest, refetch, t]
     );
 
     return {

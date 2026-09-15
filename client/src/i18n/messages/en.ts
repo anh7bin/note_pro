@@ -197,6 +197,15 @@ export const en = {
     loadingFolders: 'Loading folders...',
     noFolders: 'No folders yet',
     openInNewTab: 'Open in new tab',
+    workspaceNotFound: 'Workspace not found',
+    linkCopied: 'Link copied to clipboard',
+    copyLinkError: 'Failed to copy link. Please try again.',
+    documentDeleted: 'Document deleted successfully',
+    documentDeleteError: 'Failed to delete document. Please try again.',
+    removedFromShared: 'Removed from shared documents',
+    removeDocumentAccessError: 'Failed to remove access. Please try again.',
+    documentMoved: 'Document moved successfully',
+    documentMoveError: 'Failed to move document. Please try again.',
 
     // Search
     searchPlaceholder: 'Search documents and folders...',
@@ -281,6 +290,8 @@ export const en = {
     noNotifications: 'No notifications',
     notificationsDescription:
         'Access requests and sharing updates appear here.',
+    markNotificationReadError: 'Could not mark notification as read',
+    markAllNotificationsReadError: 'Could not mark all notifications as read',
     recentNotifications: 'Showing the {{count}} most recent notifications',
     currentlyViewing: 'Currently viewing',
     viewingStatus: '{{count}} person is viewing this document',
@@ -338,6 +349,24 @@ export const en = {
     moveOneToTrashDescription: 'This item will be moved to Recently Deleted.',
     removeDocumentAccessDescription:
         'Are you sure you want to remove your access to this document?',
+    sharedDocumentWithUser: 'Shared document with {{user}}',
+    sharedDocumentWithPeople: 'Shared document with {{count}} people',
+    shareDocumentError: 'Failed to share document',
+    linkAccessUpdated: 'Link access updated',
+    linkAccessUpdateError: 'Failed to update link access',
+    permissionUpdated: 'Permission updated',
+    permissionUpdateError: 'Failed to update permission',
+    leftDocument: 'You left the document',
+    documentAccessRemoved: 'Access removed',
+    accessRemovalError: 'Failed to remove access',
+    requestApproved: 'Request approved',
+    requestApprovalError: 'Failed to approve request',
+    requestDeclined: 'Request declined',
+    requestDeclineError: 'Failed to decline request',
+    documentOwnerUnavailable: 'Cannot determine document owner',
+    editAccessRequestSent: 'Edit access request sent successfully',
+    editAccessAlreadyRequested: 'You have already requested edit access',
+    editAccessRequestError: 'Failed to send edit access request',
 
     // Image viewer
     download: 'Download',
@@ -352,6 +381,10 @@ export const en = {
     imageDownloaded: 'Image downloaded successfully',
     imageDownloadError: 'Failed to download image',
     fullscreenUnsupported: 'Fullscreen is not supported',
+    invalidImageType: 'Invalid image type. Allowed formats: {{types}}.',
+    imageTooLarge: 'Image is too large. Maximum size is {{size}} MB.',
+    imageUploaded: 'Image uploaded successfully',
+    imageUploadError: 'Failed to upload image. Please try again.',
 
     // Editor
     openBlockActions: 'Open block actions',
@@ -411,4 +444,15 @@ export const en = {
     differentKeyword: 'Try a different keyword',
     noHeadings: 'No headings yet',
     noHeadingsDescription: 'Add headings to build a table of contents.',
+    anotherFileUploading: 'Another file is already uploading in this block.',
+    cannotUploadFileToBlock: 'Cannot upload a file to this block.',
+    fileTooLarge: 'File is too large. Maximum size is 25 MB.',
+    cannotAddUploadedFile: 'Cannot add the uploaded file to this page.',
+    uploadedFileNotSaved:
+        'The file was uploaded, but could not be saved to this page.',
+    fileUploaded: 'File uploaded successfully',
+    fileUploadError: 'Failed to upload file. Please try again.',
+    addCommentError: 'Unable to add comment',
+    deleteCommentError: 'Unable to delete comment',
+    updateReactionError: 'Unable to update reaction',
 } as const;

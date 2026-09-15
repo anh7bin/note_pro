@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { Editor } from '@tiptap/react';
-import { toast } from 'sonner';
+import { showToast } from '@/lib/toast';
 import {
     handleFileUpload,
     handleTableInsert,
@@ -17,6 +17,7 @@ import type {
 } from '@/types/editor';
 import { BlockType } from '@/types/types';
 import type { FileUploadState } from '../slash/types';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface UseCommandHandlersOptions {
     editor: Editor | null;
@@ -41,6 +42,7 @@ export function useCommandHandlers({
     onUploadStateChange,
     updateState,
 }: UseCommandHandlersOptions) {
+    const { t } = useI18n();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const activeUploadRef = useRef<AbortController | null>(null);
     const retryUploadRef = useRef<{
@@ -57,6 +59,18 @@ export function useCommandHandlers({
     onAddBlockRef.current = onAddBlock;
     onConvertToFileRef.current = onConvertToFile;
     onConvertToTableRef.current = onConvertToTable;
+
+    const fileUploadMessages = useMemo(
+        () => ({
+            cannotUploadToBlock: t('cannotUploadFileToBlock'),
+            fileTooLarge: t('fileTooLarge'),
+            cannotAddToPage: t('cannotAddUploadedFile'),
+            uploadedButNotSaved: t('uploadedFileNotSaved'),
+            uploaded: t('fileUploaded'),
+            uploadError: t('fileUploadError'),
+        }),
+        [t]
+    );
 
     useEffect(
         () => () => {
@@ -109,7 +123,7 @@ export function useCommandHandlers({
             uploadedFileData?: FileBlockContent
         ): Promise<void> => {
             if (activeUploadRef.current) {
-                toast.info('Another file is already uploading in this block.');
+                showToast.info(t('anotherFileUploading'));
                 return;
             }
 
@@ -127,6 +141,7 @@ export function useCommandHandlers({
                     onUploadStateChange,
                     signal: controller.signal,
                     uploadedFileData,
+                    messages: fileUploadMessages,
                 });
 
                 if (result.status === 'error') {
@@ -143,7 +158,7 @@ export function useCommandHandlers({
                 }
             }
         },
-        [blockId, editor, onUploadStateChange]
+        [blockId, editor, fileUploadMessages, onUploadStateChange, t]
     );
 
     const handleFileChange = useCallback(

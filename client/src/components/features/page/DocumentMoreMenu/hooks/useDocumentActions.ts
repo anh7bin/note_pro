@@ -7,9 +7,11 @@ import { useRemoveDocumentAccessMutation } from '@/graphql/mutations/__generated
 import { useUserId } from '@/hooks/useAuth';
 import showToast from '@/lib/toast';
 import type { Reference } from '@apollo/client';
+import { useI18n } from '@/contexts/I18nContext';
 
 export const useDocumentActions = (documentId: string) => {
     const userId = useUserId();
+    const { t } = useI18n();
     const [softDeleteDocument] = useSoftDeleteDocumentMutation();
     const [removeDocumentAccess] = useRemoveDocumentAccessMutation();
     const [moveDocumentToFolder] = useMoveDocumentToFolderMutation();
@@ -56,12 +58,12 @@ export const useDocumentActions = (documentId: string) => {
                     cache.gc();
                 },
             });
-            showToast.success('Successfully deleted document');
+            showToast.success(t('documentDeleted'));
         } catch (error) {
             console.error('Error deleting document:', error);
-            showToast.error('Failed to delete document. Please try again.');
+            showToast.error(t('documentDeleteError'));
         }
-    }, [documentId, softDeleteDocument]);
+    }, [documentId, softDeleteDocument, t]);
 
     const handleRemoveAccess = useCallback(async () => {
         if (!userId) return;
@@ -91,12 +93,12 @@ export const useDocumentActions = (documentId: string) => {
                     cache.gc();
                 },
             });
-            showToast.success('Successfully removed from shared documents');
+            showToast.success(t('removedFromShared'));
         } catch (error) {
             console.error('Error removing access:', error);
-            showToast.error('Failed to remove access. Please try again.');
+            showToast.error(t('removeDocumentAccessError'));
         }
-    }, [documentId, userId, removeDocumentAccess]);
+    }, [documentId, userId, removeDocumentAccess, t]);
 
     const handleMove = useCallback(
         async (folderId: string | null) => {
@@ -104,13 +106,13 @@ export const useDocumentActions = (documentId: string) => {
                 await moveDocumentToFolder({
                     variables: { id: documentId, folderId },
                 });
-                showToast.success('Document moved successfully');
+                showToast.success(t('documentMoved'));
             } catch (error) {
                 console.error('Error moving document:', error);
-                showToast.error('Failed to move document. Please try again.');
+                showToast.error(t('documentMoveError'));
             }
         },
-        [documentId, moveDocumentToFolder]
+        [documentId, moveDocumentToFolder, t]
     );
 
     return { handleDelete, handleRemoveAccess, handleMove };

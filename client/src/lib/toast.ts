@@ -92,42 +92,4 @@ export const showToast = {
     },
 };
 
-// Common toast messages
-export const commonToasts = {
-    // Success messages
-    saveSuccess: () => showToast.success('Changes saved successfully'),
-    createSuccess: (item: string) =>
-        showToast.success(`${item} created successfully`),
-    updateSuccess: (item: string) =>
-        showToast.success(`${item} updated successfully`),
-    deleteSuccess: (item: string) =>
-        showToast.success(`${item} deleted successfully`),
-
-    // Error messages
-    saveError: () =>
-        showToast.error('Failed to save changes', {
-            description: 'Please try again',
-        }),
-    loadError: () =>
-        showToast.error('Failed to load data', {
-            description: 'Please refresh the page',
-        }),
-    networkError: () =>
-        showToast.error('Network error', {
-            description: 'Please check your connection',
-        }),
-    unknownError: () =>
-        showToast.error('Something went wrong', {
-            description: 'Please try again',
-        }),
-
-    // Info messages
-    autoSaved: () => showToast.info('Auto-saved', { duration: 2000 }),
-    copied: () => showToast.success('Copied to clipboard', { duration: 2000 }),
-
-    // Loading messages
-    saving: () => showToast.loading('Saving changes...'),
-    loading: (action: string) => showToast.loading(`${action}...`),
-};
-
 export default showToast;

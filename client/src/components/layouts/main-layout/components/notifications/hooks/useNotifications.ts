@@ -14,11 +14,13 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 import { NotificationMenuProps } from '../notification.types';
 import { getNotificationData, getUnreadCount } from '../notification.utils';
+import { useI18n } from '@/contexts/I18nContext';
 
 export function useNotifications(): NotificationMenuProps {
     const userId = useUserId();
     const router = useRouter();
     const { workspace } = useWorkspace();
+    const { t } = useI18n();
 
     const { data: notificationsData, loading } =
         useNotificationSubscriptionSubscription({
@@ -58,10 +60,10 @@ export function useNotifications(): NotificationMenuProps {
                     },
                 },
             }).catch(() => {
-                showToast.error('Could not mark notification as read');
+                showToast.error(t('markNotificationReadError'));
             });
         },
-        [markAsRead]
+        [markAsRead, t]
     );
 
     const onNotificationSelect = useCallback(
@@ -93,9 +95,9 @@ export function useNotifications(): NotificationMenuProps {
         try {
             await markAllAsRead({ variables: { userId } });
         } catch {
-            showToast.error('Could not mark all notifications as read');
+            showToast.error(t('markAllNotificationsReadError'));
         }
-    }, [isMarkingAll, markAllAsRead, unreadCount, userId]);
+    }, [isMarkingAll, markAllAsRead, t, unreadCount, userId]);
 
     return {
         notifications,

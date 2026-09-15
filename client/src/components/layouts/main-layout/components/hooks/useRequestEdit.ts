@@ -8,9 +8,11 @@ import { showToast } from '@/lib/toast';
 import { AccessRequestStatus, BlockType, PermissionType } from '@/types/types';
 import { useSession } from 'next-auth/react';
 import { useCallback, useMemo, useState } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 
 export function useRequestEdit(documentId: string) {
     const userId = useUserId();
+    const { t } = useI18n();
     const { data: session } = useSession();
     const [isRequesting, setIsRequesting] = useState(false);
 
@@ -64,7 +66,7 @@ export function useRequestEdit(documentId: string) {
         if (!userId || isRequesting) return;
 
         if (!documentOwnerId) {
-            showToast.error('Cannot determine document owner');
+            showToast.error(t('documentOwnerUnavailable'));
             return;
         }
 
@@ -84,7 +86,7 @@ export function useRequestEdit(documentId: string) {
                 },
             });
 
-            showToast.success('Edit access request sent successfully');
+            showToast.success(t('editAccessRequestSent'));
             await refetch();
         } catch (error) {
             console.error('Failed to request edit access:', error);
@@ -93,8 +95,8 @@ export function useRequestEdit(documentId: string) {
 
             showToast.error(
                 errorMessage.includes('Uniqueness violation')
-                    ? 'You have already requested edit access'
-                    : 'Failed to send edit access request'
+                    ? t('editAccessAlreadyRequested')
+                    : t('editAccessRequestError')
             );
         } finally {
             setIsRequesting(false);
@@ -106,6 +108,7 @@ export function useRequestEdit(documentId: string) {
         isRequesting,
         refetch,
         session,
+        t,
         userId,
     ]);
 

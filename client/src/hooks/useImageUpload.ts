@@ -3,8 +3,9 @@ import {
     uploadImageToCloudinary,
 } from '@/lib/cloudinary/index';
 import { useState } from 'react';
-import { toast } from 'sonner';
 import { useLoading } from '@/contexts/LoadingContext';
+import { useI18n } from '@/contexts/I18nContext';
+import { showToast } from '@/lib/toast';
 
 interface UseImageUploadOptions {
     tags?: string[];
@@ -30,21 +31,26 @@ export function useImageUpload({
     const [isUploading, setIsUploading] = useState(false);
     const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
     const { startLoading, stopLoading } = useLoading();
+    const { t } = useI18n();
 
     const uploadImage = async (file: File): Promise<string | null> => {
         if (!allowedTypes.includes(file.type)) {
             const error = new Error(
-                `Invalid file type. Only ${allowedTypes.map((t) => t.split('/')[1]?.toUpperCase()).join(', ')} are allowed.`
+                t('invalidImageType', {
+                    types: allowedTypes
+                        .map((type) => type.split('/')[1]?.toUpperCase())
+                        .join(', '),
+                })
             );
-            toast.error(error.message);
+            showToast.error(error.message);
             onError?.(error);
             return null;
         }
 
         const maxSize = maxSizeMB * 1024 * 1024;
         if (file.size > maxSize) {
-            const error = new Error(`File size exceeds ${maxSizeMB}MB limit.`);
-            toast.error(error.message);
+            const error = new Error(t('imageTooLarge', { size: maxSizeMB }));
+            showToast.error(error.message);
             onError?.(error);
             return null;
         }
@@ -58,19 +64,17 @@ export function useImageUpload({
                 tags,
             });
             setUploadedUrl(uploadResult.secure_url);
-            toast.success('Image uploaded successfully');
+            showToast.success(t('imageUploaded'));
             onSuccess?.(uploadResult.secure_url, uploadResult);
 
             return uploadResult.secure_url;
         } catch (error) {
             console.error('Error uploading image:', error);
-            const errorMessage =
-                error instanceof Error
-                    ? error.message
-                    : 'Failed to upload image. Please try again.';
-            toast.error(errorMessage);
+            showToast.error(t('imageUploadError'));
             onError?.(
-                error instanceof Error ? error : new Error('Upload failed')
+                error instanceof Error
+                    ? error
+                    : new Error(t('imageUploadError'))
             );
             return null;
         } finally {

@@ -7,6 +7,7 @@ import showToast from '@/lib/toast';
 import { cn } from '@/lib/utils';
 import { Task } from '@/types/app';
 import { Check } from 'lucide-react';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface CheckTaskProps {
     task: Task;
@@ -53,6 +54,7 @@ export const CheckTask = memo(function CheckTask({
     editable,
 }: CheckTaskProps) {
     const [updateTask] = useUpdateTaskMutation();
+    const { t } = useI18n();
 
     const handleToggleComplete = useCallback(async () => {
         if (!task || isUpdating || !editable) return;
@@ -69,14 +71,16 @@ export const CheckTask = memo(function CheckTask({
                     },
                 },
             });
-            showToast.success(isCompleted ? 'Task reopened' : 'Task completed');
+            showToast.success(
+                isCompleted ? t('taskReopened') : t('taskCompleted')
+            );
         } catch (error) {
             console.error('Failed to update task:', error);
-            showToast.error('Failed to update task');
+            showToast.error(t('updateTaskError'));
         } finally {
             setIsUpdating(false);
         }
-    }, [task, isUpdating, editable, updateTask, isCompleted, setIsUpdating]);
+    }, [task, isUpdating, editable, updateTask, isCompleted, setIsUpdating, t]);
 
     if (!isTask) return null;
 

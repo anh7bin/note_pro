@@ -15,6 +15,7 @@ import {
 } from '@/graphql/__generated__/block-interactions.generated';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { showToast } from '@/lib/toast';
+import { useI18n } from '@/contexts/I18nContext';
 import {
     createContext,
     useCallback,
@@ -50,6 +51,7 @@ export function BlockInteractionsProvider({
     pageId,
 }: BlockInteractionsProviderProps) {
     const currentUser = useCurrentUser();
+    const { t } = useI18n();
     const pendingReactionKeysRef = useRef(new Set<string>());
     const { data, loading, subscribeToMore } = useGetBlockInteractionsQuery({
         variables: { pageId },
@@ -180,11 +182,11 @@ export function BlockInteractionsProvider({
                 return true;
             } catch (error) {
                 console.error('Failed to add block comment:', error);
-                showToast.error('Unable to add comment');
+                showToast.error(t('addCommentError'));
                 return false;
             }
         },
-        [addCommentMutation, currentUser, pageId]
+        [addCommentMutation, currentUser, pageId, t]
     );
 
     const deleteComment = useCallback(
@@ -221,10 +223,10 @@ export function BlockInteractionsProvider({
                 });
             } catch (error) {
                 console.error('Failed to delete block comment:', error);
-                showToast.error('Unable to delete comment');
+                showToast.error(t('deleteCommentError'));
             }
         },
-        [deleteCommentMutation, pageId]
+        [deleteCommentMutation, pageId, t]
     );
 
     const toggleReaction = useCallback(
@@ -332,7 +334,7 @@ export function BlockInteractionsProvider({
                 });
             } catch (error) {
                 console.error('Failed to toggle block reaction:', error);
-                showToast.error('Unable to update reaction');
+                showToast.error(t('updateReactionError'));
             } finally {
                 pendingReactionKeysRef.current.delete(pendingKey);
             }
@@ -343,6 +345,7 @@ export function BlockInteractionsProvider({
             data?.block_reactions,
             deleteReactionMutation,
             pageId,
+            t,
         ]
     );
 

@@ -155,10 +155,10 @@ export const LeftSidebar = ({ pageId }: Props) => {
                     awaitRefetchQueries: true,
                 });
                 showToast.success(
-                    completed ? 'Marked task complete' : 'Task reopened'
+                    completed ? t('taskCompleted') : t('taskReopened')
                 );
             } catch {
-                showToast.error('Unable to update task');
+                showToast.error(t('updateTaskError'));
             } finally {
                 setPendingTaskIds((prev) => {
                     const next = new Set(prev);
@@ -167,7 +167,7 @@ export const LeftSidebar = ({ pageId }: Props) => {
                 });
             }
         },
-        [updateTask, pageId]
+        [updateTask, pageId, t]
     );
 
     return (
