@@ -40,7 +40,9 @@ export function SidebarTabs({
         <Tabs
             defaultValue="contents"
             className="flex h-full flex-1 flex-col overflow-hidden">
-            <TabsList className="grid shrink-0 grid-cols-4">
+            <TabsList
+                data-tour="editor-sidebar-tabs"
+                className="grid shrink-0 grid-cols-4">
                 <TabsTrigger
                     value="contents"
                     aria-label={t('documentContents')}>

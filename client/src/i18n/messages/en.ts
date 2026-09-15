@@ -76,6 +76,50 @@ export const en = {
     folders: 'Folders',
     expandFolders: 'Expand folders',
     collapseFolders: 'Collapse folders',
+    tourStartAgain: 'Show guide',
+    tourBack: 'Back',
+    tourClose: 'Close guide',
+    tourDone: 'Done',
+    tourNext: 'Next',
+    tourNextProgress: 'Next ({current} of {total})',
+    tourOpen: 'Open guide',
+    tourSkip: 'Skip guide',
+    tourWorkspaceWelcomeTitle: 'Welcome to Bin Craft',
+    tourWorkspaceWelcomeBody:
+        'This workspace brings your documents, tasks, and schedule together. This short tour shows where to start.',
+    tourNewDocumentTitle: 'Create your first document',
+    tourNewDocumentBody:
+        'Use New document to open a fresh page. Give it a title, then add text, tasks, tables, or files in the editor.',
+    tourAllDocsTitle: 'Find all your documents',
+    tourAllDocsBody:
+        'All Docs lists every page in your workspace. Open a page to edit it or use its menu to organize and share it.',
+    tourTasksTitle: 'Keep track of tasks',
+    tourTasksBody:
+        'Tasks shows work from your pages and lets you create a task directly. Use Inbox, Today, and All to plan what comes next.',
+    tourCalendarTitle: 'Plan on the calendar',
+    tourCalendarBody:
+        'Calendar places dated tasks on a timeline so you can see upcoming work at a glance.',
+    tourFoldersTitle: 'Organize with folders',
+    tourFoldersBody:
+        'Create folders here to group related documents. Expand a folder to browse its pages and subfolders.',
+    tourSearchTitle: 'Search across your workspace',
+    tourSearchBody:
+        'Search finds documents and content without opening each page. On smaller screens, tap the search icon first.',
+    tourDocumentsTitle: 'Your document list',
+    tourDocumentsBody:
+        'Your pages appear here. If the list is empty, use the create button to make your first document.',
+    tourReplayTitle: 'Need this guide later?',
+    tourReplayBody:
+        'Use this help button to replay the guide for the screen you are on at any time.',
+    tourEditorWelcomeTitle: 'Name this document',
+    tourEditorWelcomeBody:
+        'Click the title to rename this page. A clear title makes it easier to find later.',
+    tourBlocksTitle: 'Write with blocks',
+    tourBlocksBody:
+        'Start typing below the title. Type / to insert a task, table, file, or other block. Hover near a block to open its actions, add comments, or drag it into place.',
+    tourEditorSidebarTitle: 'Navigate this document',
+    tourEditorSidebarBody:
+        'These tabs show the table of contents, tasks, attachments, and search for this document. Select a result to jump to its block.',
 
     // Appearance
     loadingTheme: 'Loading theme preference',

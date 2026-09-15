@@ -12,6 +12,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/contexts/I18nContext';
+import { OnboardingTour } from '@/components/features/onboarding/OnboardingTour';
 
 function LayoutMain({ children }: { children: React.ReactNode }) {
     const { workspaceSlug, loading, workspace } = useWorkspace();
@@ -103,7 +104,9 @@ export default function MainLayout({
     return (
         <SidebarProvider>
             <RouteChangeHandler />
-            <LayoutMain>{children}</LayoutMain>
+            <OnboardingTour>
+                <LayoutMain>{children}</LayoutMain>
+            </OnboardingTour>
         </SidebarProvider>
     );
 }

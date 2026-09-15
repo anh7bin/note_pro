@@ -75,7 +75,9 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                         : 'invisible -translate-x-full pointer-events-none'
                 )}>
                 <div className="flex h-full flex-col gap-2 p-3 sm:p-4">
-                    <NewDocumentButton />
+                    <div data-tour="new-document">
+                        <NewDocumentButton />
+                    </div>
                     <SidebarButton
                         icon={<RiUserVoiceLine className="h-4 w-4" />}
                         label={t('sharedWithMe')}
@@ -94,27 +96,40 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                 pathname === item.href ||
                                 pathname.startsWith(item.href + '/');
                             return (
-                                <SidebarButton
+                                <div
                                     key={item.href}
-                                    icon={<item.icon className="w-4 h-4" />}
-                                    label={menuLabels[item.label] ?? item.label}
-                                    href={item.href}
-                                    isActive={isActive}
-                                    count={item.count}
-                                    action={
-                                        item.modalType && item.action
-                                            ? renderModalWrapper(
-                                                  item.modalType,
-                                                  item.action
-                                              )
-                                            : item.action
-                                    }
-                                />
+                                    data-tour={
+                                        item.label === 'All Docs'
+                                            ? 'all-docs-nav'
+                                            : item.label === 'Tasks'
+                                              ? 'tasks-nav'
+                                              : 'calendar-nav'
+                                    }>
+                                    <SidebarButton
+                                        icon={<item.icon className="w-4 h-4" />}
+                                        label={
+                                            menuLabels[item.label] ?? item.label
+                                        }
+                                        href={item.href}
+                                        isActive={isActive}
+                                        count={item.count}
+                                        action={
+                                            item.modalType && item.action
+                                                ? renderModalWrapper(
+                                                      item.modalType,
+                                                      item.action
+                                                  )
+                                                : item.action
+                                        }
+                                    />
+                                </div>
                             );
                         })}
                         <Separator />
                     </div>
-                    <div className="flex min-h-8 items-center justify-between px-1">
+                    <div
+                        data-tour="folders-nav"
+                        className="flex min-h-8 items-center justify-between px-1">
                         <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                             {t('folders')}
                         </span>

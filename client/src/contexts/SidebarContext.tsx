@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext } from 'react';
+import { createContext, useCallback, useContext } from 'react';
 import { useCurrentUserLocalStorage } from '@/hooks';
 
 const SidebarContext = createContext<{
@@ -17,7 +17,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
         true
     );
 
-    const toggle = () => setIsOpen((prev) => !prev);
+    const toggle = useCallback(() => setIsOpen((prev) => !prev), [setIsOpen]);
 
     return (
         <SidebarContext.Provider value={{ isOpen, toggle }}>

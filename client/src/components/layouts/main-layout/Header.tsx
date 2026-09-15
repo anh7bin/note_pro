@@ -20,6 +20,7 @@ import { RequestEditButton } from './components/RequestEditButton';
 import { SettingButton } from './components/SettingButton';
 import { ShareExportButton } from './components/ShareExportButton';
 import { SidebarToggleButton } from './components/SidebarToggleButton';
+import { TourHelpButton } from './components/TourHelpButton';
 
 interface Props {
     workspaceSlug: string;
@@ -67,10 +68,12 @@ export default function Header({ workspaceSlug }: Props) {
                         <SidebarToggleButton />
                     </div>
                     <div className="min-w-0 justify-self-end lg:w-full lg:max-w-xl lg:justify-self-center">
-                        <div className="lg:hidden">
+                        <div data-tour="mobile-search" className="lg:hidden">
                             <MobileSearch />
                         </div>
-                        <div className="hidden lg:block">
+                        <div
+                            data-tour="desktop-search"
+                            className="hidden lg:block">
                             <SearchInputField />
                         </div>
                     </div>
@@ -85,6 +88,7 @@ export default function Header({ workspaceSlug }: Props) {
                         <ThemeToggle />
                         <NotificationButton />
                         <LanguageMenu compact />
+                        <TourHelpButton />
                         <SettingButton />
                     </div>
                 </header>

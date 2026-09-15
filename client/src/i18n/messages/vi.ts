@@ -74,6 +74,50 @@ export const vi: Messages = {
     folders: 'Thư mục',
     expandFolders: 'Mở rộng danh sách thư mục',
     collapseFolders: 'Thu gọn danh sách thư mục',
+    tourStartAgain: 'Xem hướng dẫn',
+    tourBack: 'Quay lại',
+    tourClose: 'Đóng hướng dẫn',
+    tourDone: 'Hoàn tất',
+    tourNext: 'Tiếp theo',
+    tourNextProgress: 'Tiếp theo ({current}/{total})',
+    tourOpen: 'Mở hướng dẫn',
+    tourSkip: 'Bỏ qua',
+    tourWorkspaceWelcomeTitle: 'Chào mừng đến với Bin Craft',
+    tourWorkspaceWelcomeBody:
+        'Không gian làm việc này tập hợp tài liệu, công việc và lịch của bạn. Hãy xem nhanh những nơi cần bắt đầu.',
+    tourNewDocumentTitle: 'Tạo tài liệu đầu tiên',
+    tourNewDocumentBody:
+        'Chọn Tài liệu mới để mở trang trống. Đặt tiêu đề, rồi thêm văn bản, công việc, bảng hoặc tệp trong trình soạn thảo.',
+    tourAllDocsTitle: 'Xem mọi tài liệu',
+    tourAllDocsBody:
+        'Tất cả tài liệu liệt kê các trang trong không gian làm việc. Mở trang để chỉnh sửa hoặc dùng menu của trang để sắp xếp và chia sẻ.',
+    tourTasksTitle: 'Theo dõi công việc',
+    tourTasksBody:
+        'Mục Công việc tập hợp việc cần làm trong các trang và cho phép tạo việc mới. Dùng Hộp thư, Hôm nay và Tất cả để lên kế hoạch.',
+    tourCalendarTitle: 'Lên kế hoạch trên lịch',
+    tourCalendarBody:
+        'Lịch đặt công việc có ngày lên dòng thời gian để bạn nhìn nhanh những việc sắp tới.',
+    tourFoldersTitle: 'Sắp xếp bằng thư mục',
+    tourFoldersBody:
+        'Tạo thư mục tại đây để nhóm tài liệu liên quan. Mở rộng một thư mục để xem trang và thư mục con.',
+    tourSearchTitle: 'Tìm kiếm trong không gian làm việc',
+    tourSearchBody:
+        'Tìm kiếm giúp bạn tìm tài liệu và nội dung mà không cần mở từng trang. Trên màn hình nhỏ, hãy chạm biểu tượng kính lúp trước.',
+    tourDocumentsTitle: 'Danh sách tài liệu của bạn',
+    tourDocumentsBody:
+        'Các trang của bạn xuất hiện ở đây. Nếu danh sách trống, hãy dùng nút tạo để bắt đầu tài liệu đầu tiên.',
+    tourReplayTitle: 'Cần xem lại sau?',
+    tourReplayBody:
+        'Bạn có thể dùng nút trợ giúp này để xem lại hướng dẫn của màn hình hiện tại bất cứ lúc nào.',
+    tourEditorWelcomeTitle: 'Đặt tên cho tài liệu',
+    tourEditorWelcomeBody:
+        'Nhấn vào tiêu đề để đổi tên trang. Tên rõ ràng sẽ giúp bạn tìm lại tài liệu dễ hơn.',
+    tourBlocksTitle: 'Viết bằng các khối nội dung',
+    tourBlocksBody:
+        'Bắt đầu nhập bên dưới tiêu đề. Gõ / để chèn công việc, bảng, tệp hoặc khối khác. Đưa chuột đến cạnh khối để mở thao tác, bình luận hoặc kéo khối đến vị trí mới.',
+    tourEditorSidebarTitle: 'Điều hướng trong tài liệu',
+    tourEditorSidebarBody:
+        'Các tab này hiển thị mục lục, công việc, tệp đính kèm và tìm kiếm của tài liệu. Chọn một kết quả để chuyển tới khối tương ứng.',
 
     loadingTheme: 'Đang tải tùy chọn giao diện',
     switchToDark: 'Chuyển sang giao diện tối',

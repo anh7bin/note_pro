@@ -68,7 +68,9 @@ function EditorContent() {
         <div className="relative h-full">
             <div className="mx-auto h-full w-full max-w-full">
                 <div className="mx-auto h-full max-w-full overflow-hidden bg-card">
-                    <div className="h-full overflow-y-auto">
+                    <div
+                        data-tour="editor-scroll"
+                        className="h-full overflow-y-auto">
                         {coverImage && (
                             <DocumentCover
                                 imageUrl={coverImage}
@@ -88,7 +90,9 @@ function EditorContent() {
                                         />
                                     </div>
                                 )}
-                                <div className="group/block relative pl-[5px]">
+                                <div
+                                    data-tour="editor-title"
+                                    className="group/block relative pl-[5px]">
                                     <DocumentTitleInput
                                         value={rootBlock.content?.title || ''}
                                         onChange={handleUpdateTitle}
@@ -104,9 +108,11 @@ function EditorContent() {
                                 </div>
                             </div>
                             <Separator className="my-4" />
-                            <TiptapWrapper>
-                                <BlockList />
-                            </TiptapWrapper>
+                            <div data-tour="editor-blocks" className="min-h-24">
+                                <TiptapWrapper>
+                                    <BlockList />
+                                </TiptapWrapper>
+                            </div>
                             <div className="h-[40vh]" />
                         </div>
                     </div>

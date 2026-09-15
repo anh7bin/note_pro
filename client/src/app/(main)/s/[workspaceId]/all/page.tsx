@@ -43,7 +43,7 @@ export default function AllDocsPage() {
     return loading && allDocs.length === 0 ? (
         <PageLoading />
     ) : (
-        <PageShell>
+        <PageShell data-tour="documents-page">
             <PageHeader>
                 <div className="flex items-center gap-2">
                     <SimpleTooltip title={t('createDocument')}>
@@ -62,7 +62,9 @@ export default function AllDocsPage() {
                         </Button>
                     </SimpleTooltip>
                     <Separator orientation="vertical" />
-                    <PageTitle>{t('allDocs')}</PageTitle>
+                    <PageTitle data-tour="documents-heading">
+                        {t('allDocs')}
+                    </PageTitle>
                 </div>
                 <SelectionActionBar
                     documentIds={allDocs.map((document) => document.id)}
