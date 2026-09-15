@@ -343,13 +343,15 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
                   ]
                 : []),
             {
-                target: '[data-tour="tour-help"]',
+                target: mobile
+                    ? '[data-tour="editor-more"]'
+                    : '[data-tour="tour-help"]',
                 title: t('tourReplayTitle'),
-                content: t('tourReplayBody'),
+                content: t(mobile ? 'tourReplayMobileBody' : 'tourReplayBody'),
                 placement: 'bottom',
             },
         ],
-        [showShareStep, t, toggle]
+        [mobile, showShareStep, t, toggle]
     );
 
     const finishTour = useCallback(() => {

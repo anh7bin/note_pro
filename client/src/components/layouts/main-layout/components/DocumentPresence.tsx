@@ -47,7 +47,7 @@ export function DocumentPresence({ documentId }: { documentId: string }) {
                         ))}
                     </span>
                     {users.length > 1 && (
-                        <span className="ml-1 text-xs font-medium text-muted-foreground sm:hidden">
+                        <span className="ml-1 hidden text-xs font-medium text-muted-foreground min-[375px]:inline sm:hidden">
                             +{users.length - 1}
                         </span>
                     )}

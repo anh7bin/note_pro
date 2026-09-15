@@ -24,7 +24,11 @@ export const NotificationMenu = ({
     const { t } = useI18n();
     if (isInitialLoading) {
         return (
-            <Button variant="ghost" size="icon">
+            <Button
+                variant="ghost"
+                size="icon"
+                aria-label={t('notifications')}
+                disabled>
                 <Bell />
             </Button>
         );
@@ -34,7 +38,11 @@ export const NotificationMenu = ({
         <DropdownMenu modal={false}>
             <SimpleTooltip title={t('notifications')}>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="relative">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="relative"
+                        aria-label={t('notifications')}>
                         <Bell />
                         {unreadCount > 0 && (
                             <span

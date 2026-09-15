@@ -1,10 +1,10 @@
 'use client';
 
-import { CellDocument } from '@/components/features/page/CellDocument';
+import { DocumentRow } from '@/components/features/page/DocumentRow';
 import { Document } from '@/types/app';
 import { useEffect, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { FixedSizeGrid as Grid, GridOnScrollProps } from 'react-window';
+import { FixedSizeList as List, ListOnScrollProps } from 'react-window';
 
 const MIN_CARD_WIDTH = 200;
 const GUTTER = 16;
@@ -59,38 +59,36 @@ export function DocumentGrid({ documents }: DocumentGridProps) {
                         5,
                         Math.max(
                             1,
-                            Math.floor(width / (MIN_CARD_WIDTH + GUTTER))
+                            Math.floor(
+                                (width + GUTTER) / (MIN_CARD_WIDTH + GUTTER)
+                            )
                         )
                     );
-
-                    const columnWidth = Math.floor(width / columnCount);
                     const rowCount = Math.ceil(documents.length / columnCount);
                     const totalHeight = rowCount * rowHeight;
 
                     // Only show fades if content is scrollable
                     const isScrollable = totalHeight > height;
 
-                    const handleGridScroll = (props: GridOnScrollProps) => {
-                        handleScroll(props.scrollTop, height, totalHeight);
+                    const handleListScroll = (props: ListOnScrollProps) => {
+                        handleScroll(props.scrollOffset, height, totalHeight);
                     };
 
                     return (
                         <>
-                            <Grid
-                                columnCount={columnCount}
-                                columnWidth={columnWidth}
+                            <List
+                                className="document-grid-scroll"
                                 height={height}
-                                rowCount={rowCount}
-                                rowHeight={rowHeight}
+                                itemCount={rowCount}
+                                itemSize={rowHeight}
                                 width={width}
-                                overscanRowCount={3}
+                                overscanCount={3}
                                 style={{ overflowX: 'hidden' }}
                                 itemData={{
-                                    docs: documents,
+                                    documents,
                                     columnCount,
-                                    columnWidth,
                                 }}
-                                onScroll={handleGridScroll}
+                                onScroll={handleListScroll}
                                 onItemsRendered={() => {
                                     if (
                                         !dimensions ||
@@ -100,8 +98,8 @@ export function DocumentGrid({ documents }: DocumentGridProps) {
                                         setDimensions({ height, totalHeight });
                                     }
                                 }}>
-                                {CellDocument}
-                            </Grid>
+                                {DocumentRow}
+                            </List>
                             {isScrollable && showTopFade && (
                                 <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background to-transparent" />
                             )}

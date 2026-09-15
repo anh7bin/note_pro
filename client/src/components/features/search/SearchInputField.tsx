@@ -10,9 +10,10 @@ import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     onResultClick?: () => void;
+    autoFocus?: boolean;
 }
 
-export function SearchInputField({ onResultClick }: Props) {
+export function SearchInputField({ onResultClick, autoFocus }: Props) {
     const { searchTerm, setSearchTerm, results } = useSearch();
     const { t } = useI18n();
 
@@ -31,6 +32,7 @@ export function SearchInputField({ onResultClick }: Props) {
 
     return (
         <InputField
+            autoFocus={autoFocus}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             type="search"

@@ -267,6 +267,14 @@
     background: transparent;
 }
 
+.document-grid-scroll {
+    scrollbar-width: none;
+}
+
+.document-grid-scroll::-webkit-scrollbar {
+    display: none;
+}
+
 /* Additional base styles */
 html,
 body {

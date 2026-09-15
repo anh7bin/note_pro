@@ -7,12 +7,14 @@ export const vi: Messages = {
     loading: 'Đang tải',
     cancel: 'Hủy',
     close: 'Đóng',
+    back: 'Quay lại',
     save: 'Lưu',
     create: 'Tạo',
     delete: 'Xóa',
     remove: 'Gỡ bỏ',
     move: 'Di chuyển',
     search: 'Tìm kiếm',
+    moreOptions: 'Thêm tùy chọn',
     searchEmoji: 'Tìm biểu tượng cảm xúc',
     clearEmojiSearch: 'Xóa tìm kiếm biểu tượng cảm xúc',
     noEmail: 'Không có email',
@@ -109,6 +111,8 @@ export const vi: Messages = {
     tourReplayTitle: 'Cần xem lại sau?',
     tourReplayBody:
         'Bạn có thể dùng nút trợ giúp này để xem lại hướng dẫn của màn hình hiện tại bất cứ lúc nào.',
+    tourReplayMobileBody:
+        'Mở Thêm tùy chọn để tìm hướng dẫn, tìm kiếm, giao diện, ngôn ngữ và tài khoản.',
     tourEditorWelcomeTitle: 'Đặt tên cho tài liệu',
     tourEditorWelcomeBody:
         'Nhấn vào tiêu đề để đổi tên trang. Tên rõ ràng sẽ giúp bạn tìm lại tài liệu dễ hơn.',
