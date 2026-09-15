@@ -1,0 +1,1 @@
+ALTER TABLE public.tasks RENAME COLUMN due_date TO deadline_date;
