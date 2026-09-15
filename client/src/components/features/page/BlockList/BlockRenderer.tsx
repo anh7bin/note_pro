@@ -161,6 +161,11 @@ export const BlockRenderer = memo(
             prevProps.focusedBlockId === nextProps.focusedBlockId &&
             prevProps.focusPosition === nextProps.focusPosition &&
             prevProps.editable === nextProps.editable &&
+            prevProps.commonDeleteHandler === nextProps.commonDeleteHandler &&
+            prevProps.commonInsertHandlers.onInsertAbove ===
+                nextProps.commonInsertHandlers.onInsertAbove &&
+            prevProps.commonInsertHandlers.onInsertBelow ===
+                nextProps.commonInsertHandlers.onInsertBelow &&
             tasksEqual
         );
     }

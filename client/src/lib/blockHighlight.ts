@@ -2,7 +2,10 @@
  * Highlights a block element with a border and background effect
  * Returns a cleanup function to remove the highlight
  */
-export const highlightBlock = (blockId: string): (() => void) | null => {
+export const highlightBlock = (
+    blockId: string,
+    shouldScroll = true
+): (() => void) | null => {
     const el = document.querySelector<HTMLElement>(
         `[data-block-id="${blockId}"]`
     );
@@ -12,7 +15,7 @@ export const highlightBlock = (blockId: string): (() => void) | null => {
 
     const scrollContainer = el.closest('.overflow-y-auto');
 
-    if (scrollContainer) {
+    if (shouldScroll && scrollContainer) {
         const containerRect = scrollContainer.getBoundingClientRect();
         const blockRect = el.getBoundingClientRect();
         const headerOffset = 100;

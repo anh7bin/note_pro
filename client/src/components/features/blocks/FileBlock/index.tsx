@@ -148,7 +148,11 @@ export const FileBlock = memo(
                 nextProps.block.content?.fileType &&
             prevProps.block.content?.fileSize ===
                 nextProps.block.content?.fileSize &&
-            prevProps.editable === nextProps.editable
+            prevProps.block.position === nextProps.block.position &&
+            prevProps.editable === nextProps.editable &&
+            prevProps.onDeleteBlock === nextProps.onDeleteBlock &&
+            prevProps.onInsertAbove === nextProps.onInsertAbove &&
+            prevProps.onInsertBelow === nextProps.onInsertBelow
         );
     }
 );

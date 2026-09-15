@@ -52,7 +52,7 @@ export function BlockActionMenu({
             }
 
             if (blockId) {
-                const cleanup = highlightBlock(blockId);
+                const cleanup = highlightBlock(blockId, false);
                 if (cleanup) {
                     cleanupHighlightRef.current = cleanup;
                 }
@@ -144,13 +144,13 @@ export function BlockActionMenu({
                 align="start"
                 onCloseAutoFocus={handleCloseAutoFocus}>
                 {onInsertAbove && (
-                    <DropdownMenuItem onClick={handleInsertAbove}>
+                    <DropdownMenuItem onSelect={handleInsertAbove}>
                         <InsertBlockAboveIcon />
                         {t('insertBlockAbove')}
                     </DropdownMenuItem>
                 )}
                 {onInsertBelow && (
-                    <DropdownMenuItem onClick={handleInsertBelow}>
+                    <DropdownMenuItem onSelect={handleInsertBelow}>
                         <InsertBlockBelowIcon />
                         {t('insertBlockBelow')}
                     </DropdownMenuItem>
@@ -158,13 +158,13 @@ export function BlockActionMenu({
                 {onDelete && (
                     <DropdownMenuItem
                         className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-                        onClick={onDelete}>
+                        onSelect={onDelete}>
                         <Trash2 />
                         {t('delete')}
                     </DropdownMenuItem>
                 )}
                 {downloadUrl && (
-                    <DropdownMenuItem onClick={handleDownload}>
+                    <DropdownMenuItem onSelect={handleDownload}>
                         <Download />
                         {t('download')}
                     </DropdownMenuItem>
