@@ -120,6 +120,9 @@ export const en = {
     tourEditorSidebarTitle: 'Navigate this document',
     tourEditorSidebarBody:
         'These tabs show the table of contents, tasks, attachments, and search for this document. Select a result to jump to its block.',
+    tourShareTitle: 'Share this document',
+    tourShareBody:
+        'Open Share to invite people, set link access, or copy the document link. Owners can manage invitations; only accounts with link management permission can change link access.',
 
     // Appearance
     loadingTheme: 'Loading theme preference',

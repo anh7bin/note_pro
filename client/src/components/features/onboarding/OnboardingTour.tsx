@@ -84,6 +84,7 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
     const [activeTour, setActiveTour] = useState<TourName | null>(null);
     const [requestedTour, setRequestedTour] = useState<TourName | null>(null);
     const [run, setRun] = useState(false);
+    const [showShareStep, setShowShareStep] = useState(false);
     const [mobile, setMobile] = useState(false);
 
     useEffect(() => {
@@ -161,7 +162,19 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
             return;
         }
         // Let the sidebar finish its transform before measuring spotlight targets.
-        const timer = window.setTimeout(() => setRun(true), 350);
+        const timer = window.setTimeout(
+            () => {
+                if (activeTour === 'editor') {
+                    setShowShareStep(
+                        Boolean(
+                            document.querySelector('[data-tour="editor-share"]')
+                        )
+                    );
+                }
+                setRun(true);
+            },
+            activeTour === 'editor' ? 500 : 350
+        );
         return () => window.clearTimeout(timer);
     }, [activeTour, isOpen, mobile, run, toggle]);
 
@@ -176,6 +189,29 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
         }
     }, [run, activeTour, onWorkspacePage, onEditorPage]);
 
+    const setWorkspaceSidebarOpen = useCallback(
+        async (open: boolean) => {
+            const sidebar = document.getElementById('app-sidebar');
+            if (!sidebar) return;
+
+            const isSidebarOpen =
+                sidebar.getAttribute('aria-hidden') !== 'true';
+            if (isSidebarOpen === open) return;
+
+            toggle();
+            await new Promise<void>((resolve) =>
+                window.setTimeout(resolve, 350)
+            );
+        },
+        [toggle]
+    );
+
+    const closeWorkspaceSidebarOnMobile = useCallback(async () => {
+        if (window.matchMedia('(max-width: 767px)').matches) {
+            await setWorkspaceSidebarOpen(false);
+        }
+    }, [setWorkspaceSidebarOpen]);
+
     const workspaceSteps = useMemo<Step[]>(
         () => [
             {
@@ -189,30 +225,35 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
                 title: t('tourNewDocumentTitle'),
                 content: t('tourNewDocumentBody'),
                 placement: 'right',
+                before: () => setWorkspaceSidebarOpen(true),
             },
             {
                 target: '[data-tour="all-docs-nav"]',
                 title: t('tourAllDocsTitle'),
                 content: t('tourAllDocsBody'),
                 placement: 'right',
+                before: () => setWorkspaceSidebarOpen(true),
             },
             {
                 target: '[data-tour="tasks-nav"]',
                 title: t('tourTasksTitle'),
                 content: t('tourTasksBody'),
                 placement: 'right',
+                before: () => setWorkspaceSidebarOpen(true),
             },
             {
                 target: '[data-tour="calendar-nav"]',
                 title: t('tourCalendarTitle'),
                 content: t('tourCalendarBody'),
                 placement: 'right',
+                before: () => setWorkspaceSidebarOpen(true),
             },
             {
                 target: '[data-tour="folders-nav"]',
                 title: t('tourFoldersTitle'),
                 content: t('tourFoldersBody'),
                 placement: 'right',
+                before: () => setWorkspaceSidebarOpen(true),
             },
             {
                 target: mobile
@@ -221,12 +262,14 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
                 title: t('tourSearchTitle'),
                 content: t('tourSearchBody'),
                 placement: 'bottom',
+                before: closeWorkspaceSidebarOnMobile,
             },
             {
                 target: '[data-tour="documents-heading"]',
                 title: t('tourDocumentsTitle'),
                 content: t('tourDocumentsBody'),
                 placement: 'bottom',
+                before: closeWorkspaceSidebarOnMobile,
             },
             {
                 target: '[data-tour="tour-help"]',
@@ -235,7 +278,7 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
                 placement: 'bottom',
             },
         ],
-        [mobile, t]
+        [closeWorkspaceSidebarOnMobile, mobile, setWorkspaceSidebarOpen, t]
     );
 
     const editorSteps = useMemo<Step[]>(
@@ -273,6 +316,32 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
                     }
                 },
             },
+            ...(showShareStep
+                ? [
+                      {
+                          target: '[data-tour="editor-share"]',
+                          title: t('tourShareTitle'),
+                          content: t('tourShareBody'),
+                          placement: 'bottom' as const,
+                          before: async () => {
+                              const sidebar = document.querySelector(
+                                  '[data-tour="editor-sidebar"]'
+                              );
+                              if (
+                                  window.matchMedia('(max-width: 767px)')
+                                      .matches &&
+                                  sidebar?.getAttribute('aria-hidden') ===
+                                      'false'
+                              ) {
+                                  toggle();
+                                  await new Promise<void>((resolve) =>
+                                      window.setTimeout(resolve, 350)
+                                  );
+                              }
+                          },
+                      },
+                  ]
+                : []),
             {
                 target: '[data-tour="tour-help"]',
                 title: t('tourReplayTitle'),
@@ -280,7 +349,7 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
                 placement: 'bottom',
             },
         ],
-        [t, toggle]
+        [showShareStep, t, toggle]
     );
 
     const finishTour = useCallback(() => {

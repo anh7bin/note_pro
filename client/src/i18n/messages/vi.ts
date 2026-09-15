@@ -118,6 +118,9 @@ export const vi: Messages = {
     tourEditorSidebarTitle: 'Điều hướng trong tài liệu',
     tourEditorSidebarBody:
         'Các tab này hiển thị mục lục, công việc, tệp đính kèm và tìm kiếm của tài liệu. Chọn một kết quả để chuyển tới khối tương ứng.',
+    tourShareTitle: 'Chia sẻ tài liệu',
+    tourShareBody:
+        'Mở Chia sẻ để mời người khác, chọn quyền truy cập qua liên kết hoặc sao chép liên kết tài liệu. Chủ sở hữu có thể quản lý lời mời; chỉ tài khoản có quyền quản lý liên kết mới đổi được quyền truy cập.',
 
     loadingTheme: 'Đang tải tùy chọn giao diện',
     switchToDark: 'Chuyển sang giao diện tối',

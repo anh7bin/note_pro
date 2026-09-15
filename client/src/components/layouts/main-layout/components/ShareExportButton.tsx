@@ -57,6 +57,7 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
             }}
             trigger={
                 <Button
+                    data-tour="editor-share"
                     variant={isShared ? 'default' : 'outline'}
                     size="sm"
                     aria-label={t('shareAndExport')}>
