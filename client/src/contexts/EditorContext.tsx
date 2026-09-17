@@ -55,8 +55,9 @@ export function EditorProvider({ children, pageId }: EditorProviderProps) {
         flushPendingChanges: debounce.flush,
         waitForPendingBlockWrites: persistence.waitForPendingBlockWrites,
         updateBlockType: blockRepository.updateBlockType,
-        updateBlockContent: blockRepository.updateBlockContent,
         convertBlockToFile: blockRepository.convertBlockToFile,
+        convertBlockToTable: blockRepository.convertBlockToTable,
+        convertBlockToParagraph: blockRepository.convertBlockToParagraph,
     });
 
     const value = useMemo<EditorContextValue>(
@@ -82,6 +83,7 @@ export function EditorProvider({ children, pageId }: EditorProviderProps) {
             handleConvertToTask: conversions.handleConvertToTask,
             handleConvertToFile: conversions.handleConvertToFile,
             handleConvertToTable: conversions.handleConvertToTable,
+            handleConvertToParagraph: conversions.handleConvertToParagraph,
         }),
         [
             blockActions.handleBackspaceAtStart,
@@ -93,6 +95,7 @@ export function EditorProvider({ children, pageId }: EditorProviderProps) {
             blockActions.handleSaveImmediate,
             canEdit,
             conversions.handleConvertToFile,
+            conversions.handleConvertToParagraph,
             conversions.handleConvertToTable,
             conversions.handleConvertToTask,
             editorState.blocks,

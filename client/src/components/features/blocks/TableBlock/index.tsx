@@ -41,7 +41,8 @@ export const TableBlock = memo(
             prevProps.block.content?.text === nextProps.block.content?.text &&
             prevProps.block.position === nextProps.block.position &&
             prevProps.isFocused === nextProps.isFocused &&
-            prevProps.editable === nextProps.editable
+            prevProps.editable === nextProps.editable &&
+            prevProps.onDeleteBlock === nextProps.onDeleteBlock
         );
     }
 );

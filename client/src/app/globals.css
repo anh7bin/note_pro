@@ -346,7 +346,6 @@ aside.EmojiPickerReact.epr-dark-theme {
 }
 
 /* Enable scrolling in emoji picker */
-aside.EmojiPickerReact .epr-emoji-list,
 aside.EmojiPickerReact .epr-body {
     overflow-y: auto !important;
     overscroll-behavior: contain !important;

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 import EmojiPickerReact, { Theme, EmojiClickData } from 'emoji-picker-react';
-import { useI18n } from '@/contexts/I18nContext';
 import { useTheme } from '@/contexts/ThemeProvider';
 
 interface EmojiPickerPopoverProps {
@@ -11,7 +10,7 @@ interface EmojiPickerPopoverProps {
     onClose: () => void;
     width?: number;
     height?: number;
-    searchPlaceHolder?: string;
+    manualWheelScroll?: boolean;
 }
 
 export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
@@ -20,10 +19,9 @@ export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
     onClose,
     width = 350,
     height = 400,
-    searchPlaceHolder,
+    manualWheelScroll = false,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
-    const { t } = useI18n();
     const { theme } = useTheme();
 
     useEffect(() => {
@@ -40,21 +38,28 @@ export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
     }, [show, onClose]);
 
     useEffect(() => {
-        if (show && ref.current) {
-            const handleWheel = (e: WheelEvent) => {
-                e.stopPropagation();
-            };
+        const picker = ref.current;
+        if (!show || !manualWheelScroll || !picker) return;
 
-            const pickerElement = ref.current;
-            pickerElement.addEventListener('wheel', handleWheel, {
-                passive: true,
-            });
+        const handleWheel = (event: WheelEvent) => {
+            const scrollBody = picker.querySelector<HTMLElement>('.epr-body');
+            if (!scrollBody || event.deltaY === 0) return;
 
-            return () => {
-                pickerElement.removeEventListener('wheel', handleWheel);
-            };
-        }
-    }, [show]);
+            const delta =
+                event.deltaMode === WheelEvent.DOM_DELTA_LINE
+                    ? event.deltaY * 16
+                    : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+                      ? event.deltaY * scrollBody.clientHeight
+                      : event.deltaY;
+
+            event.preventDefault();
+            event.stopPropagation();
+            scrollBody.scrollTop += delta;
+        };
+
+        picker.addEventListener('wheel', handleWheel, { passive: false });
+        return () => picker.removeEventListener('wheel', handleWheel);
+    }, [manualWheelScroll, show]);
 
     const handleEmojiClick = (emojiData: EmojiClickData) => {
         onSelect(emojiData.emoji);
@@ -67,15 +72,13 @@ export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
         <div
             ref={ref}
             className="shadow-lg rounded-lg overflow-hidden bg-popover border border-border"
-            style={{ pointerEvents: 'auto' }}
-            onWheel={(e) => e.stopPropagation()}>
+            style={{ pointerEvents: 'auto' }}>
             <EmojiPickerReact
                 onEmojiClick={handleEmojiClick}
                 theme={emojiTheme}
                 width={width}
                 height={height}
-                searchPlaceHolder={searchPlaceHolder ?? t('searchEmoji')}
-                searchClearButtonLabel={t('clearEmojiSearch')}
+                searchDisabled
                 previewConfig={{
                     showPreview: false,
                 }}

@@ -6,9 +6,12 @@ import type {
     FileBlockContent,
 } from '@/types/editor';
 import type { Editor } from '@tiptap/react';
+import { createTable } from '@tiptap/extension-table';
+import { DOMSerializer } from '@tiptap/pm/model';
 import { showToast } from '@/lib/toast';
 import { MAX_FILE_SIZE } from '@/lib/constants';
 import type { FileUploadState, FileUploadTarget } from './types';
+import { MAX_TABLE_COLS, MAX_TABLE_ROWS } from './constants';
 
 interface FileUploadOptions {
     file: File;
@@ -187,16 +190,25 @@ export const handleTableInsert = async ({
     if (!editor) return;
 
     const currentText = (editor?.getText() || '').trim();
-    const tableHTML = `<table><tbody>${Array.from({ length: rows })
-        .map(
-            (_, i) =>
-                `<tr>${Array.from({ length: cols })
-                    .map(() =>
-                        i === 0 ? '<th><p></p></th>' : '<td><p></p></td>'
-                    )
-                    .join('')}</tr>`
-        )
-        .join('')}</tbody></table>`;
+    const normalizedRows = Math.max(
+        1,
+        Math.min(Math.floor(rows), MAX_TABLE_ROWS)
+    );
+    const normalizedCols = Math.max(
+        1,
+        Math.min(Math.floor(cols), MAX_TABLE_COLS)
+    );
+    const tableNode = createTable(
+        editor.schema,
+        normalizedRows,
+        normalizedCols,
+        true
+    );
+    const container = document.createElement('div');
+    container.appendChild(
+        DOMSerializer.fromSchema(editor.schema).serializeNode(tableNode)
+    );
+    const tableHTML = container.innerHTML;
 
     if (currentText.length > 0 && onAddBlock && blockId) {
         const creation = onAddBlock(position + 1, BlockType.TABLE, {
@@ -209,7 +221,11 @@ export const handleTableInsert = async ({
         editor
             .chain()
             .focus()
-            .insertTable({ rows, cols, withHeaderRow: true })
+            .insertTable({
+                rows: normalizedRows,
+                cols: normalizedCols,
+                withHeaderRow: true,
+            })
             .run();
     }
 };

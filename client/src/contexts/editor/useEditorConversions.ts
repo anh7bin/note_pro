@@ -14,23 +14,26 @@ type UpdateBlockType = (
     type: BlockType
 ) => Promise<Block | null>;
 
-type UpdateBlockContent = (
-    blockId: string,
-    content: BlockContent
-) => Promise<Block | null>;
-
 type ConvertBlockToFile = (
     blockId: string,
     fileData: FileBlockContent
 ) => Promise<Block | null>;
+
+type ConvertBlockToTable = (
+    blockId: string,
+    content: BlockContent
+) => Promise<Block | null>;
+
+type ConvertBlockToParagraph = (blockId: string) => Promise<Block | null>;
 
 interface UseEditorConversionsOptions {
     setBlocks: Dispatch<SetStateAction<Block[]>>;
     flushPendingChanges: () => void;
     waitForPendingBlockWrites: (blockId: string) => Promise<boolean>;
     updateBlockType: UpdateBlockType;
-    updateBlockContent: UpdateBlockContent;
     convertBlockToFile: ConvertBlockToFile;
+    convertBlockToTable: ConvertBlockToTable;
+    convertBlockToParagraph: ConvertBlockToParagraph;
 }
 
 export function useEditorConversions({
@@ -38,8 +41,9 @@ export function useEditorConversions({
     flushPendingChanges,
     waitForPendingBlockWrites,
     updateBlockType,
-    updateBlockContent,
     convertBlockToFile,
+    convertBlockToTable,
+    convertBlockToParagraph,
 }: UseEditorConversionsOptions): EditorConversions {
     const userId = useUserId();
     const [createTask] = useCreateTaskMutation();
@@ -170,10 +174,8 @@ export function useEditorConversions({
 
             try {
                 if (!(await waitForPendingBlockWrites(blockId))) return;
-                if (!(await updateBlockType(blockId, BlockType.TABLE))) return;
-
                 const content: BlockContent = { text: tableHTML };
-                await updateBlockContent(blockId, content);
+                if (!(await convertBlockToTable(blockId, content))) return;
 
                 setBlocks((blocks) =>
                     blocks.map((block) =>
@@ -192,9 +194,41 @@ export function useEditorConversions({
         },
         [
             flushPendingChanges,
+            convertBlockToTable,
             setBlocks,
-            updateBlockContent,
-            updateBlockType,
+            waitForPendingBlockWrites,
+        ]
+    );
+
+    const handleConvertToParagraph = useCallback(
+        async (blockId: string) => {
+            flushPendingChanges();
+
+            try {
+                if (!(await waitForPendingBlockWrites(blockId))) return false;
+                if (!(await convertBlockToParagraph(blockId))) return false;
+
+                setBlocks((blocks) =>
+                    blocks.map((block) =>
+                        block.id === blockId
+                            ? {
+                                  ...block,
+                                  type: BlockType.PARAGRAPH,
+                                  content: { text: '' },
+                              }
+                            : block
+                    )
+                );
+                return true;
+            } catch (error) {
+                console.error('Failed to convert block to paragraph:', error);
+                return false;
+            }
+        },
+        [
+            convertBlockToParagraph,
+            flushPendingChanges,
+            setBlocks,
             waitForPendingBlockWrites,
         ]
     );
@@ -203,5 +237,6 @@ export function useEditorConversions({
         handleConvertToTask,
         handleConvertToFile,
         handleConvertToTable,
+        handleConvertToParagraph,
     };
 }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/contexts/I18nContext';
+import { MAX_TABLE_COLS, MAX_TABLE_ROWS } from './slash/constants';
 
 interface TableSizePickerProps {
     show: boolean;
@@ -11,9 +12,6 @@ interface TableSizePickerProps {
     position: { top: number; left: number };
 }
 
-const MAX_ROWS = 9;
-const MAX_COLS = 9;
-
 export const TableSizePicker = ({
     show,
     onSelect,
@@ -21,11 +19,22 @@ export const TableSizePicker = ({
     position,
 }: TableSizePickerProps) => {
     const ref = useRef<HTMLDivElement>(null);
-    const [hoveredCell, setHoveredCell] = useState<{
+    const cellRefs = useRef<Array<HTMLButtonElement | null>>([]);
+    const [activeCell, setActiveCell] = useState<{
         row: number;
         col: number;
-    } | null>(null);
+    }>({ row: 0, col: 0 });
     const { t } = useI18n();
+
+    useEffect(() => {
+        if (!show) return;
+
+        setActiveCell({ row: 0, col: 0 });
+        const focusFrame = requestAnimationFrame(() =>
+            cellRefs.current[0]?.focus()
+        );
+        return () => cancelAnimationFrame(focusFrame);
+    }, [show]);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -54,8 +63,15 @@ export const TableSizePicker = ({
 
     if (!show) return null;
 
-    const rows = hoveredCell ? hoveredCell.row + 1 : 0;
-    const cols = hoveredCell ? hoveredCell.col + 1 : 0;
+    const rows = activeCell.row + 1;
+    const cols = activeCell.col + 1;
+
+    const moveActiveCell = (row: number, col: number) => {
+        const nextRow = Math.max(0, Math.min(row, MAX_TABLE_ROWS - 1));
+        const nextCol = Math.max(0, Math.min(col, MAX_TABLE_COLS - 1));
+        setActiveCell({ row: nextRow, col: nextCol });
+        cellRefs.current[nextRow * MAX_TABLE_COLS + nextCol]?.focus();
+    };
 
     return (
         <div
@@ -65,50 +81,87 @@ export const TableSizePicker = ({
             className="fixed z-50 min-w-60 rounded-md border border-border bg-popover p-3 text-popover-foreground shadow-md"
             style={{ top: position.top, left: position.left }}>
             <div className="mb-3 text-center text-xs font-semibold">
-                {hoveredCell ? (
-                    <span className="text-primary">
-                        {t('tableDimensions', { rows, cols })}
-                    </span>
-                ) : (
-                    <span className="text-muted-foreground">
-                        {t('insertTable')}
-                    </span>
-                )}
+                <span className="text-primary">
+                    {t('tableDimensions', { rows, cols })}
+                </span>
             </div>
             <div
-                className="grid gap-[3px] p-1 bg-muted/30 rounded"
-                style={{ gridTemplateColumns: `repeat(${MAX_COLS}, 1fr)` }}>
-                {Array.from({ length: MAX_ROWS * MAX_COLS }).map((_, index) => {
-                    const row = Math.floor(index / MAX_COLS);
-                    const col = index % MAX_COLS;
-                    const isHighlighted =
-                        hoveredCell &&
-                        row <= hoveredCell.row &&
-                        col <= hoveredCell.col;
+                role="grid"
+                aria-label={t('chooseTableSize')}
+                aria-rowcount={MAX_TABLE_ROWS}
+                aria-colcount={MAX_TABLE_COLS}
+                className="grid gap-[3px] rounded bg-muted/30 p-1"
+                style={{
+                    gridTemplateColumns: `repeat(${MAX_TABLE_COLS}, 1fr)`,
+                }}>
+                {Array.from({ length: MAX_TABLE_ROWS * MAX_TABLE_COLS }).map(
+                    (_, index) => {
+                        const row = Math.floor(index / MAX_TABLE_COLS);
+                        const col = index % MAX_TABLE_COLS;
+                        const isHighlighted =
+                            row <= activeCell.row && col <= activeCell.col;
 
-                    return (
-                        <button
-                            type="button"
-                            key={index}
-                            onMouseEnter={() => setHoveredCell({ row, col })}
-                            onFocus={() => setHoveredCell({ row, col })}
-                            onClick={() => {
-                                onSelect(row + 1, col + 1);
-                                close();
-                            }}
-                            className={cn(
-                                'h-5 w-5 rounded-sm border-2 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-1',
-                                isHighlighted
-                                    ? 'bg-primary/90 border-primary scale-105 shadow-sm'
-                                    : 'bg-background border-border/50 hover:border-primary/30 hover:bg-accent/50'
-                            )}
-                            aria-label={t('tableDimensions', {
-                                rows: row + 1,
-                                cols: col + 1,
-                            })}
-                        />
-                    );
-                })}
+                        return (
+                            <button
+                                type="button"
+                                role="gridcell"
+                                key={index}
+                                ref={(element) => {
+                                    cellRefs.current[index] = element;
+                                }}
+                                tabIndex={
+                                    row === activeCell.row &&
+                                    col === activeCell.col
+                                        ? 0
+                                        : -1
+                                }
+                                onMouseEnter={() => setActiveCell({ row, col })}
+                                onFocus={() => setActiveCell({ row, col })}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'ArrowUp') {
+                                        event.preventDefault();
+                                        moveActiveCell(row - 1, col);
+                                    } else if (event.key === 'ArrowDown') {
+                                        event.preventDefault();
+                                        moveActiveCell(row + 1, col);
+                                    } else if (event.key === 'ArrowLeft') {
+                                        event.preventDefault();
+                                        moveActiveCell(row, col - 1);
+                                    } else if (event.key === 'ArrowRight') {
+                                        event.preventDefault();
+                                        moveActiveCell(row, col + 1);
+                                    } else if (event.key === 'Home') {
+                                        event.preventDefault();
+                                        moveActiveCell(row, 0);
+                                    } else if (event.key === 'End') {
+                                        event.preventDefault();
+                                        moveActiveCell(row, MAX_TABLE_COLS - 1);
+                                    }
+                                }}
+                                onClick={() => {
+                                    onSelect(row + 1, col + 1);
+                                    close();
+                                }}
+                                className={cn(
+                                    'h-6 w-6 rounded-sm border-2 transition-[background-color,border-color,box-shadow,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-1',
+                                    isHighlighted
+                                        ? 'bg-primary/90 border-primary scale-105 shadow-sm'
+                                        : 'bg-background border-border/50 hover:border-primary/30 hover:bg-accent/50'
+                                )}
+                                aria-rowindex={row + 1}
+                                aria-colindex={col + 1}
+                                aria-selected={
+                                    row === activeCell.row &&
+                                    col === activeCell.col
+                                }
+                                aria-label={t('tableDimensions', {
+                                    rows: row + 1,
+                                    cols: col + 1,
+                                })}
+                            />
+                        );
+                    }
+                )}
             </div>
         </div>
     );

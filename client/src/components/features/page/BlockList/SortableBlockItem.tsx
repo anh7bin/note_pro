@@ -29,6 +29,7 @@ export const SortableBlockItem = memo(
             handleConvertToTask,
             handleConvertToFile,
             handleConvertToTable,
+            handleConvertToParagraph,
         } = useEditor();
 
         const {
@@ -112,6 +113,10 @@ export const SortableBlockItem = memo(
             [block.id, handleDeleteBlock]
         );
 
+        const deleteOnlyTable = useCallback(() => {
+            void handleConvertToParagraph(block.id);
+        }, [block.id, handleConvertToParagraph]);
+
         const insertAbove = useCallback(() => {
             const creation = handleAddBlock(
                 positionRef.current,
@@ -132,7 +137,12 @@ export const SortableBlockItem = memo(
             return creation?.blockId ?? null;
         }, [handleAddBlock]);
 
-        const commonDeleteHandler = totalBlocks > 1 ? deleteBlock : undefined;
+        const commonDeleteHandler =
+            totalBlocks > 1
+                ? deleteBlock
+                : block.type === BlockType.TABLE
+                  ? deleteOnlyTable
+                  : undefined;
 
         const handleBlockKeyDown = useCallback(
             (event: React.KeyboardEvent<HTMLDivElement>) => {

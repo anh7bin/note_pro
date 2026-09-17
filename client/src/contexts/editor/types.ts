@@ -61,6 +61,7 @@ export interface EditorConversions {
         fileData: FileBlockContent
     ) => Promise<boolean>;
     handleConvertToTable: (blockId: string, tableHTML: string) => Promise<void>;
+    handleConvertToParagraph: (blockId: string) => Promise<boolean>;
 }
 
 export interface EditorContextValue

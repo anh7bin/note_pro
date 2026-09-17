@@ -343,9 +343,12 @@ export function useCommandHandlers({
             const currentOnAddBlock = onAddBlockRef.current;
             if (!currentOnAddBlock) return;
 
-            currentOnAddBlock(positionRef.current, BlockType.SEPARATOR, {
-                style,
-            });
+            currentOnAddBlock(
+                positionRef.current,
+                BlockType.SEPARATOR,
+                { style },
+                null
+            );
             updateState({ showSeparator: false });
         },
         [updateState]

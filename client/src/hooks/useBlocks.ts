@@ -62,6 +62,11 @@ export interface BlockRepository {
         id: string,
         content: FileBlockContent
     ) => Promise<EditorBlock | null>;
+    convertBlockToTable: (
+        id: string,
+        content: BlockContent
+    ) => Promise<EditorBlock | null>;
+    convertBlockToParagraph: (id: string) => Promise<EditorBlock | null>;
     updateBlockCoverImage: (
         id: string,
         coverImage: string | null
@@ -335,17 +340,18 @@ export function useBlocks(): BlockRepository {
         [updateBlock]
     );
 
-    const convertBlockToFile = useCallback(
+    const convertBlock = useCallback(
         async (
             id: string,
-            content: FileBlockContent
+            type: BlockType,
+            content: BlockContent
         ): Promise<EditorBlock | null> => {
             try {
                 const res = await updateBlock({
                     variables: {
                         id,
                         input: {
-                            type: BlockType.FILE,
+                            type,
                             content,
                             updated_at: new Date().toISOString(),
                         },
@@ -380,11 +386,28 @@ export function useBlocks(): BlockRepository {
                     tasks: [],
                 };
             } catch (error) {
-                console.error('Failed to convert block to file:', error);
+                console.error(`Failed to convert block to ${type}:`, error);
                 return null;
             }
         },
         [updateBlock]
+    );
+
+    const convertBlockToFile = useCallback(
+        (id: string, content: FileBlockContent) =>
+            convertBlock(id, BlockType.FILE, content),
+        [convertBlock]
+    );
+
+    const convertBlockToTable = useCallback(
+        (id: string, content: BlockContent) =>
+            convertBlock(id, BlockType.TABLE, content),
+        [convertBlock]
+    );
+
+    const convertBlockToParagraph = useCallback(
+        (id: string) => convertBlock(id, BlockType.PARAGRAPH, { text: '' }),
+        [convertBlock]
     );
 
     const updateBlockCoverImage = useCallback(
@@ -426,6 +449,8 @@ export function useBlocks(): BlockRepository {
         updateBlocksPositionsBatch,
         updateBlockType,
         convertBlockToFile,
+        convertBlockToTable,
+        convertBlockToParagraph,
         updateBlockCoverImage,
         removeBlock,
     };

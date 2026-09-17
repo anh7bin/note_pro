@@ -59,6 +59,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                     show={isOpen}
                     onSelect={handleEmojiSelect}
                     onClose={() => setIsOpen(false)}
+                    manualWheelScroll
                 />
             </PopoverPanel>
         </div>

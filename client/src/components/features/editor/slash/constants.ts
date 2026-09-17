@@ -6,6 +6,9 @@ export const SLASH_MENU_KEYS = ['/', 'Escape', 'ArrowUp', 'ArrowDown', 'Enter'];
 
 export const SLASH_TRIGGER_SUFFIXES = ['', ' ', '/'];
 
+export const MAX_TABLE_ROWS = 9;
+export const MAX_TABLE_COLS = 9;
+
 export const createSlashCommands = (
     isTitle: boolean,
     t: (key: TranslationKey) => string

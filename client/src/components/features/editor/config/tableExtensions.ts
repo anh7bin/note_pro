@@ -1,10 +1,7 @@
 import { CustomCode } from '@/lib/tiptap/extensions/custom-code';
 import Highlight from '@tiptap/extension-highlight';
 import Link from '@tiptap/extension-link';
-import { Table } from '@tiptap/extension-table';
-import { TableCell } from '@tiptap/extension-table-cell';
-import { TableHeader } from '@tiptap/extension-table-header';
-import { TableRow } from '@tiptap/extension-table-row';
+import { TableKit } from '@tiptap/extension-table';
 import Underline from '@tiptap/extension-underline';
 import { Extension } from '@tiptap/core';
 import Document from '@tiptap/extension-document';
@@ -13,7 +10,7 @@ import Text from '@tiptap/extension-text';
 import Bold from '@tiptap/extension-bold';
 import Italic from '@tiptap/extension-italic';
 import Strike from '@tiptap/extension-strike';
-import { TextSelection } from '@tiptap/pm/state';
+import { AllSelection, TextSelection } from '@tiptap/pm/state';
 import { TABLE_CONFIG } from './constants';
 
 const TableDocument = Document.extend({
@@ -21,7 +18,7 @@ const TableDocument = Document.extend({
 });
 
 interface TableKeyHandlerOptions {
-    onBackspaceAtStart: () => boolean;
+    onDeleteTable: () => boolean;
 }
 
 const TableKeyHandler = Extension.create<TableKeyHandlerOptions>({
@@ -29,7 +26,7 @@ const TableKeyHandler = Extension.create<TableKeyHandlerOptions>({
 
     addOptions() {
         return {
-            onBackspaceAtStart: () => true,
+            onDeleteTable: () => true,
         };
     },
 
@@ -59,27 +56,51 @@ const TableKeyHandler = Extension.create<TableKeyHandlerOptions>({
                 // Outside table, prevent creating new content
                 return true;
             },
-            // Prevent Backspace from deleting the table structure
+            // A table-only document cannot become empty. Delete the whole
+            // block instead of letting ProseMirror leave a minimal table.
             Backspace: ({ editor }) => {
                 const { selection } = editor.state;
-                const { empty } = selection;
-
-                if (!empty) return false;
-
                 const firstTextPosition = TextSelection.atStart(
                     editor.state.doc
                 ).from;
-                if (selection.from === firstTextPosition) {
-                    return this.options.onBackspaceAtStart();
+                const lastTextPosition = TextSelection.atEnd(
+                    editor.state.doc
+                ).to;
+                const wholeTableSelected =
+                    selection instanceof AllSelection ||
+                    (!selection.empty &&
+                        selection.from <= firstTextPosition &&
+                        selection.to >= lastTextPosition);
+
+                if (wholeTableSelected) {
+                    return this.options.onDeleteTable();
+                }
+
+                if (selection.empty && selection.from === firstTextPosition) {
+                    return this.options.onDeleteTable();
                 }
 
                 return false;
+            },
+            Delete: ({ editor }) => {
+                const { selection, doc } = editor.state;
+                const firstTextPosition = TextSelection.atStart(doc).from;
+                const lastTextPosition = TextSelection.atEnd(doc).to;
+                const wholeTableSelected =
+                    selection instanceof AllSelection ||
+                    (!selection.empty &&
+                        selection.from <= firstTextPosition &&
+                        selection.to >= lastTextPosition);
+
+                return wholeTableSelected
+                    ? this.options.onDeleteTable()
+                    : false;
             },
         };
     },
 });
 
-export const createTableExtensions = (onBackspaceAtStart: () => boolean) => [
+export const createTableExtensions = (onDeleteTable: () => boolean) => [
     TableDocument,
     Paragraph,
     Text,
@@ -96,17 +117,17 @@ export const createTableExtensions = (onBackspaceAtStart: () => boolean) => [
         autolink: true,
         linkOnPaste: true,
     }),
-    Table.configure({
-        ...TABLE_CONFIG,
-        // Prevent table from being deleted
-        allowTableNodeSelection: false,
-    }),
-    TableRow,
-    TableHeader,
-    TableCell.configure({
-        HTMLAttributes: {
-            class: 'table-cell',
+    TableKit.configure({
+        table: {
+            ...TABLE_CONFIG,
+            // Prevent table from being deleted
+            allowTableNodeSelection: false,
+        },
+        tableCell: {
+            HTMLAttributes: {
+                class: 'table-cell',
+            },
         },
     }),
-    TableKeyHandler.configure({ onBackspaceAtStart }),
+    TableKeyHandler.configure({ onDeleteTable }),
 ];
