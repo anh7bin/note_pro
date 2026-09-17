@@ -131,6 +131,8 @@ export function BlockActionMenu({
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
                 <Button
+                    type="button"
+                    data-block-action-trigger
                     variant="ghost"
                     size="icon"
                     aria-label={t('openBlockActions')}

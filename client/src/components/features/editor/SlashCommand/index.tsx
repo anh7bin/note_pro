@@ -13,6 +13,7 @@ interface SlashCommandProps {
     commands: Command[];
     selectedIndex: number;
     onActiveIndexChange: (index: number) => void;
+    editorElement: HTMLElement | null;
 }
 
 export const SlashCommand = memo(function SlashCommand({
@@ -23,6 +24,7 @@ export const SlashCommand = memo(function SlashCommand({
     commands,
     selectedIndex,
     onActiveIndexChange,
+    editorElement,
 }: SlashCommandProps) {
     const ref = useRef<HTMLDivElement>(null);
     const { t } = useI18n();
@@ -31,15 +33,18 @@ export const SlashCommand = memo(function SlashCommand({
         if (!show) return;
 
         const handleClickOutside = (e: MouseEvent) => {
-            if (ref.current && !ref.current.contains(e.target as Node)) {
-                close();
-            }
+            const target = e.target;
+            if (!(target instanceof Node)) return;
+            if (ref.current?.contains(target)) return;
+            if (editorElement?.contains(target)) return;
+
+            close();
         };
 
         document.addEventListener('mousedown', handleClickOutside);
         return () =>
             document.removeEventListener('mousedown', handleClickOutside);
-    }, [show, close]);
+    }, [show, close, editorElement]);
 
     const handleSelect = useCallback(
         (commandId: string) => {
@@ -54,7 +59,7 @@ export const SlashCommand = memo(function SlashCommand({
     return (
         <div
             ref={ref}
-            className="fixed bg-popover text-popover-foreground border border-border rounded-lg shadow-lg p-2 z-50 w-80 max-h-96 overflow-hidden"
+            className="fixed z-50 max-h-96 w-80 origin-top-left overflow-hidden rounded-lg border border-border bg-popover p-2 text-popover-foreground shadow-lg animate-in fade-in-0 zoom-in-95 slide-in-from-top-1 duration-150 motion-reduce:animate-none"
             style={{ top: position.top, left: position.left }}
             role="listbox"
             aria-label={t('blockCommands')}

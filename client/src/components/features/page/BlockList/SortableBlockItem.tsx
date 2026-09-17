@@ -41,6 +41,7 @@ export const SortableBlockItem = memo(
         } = useSortable({ id: block.id });
 
         const blockElementRef = useRef<HTMLDivElement>(null);
+        const preserveActionFocusRef = useRef(false);
         const positionRef = useRef(block.position ?? 0);
         positionRef.current = block.position ?? 0;
         const usesBlockLevelFocus =
@@ -56,6 +57,11 @@ export const SortableBlockItem = memo(
 
         useLayoutEffect(() => {
             if (!usesBlockLevelFocus || focusedBlock !== block.id) return;
+
+            if (preserveActionFocusRef.current) {
+                preserveActionFocusRef.current = false;
+                return;
+            }
 
             blockElementRef.current?.focus({ preventScroll: true });
         }, [block.id, focusedBlock, usesBlockLevelFocus]);
@@ -162,6 +168,16 @@ export const SortableBlockItem = memo(
                     '[data-editor-container]'
                 );
                 if (!editorContainer && target.closest('button, a, input')) {
+                    if (
+                        focusedBlock !== block.id &&
+                        target.closest('[data-block-action-trigger]')
+                    ) {
+                        // Visually focus the file/separator block without
+                        // moving DOM focus away from the menu trigger while
+                        // Radix is opening its dropdown.
+                        preserveActionFocusRef.current = true;
+                        handleBlockFocus(block.id);
+                    }
                     return;
                 }
 
@@ -170,7 +186,7 @@ export const SortableBlockItem = memo(
                     blockElementRef.current?.focus({ preventScroll: true });
                 }
             },
-            [block.id, handleBlockFocus, usesBlockLevelFocus]
+            [block.id, focusedBlock, handleBlockFocus, usesBlockLevelFocus]
         );
 
         const commonInsertHandlers = useMemo(

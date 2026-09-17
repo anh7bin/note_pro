@@ -1,12 +1,16 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import type { Editor } from '@tiptap/react';
 import { SlashCommand } from '../SlashCommand';
 import { TableSizePicker } from '../TableSizePicker';
 import { SeparatorStylePicker } from '../SeparatorStylePicker';
 import { EmojiPickerPopover } from '@/components/shared/EmojiPickerPopover';
-import { createSlashCommands } from '../slash/constants';
+import {
+    createSlashCommands,
+    SLASH_TRIGGER_SUFFIXES,
+} from '../slash/constants';
+import { getPopoverPosition, shouldShowSlash } from '../slash/helpers';
 import type { SlashCommandOptions } from '../slash/types';
 import { useMenuState, useSlashKeyHandler } from './useMenuState';
 import { useCommandHandlers } from './useCommandHandlers';
@@ -64,6 +68,73 @@ export function useSlashCommand(
         onCommandSelect,
     });
 
+    useEffect(() => {
+        if (!editor || availableCommands.length === 0) return;
+
+        const handleEditorClick = () => {
+            if (editor.isDestroyed) return;
+
+            const { selection } = editor.state;
+            if (!selection.empty) {
+                updateState({ showSlash: false, selectedIndex: 0 });
+                return;
+            }
+
+            const { $from } = selection;
+            if (!$from.parent.isTextblock) {
+                updateState({ showSlash: false, selectedIndex: 0 });
+                return;
+            }
+
+            const textBefore = $from.parent.textBetween(
+                0,
+                $from.parentOffset,
+                undefined,
+                '\ufffc'
+            );
+            const slashIsBeforeCaret =
+                textBefore.endsWith('/') &&
+                shouldShowSlash(
+                    textBefore.slice(0, -1),
+                    SLASH_TRIGGER_SUFFIXES
+                );
+            const textAfter = $from.parent.textBetween(
+                $from.parentOffset,
+                Math.min($from.parentOffset + 1, $from.parent.content.size),
+                undefined,
+                '\ufffc'
+            );
+            const slashIsAfterCaret =
+                textAfter === '/' &&
+                shouldShowSlash(textBefore, SLASH_TRIGGER_SUFFIXES);
+
+            if (!slashIsBeforeCaret && !slashIsAfterCaret) {
+                updateState({ showSlash: false, selectedIndex: 0 });
+                return;
+            }
+
+            const slashPosition = slashIsBeforeCaret
+                ? selection.from
+                : selection.from + 1;
+            if (slashPosition !== selection.from) {
+                editor.commands.setTextSelection(slashPosition);
+            }
+
+            const coords = editor.view.coordsAtPos(slashPosition);
+            updateState({
+                slashPos: getPopoverPosition(coords),
+                showSlash: true,
+                selectedIndex: 0,
+            });
+        };
+
+        const editorElement = editor.view.dom;
+        editorElement.addEventListener('click', handleEditorClick);
+        return () => {
+            editorElement.removeEventListener('click', handleEditorClick);
+        };
+    }, [availableCommands.length, editor, updateState]);
+
     const menus = useMemo(
         () => (
             <>
@@ -87,6 +158,7 @@ export function useSlashCommand(
                         onActiveIndexChange={(selectedIndex) =>
                             updateState({ selectedIndex })
                         }
+                        editorElement={editor?.view.dom ?? null}
                     />
                 )}
                 {state.showEmoji && (
@@ -130,6 +202,7 @@ export function useSlashCommand(
             onSeparatorSelect,
             handleFileChange,
             availableCommands,
+            editor,
             isTitle,
             updateState,
             fileInputRef,
