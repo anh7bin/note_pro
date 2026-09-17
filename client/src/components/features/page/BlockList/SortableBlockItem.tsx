@@ -11,6 +11,7 @@ import { BlockRenderer } from './BlockRenderer';
 import { useEditor } from '@/contexts/EditorContext';
 import { BlockInteractions } from '@/components/features/editor/BlockInteractions';
 import { cn } from '@/lib/utils';
+import { getBlockElementId } from '@/lib/blockLink';
 
 export const SortableBlockItem = memo(
     function SortableBlockItem({ block, totalBlocks }: SortableBlockItemProps) {
@@ -210,6 +211,7 @@ export const SortableBlockItem = memo(
         return (
             <div
                 ref={setBlockRef}
+                id={getBlockElementId(block.id)}
                 style={style}
                 data-block-id={block.id}
                 role={usesBlockLevelFocus ? 'group' : undefined}

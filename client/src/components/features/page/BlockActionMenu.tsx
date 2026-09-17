@@ -8,7 +8,9 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { highlightBlock } from '@/lib/blockHighlight';
-import { Download, MoreVertical, Trash2 } from 'lucide-react';
+import { createBlockLink } from '@/lib/blockLink';
+import showToast from '@/lib/toast';
+import { Download, Link2, MoreVertical, Trash2 } from 'lucide-react';
 import { useCallback, useRef } from 'react';
 import { InsertBlockAboveIcon } from '@/components/shared/icons/InsertBlockAboveIcon';
 import { InsertBlockBelowIcon } from '@/components/shared/icons/InsertBlockBelowIcon';
@@ -37,6 +39,7 @@ export function BlockActionMenu({
     const { t } = useI18n();
 
     const hasActions =
+        Boolean(blockId) ||
         Boolean(downloadUrl) ||
         Boolean(onDelete) ||
         Boolean(onInsertAbove) ||
@@ -90,6 +93,19 @@ export function BlockActionMenu({
         }
     }, [downloadFileName, downloadUrl]);
 
+    const handleCopyBlockLink = useCallback(async () => {
+        if (!blockId) return;
+
+        try {
+            const url = createBlockLink(window.location.href, blockId);
+            await navigator.clipboard.writeText(url);
+            showToast.success(t('blockLinkCopied'), { duration: 2000 });
+        } catch (error) {
+            console.error('Error copying block link:', error);
+            showToast.error(t('copyLinkError'));
+        }
+    }, [blockId, t]);
+
     const handleInsertAbove = useCallback(() => {
         const blockId = onInsertAbove?.();
         insertedBlockIdRef.current =
@@ -142,7 +158,7 @@ export function BlockActionMenu({
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-                className="w-48"
+                className="w-56"
                 align="start"
                 onCloseAutoFocus={handleCloseAutoFocus}>
                 {onInsertAbove && (
@@ -155,6 +171,12 @@ export function BlockActionMenu({
                     <DropdownMenuItem onSelect={handleInsertBelow}>
                         <InsertBlockBelowIcon />
                         {t('insertBlockBelow')}
+                    </DropdownMenuItem>
+                )}
+                {blockId && (
+                    <DropdownMenuItem onSelect={handleCopyBlockLink}>
+                        <Link2 />
+                        {t('copyBlockLink')}
                     </DropdownMenuItem>
                 )}
                 {onDelete && (

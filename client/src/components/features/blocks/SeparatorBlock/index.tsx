@@ -17,6 +17,7 @@ const SEPARATOR_STYLES: Record<SeparatorStyle, string> = {
 
 export const SeparatorBlock = memo(
     function SeparatorBlock({
+        blockId,
         style,
         dragHandle,
         editable = true,
@@ -35,7 +36,7 @@ export const SeparatorBlock = memo(
                 {editable && (
                     <div className="absolute left-full top-1/2 ml-1 -translate-y-1/2">
                         <BlockActionMenu
-                            blockId=""
+                            blockId={blockId}
                             onDelete={onDeleteBlock}
                             onInsertAbove={onInsertAbove}
                             onInsertBelow={onInsertBelow}
@@ -47,6 +48,7 @@ export const SeparatorBlock = memo(
     },
     (prevProps, nextProps) => {
         return (
+            prevProps.blockId === nextProps.blockId &&
             prevProps.style === nextProps.style &&
             prevProps.editable === nextProps.editable
         );

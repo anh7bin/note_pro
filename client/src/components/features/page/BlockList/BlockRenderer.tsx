@@ -106,6 +106,7 @@ export const BlockRenderer = memo(
             case BlockType.SEPARATOR:
                 return (
                     <SeparatorBlock
+                        blockId={block.id}
                         style={
                             (block.content?.style as SeparatorStyle) ||
                             'regular'

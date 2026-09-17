@@ -446,6 +446,8 @@ export const en = {
     emojis: 'Emojis',
     insertBlockAbove: 'Insert block above',
     insertBlockBelow: 'Insert block below',
+    copyBlockLink: 'Copy link to block',
+    blockLinkCopied: 'Block link copied to clipboard',
     tableDimensions: '{{rows}} × {{cols}} table',
     strong: 'Strong',
     regular: 'Regular',

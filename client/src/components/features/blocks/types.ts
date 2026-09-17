@@ -42,6 +42,7 @@ export interface TaskBlockProps extends TextBlockProps {
 export type FileBlockProps = BaseBlockProps;
 
 export interface SeparatorBlockProps {
+    blockId: string;
     style: 'extralight' | 'light' | 'regular' | 'strong';
     dragHandle?: ReactNode;
     editable?: boolean;

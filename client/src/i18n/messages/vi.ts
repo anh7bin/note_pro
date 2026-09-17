@@ -439,6 +439,8 @@ export const vi: Messages = {
     emojis: 'Biểu tượng cảm xúc',
     insertBlockAbove: 'Chèn khối bên trên',
     insertBlockBelow: 'Chèn khối bên dưới',
+    copyBlockLink: 'Sao chép liên kết tới khối',
+    blockLinkCopied: 'Đã sao chép liên kết tới khối',
     tableDimensions: 'Bảng {{rows}} × {{cols}}',
     strong: 'Đậm',
     regular: 'Thường',
