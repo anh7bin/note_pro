@@ -7,8 +7,14 @@ import {
     handleFileUpload,
     handleTableInsert,
     getPopoverPosition,
+    type FileUploadResult,
 } from '../slash/helpers';
-import type { CommandHandlers, SlashCommandState } from '../slash/types';
+import type {
+    CommandHandlers,
+    FileUploadState,
+    FileUploadTarget,
+    SlashCommandState,
+} from '../slash/types';
 import type {
     AddEditorBlockHandler,
     ConvertToFileHandler,
@@ -16,8 +22,57 @@ import type {
     SeparatorStyle,
 } from '@/types/editor';
 import { BlockType } from '@/types/types';
-import type { FileUploadState } from '../slash/types';
 import { useI18n } from '@/contexts/I18nContext';
+import { MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/lib/constants';
+
+interface QueuedFileUpload {
+    file: File;
+    target: FileUploadTarget;
+    queuePosition: number;
+    queueTotal: number;
+    uploadedFileData?: FileBlockContent;
+}
+
+// For an empty source block, insert every file except the last one before it,
+// then convert the source block with the last file. This preserves selection
+// order without leaving an empty block or unmounting the upload UI mid-queue.
+function createFileUploadQueue(
+    files: File[],
+    basePosition: number,
+    currentBlockIsEmpty: boolean
+): QueuedFileUpload[] {
+    const queueTotal = files.length;
+
+    return files.map((file, index) => {
+        let target: FileUploadTarget;
+
+        if (currentBlockIsEmpty && index === queueTotal - 1) {
+            target = {
+                kind: 'convert-current',
+                previewInsertBelow: false,
+            };
+        } else if (currentBlockIsEmpty) {
+            target = {
+                kind: 'insert',
+                position: basePosition + index,
+                previewInsertBelow: false,
+            };
+        } else {
+            target = {
+                kind: 'insert',
+                position: basePosition + index + 1,
+                previewInsertBelow: true,
+            };
+        }
+
+        return {
+            file,
+            target,
+            queuePosition: index + 1,
+            queueTotal,
+        };
+    });
+}
 
 interface UseCommandHandlersOptions {
     editor: Editor | null;
@@ -45,10 +100,7 @@ export function useCommandHandlers({
     const { t } = useI18n();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const activeUploadRef = useRef<AbortController | null>(null);
-    const retryUploadRef = useRef<{
-        file: File;
-        uploadedFileData?: FileBlockContent;
-    } | null>(null);
+    const uploadQueueRef = useRef<QueuedFileUpload[]>([]);
 
     const positionRef = useRef(position);
     const onAddBlockRef = useRef(onAddBlock);
@@ -63,10 +115,9 @@ export function useCommandHandlers({
     const fileUploadMessages = useMemo(
         () => ({
             cannotUploadToBlock: t('cannotUploadFileToBlock'),
-            fileTooLarge: t('fileTooLarge'),
+            fileTooLarge: t('fileTooLarge', { size: MAX_FILE_SIZE_MB }),
             cannotAddToPage: t('cannotAddUploadedFile'),
             uploadedButNotSaved: t('uploadedFileNotSaved'),
-            uploaded: t('fileUploaded'),
             uploadError: t('fileUploadError'),
         }),
         [t]
@@ -75,6 +126,7 @@ export function useCommandHandlers({
     useEffect(
         () => () => {
             activeUploadRef.current?.abort();
+            uploadQueueRef.current = [];
         },
         []
     );
@@ -97,6 +149,13 @@ export function useCommandHandlers({
             },
             'upload-file': () => {
                 if (isTitle) return;
+                if (
+                    activeUploadRef.current ||
+                    uploadQueueRef.current.length > 0
+                ) {
+                    showToast.info(t('anotherFileUploading'));
+                    return;
+                }
                 fileInputRef.current?.click();
             },
             'insert-table': () => {
@@ -114,17 +173,14 @@ export function useCommandHandlers({
                 });
             },
         }),
-        [editor, isTitle, getPopoverPositionFromEditor, updateState]
+        [editor, isTitle, getPopoverPositionFromEditor, t, updateState]
     );
 
     const runFileUpload = useCallback(
-        async (
-            file: File,
-            uploadedFileData?: FileBlockContent
-        ): Promise<void> => {
+        async (upload: QueuedFileUpload): Promise<FileUploadResult> => {
             if (activeUploadRef.current) {
                 showToast.info(t('anotherFileUploading'));
-                return;
+                return { status: 'error' };
             }
 
             const controller = new AbortController();
@@ -132,44 +188,94 @@ export function useCommandHandlers({
 
             try {
                 const result = await handleFileUpload({
-                    file,
+                    file: upload.file,
                     blockId,
-                    editor,
                     onAddBlock: onAddBlockRef.current,
                     onConvertToFile: onConvertToFileRef.current,
-                    getPosition: () => positionRef.current,
+                    target: upload.target,
+                    queuePosition: upload.queuePosition,
+                    queueTotal: upload.queueTotal,
                     onUploadStateChange,
                     signal: controller.signal,
-                    uploadedFileData,
+                    uploadedFileData: upload.uploadedFileData,
                     messages: fileUploadMessages,
                 });
 
                 if (result.status === 'error') {
-                    retryUploadRef.current = {
-                        file,
-                        uploadedFileData: result.uploadedFileData,
-                    };
-                } else {
-                    retryUploadRef.current = null;
+                    upload.uploadedFileData = result.uploadedFileData;
                 }
+
+                return result;
             } finally {
                 if (activeUploadRef.current === controller) {
                     activeUploadRef.current = null;
                 }
             }
         },
-        [blockId, editor, fileUploadMessages, onUploadStateChange, t]
+        [blockId, fileUploadMessages, onUploadStateChange, t]
     );
+
+    const processUploadQueue = useCallback(async () => {
+        const queueTotal = uploadQueueRef.current[0]?.queueTotal;
+
+        while (uploadQueueRef.current.length > 0) {
+            const upload = uploadQueueRef.current[0];
+            if (!upload) return;
+
+            const result = await runFileUpload(upload);
+
+            if (result.status === 'success') {
+                uploadQueueRef.current.shift();
+                continue;
+            }
+
+            if (result.status === 'cancelled') {
+                uploadQueueRef.current = [];
+            }
+            return;
+        }
+
+        if (queueTotal) {
+            onUploadStateChange?.(null);
+            showToast.success(
+                queueTotal > 1
+                    ? t('filesUploaded', { count: queueTotal })
+                    : t('fileUploaded')
+            );
+        }
+    }, [onUploadStateChange, runFileUpload, t]);
 
     const handleFileChange = useCallback(
         async (event: ChangeEvent<HTMLInputElement>) => {
-            const file = event.target.files?.[0];
+            const files = Array.from(event.target.files || []);
             event.target.value = '';
-            if (!file) return;
+            if (!files.length) return;
 
-            await runFileUpload(file);
+            if (activeUploadRef.current || uploadQueueRef.current.length > 0) {
+                showToast.info(t('anotherFileUploading'));
+                return;
+            }
+
+            const validFiles = files.filter(
+                (file) => file.size <= MAX_FILE_SIZE
+            );
+            if (validFiles.length !== files.length) {
+                showToast.error(t('fileTooLarge', { size: MAX_FILE_SIZE_MB }));
+            }
+            if (!validFiles.length) return;
+
+            const basePosition = positionRef.current;
+            const currentBlockIsEmpty =
+                (editor?.getText() || '').trim().length === 0;
+            uploadQueueRef.current = createFileUploadQueue(
+                validFiles,
+                basePosition,
+                currentBlockIsEmpty
+            );
+
+            await processUploadQueue();
         },
-        [runFileUpload]
+        [editor, processUploadQueue, t]
     );
 
     const cancelFileUpload = useCallback(() => {
@@ -177,14 +283,15 @@ export function useCommandHandlers({
     }, []);
 
     const retryFileUpload = useCallback(() => {
-        const retryUpload = retryUploadRef.current;
-        if (!retryUpload) return;
-        void runFileUpload(retryUpload.file, retryUpload.uploadedFileData);
-    }, [runFileUpload]);
+        if (activeUploadRef.current || uploadQueueRef.current.length === 0) {
+            return;
+        }
+        void processUploadQueue();
+    }, [processUploadQueue]);
 
     const dismissFileUpload = useCallback(() => {
         activeUploadRef.current?.abort();
-        retryUploadRef.current = null;
+        uploadQueueRef.current = [];
         onUploadStateChange?.(null);
     }, [onUploadStateChange]);
 

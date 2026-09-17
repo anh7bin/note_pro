@@ -491,11 +491,12 @@ export const vi: Messages = {
     noHeadingsDescription: 'Thêm tiêu đề mục để tạo mục lục.',
     anotherFileUploading: 'Một tệp khác đang được tải lên trong khối này.',
     cannotUploadFileToBlock: 'Không thể tải tệp lên khối này.',
-    fileTooLarge: 'Tệp quá lớn. Kích thước tối đa là 25 MB.',
+    fileTooLarge: 'Tệp quá lớn. Kích thước tối đa là {{size}} MB.',
     cannotAddUploadedFile: 'Không thể thêm tệp đã tải lên vào trang này.',
     uploadedFileNotSaved:
         'Tệp đã được tải lên nhưng không thể lưu vào trang này.',
     fileUploaded: 'Đã tải tệp lên',
+    filesUploaded: 'Đã tải lên {{count}} tệp',
     fileUploadError: 'Không thể tải tệp lên. Vui lòng thử lại.',
     addCommentError: 'Không thể thêm bình luận',
     deleteCommentError: 'Không thể xóa bình luận',

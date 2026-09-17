@@ -497,11 +497,12 @@ export const en = {
     noHeadingsDescription: 'Add headings to build a table of contents.',
     anotherFileUploading: 'Another file is already uploading in this block.',
     cannotUploadFileToBlock: 'Cannot upload a file to this block.',
-    fileTooLarge: 'File is too large. Maximum size is 25 MB.',
+    fileTooLarge: 'File is too large. Maximum size is {{size}} MB.',
     cannotAddUploadedFile: 'Cannot add the uploaded file to this page.',
     uploadedFileNotSaved:
         'The file was uploaded, but could not be saved to this page.',
     fileUploaded: 'File uploaded successfully',
+    filesUploaded: '{{count}} files uploaded successfully',
     fileUploadError: 'Failed to upload file. Please try again.',
     addCommentError: 'Unable to add comment',
     deleteCommentError: 'Unable to delete comment',

@@ -2,8 +2,6 @@ import { Minus, Paperclip, Smile, Table } from 'lucide-react';
 import type { Command } from '../SlashCommand';
 import type { TranslationKey } from '@/i18n/messages';
 
-export const MAX_FILE_SIZE_BYTES = 25 * 1024 * 1024;
-
 export const SLASH_MENU_KEYS = ['/', 'Escape', 'ArrowUp', 'ArrowDown', 'Enter'];
 
 export const SLASH_TRIGGER_SUFFIXES = ['', ' ', '/'];

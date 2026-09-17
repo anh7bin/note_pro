@@ -21,6 +21,8 @@ export function FileUploadPreview({
     fileType,
     fileSize,
     progress,
+    queuePosition,
+    queueTotal,
     status,
     errorMessage,
     dragHandle,
@@ -33,6 +35,8 @@ export function FileUploadPreview({
     const normalizedProgress = Math.min(100, Math.max(0, progress));
     const readableSize = formatFileSize(fileSize);
     const hasError = status === 'error';
+    const queueProgress =
+        queueTotal > 1 ? `${queuePosition}/${queueTotal}` : null;
     const statusText =
         status === 'finishing'
             ? 'Finishing…'
@@ -47,14 +51,15 @@ export function FileUploadPreview({
             aria-busy={!hasError}
             aria-label={
                 hasError
-                    ? `Upload failed for ${fileName}`
-                    : `Uploading ${fileName}`
+                    ? `Upload failed for ${fileName}${queueProgress ? ` (${queueProgress})` : ''}`
+                    : `Uploading ${fileName}${queueProgress ? ` (${queueProgress})` : ''}`
             }>
             <span
                 className="sr-only"
                 role={hasError ? 'alert' : 'status'}
                 aria-live={hasError ? 'assertive' : 'polite'}>
                 {statusText} {fileName}
+                {queueProgress ? ` (${queueProgress})` : ''}
             </span>
             {dragHandle && (
                 <div className="absolute right-full top-1 mr-1 text-muted-foreground">
@@ -83,6 +88,7 @@ export function FileUploadPreview({
                             <TruncatedTooltip text={statusText}>
                                 <span className="truncate">
                                     {statusText}
+                                    {queueProgress && ` · ${queueProgress}`}
                                     {!hasError && (
                                         <>
                                             {' · '}

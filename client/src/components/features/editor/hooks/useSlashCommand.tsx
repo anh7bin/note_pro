@@ -71,6 +71,7 @@ export function useSlashCommand(
                     <input
                         ref={fileInputRef}
                         type="file"
+                        multiple
                         className="hidden"
                         onChange={handleFileChange}
                     />

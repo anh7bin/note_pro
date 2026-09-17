@@ -7,16 +7,17 @@ import type {
 } from '@/types/editor';
 import type { Editor } from '@tiptap/react';
 import { showToast } from '@/lib/toast';
-import { MAX_FILE_SIZE_BYTES } from './constants';
-import type { FileUploadState } from './types';
+import { MAX_FILE_SIZE } from '@/lib/constants';
+import type { FileUploadState, FileUploadTarget } from './types';
 
 interface FileUploadOptions {
     file: File;
     blockId?: string;
-    editor: Editor | null;
     onAddBlock?: AddEditorBlockHandler;
     onConvertToFile?: ConvertToFileHandler;
-    getPosition: () => number;
+    target: FileUploadTarget;
+    queuePosition: number;
+    queueTotal: number;
     onUploadStateChange?: (upload: FileUploadState | null) => void;
     signal?: AbortSignal;
     uploadedFileData?: FileBlockContent;
@@ -28,7 +29,6 @@ export interface FileUploadMessages {
     fileTooLarge: string;
     cannotAddToPage: string;
     uploadedButNotSaved: string;
-    uploaded: string;
     uploadError: string;
 }
 
@@ -40,10 +40,11 @@ export interface FileUploadResult {
 export const handleFileUpload = async ({
     file,
     blockId,
-    editor,
     onAddBlock,
     onConvertToFile,
-    getPosition,
+    target,
+    queuePosition,
+    queueTotal,
     onUploadStateChange,
     signal,
     uploadedFileData: existingUpload,
@@ -54,13 +55,11 @@ export const handleFileUpload = async ({
         return { status: 'error' };
     }
 
-    if (file.size > MAX_FILE_SIZE_BYTES) {
+    if (file.size > MAX_FILE_SIZE) {
         showToast.error(messages.fileTooLarge);
         return { status: 'error' };
     }
 
-    const currentText = (editor?.getText() || '').trim();
-    const insertBelow = currentText.length > 0 && Boolean(onAddBlock);
     const pendingFile: Omit<
         FileUploadState,
         'progress' | 'status' | 'errorMessage'
@@ -68,7 +67,9 @@ export const handleFileUpload = async ({
         fileName: file.name,
         fileType: file.type,
         fileSize: file.size,
-        insertBelow,
+        queuePosition,
+        queueTotal,
+        insertBelow: target.previewInsertBelow,
     };
     let uploadedFileData = existingUpload;
     let lastProgress = existingUpload ? 100 : 0;
@@ -113,9 +114,13 @@ export const handleFileUpload = async ({
         });
 
         let persisted: boolean | void;
-        if (currentText.length > 0 && onAddBlock) {
+        if (target.kind === 'insert') {
+            if (!onAddBlock) {
+                throw new Error(messages.cannotAddToPage);
+            }
+
             const creation = onAddBlock(
-                getPosition() + 1,
+                target.position,
                 BlockType.FILE,
                 uploadedFileData,
                 null
@@ -131,8 +136,6 @@ export const handleFileUpload = async ({
             throw new Error(messages.uploadedButNotSaved);
         }
 
-        onUploadStateChange?.(null);
-        showToast.success(messages.uploaded);
         return { status: 'success' };
     } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {

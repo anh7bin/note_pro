@@ -26,10 +26,23 @@ export interface FileUploadState {
     fileType: string;
     fileSize: number;
     progress: number;
+    queuePosition: number;
+    queueTotal: number;
     insertBelow: boolean;
     status: 'uploading' | 'finishing' | 'error';
     errorMessage?: string;
 }
+
+export type FileUploadTarget =
+    | {
+          kind: 'convert-current';
+          previewInsertBelow: false;
+      }
+    | {
+          kind: 'insert';
+          position: number;
+          previewInsertBelow: boolean;
+      };
 
 export interface CommandHandlers {
     emojis: () => void;
