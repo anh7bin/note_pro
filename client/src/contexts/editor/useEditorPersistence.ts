@@ -98,6 +98,8 @@ export function useEditorPersistence({
         setFocusPosition,
         isCreatingBlockRef,
     } = state;
+    const rootBlockRef = useRef(rootBlock);
+    rootBlockRef.current = rootBlock;
 
     const enqueueBlockSave = useCallback(
         (blockId: string, content: string) => {
@@ -389,7 +391,8 @@ export function useEditorPersistence({
 
     const handleUpdateTitle = useCallback(
         (title: string) => {
-            if (!rootBlock) return;
+            const currentRootBlock = rootBlockRef.current;
+            if (!currentRootBlock) return;
 
             dirtyTitleRef.current = title;
             debounced(() => {
@@ -399,9 +402,12 @@ export function useEditorPersistence({
                     .then(async () => {
                         if (dirtyTitleRef.current !== title) return;
 
+                        const latestRootBlock = rootBlockRef.current;
+                        if (!latestRootBlock) return;
+
                         const savedBlock = await updateBlockContent(
-                            rootBlock.id,
-                            { title }
+                            latestRootBlock.id,
+                            { ...latestRootBlock.content, title }
                         );
                         if (savedBlock && dirtyTitleRef.current === title) {
                             dirtyTitleRef.current = null;
@@ -410,9 +416,68 @@ export function useEditorPersistence({
 
                 titleSaveQueueRef.current = nextSave;
                 return nextSave;
-            }, `title-${rootBlock.id}`);
+            }, `title-${currentRootBlock.id}`);
         },
-        [debounced, dirtyTitleRef, rootBlock, updateBlockContent]
+        [debounced, dirtyTitleRef, updateBlockContent]
+    );
+
+    const handleUpdateDocumentIcon = useCallback(
+        async (icon: string | null) => {
+            const currentRootBlock = rootBlockRef.current;
+            if (!currentRootBlock) return false;
+
+            const previousIcon = currentRootBlock.content.icon;
+            const nextContent: BlockContent = {
+                ...currentRootBlock.content,
+                title: dirtyTitleRef.current ?? currentRootBlock.content.title,
+            };
+            if (icon) {
+                nextContent.icon = icon;
+            } else {
+                delete nextContent.icon;
+            }
+
+            const nextRootBlock = {
+                ...currentRootBlock,
+                content: nextContent,
+            };
+            rootBlockRef.current = nextRootBlock;
+            setRootBlock(nextRootBlock);
+
+            const iconSave = titleSaveQueueRef.current
+                .catch(() => undefined)
+                .then(() =>
+                    updateBlockContent(currentRootBlock.id, nextContent)
+                );
+            titleSaveQueueRef.current = iconSave.then(() => undefined);
+            const savedBlock = await iconSave;
+            if (savedBlock) return true;
+
+            setRootBlock((latestRootBlock) => {
+                if (
+                    !latestRootBlock ||
+                    latestRootBlock.id !== currentRootBlock.id ||
+                    latestRootBlock.content.icon !== icon
+                ) {
+                    return latestRootBlock;
+                }
+
+                const restoredContent = { ...latestRootBlock.content };
+                if (previousIcon) {
+                    restoredContent.icon = previousIcon;
+                } else {
+                    delete restoredContent.icon;
+                }
+                const restoredRootBlock = {
+                    ...latestRootBlock,
+                    content: restoredContent,
+                };
+                rootBlockRef.current = restoredRootBlock;
+                return restoredRootBlock;
+            });
+            return false;
+        },
+        [dirtyTitleRef, setRootBlock, updateBlockContent]
     );
 
     const handleTitleBlur = useCallback(() => {
@@ -469,6 +534,7 @@ export function useEditorPersistence({
         handleAddBlock,
         handleUpdateBlockContent,
         handleUpdateTitle,
+        handleUpdateDocumentIcon,
         handleTitleBlur,
         handleTitleEnter,
         enqueueBlockSave,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import EmojiPickerReact, { Theme, EmojiClickData } from 'emoji-picker-react';
 import { useTheme } from '@/contexts/ThemeProvider';
 
@@ -11,6 +11,7 @@ interface EmojiPickerPopoverProps {
     width?: number;
     height?: number;
     manualWheelScroll?: boolean;
+    header?: ReactNode;
 }
 
 export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
@@ -20,6 +21,7 @@ export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
     width = 350,
     height = 400,
     manualWheelScroll = false,
+    header,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const { theme } = useTheme();
@@ -71,8 +73,9 @@ export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
     return !show ? null : (
         <div
             ref={ref}
-            className="shadow-lg rounded-lg overflow-hidden bg-popover border border-border"
+            className="overflow-hidden rounded-lg border border-border bg-popover shadow-lg"
             style={{ pointerEvents: 'auto' }}>
+            {header}
             <EmojiPickerReact
                 onEmojiClick={handleEmojiClick}
                 theme={emojiTheme}

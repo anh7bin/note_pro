@@ -8,6 +8,28 @@ import { useDocumentAccess } from '@/contexts/DocumentAccessContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { TranslationKey } from '@/i18n/messages';
 
+const MANAGED_FAVICON_ID = 'document-emoji-favicon';
+const DEFAULT_FAVICON_HREF = '/favicon.ico';
+
+function escapeSvgText(value: string) {
+    return value.replace(
+        /[&<>"']/g,
+        (character) =>
+            ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&apos;',
+            })[character] ?? character
+    );
+}
+
+function createEmojiFavicon(emoji: string) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="52" dominant-baseline="central" text-anchor="middle" font-size="82">${escapeSvgText(emoji)}</text></svg>`;
+    return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
 function getTitleKeyFromPathname(pathname: string): TranslationKey | null {
     if (pathname.includes('/tasks')) return 'tasks';
     if (pathname.includes('/calendar')) return 'calendar';
@@ -37,7 +59,7 @@ export function usePageTitle() {
         fetchPolicy: 'cache-first',
     });
 
-    const { documentTitle, hasDocument } = useDocumentTitle({
+    const { documentTitle, documentIcon, hasDocument } = useDocumentTitle({
         enabled: pageType === 'editor',
     });
 
@@ -69,4 +91,29 @@ export function usePageTitle() {
     useEffect(() => {
         document.title = title;
     }, [title, locale]);
+
+    useEffect(() => {
+        const existingFavicon = document.getElementById(MANAGED_FAVICON_ID);
+        const activeDocumentIcon =
+            pageType === 'editor' && hasDocument && hasAccess
+                ? documentIcon
+                : null;
+
+        const favicon =
+            existingFavicon instanceof HTMLLinkElement
+                ? existingFavicon
+                : document.createElement('link');
+        favicon.id = MANAGED_FAVICON_ID;
+        favicon.rel = 'icon';
+        favicon.type = activeDocumentIcon ? 'image/svg+xml' : 'image/x-icon';
+        favicon.href = activeDocumentIcon
+            ? createEmojiFavicon(activeDocumentIcon)
+            : DEFAULT_FAVICON_HREF;
+        if (!favicon.isConnected) document.head.appendChild(favicon);
+
+        return () => {
+            favicon.type = 'image/x-icon';
+            favicon.href = DEFAULT_FAVICON_HREF;
+        };
+    }, [documentIcon, hasAccess, hasDocument, pageType]);
 }

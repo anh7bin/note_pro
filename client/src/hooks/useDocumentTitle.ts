@@ -48,13 +48,19 @@ export function useDocumentTitle(options: UseDocumentTitleOptions = {}) {
         return lastTitleRef.current;
     }, [processedRootBlock?.content?.title, enabled]);
 
+    const documentIcon = useMemo(() => {
+        const icon = processedRootBlock?.content?.icon;
+        return enabled && typeof icon === 'string' && icon.trim() ? icon : null;
+    }, [enabled, processedRootBlock?.content?.icon]);
+
     return useMemo(
         () => ({
             documentId,
             documentTitle,
+            documentIcon,
             loading: enabled ? loading : false,
             hasDocument: enabled && Boolean(documentId),
         }),
-        [documentId, documentTitle, loading, enabled]
+        [documentIcon, documentId, documentTitle, loading, enabled]
     );
 }

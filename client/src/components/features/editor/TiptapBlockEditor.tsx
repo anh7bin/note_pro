@@ -8,11 +8,13 @@ import { BlockList } from '@/components/features/page/BlockList';
 import { Separator } from '@/components/ui/separator';
 import { DocumentCover } from '@/components/features/page/DocumentCover';
 import { AddCoverButton } from '@/components/features/page/AddCoverButton';
+import { DocumentIcon } from '@/components/features/page/DocumentIcon';
 import { useDocumentCover } from '@/hooks/useDocumentCover';
 import { EditorProvider, useEditor } from '@/contexts/EditorContext';
 import { BlockInteractionsProvider } from '@/contexts/BlockInteractionsContext';
 import { BlockInteractions } from './BlockInteractions';
 import { NEW_DOCUMENT_TITLE_FOCUS_KEY } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 interface Props {
     pageId: string;
@@ -24,6 +26,7 @@ function EditorContent() {
         rootBlock,
         editable,
         handleUpdateTitle,
+        handleUpdateDocumentIcon,
         handleTitleBlur,
         handleTitleEnter,
     } = useEditor();
@@ -32,6 +35,7 @@ function EditorContent() {
             rootBlock,
         });
     const [shouldFocusTitle, setShouldFocusTitle] = useState(false);
+    const documentIcon = rootBlock?.content.icon;
 
     useEffect(() => {
         if (!editable || !rootBlock?.id) return;
@@ -80,14 +84,44 @@ function EditorContent() {
                                 isUploading={isUploading}
                             />
                         )}
-                        <div className="mx-auto max-w-[61rem] px-9 py-16 sm:px-10">
-                            <div className="group flex flex-col gap-2">
-                                {!coverImage && editable && (
-                                    <div className="">
-                                        <AddCoverButton
-                                            onAddCover={handleAddCover}
-                                            isUploading={isUploading}
+                        <div
+                            className={cn(
+                                'mx-auto max-w-[50rem] px-6 pb-16 sm:px-10',
+                                !coverImage && 'pt-8',
+                                coverImage && !documentIcon && 'pt-4'
+                            )}>
+                            <div
+                                className={cn(
+                                    'group flex flex-col gap-2',
+                                    coverImage && documentIcon && '-mt-10'
+                                )}>
+                                {documentIcon && (
+                                    <div className="relative z-10 w-fit">
+                                        <DocumentIcon
+                                            icon={documentIcon}
+                                            editable={editable}
+                                            display="large"
+                                            onChange={handleUpdateDocumentIcon}
                                         />
+                                    </div>
+                                )}
+                                {editable && (!documentIcon || !coverImage) && (
+                                    <div className="flex min-h-8 flex-wrap items-center gap-1">
+                                        {!documentIcon && (
+                                            <DocumentIcon
+                                                editable={editable}
+                                                display="action"
+                                                onChange={
+                                                    handleUpdateDocumentIcon
+                                                }
+                                            />
+                                        )}
+                                        {!coverImage && (
+                                            <AddCoverButton
+                                                onAddCover={handleAddCover}
+                                                isUploading={isUploading}
+                                            />
+                                        )}
                                     </div>
                                 )}
                                 <div

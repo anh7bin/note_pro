@@ -14,6 +14,7 @@ export type SeparatorStyle = 'extralight' | 'light' | 'regular' | 'strong';
 export interface BlockContent extends JsonObject {
     text?: string;
     title?: string;
+    icon?: string;
     style?: SeparatorStyle;
     fileUrl?: string;
     fileName?: string;
@@ -72,6 +73,7 @@ const SEPARATOR_STYLES = new Set<string>([
 const STRING_CONTENT_FIELDS = [
     'text',
     'title',
+    'icon',
     'fileUrl',
     'fileName',
     'fileType',

@@ -30,6 +30,7 @@ export interface EditorPersistenceController {
     handleAddBlock: AddEditorBlockHandler;
     handleUpdateBlockContent: (blockId: string, content: string) => void;
     handleUpdateTitle: (title: string) => void;
+    handleUpdateDocumentIcon: (icon: string | null) => Promise<boolean>;
     handleTitleBlur: () => void;
     handleTitleEnter: () => void;
     enqueueBlockSave: (blockId: string, content: string) => Promise<void>;
@@ -72,6 +73,7 @@ export interface EditorContextValue
             | 'handleAddBlock'
             | 'handleUpdateBlockContent'
             | 'handleUpdateTitle'
+            | 'handleUpdateDocumentIcon'
             | 'handleTitleBlur'
             | 'handleTitleEnter'
         > {

@@ -71,6 +71,7 @@ export function EditorProvider({ children, pageId }: EditorProviderProps) {
             handleAddBlock: persistence.handleAddBlock,
             handleUpdateBlockContent: persistence.handleUpdateBlockContent,
             handleUpdateTitle: persistence.handleUpdateTitle,
+            handleUpdateDocumentIcon: persistence.handleUpdateDocumentIcon,
             handleTitleBlur: persistence.handleTitleBlur,
             handleTitleEnter: persistence.handleTitleEnter,
             handleBlockFocus: blockActions.handleBlockFocus,
@@ -107,6 +108,7 @@ export function EditorProvider({ children, pageId }: EditorProviderProps) {
             persistence.handleTitleBlur,
             persistence.handleTitleEnter,
             persistence.handleUpdateBlockContent,
+            persistence.handleUpdateDocumentIcon,
             persistence.handleUpdateTitle,
         ]
     );

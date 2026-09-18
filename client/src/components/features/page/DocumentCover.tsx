@@ -39,7 +39,7 @@ export function DocumentCover({
     };
 
     return (
-        <div className="group relative h-[265px] w-full overflow-hidden bg-muted">
+        <div className="group relative h-48 w-full overflow-hidden bg-muted sm:h-[280px]">
             <Image
                 src={imageUrl}
                 alt={t('documentCover')}
@@ -51,6 +51,8 @@ export function DocumentCover({
                 <>
                     <div className="absolute right-3 top-3 flex gap-2 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
                         <Button
+                            type="button"
+                            variant="outline"
                             size="sm"
                             onClick={handleChangeCover}
                             aria-busy={isUploading}
@@ -59,8 +61,9 @@ export function DocumentCover({
                             {isUploading ? t('uploading') : t('changeCover')}
                         </Button>
                         <Button
-                            size="sm"
+                            type="button"
                             variant="destructive"
+                            size="sm"
                             onClick={onRemove}
                             disabled={isUploading}>
                             <Trash2 />
