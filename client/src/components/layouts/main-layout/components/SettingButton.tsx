@@ -3,21 +3,31 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
     DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut } from 'lucide-react';
+import { FlagIcon } from '@/components/ui/language-switcher';
+import { LogOut, Moon, Sun } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useLogout } from '@/hooks/useLogout';
 import { UserAvatar } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
+import { useTheme } from '@/contexts/ThemeProvider';
+import { isLocale } from '@/i18n/config';
 
 export const SettingButton = () => {
     const { data: session } = useSession();
     const { logout, isLoggingOut } = useLogout();
-    const { t } = useI18n();
+    const { t, locale, setLocale } = useI18n();
+    const { theme, setTheme, mounted } = useTheme();
 
     return (
         <div className="relative">
@@ -38,7 +48,7 @@ export const SettingButton = () => {
                         </Button>
                     </DropdownMenuTrigger>
                 </SimpleTooltip>
-                <DropdownMenuContent className="w-56 p-2" align="end">
+                <DropdownMenuContent className="w-58 p-2" align="end">
                     <DropdownMenuLabel>
                         <div className="flex flex-col items-center gap-2">
                             <UserAvatar
@@ -55,6 +65,52 @@ export const SettingButton = () => {
                             </p>
                         </div>
                     </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                        disabled={!mounted}
+                        onClick={() =>
+                            setTheme(theme === 'light' ? 'dark' : 'light')
+                        }>
+                        {theme === 'light' ? (
+                            <Moon aria-hidden="true" />
+                        ) : (
+                            <Sun aria-hidden="true" />
+                        )}
+                        {mounted
+                            ? t(
+                                  theme === 'light'
+                                      ? 'switchToDark'
+                                      : 'switchToLight'
+                              )
+                            : t('loadingTheme')}
+                    </DropdownMenuItem>
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                            <FlagIcon locale={locale} />
+                            {t('language')}
+                            <span className="ml-auto text-xs text-muted-foreground">
+                                {locale.toUpperCase()}
+                            </span>
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                            <DropdownMenuSubContent>
+                                <DropdownMenuRadioGroup
+                                    value={locale}
+                                    onValueChange={(value) => {
+                                        if (isLocale(value)) setLocale(value);
+                                    }}>
+                                    <DropdownMenuRadioItem value="vi">
+                                        <FlagIcon locale="vi" />
+                                        {t('vietnamese')}
+                                    </DropdownMenuRadioItem>
+                                    <DropdownMenuRadioItem value="en">
+                                        <FlagIcon locale="en" />
+                                        {t('english')}
+                                    </DropdownMenuRadioItem>
+                                </DropdownMenuRadioGroup>
+                            </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                    </DropdownMenuSub>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logout} disabled={isLoggingOut}>
                         <LogOut />

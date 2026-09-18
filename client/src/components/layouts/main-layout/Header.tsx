@@ -1,11 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { LanguageMenu } from '@/components/ui/language-switcher';
 import { useI18n } from '@/contexts/I18nContext';
 import { useDocumentPermission } from '@/hooks/useDocumentPermission';
 import { SearchInputField } from 'components/features/search/SearchInputField';
-import { ThemeToggle } from 'components/ui/theme-toggle';
 import { TopLoadingBar } from 'components/ui/TopLoadingBar';
 import { useDocumentAccess } from 'contexts/DocumentAccessContext';
 import { useLoading } from 'contexts/LoadingContext';
@@ -15,7 +13,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DocumentPresence } from './components/DocumentPresence';
 import { MobileSearch } from './components/MobileSearch';
-import { MobileEditorMenu } from './components/MobileEditorMenu';
 import { NotificationButton } from './components/NotificationButton';
 import { useNotifications } from './components/notifications/hooks/useNotifications';
 import { getUnreadAccessRequestCountForDocument } from './components/notifications/notification.utils';
@@ -92,13 +89,7 @@ export default function Header({ workspaceSlug }: Props) {
                         </div>
                     </div>
                     <div className="min-w-0 justify-self-end lg:w-full lg:max-w-xl lg:justify-self-center">
-                        <div
-                            data-tour="mobile-search"
-                            className={
-                                isDocumentPage
-                                    ? 'hidden md:block lg:hidden'
-                                    : 'lg:hidden'
-                            }>
+                        <div data-tour="mobile-search" className="lg:hidden">
                             <MobileSearch />
                         </div>
                         <div
@@ -125,27 +116,16 @@ export default function Header({ workspaceSlug }: Props) {
                                 />
                             </>
                         )}
-                        <div
-                            className={isDocumentPage ? 'hidden md:block' : ''}>
-                            <ThemeToggle />
-                        </div>
                         <NotificationButton {...notificationMenuProps} />
                         {isDocumentPage ? (
                             <>
-                                <div className="hidden items-center gap-1 md:flex">
-                                    <LanguageMenu compact />
+                                <div className="hidden md:block">
                                     <TourHelpButton />
-                                    <SettingButton />
                                 </div>
-                                <div className="md:hidden">
-                                    <MobileEditorMenu
-                                        workspaceSlug={workspaceSlug}
-                                    />
-                                </div>
+                                <SettingButton />
                             </>
                         ) : (
                             <>
-                                <LanguageMenu compact />
                                 <TourHelpButton />
                                 <SettingButton />
                             </>

@@ -64,7 +64,7 @@ export function LanguageMenu({ compact = false }: LanguageMenuProps) {
     );
 }
 
-function FlagIcon({ locale }: { locale: Locale }) {
+export function FlagIcon({ locale }: { locale: Locale }) {
     return (
         <span
             className="inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-[2px] border border-black/10 shadow-sm"
