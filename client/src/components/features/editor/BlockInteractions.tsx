@@ -167,12 +167,12 @@ export const BlockInteractions = memo(function BlockInteractions({
     const toolbar = (
         <div
             className={cn(
-                'z-20 flex shrink-0 items-center gap-0.5 rounded-lg border border-border/70 bg-popover/95 p-0.5 shadow-sm backdrop-blur-sm transition-[opacity,box-shadow]',
+                'z-20 shrink-0 items-center gap-0.5 rounded-lg border border-border/70 bg-popover/95 p-0.5 shadow-sm backdrop-blur-sm transition-[opacity,box-shadow]',
                 hasInteractions
-                    ? 'opacity-100'
-                    : 'absolute right-0 top-0 opacity-100 md:pointer-events-none md:opacity-0 md:group-hover/block:pointer-events-auto md:group-hover/block:opacity-100 md:focus-within:pointer-events-auto md:focus-within:opacity-100',
+                    ? 'hidden group-focus-within/block:flex md:flex'
+                    : 'pointer-events-none absolute right-0 top-0 flex opacity-0 group-focus-within/block:pointer-events-auto group-focus-within/block:opacity-100 md:group-hover/block:pointer-events-auto md:group-hover/block:opacity-100',
                 isToolbarOpen &&
-                    'shadow-md md:pointer-events-auto md:opacity-100'
+                    'flex pointer-events-auto opacity-100 shadow-md'
             )}>
             <PopoverPanel
                 open={reactionOpen}

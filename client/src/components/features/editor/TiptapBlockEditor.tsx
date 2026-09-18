@@ -74,7 +74,7 @@ function EditorContent() {
                 <div className="mx-auto h-full max-w-full overflow-hidden bg-card">
                     <div
                         data-tour="editor-scroll"
-                        className="h-full overflow-y-auto">
+                        className="h-full min-w-0 overflow-x-hidden overflow-y-auto overscroll-x-none">
                         {coverImage && (
                             <DocumentCover
                                 imageUrl={coverImage}
