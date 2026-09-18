@@ -50,7 +50,7 @@ export type GetDocumentSharedUsersQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetDocumentSharedUsersQuery = { __typename?: 'query_root', access_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, pending_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, blocks_by_pk?: { __typename?: 'blocks', id: string, user_id?: string | null, content?: any | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, user?: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } | null } | null };
+export type GetDocumentSharedUsersQuery = { __typename?: 'query_root', access_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, status?: string | null, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, pending_requests: Array<{ __typename?: 'access_requests', id: string, requester_id: string, permission_type?: string | null, created_at?: string | null, requester: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } }>, blocks_by_pk?: { __typename?: 'blocks', id: string, user_id?: string | null, content?: any | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, user?: { __typename?: 'users', id: string, email: string, name?: string | null, avatar_url?: string | null } | null } | null };
 
 export type ApproveAccessRequestMutationVariables = Types.Exact<{
   requestId: Types.Scalars['uuid']['input'];
@@ -271,10 +271,11 @@ export type UpdateDocumentPermissionMutationOptions = Apollo.BaseMutationOptions
 export const GetDocumentSharedUsersDocument = gql`
     query GetDocumentSharedUsers($documentId: uuid!) {
   access_requests(
-    where: {document_id: {_eq: $documentId}, status: {_eq: "approved"}}
+    where: {document_id: {_eq: $documentId}, _or: [{status: {_eq: "approved"}}, {status: {_eq: "pending"}, permission_type: {_eq: "write"}}]}
   ) {
     id
     requester_id
+    status
     permission_type
     created_at
     requester {

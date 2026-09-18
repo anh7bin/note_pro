@@ -28,8 +28,13 @@ insert_permissions:
                     - access_requests:
                         requester_id:
                           _eq: X-Hasura-User-Id
-                        status:
-                          _eq: approved
+                        _or:
+                          - status:
+                              _eq: approved
+                          - permission_type:
+                              _eq: write
+                            status:
+                              _eq: pending
                     - link_access:
                         permission_type:
                           _in:
@@ -63,8 +68,13 @@ select_permissions:
                 - access_requests:
                     requester_id:
                       _eq: X-Hasura-User-Id
-                    status:
-                      _eq: approved
+                    _or:
+                      - status:
+                          _eq: approved
+                      - permission_type:
+                          _eq: write
+                        status:
+                          _eq: pending
                 - link_access:
                     permission_type:
                       _in:

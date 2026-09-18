@@ -18,6 +18,39 @@ mutation CreateAccessRequest($input: access_requests_insert_input!) {
     }
 }
 
+mutation RequestEditAccess(
+    $documentId: uuid!
+    $requesterId: uuid!
+    $message: String!
+    $updatedAt: timestamptz!
+) {
+    update_access_requests(
+        where: {
+            document_id: { _eq: $documentId }
+            requester_id: { _eq: $requesterId }
+            permission_type: { _eq: "read" }
+            status: { _eq: "approved" }
+        }
+        _set: {
+            message: $message
+            permission_type: "write"
+            status: "pending"
+            updated_at: $updatedAt
+        }
+    ) {
+        affected_rows
+        returning {
+            id
+            document_id
+            requester_id
+            owner_id
+            status
+            permission_type
+            updated_at
+        }
+    }
+}
+
 mutation BulkDeleteAccessRequests(
     $document_ids: [uuid!]!
     $requester_id: uuid!

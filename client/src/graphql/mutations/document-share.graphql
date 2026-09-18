@@ -90,11 +90,18 @@ query GetDocumentSharedUsers($documentId: uuid!) {
     access_requests(
         where: {
             document_id: { _eq: $documentId }
-            status: { _eq: "approved" }
+            _or: [
+                { status: { _eq: "approved" } }
+                {
+                    status: { _eq: "pending" }
+                    permission_type: { _eq: "write" }
+                }
+            ]
         }
     ) {
         id
         requester_id
+        status
         permission_type
         created_at
         requester {

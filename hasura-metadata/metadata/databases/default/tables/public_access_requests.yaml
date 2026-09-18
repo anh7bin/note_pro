@@ -21,6 +21,8 @@ insert_permissions:
                   _eq: X-Hasura-User-Id
               - status:
                   _eq: pending
+              - permission_type:
+                  _eq: read
           - _and:
               - owner_id:
                   _eq: X-Hasura-User-Id
@@ -70,8 +72,13 @@ update_permissions:
           - document:
               user_id:
                 _eq: X-Hasura-User-Id
-          - requester_id:
-              _eq: X-Hasura-User-Id
+          - _and:
+              - requester_id:
+                  _eq: X-Hasura-User-Id
+              - status:
+                  _eq: approved
+              - permission_type:
+                  _eq: read
       check:
         _or:
           - _and:
@@ -87,6 +94,8 @@ update_permissions:
                   _eq: X-Hasura-User-Id
               - status:
                   _eq: pending
+              - permission_type:
+                  _eq: write
 delete_permissions:
   - role: user
     permission:

@@ -1,11 +1,10 @@
 'use client';
 
-import { useCreateAccessRequestMutation } from '@/graphql/mutations/__generated__/access-request.generated';
+import { useRequestEditAccessMutation } from '@/graphql/mutations/__generated__/access-request.generated';
 import { useGetAccessRequestByDocumentQuery } from '@/graphql/queries/__generated__/access-request.generated';
-import { useGetDocumentBlocksQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { showToast } from '@/lib/toast';
-import { AccessRequestStatus, BlockType, PermissionType } from '@/types/types';
+import { AccessRequestStatus, PermissionType } from '@/types/types';
 import { useSession } from 'next-auth/react';
 import { useCallback, useMemo, useState } from 'react';
 import { useI18n } from '@/contexts/I18nContext';
@@ -28,13 +27,7 @@ export function useRequestEdit(documentId: string) {
         skip: !documentId || !userId,
         fetchPolicy: 'network-only',
     });
-    const { data: documentData, loading: documentLoading } =
-        useGetDocumentBlocksQuery({
-            variables: { pageId: documentId || '' },
-            skip: !documentId,
-            errorPolicy: 'all',
-        });
-    const [createAccessRequest] = useCreateAccessRequestMutation();
+    const [requestEditAccess] = useRequestEditAccessMutation();
 
     const canRequestEdit = useMemo(() => {
         const requests = accessRequestData?.access_requests || [];
@@ -53,38 +46,24 @@ export function useRequestEdit(documentId: string) {
         return hasApprovedReadAccess && !hasWriteRequest;
     }, [accessRequestData]);
 
-    const documentOwnerId = useMemo(
-        () =>
-            documentData?.blocks.find(
-                (block) =>
-                    block.id === documentId && block.type === BlockType.PAGE
-            )?.user_id,
-        [documentData, documentId]
-    );
-
     const requestEdit = useCallback(async () => {
         if (!userId || isRequesting) return;
 
-        if (!documentOwnerId) {
-            showToast.error(t('documentOwnerUnavailable'));
-            return;
-        }
-
         try {
             setIsRequesting(true);
-            await createAccessRequest({
+            const result = await requestEditAccess({
                 variables: {
-                    input: {
-                        document_id: documentId,
-                        requester_id: userId,
-                        owner_id: documentOwnerId,
-                        message: `${session?.user?.email} requested edit access`,
-                        permission_type: PermissionType.WRITE,
-                        status: AccessRequestStatus.PENDING,
-                        updated_at: new Date().toISOString(),
-                    },
+                    documentId,
+                    requesterId: userId,
+                    message: `${session?.user?.email} requested edit access`,
+                    updatedAt: new Date().toISOString(),
                 },
             });
+
+            if (!result.data?.update_access_requests?.affected_rows) {
+                showToast.error(t('editAccessAlreadyRequested'));
+                return;
+            }
 
             showToast.success(t('editAccessRequestSent'));
             await refetch();
@@ -102,18 +81,17 @@ export function useRequestEdit(documentId: string) {
             setIsRequesting(false);
         }
     }, [
-        createAccessRequest,
         documentId,
-        documentOwnerId,
         isRequesting,
         refetch,
+        requestEditAccess,
         session,
         t,
         userId,
     ]);
 
     return {
-        isVisible: !accessRequestLoading && !documentLoading && canRequestEdit,
+        isVisible: !accessRequestLoading && canRequestEdit,
         isRequesting,
         requestEdit,
     };

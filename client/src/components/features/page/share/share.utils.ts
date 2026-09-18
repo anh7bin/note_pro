@@ -8,7 +8,10 @@ export function mapSharedUsers(
         id: request.requester_id,
         email: request.requester?.email || '',
         name: request.requester?.name || undefined,
-        role: request.permission_type === 'write' ? 'editor' : 'viewer',
+        role:
+            request.status === 'approved' && request.permission_type === 'write'
+                ? 'editor'
+                : 'viewer',
         avatar_url: request.requester?.avatar_url || undefined,
     }));
 }
