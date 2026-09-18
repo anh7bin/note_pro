@@ -283,5 +283,6 @@ export function useDocumentSharing(documentId: string) {
         onRemoveUser,
         onApproveRequest,
         onDeclineRequest,
+        refetch,
     };
 }

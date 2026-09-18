@@ -331,6 +331,7 @@ export const vi: Messages = {
     markAllRead: 'Đánh dấu tất cả đã đọc',
     marking: 'Đang đánh dấu...',
     unreadCount: '{{count}} chưa đọc',
+    pendingAccessRequestCount: '{{count}} yêu cầu truy cập đang chờ',
     noNotifications: 'Không có thông báo',
     notificationsDescription:
         'Yêu cầu truy cập và cập nhật chia sẻ sẽ xuất hiện ở đây.',

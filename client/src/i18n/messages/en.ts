@@ -338,6 +338,7 @@ export const en = {
     markAllRead: 'Mark all read',
     marking: 'Marking...',
     unreadCount: '{{count}} unread',
+    pendingAccessRequestCount: '{{count}} pending access request(s)',
     noNotifications: 'No notifications',
     notificationsDescription:
         'Access requests and sharing updates appear here.',

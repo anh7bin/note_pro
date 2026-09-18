@@ -1,10 +1,8 @@
 'use client';
 
 import { NotificationMenu } from './notifications/NotificationMenu';
-import { useNotifications } from './notifications/hooks/useNotifications';
+import { NotificationMenuProps } from './notifications/notification.types';
 
-export const NotificationButton = () => {
-    const notificationMenuProps = useNotifications();
-
-    return <NotificationMenu {...notificationMenuProps} />;
+export const NotificationButton = (props: NotificationMenuProps) => {
+    return <NotificationMenu {...props} />;
 };

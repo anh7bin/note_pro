@@ -21,6 +21,23 @@ export function getUnreadCount(notifications: Notification[]): number {
     );
 }
 
+export function getUnreadAccessRequestCountForDocument(
+    notifications: Notification[],
+    documentId?: string | null
+): number {
+    if (!documentId) return 0;
+
+    return notifications.reduce((count, notification) => {
+        const data = getNotificationData(notification.data);
+        const isMatchingUnreadRequest =
+            !notification.is_read &&
+            notification.type === 'access_request' &&
+            data.document_id === documentId;
+
+        return count + (isMatchingUnreadRequest ? 1 : 0);
+    }, 0);
+}
+
 export function getNotificationPresentation(notification: Notification) {
     const data = getNotificationData(notification.data);
 

@@ -17,6 +17,8 @@ import { DocumentPresence } from './components/DocumentPresence';
 import { MobileSearch } from './components/MobileSearch';
 import { MobileEditorMenu } from './components/MobileEditorMenu';
 import { NotificationButton } from './components/NotificationButton';
+import { useNotifications } from './components/notifications/hooks/useNotifications';
+import { getUnreadAccessRequestCountForDocument } from './components/notifications/notification.utils';
 import { RequestEditButton } from './components/RequestEditButton';
 import { SettingButton } from './components/SettingButton';
 import { ShareExportButton } from './components/ShareExportButton';
@@ -32,6 +34,7 @@ export default function Header({ workspaceSlug }: Props) {
     const { isLoading, startLoading } = useLoading();
     const pathname = usePathname();
     const { t } = useI18n();
+    const notificationMenuProps = useNotifications();
 
     // Check if we're on a document/editor page
     const isDocumentPage = pathname.startsWith('/editor/');
@@ -39,6 +42,11 @@ export default function Header({ workspaceSlug }: Props) {
     const { permissionType } = useDocumentPermission(
         isDocumentPage ? documentId || '' : ''
     );
+    const documentAccessRequestNotificationCount =
+        getUnreadAccessRequestCountForDocument(
+            notificationMenuProps.notifications,
+            isDocumentPage ? documentId : undefined
+        );
 
     const handleLogoClick = () => {
         const allDocsPath = ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug);
@@ -109,14 +117,19 @@ export default function Header({ workspaceSlug }: Props) {
                             <>
                                 <DocumentPresence documentId={documentId} />
                                 <RequestEditButton documentId={documentId} />
-                                <ShareExportButton documentId={documentId} />
+                                <ShareExportButton
+                                    documentId={documentId}
+                                    accessRequestNotificationCount={
+                                        documentAccessRequestNotificationCount
+                                    }
+                                />
                             </>
                         )}
                         <div
                             className={isDocumentPage ? 'hidden md:block' : ''}>
                             <ThemeToggle />
                         </div>
-                        <NotificationButton />
+                        <NotificationButton {...notificationMenuProps} />
                         {isDocumentPage ? (
                             <>
                                 <div className="hidden items-center gap-1 md:flex">

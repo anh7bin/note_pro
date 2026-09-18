@@ -15,15 +15,21 @@ import { HiOutlineUsers } from 'react-icons/hi2';
 
 interface ShareExportButtonProps {
     documentId: string;
+    accessRequestNotificationCount?: number;
 }
 
-export function ShareExportButton({ documentId }: ShareExportButtonProps) {
+export function ShareExportButton({
+    documentId,
+    accessRequestNotificationCount = 0,
+}: ShareExportButtonProps) {
     const searchParams = useSearchParams();
     const [open, setOpen] = useState(false);
     const [inviteMode, setInviteMode] = useState(false);
-    const { sharedUsers, linkPermission } = useDocumentSharing(documentId);
+    const { sharedUsers, linkPermission, pendingRequests, refetch, isOwner } =
+        useDocumentSharing(documentId);
     const { t } = useI18n();
 
+    const accessRequestCount = isOwner ? pendingRequests.length : 0;
     const hasSharedUsers = sharedUsers.length > 0;
     const hasLinkShared = linkPermission !== 'restricted';
     const isShared = hasSharedUsers || hasLinkShared;
@@ -44,6 +50,12 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
         }
     }, [searchParams]);
 
+    useEffect(() => {
+        if (isOwner && accessRequestNotificationCount > 0) {
+            void refetch();
+        }
+    }, [accessRequestNotificationCount, isOwner, refetch]);
+
     return (
         <PopoverPanel
             open={open}
@@ -60,11 +72,27 @@ export function ShareExportButton({ documentId }: ShareExportButtonProps) {
                     data-tour="editor-share"
                     variant={isShared ? 'default' : 'outline'}
                     size="sm"
-                    aria-label={t('shareAndExport')}>
+                    className="relative"
+                    aria-label={
+                        accessRequestCount > 0
+                            ? `${t('shareAndExport')}. ${t(
+                                  'pendingAccessRequestCount',
+                                  {
+                                      count: accessRequestCount,
+                                  }
+                              )}`
+                            : t('shareAndExport')
+                    }>
                     <ShareIcon />
                     <span className="hidden lg:inline">
                         {isShared ? t('shared') : t('share')}
                     </span>
+                    {accessRequestCount > 0 && (
+                        <span
+                            aria-hidden="true"
+                            className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background"
+                        />
+                    )}
                 </Button>
             }>
             <Tabs defaultValue="share" className="w-full">
