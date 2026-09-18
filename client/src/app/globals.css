@@ -253,7 +253,7 @@
 @layer base {
     * {
         @apply border-border;
-        scrollbar-width: thin;
+        scrollbar-width: auto;
         scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
     }
     html {
