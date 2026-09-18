@@ -2,15 +2,21 @@ import { CustomCode } from '@/lib/tiptap/extensions/custom-code';
 import { TrailingParagraphCleanup } from '@/lib/tiptap/extensions/trailing-paragraph-cleanup';
 import { EnterHandler } from '@/lib/tiptap/handlers/enter';
 import type { AddEditorBlockHandler } from '@/types/editor';
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import Color from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import { TableKit } from '@tiptap/extension-table';
+import { TextStyle } from '@tiptap/extension-text-style';
 import Typography from '@tiptap/extension-typography';
 import Underline from '@tiptap/extension-underline';
 import StarterKit from '@tiptap/starter-kit';
+import { common, createLowlight } from 'lowlight';
 import { Markdown } from 'tiptap-markdown';
 import { MARKDOWN_CONFIG, TABLE_CONFIG } from './constants';
+
+const lowlight = createLowlight(common);
 
 interface ExtensionsConfig {
     getPosition: () => number;
@@ -47,11 +53,7 @@ export const createExtensions = ({
                 class: 'border-l-4 border-border-strong pl-4 italic',
             },
         },
-        codeBlock: {
-            HTMLAttributes: {
-                class: 'rounded-md bg-muted p-2 font-mono text-sm',
-            },
-        },
+        codeBlock: false,
     }),
     ...(placeholder
         ? [
@@ -65,7 +67,15 @@ export const createExtensions = ({
     TrailingParagraphCleanup,
     Markdown.configure(MARKDOWN_CONFIG),
     CustomCode,
+    CodeBlockLowlight.configure({
+        lowlight,
+        HTMLAttributes: {
+            class: 'tiptap-code-block',
+        },
+    }),
     Underline,
+    TextStyle,
+    Color,
     Highlight.configure({
         multicolor: true,
     }),

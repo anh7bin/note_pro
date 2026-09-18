@@ -235,12 +235,26 @@ export const getPopoverPosition = (coords: {
     bottom: number;
     left: number;
     right: number;
-}) => ({
+}) => {
     // coordsAtPos already returns viewport coordinates and every editor menu is
     // position: fixed. Adding page scroll here makes menus drift while editing.
-    top: coords.bottom,
-    left: coords.left,
-});
+    const viewportMargin = 8;
+    const menuWidth = 320;
+    const maxLeft =
+        typeof window === 'undefined'
+            ? coords.left
+            : Math.max(
+                  viewportMargin,
+                  window.innerWidth - menuWidth - viewportMargin
+              );
+
+    return {
+        top: coords.bottom,
+        left: Math.max(viewportMargin, Math.min(coords.left, maxLeft)),
+    };
+};
 
 export const shouldShowSlash = (textBefore: string, suffixes: string[]) =>
-    suffixes.some((suffix) => textBefore.endsWith(suffix));
+    suffixes.some((suffix) =>
+        suffix === '' ? textBefore.length === 0 : textBefore.endsWith(suffix)
+    );

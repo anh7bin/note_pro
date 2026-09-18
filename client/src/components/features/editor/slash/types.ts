@@ -49,6 +49,17 @@ export interface CommandHandlers {
     'upload-file': () => void;
     'insert-table': () => void;
     'insert-separator': () => void;
+    paragraph: () => void;
+    'heading-1': () => void;
+    'heading-2': () => void;
+    'heading-3': () => void;
+    'heading-4': () => void;
+    'heading-5': () => void;
+    'heading-6': () => void;
+    'bullet-list': () => void;
+    'ordered-list': () => void;
+    blockquote: () => void;
+    'code-block': () => void;
 }
 
 export interface SlashCommandState {
@@ -61,6 +72,8 @@ export interface SlashCommandState {
     tablePos: { top: number; left: number };
     separatorPos: { top: number; left: number };
     selectedIndex: number;
+    slashFrom: number | null;
+    slashQuery: string;
 }
 
 export interface SlashCommandHookReturn {

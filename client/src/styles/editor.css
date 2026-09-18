@@ -168,8 +168,8 @@
     padding: 0.75em 1em;
 }
 
-/* Code */
-.ProseMirror code {
+/* Inline code */
+.ProseMirror :not(pre) > code {
     background-color: hsl(var(--background-soft));
     padding: 0.125em 0.25em;
     border-radius: var(--radius-sm);
@@ -177,11 +177,13 @@
         ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono',
         Menlo, monospace;
     font-size: 0.875em;
-    color: hsl(var(--primary));
+    color: hsl(var(--foreground));
 }
 
+/* Code blocks */
 .ProseMirror pre {
-    background-color: hsl(var(--background-soft));
+    background-color: hsl(var(--code-background));
+    color: hsl(var(--code-foreground));
     padding: 1em;
     border-radius: var(--radius-md);
     margin: 0.5em 0;
@@ -191,8 +193,93 @@
 
 .ProseMirror pre code {
     background-color: transparent;
+    color: inherit;
+    display: block;
     padding: 0;
     border-radius: 0;
+    font-family:
+        ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono',
+        Menlo, monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    overflow-wrap: normal;
+    white-space: pre;
+    word-break: normal;
+}
+
+.ProseMirror .hljs-doctag,
+.ProseMirror .hljs-keyword,
+.ProseMirror .hljs-meta .hljs-keyword,
+.ProseMirror .hljs-template-tag,
+.ProseMirror .hljs-template-variable,
+.ProseMirror .hljs-type,
+.ProseMirror .hljs-variable.language_ {
+    color: hsl(var(--code-keyword));
+}
+
+.ProseMirror .hljs-title,
+.ProseMirror .hljs-title.class_,
+.ProseMirror .hljs-title.class_.inherited__,
+.ProseMirror .hljs-title.function_ {
+    color: hsl(var(--code-title));
+}
+
+.ProseMirror .hljs-attr,
+.ProseMirror .hljs-attribute,
+.ProseMirror .hljs-literal,
+.ProseMirror .hljs-meta,
+.ProseMirror .hljs-number,
+.ProseMirror .hljs-operator,
+.ProseMirror .hljs-variable,
+.ProseMirror .hljs-selector-attr,
+.ProseMirror .hljs-selector-class,
+.ProseMirror .hljs-selector-id,
+.ProseMirror .hljs-section {
+    color: hsl(var(--code-literal));
+}
+
+.ProseMirror .hljs-regexp,
+.ProseMirror .hljs-string,
+.ProseMirror .hljs-meta .hljs-string {
+    color: hsl(var(--code-string));
+}
+
+.ProseMirror .hljs-built_in,
+.ProseMirror .hljs-symbol,
+.ProseMirror .hljs-bullet {
+    color: hsl(var(--code-built-in));
+}
+
+.ProseMirror .hljs-comment,
+.ProseMirror .hljs-code,
+.ProseMirror .hljs-formula {
+    color: hsl(var(--code-comment));
+}
+
+.ProseMirror .hljs-name,
+.ProseMirror .hljs-quote,
+.ProseMirror .hljs-selector-tag,
+.ProseMirror .hljs-selector-pseudo {
+    color: hsl(var(--code-tag));
+}
+
+.ProseMirror .hljs-section,
+.ProseMirror .hljs-strong {
+    font-weight: 600;
+}
+
+.ProseMirror .hljs-emphasis {
+    font-style: italic;
+}
+
+.ProseMirror .hljs-addition {
+    color: hsl(var(--code-added));
+    background-color: hsl(var(--code-added-background));
+}
+
+.ProseMirror .hljs-deletion {
+    color: hsl(var(--code-deleted));
+    background-color: hsl(var(--code-deleted-background));
 }
 
 /* Links */
@@ -240,13 +327,14 @@
     background-color: hsl(var(--background-soft));
 }
 
-.dark .ProseMirror code {
+.dark .ProseMirror :not(pre) > code {
     background-color: hsl(var(--background-soft));
-    color: hsl(var(--primary));
+    color: hsl(var(--foreground));
 }
 
 .dark .ProseMirror pre {
-    background-color: hsl(var(--background-soft));
+    background-color: hsl(var(--code-background));
+    color: hsl(var(--code-foreground));
     border: 1px solid hsl(var(--border));
 }
 

@@ -1,7 +1,9 @@
 import { CustomCode } from '@/lib/tiptap/extensions/custom-code';
+import Color from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import Link from '@tiptap/extension-link';
 import { TableKit } from '@tiptap/extension-table';
+import { TextStyle } from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import { Extension } from '@tiptap/core';
 import Document from '@tiptap/extension-document';
@@ -109,6 +111,8 @@ export const createTableExtensions = (onDeleteTable: () => boolean) => [
     Strike,
     CustomCode,
     Underline,
+    TextStyle,
+    Color,
     Highlight.configure({
         multicolor: true,
     }),

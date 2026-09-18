@@ -6,8 +6,8 @@ const TRACKED_MARKS = [
     'italic',
     'strike',
     'code',
-    'bulletList',
-    'orderedList',
+    'underline',
+    'textStyle',
     'highlight',
     'link',
 ] as const;
@@ -20,8 +20,9 @@ function getToolbarSnapshot(editor: Editor): string {
         editor.isActive(mark) ? '1' : '0'
     ).join('');
     const highlight = editor.getAttributes('highlight').color ?? '';
+    const textColor = editor.getAttributes('textStyle').color ?? '';
     const href = editor.getAttributes('link').href ?? '';
-    return `${from}:${to}:${activeMarks}:${highlight}:${href}`;
+    return `${from}:${to}:${activeMarks}:${highlight}:${textColor}:${href}`;
 }
 
 export function useEditorState(editor: Editor | null) {
@@ -62,8 +63,15 @@ export function useEditorState(editor: Editor | null) {
         return attributes.color || null;
     }, [editor]);
 
+    const getCurrentTextColor = useCallback(() => {
+        if (!editor) return null;
+        const attributes = editor.getAttributes('textStyle');
+        return attributes.color || null;
+    }, [editor]);
+
     return {
         isMarkActive,
         getCurrentHighlightColor,
+        getCurrentTextColor,
     };
 }

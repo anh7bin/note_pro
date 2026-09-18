@@ -98,6 +98,21 @@
         --input: 240 10% 86%;
         --ring: 239 56% 54%;
 
+        /* Code syntax */
+        --code-background: 220 20% 97%;
+        --code-foreground: 215 28% 17%;
+        --code-comment: 215 14% 40%;
+        --code-keyword: 356 72% 43%;
+        --code-title: 263 52% 47%;
+        --code-literal: 212 92% 38%;
+        --code-string: 215 80% 28%;
+        --code-built-in: 25 90% 37%;
+        --code-tag: 137 55% 31%;
+        --code-added: 137 55% 30%;
+        --code-added-background: 137 45% 93%;
+        --code-deleted: 356 72% 43%;
+        --code-deleted-background: 356 75% 94%;
+
         /* Border radius */
         --radius-sm: 4px;
         --radius-md: 6px;
@@ -195,6 +210,21 @@
         --border-strong: 210 16% 40%;
         --input: 210 20% 30%;
         --ring: 239 56% 64%;
+
+        /* Code syntax */
+        --code-background: 215 28% 14%;
+        --code-foreground: 210 17% 82%;
+        --code-comment: 215 11% 58%;
+        --code-keyword: 2 100% 72%;
+        --code-title: 267 100% 82%;
+        --code-literal: 210 100% 75%;
+        --code-string: 210 100% 82%;
+        --code-built-in: 29 100% 67%;
+        --code-tag: 128 64% 70%;
+        --code-added: 130 57% 70%;
+        --code-added-background: 135 85% 12%;
+        --code-deleted: 8 100% 92%;
+        --code-deleted-background: 0 84% 25%;
 
         --shadow-sm: 0 1px 2px hsl(210 60% 2% / 0.35);
         --shadow-md: 0 8px 24px hsl(210 60% 2% / 0.42);

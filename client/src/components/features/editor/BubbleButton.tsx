@@ -22,7 +22,7 @@ export const BubbleButton = ({
             aria-pressed={isActive}
             onClick={onClick}
             className={cn(
-                'inline-flex h-8 w-8 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                'inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                 isActive && 'bg-accent text-primary'
             )}>
             {children}

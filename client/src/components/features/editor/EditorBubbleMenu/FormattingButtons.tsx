@@ -6,11 +6,13 @@ import {
     Bold,
     Code,
     Italic,
-    List,
-    ListOrdered,
+    RemoveFormatting,
     Strikethrough,
+    Underline,
 } from 'lucide-react';
 import { BubbleButton } from '../BubbleButton';
+import { useI18n } from '@/contexts/I18nContext';
+import type { TranslationKey } from '@/i18n/messages';
 
 interface Props {
     editor: Editor;
@@ -18,48 +20,55 @@ interface Props {
 }
 
 interface ButtonConfig {
-    type: string;
-    label: string;
+    id: string;
+    type?: string;
+    label: TranslationKey;
     icon: React.ReactNode;
     action: (editor: Editor) => void;
 }
 
 const FORMATTING_BUTTONS: ButtonConfig[] = [
     {
+        id: 'bold',
         type: 'bold',
-        label: 'Bold',
+        label: 'bold',
         icon: <Bold />,
         action: (editor) => editor.chain().focus().toggleBold().run(),
     },
     {
+        id: 'italic',
         type: 'italic',
-        label: 'Italic',
+        label: 'italic',
         icon: <Italic />,
         action: (editor) => editor.chain().focus().toggleItalic().run(),
     },
     {
+        id: 'strike',
         type: 'strike',
-        label: 'Strikethrough',
+        label: 'strikethrough',
         icon: <Strikethrough />,
         action: (editor) => editor.chain().focus().toggleStrike().run(),
     },
     {
+        id: 'code',
         type: 'code',
-        label: 'Inline code',
+        label: 'inlineCode',
         icon: <Code />,
         action: (editor) => editor.chain().focus().toggleCode().run(),
     },
     {
-        type: 'bulletList',
-        label: 'Bulleted list',
-        icon: <List />,
-        action: (editor) => editor.chain().focus().toggleBulletList().run(),
+        id: 'underline',
+        type: 'underline',
+        label: 'underline',
+        icon: <Underline />,
+        action: (editor) => editor.chain().focus().toggleUnderline().run(),
     },
     {
-        type: 'orderedList',
-        label: 'Numbered list',
-        icon: <ListOrdered />,
-        action: (editor) => editor.chain().focus().toggleOrderedList().run(),
+        id: 'clear-formatting',
+        label: 'clearFormatting',
+        icon: <RemoveFormatting />,
+        action: (editor) =>
+            editor.chain().focus().unsetAllMarks().clearNodes().run(),
     },
 ];
 
@@ -67,6 +76,7 @@ export const FormattingButtons = memo(function FormattingButtons({
     editor,
     isMarkActive,
 }: Props) {
+    const { t } = useI18n();
     const handleClick = useCallback(
         (action: (editor: Editor) => void) => {
             action(editor);
@@ -78,10 +88,12 @@ export const FormattingButtons = memo(function FormattingButtons({
         <>
             {FORMATTING_BUTTONS.map((button) => (
                 <BubbleButton
-                    key={button.type}
-                    ariaLabel={button.label}
+                    key={button.id}
+                    ariaLabel={t(button.label)}
                     onClick={() => handleClick(button.action)}
-                    isActive={isMarkActive(button.type)}>
+                    isActive={
+                        button.type ? isMarkActive(button.type) : undefined
+                    }>
                     {button.icon}
                 </BubbleButton>
             ))}

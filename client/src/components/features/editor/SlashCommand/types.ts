@@ -4,5 +4,6 @@ export interface Command {
     id: string;
     name: string;
     icon: ComponentType<SVGProps<SVGSVGElement>>;
-    preview?: string;
+    group: 'basic' | 'insert';
+    keywords?: string[];
 }

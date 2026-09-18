@@ -84,6 +84,7 @@ interface UseCommandHandlersOptions {
     onConvertToTable?: (blockId: string, tableHTML: string) => void;
     onUploadStateChange?: (upload: FileUploadState | null) => void;
     updateState: (updates: Partial<SlashCommandState>) => void;
+    slashFrom: number | null;
 }
 
 export function useCommandHandlers({
@@ -96,6 +97,7 @@ export function useCommandHandlers({
     onConvertToTable,
     onUploadStateChange,
     updateState,
+    slashFrom,
 }: UseCommandHandlersOptions) {
     const { t } = useI18n();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -171,6 +173,39 @@ export function useCommandHandlers({
                     separatorPos: getPopoverPositionFromEditor(),
                     showSeparator: true,
                 });
+            },
+            paragraph: () => {
+                editor?.chain().focus().setParagraph().run();
+            },
+            'heading-1': () => {
+                editor?.chain().focus().setHeading({ level: 1 }).run();
+            },
+            'heading-2': () => {
+                editor?.chain().focus().setHeading({ level: 2 }).run();
+            },
+            'heading-3': () => {
+                editor?.chain().focus().setHeading({ level: 3 }).run();
+            },
+            'heading-4': () => {
+                editor?.chain().focus().setHeading({ level: 4 }).run();
+            },
+            'heading-5': () => {
+                editor?.chain().focus().setHeading({ level: 5 }).run();
+            },
+            'heading-6': () => {
+                editor?.chain().focus().setHeading({ level: 6 }).run();
+            },
+            'bullet-list': () => {
+                editor?.chain().focus().toggleBulletList().run();
+            },
+            'ordered-list': () => {
+                editor?.chain().focus().toggleOrderedList().run();
+            },
+            blockquote: () => {
+                editor?.chain().focus().toggleBlockquote().run();
+            },
+            'code-block': () => {
+                editor?.chain().focus().toggleCodeBlock().run();
             },
         }),
         [editor, isTitle, getPopoverPositionFromEditor, t, updateState]
@@ -299,16 +334,24 @@ export function useCommandHandlers({
         (cmd: string) => {
             if (!editor) return;
 
-            // Delete the "/" character before executing command
-            editor.commands.deleteRange({
-                from: editor.state.selection.from - 1,
-                to: editor.state.selection.from,
-            });
+            const selectionTo = editor.state.selection.from;
+            const commandFrom = slashFrom ?? selectionTo - 1;
+
+            if (commandFrom >= 0 && commandFrom < selectionTo) {
+                editor.commands.deleteRange({
+                    from: commandFrom,
+                    to: selectionTo,
+                });
+            }
 
             commandHandlers[cmd as keyof CommandHandlers]?.();
-            updateState({ showSlash: false });
+            updateState({
+                showSlash: false,
+                slashFrom: null,
+                slashQuery: '',
+            });
         },
-        [editor, commandHandlers, updateState]
+        [editor, commandHandlers, slashFrom, updateState]
     );
 
     const onEmojiSelect = useCallback(

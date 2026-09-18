@@ -29,7 +29,7 @@ export const SlashCommandItem = memo(function SlashCommandItem({
             onMouseEnter={onMouseEnter}
             onClick={() => onSelect(command.id)}
             className={cn(
-                'flex min-h-9 w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40',
+                'flex min-h-11 w-full cursor-pointer touch-manipulation items-center gap-2 rounded-sm px-2 py-2 text-left text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40',
                 isActive
                     ? 'bg-accent text-accent-foreground'
                     : 'hover:bg-accent/60 hover:text-accent-foreground'

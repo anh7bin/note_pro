@@ -8,6 +8,7 @@ import { SeparatorStylePicker } from '../SeparatorStylePicker';
 import { EmojiPickerPopover } from '@/components/shared/EmojiPickerPopover';
 import {
     createSlashCommands,
+    filterSlashCommands,
     SLASH_TRIGGER_SUFFIXES,
 } from '../slash/constants';
 import { getPopoverPosition, shouldShowSlash } from '../slash/helpers';
@@ -32,9 +33,13 @@ export function useSlashCommand(
     const { state, updateState } = useMenuState();
     const { t } = useI18n();
 
-    const availableCommands = useMemo(
+    const allCommands = useMemo(
         () => createSlashCommands(isTitle, t),
         [isTitle, t]
+    );
+    const availableCommands = useMemo(
+        () => filterSlashCommands(allCommands, state.slashQuery),
+        [allCommands, state.slashQuery]
     );
 
     const {
@@ -57,6 +62,7 @@ export function useSlashCommand(
         onConvertToTable,
         onUploadStateChange,
         updateState,
+        slashFrom: state.slashFrom,
     });
 
     const handleKeyDown = useSlashKeyHandler({
@@ -69,20 +75,89 @@ export function useSlashCommand(
     });
 
     useEffect(() => {
-        if (!editor || availableCommands.length === 0) return;
+        if (!state.showSlash) return;
+        updateState({ selectedIndex: 0 });
+    }, [state.slashQuery, state.showSlash, updateState]);
+
+    useEffect(() => {
+        if (!editor || !state.showSlash || state.slashFrom === null) return;
+        const slashFrom = state.slashFrom;
+
+        const syncSlashQuery = () => {
+            if (editor.isDestroyed) return;
+
+            const { doc, selection } = editor.state;
+            if (!selection.empty || selection.from <= slashFrom) {
+                updateState({
+                    showSlash: false,
+                    selectedIndex: 0,
+                    slashFrom: null,
+                    slashQuery: '',
+                });
+                return;
+            }
+
+            const slashText = doc.textBetween(
+                slashFrom,
+                selection.from,
+                '\n',
+                '\ufffc'
+            );
+            if (!slashText.startsWith('/') || slashText.includes('\n')) {
+                updateState({
+                    showSlash: false,
+                    selectedIndex: 0,
+                    slashFrom: null,
+                    slashQuery: '',
+                });
+                return;
+            }
+
+            const query = slashText.slice(1);
+            if (query !== state.slashQuery) {
+                updateState({ slashQuery: query });
+            }
+        };
+
+        editor.on('transaction', syncSlashQuery);
+        syncSlashQuery();
+
+        return () => {
+            editor.off('transaction', syncSlashQuery);
+        };
+    }, [
+        editor,
+        state.showSlash,
+        state.slashFrom,
+        state.slashQuery,
+        updateState,
+    ]);
+
+    useEffect(() => {
+        if (!editor || allCommands.length === 0) return;
 
         const handleEditorClick = () => {
             if (editor.isDestroyed) return;
 
             const { selection } = editor.state;
             if (!selection.empty) {
-                updateState({ showSlash: false, selectedIndex: 0 });
+                updateState({
+                    showSlash: false,
+                    selectedIndex: 0,
+                    slashFrom: null,
+                    slashQuery: '',
+                });
                 return;
             }
 
             const { $from } = selection;
             if (!$from.parent.isTextblock) {
-                updateState({ showSlash: false, selectedIndex: 0 });
+                updateState({
+                    showSlash: false,
+                    selectedIndex: 0,
+                    slashFrom: null,
+                    slashQuery: '',
+                });
                 return;
             }
 
@@ -92,10 +167,11 @@ export function useSlashCommand(
                 undefined,
                 '\ufffc'
             );
+            const slashIndex = textBefore.lastIndexOf('/');
             const slashIsBeforeCaret =
-                textBefore.endsWith('/') &&
+                slashIndex >= 0 &&
                 shouldShowSlash(
-                    textBefore.slice(0, -1),
+                    textBefore.slice(0, slashIndex),
                     SLASH_TRIGGER_SUFFIXES
                 );
             const textAfter = $from.parent.textBetween(
@@ -109,22 +185,35 @@ export function useSlashCommand(
                 shouldShowSlash(textBefore, SLASH_TRIGGER_SUFFIXES);
 
             if (!slashIsBeforeCaret && !slashIsAfterCaret) {
-                updateState({ showSlash: false, selectedIndex: 0 });
+                updateState({
+                    showSlash: false,
+                    selectedIndex: 0,
+                    slashFrom: null,
+                    slashQuery: '',
+                });
                 return;
             }
 
-            const slashPosition = slashIsBeforeCaret
+            const slashFrom = slashIsBeforeCaret
+                ? $from.start() + slashIndex
+                : selection.from;
+            const caretPosition = slashIsBeforeCaret
                 ? selection.from
                 : selection.from + 1;
-            if (slashPosition !== selection.from) {
-                editor.commands.setTextSelection(slashPosition);
+            if (!slashIsBeforeCaret && caretPosition !== selection.from) {
+                editor.commands.setTextSelection(caretPosition);
             }
 
-            const coords = editor.view.coordsAtPos(slashPosition);
+            const query = slashIsBeforeCaret
+                ? textBefore.slice(slashIndex + 1)
+                : '';
+            const coords = editor.view.coordsAtPos(selection.from);
             updateState({
                 slashPos: getPopoverPosition(coords),
                 showSlash: true,
                 selectedIndex: 0,
+                slashFrom,
+                slashQuery: query,
             });
         };
 
@@ -133,7 +222,7 @@ export function useSlashCommand(
         return () => {
             editorElement.removeEventListener('click', handleEditorClick);
         };
-    }, [availableCommands.length, editor, updateState]);
+    }, [allCommands.length, editor, updateState]);
 
     const menus = useMemo(
         () => (
@@ -147,11 +236,17 @@ export function useSlashCommand(
                         onChange={handleFileChange}
                     />
                 )}
-                {state.showSlash && availableCommands.length > 0 && (
+                {state.showSlash && (
                     <SlashCommand
                         show={state.showSlash}
                         onSelect={onCommandSelect}
-                        close={() => updateState({ showSlash: false })}
+                        close={() =>
+                            updateState({
+                                showSlash: false,
+                                slashFrom: null,
+                                slashQuery: '',
+                            })
+                        }
                         position={state.slashPos}
                         commands={availableCommands}
                         selectedIndex={state.selectedIndex}

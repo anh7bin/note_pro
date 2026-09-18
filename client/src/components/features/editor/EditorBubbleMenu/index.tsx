@@ -7,7 +7,9 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { FormattingButtons } from './FormattingButtons';
 import { HighlightControl } from './HighlightControl';
 import { LinkControl } from './LinkControl';
+import { TextColorControl } from './TextColorControl';
 import { useEditorState } from './useEditorState';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     editor: Editor;
@@ -19,9 +21,11 @@ export const EditorBubbleMenu = memo(function EditorBubbleMenu({
     editor,
 }: Props) {
     const bubbleMenuRef = useRef<HTMLDivElement>(null);
+    const { t } = useI18n();
     const [isVisible, setIsVisible] = useState(false);
     const [contentKey, setContentKey] = useState(0);
-    const { isMarkActive, getCurrentHighlightColor } = useEditorState(editor);
+    const { isMarkActive, getCurrentHighlightColor, getCurrentTextColor } =
+        useEditorState(editor);
 
     const handleHighlight = useCallback(
         (color: string | null) => {
@@ -40,6 +44,17 @@ export const EditorBubbleMenu = memo(function EditorBubbleMenu({
                 editor.chain().focus().unsetLink().run();
             } else {
                 editor.chain().focus().setLink({ href: url }).run();
+            }
+        },
+        [editor]
+    );
+
+    const handleTextColor = useCallback(
+        (color: string | null) => {
+            if (color) {
+                editor.chain().focus().setColor(color).run();
+            } else {
+                editor.chain().focus().unsetColor().run();
             }
         },
         [editor]
@@ -141,8 +156,8 @@ export const EditorBubbleMenu = memo(function EditorBubbleMenu({
             <div
                 key={contentKey}
                 role="toolbar"
-                aria-label="Text formatting"
-                className="flex items-center gap-1 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md">
+                aria-label={t('textFormatting')}
+                className="flex max-w-[calc(100vw-1rem)] flex-wrap items-center gap-1 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md">
                 <FormattingButtons
                     editor={editor}
                     isMarkActive={isMarkActive}
@@ -151,6 +166,11 @@ export const EditorBubbleMenu = memo(function EditorBubbleMenu({
                     onSelect={handleHighlight}
                     currentColor={getCurrentHighlightColor()}
                     isActive={isMarkActive('highlight')}
+                />
+                <TextColorControl
+                    onSelect={handleTextColor}
+                    currentColor={getCurrentTextColor()}
+                    isActive={isMarkActive('textStyle')}
                 />
                 <LinkControl
                     onSubmit={handleLink}

@@ -4,7 +4,6 @@ import { useCallback, useState } from 'react';
 import type { EditorView } from '@tiptap/pm/view';
 import {
     createSlashCommands,
-    SLASH_MENU_KEYS,
     SLASH_TRIGGER_SUFFIXES,
 } from '../slash/constants';
 import { shouldShowSlash, getPopoverPosition } from '../slash/helpers';
@@ -20,6 +19,8 @@ const INITIAL_STATE: SlashCommandState = {
     tablePos: { top: 0, left: 0 },
     separatorPos: { top: 0, left: 0 },
     selectedIndex: 0,
+    slashFrom: null,
+    slashQuery: '',
 };
 
 export function useMenuState() {
@@ -73,9 +74,15 @@ export function useSlashKeyHandler({
                     return true;
                 }
 
-                if (!SLASH_MENU_KEYS.includes(event.key)) {
-                    updateState({ showSlash: false, selectedIndex: 0 });
-                    return false;
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    updateState({
+                        showSlash: false,
+                        selectedIndex: 0,
+                        slashFrom: null,
+                        slashQuery: '',
+                    });
+                    return true;
                 }
             }
 
@@ -113,6 +120,8 @@ export function useSlashKeyHandler({
                             slashPos: getPopoverPosition(coords),
                             showSlash: true,
                             selectedIndex: 0,
+                            slashFrom: editorState.selection.from,
+                            slashQuery: '',
                         });
                     }, 0);
                     return false;
@@ -132,6 +141,8 @@ export function useSlashKeyHandler({
                     showEmoji: false,
                     showTable: false,
                     showSeparator: false,
+                    slashFrom: null,
+                    slashQuery: '',
                 });
                 return true;
             }
