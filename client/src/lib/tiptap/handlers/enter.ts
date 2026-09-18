@@ -1,26 +1,13 @@
 import { Extension } from '@tiptap/core';
 import type { Editor } from '@tiptap/core';
-import { DOMSerializer } from '@tiptap/pm/model';
 import type { AddEditorBlockHandler } from '@/types/editor';
 import { BlockType } from '@/types/types';
-
-const EMPTY_PARAGRAPH = '<p></p>';
-
-function serializeRange(editor: Editor, from: number, to: number): string {
-    if (from >= to) return EMPTY_PARAGRAPH;
-
-    const container = document.createElement('div');
-    const fragment = editor.state.doc.slice(from, to).content;
-    container.appendChild(
-        DOMSerializer.fromSchema(editor.schema).serializeFragment(fragment)
-    );
-    return container.innerHTML || EMPTY_PARAGRAPH;
-}
+import { serializeEditorRange } from '@/lib/tiptap/html';
 
 function splitContentAtSelection(editor: Editor): string {
     const { doc, selection } = editor.state;
-    const before = serializeRange(editor, 0, selection.from);
-    const after = serializeRange(editor, selection.to, doc.content.size);
+    const before = serializeEditorRange(editor, 0, selection.from);
+    const after = serializeEditorRange(editor, selection.to, doc.content.size);
 
     // Empty blocks and cursors at the end already contain the exact `before`
     // value. Avoid dispatching a redundant transaction for every Enter press.

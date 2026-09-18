@@ -1,6 +1,7 @@
 import { CustomCode } from '@/lib/tiptap/extensions/custom-code';
 import { TrailingParagraphCleanup } from '@/lib/tiptap/extensions/trailing-paragraph-cleanup';
 import { EnterHandler } from '@/lib/tiptap/handlers/enter';
+import { PasteHandler } from '@/lib/tiptap/handlers/paste';
 import type { AddEditorBlockHandler } from '@/types/editor';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import Color from '@tiptap/extension-color';
@@ -96,6 +97,10 @@ export const createExtensions = ({
     EnterHandler.configure({
         onAddBlock,
         onBackspaceAtStart,
+        getPosition,
+    }),
+    PasteHandler.configure({
+        onAddBlock,
         getPosition,
     }),
 ];
