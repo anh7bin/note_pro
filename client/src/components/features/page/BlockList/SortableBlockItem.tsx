@@ -225,11 +225,9 @@ export const SortableBlockItem = memo(
                 onPointerDown={handleBlockPointerDown}
                 onKeyDown={handleBlockKeyDown}
                 className={cn(
-                    'group/block relative rounded-md px-1.5 py-1 transition-colors duration-150',
-                    'focus-within:bg-primary/5',
+                    'group/block relative rounded-md px-1.5 py-1',
                     usesBlockLevelFocus &&
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
-                    focusedBlock === block.id && 'bg-primary/5'
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40'
                 )}>
                 {dragHandle && (
                     <div className="absolute left-1.5 top-0 z-10 -ml-1 -translate-x-full text-muted-foreground">

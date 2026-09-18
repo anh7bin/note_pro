@@ -49,7 +49,9 @@ export const ParagraphBlock = memo(
                 position={block.position || 0}
                 editorClassName={cn(
                     'prose prose-sm max-w-none break-words text-sm leading-relaxed focus:outline-none',
-                    (totalBlocks === 1 || isFocused) && 'show-placeholder'
+                    totalBlocks === 1
+                        ? 'show-placeholder'
+                        : 'show-placeholder-on-focus'
                 )}
                 placeholder={t('blockPlaceholder')}
                 showBubbleMenu={true}
