@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Notification } from '@/types/app';
 import {
     getNotificationInitial,
+    getNotificationMessage,
     getNotificationPresentation,
     getNotificationTime,
     getNotificationTitle,
@@ -19,6 +20,7 @@ export const NotificationItem = ({
 }: NotificationItemProps) => {
     const { locale, t } = useI18n();
     const presentation = getNotificationPresentation(notification);
+    const message = getNotificationMessage(notification, t);
     const Icon = presentation.icon;
     const initial = getNotificationInitial(presentation.actor);
 
@@ -50,9 +52,9 @@ export const NotificationItem = ({
                         {getNotificationTime(notification.created_at, locale)}
                     </span>
                 </span>
-                {notification.message && (
+                {message && (
                     <span className="mt-0.5 line-clamp-2 block text-xs leading-relaxed text-muted-foreground">
-                        {notification.message}
+                        {message}
                     </span>
                 )}
             </span>

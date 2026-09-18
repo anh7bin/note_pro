@@ -335,6 +335,20 @@ export const vi: Messages = {
     noNotifications: 'Không có thông báo',
     notificationsDescription:
         'Yêu cầu truy cập và cập nhật chia sẻ sẽ xuất hiện ở đây.',
+    notificationAccessRequestEdit: '{{name}} muốn chỉnh sửa tài liệu này',
+    notificationAccessRequestView: '{{name}} muốn xem tài liệu này',
+    notificationAccessGrantedEditor:
+        '{{name}} đã cấp cho bạn quyền chỉnh sửa tài liệu này',
+    notificationAccessGrantedViewer:
+        '{{name}} đã cấp cho bạn quyền xem tài liệu này',
+    notificationPermissionUpdatedEditor:
+        '{{name}} đã đổi quyền của bạn thành chỉnh sửa',
+    notificationPermissionUpdatedViewer:
+        '{{name}} đã đổi quyền của bạn thành chỉ xem',
+    notificationEditRequestDeclined:
+        'Yêu cầu chỉnh sửa tài liệu của bạn đã bị từ chối. Bạn vẫn có thể xem tài liệu',
+    notificationViewRequestDeclined:
+        'Yêu cầu xem tài liệu của bạn đã bị từ chối',
     markNotificationReadError: 'Không thể đánh dấu thông báo là đã đọc',
     markAllNotificationsReadError:
         'Không thể đánh dấu tất cả thông báo là đã đọc',

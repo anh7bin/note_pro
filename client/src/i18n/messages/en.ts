@@ -342,6 +342,20 @@ export const en = {
     noNotifications: 'No notifications',
     notificationsDescription:
         'Access requests and sharing updates appear here.',
+    notificationAccessRequestEdit: '{{name}} wants to edit this document',
+    notificationAccessRequestView: '{{name}} wants to view this document',
+    notificationAccessGrantedEditor:
+        '{{name}} made you an editor of this document',
+    notificationAccessGrantedViewer:
+        '{{name}} made you a viewer of this document',
+    notificationPermissionUpdatedEditor:
+        '{{name}} changed your access to editor',
+    notificationPermissionUpdatedViewer:
+        '{{name}} changed your access to viewer',
+    notificationEditRequestDeclined:
+        'Your request to edit this document was declined. You can still view it',
+    notificationViewRequestDeclined:
+        'Your request to view this document was declined',
     markNotificationReadError: 'Could not mark notification as read',
     markAllNotificationsReadError: 'Could not mark all notifications as read',
     recentNotifications: 'Showing the {{count}} most recent notifications',
