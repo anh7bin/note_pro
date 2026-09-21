@@ -22,8 +22,6 @@ export const STALE_TIME = 2 * 60 * 1000; // 2 minutes
 // UI constants
 export const DEBOUNCE_DELAY = 300;
 export const TOAST_DURATION = 5000;
-export const NEW_DOCUMENT_TITLE_FOCUS_KEY =
-    'bin-craft-new-document-title-focus';
 
 // Page titles
 export const PAGE_TITLES: Record<string, string> = {

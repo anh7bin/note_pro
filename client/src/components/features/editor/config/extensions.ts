@@ -60,7 +60,7 @@ export const createExtensions = ({
         ? [
               Placeholder.configure({
                   placeholder,
-                  showOnlyCurrent: true,
+                  showOnlyCurrent: false,
                   showOnlyWhenEditable: true,
               }),
           ]

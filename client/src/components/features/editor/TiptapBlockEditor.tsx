@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { TiptapWrapper } from './TiptapWrapper';
 import { PageLoading } from '@/components/ui/loading';
 import { DocumentTitleInput } from '@/components/features/page/DocumentTitleInput';
@@ -13,45 +13,38 @@ import { useDocumentCover } from '@/hooks/useDocumentCover';
 import { EditorProvider, useEditor } from '@/contexts/EditorContext';
 import { BlockInteractionsProvider } from '@/contexts/BlockInteractionsContext';
 import { BlockInteractions } from './BlockInteractions';
-import { NEW_DOCUMENT_TITLE_FOCUS_KEY } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/contexts/I18nContext';
+import type { DraftDocumentConfig } from '@/contexts/editor/types';
 
 interface Props {
     pageId: string;
+    draft?: DraftDocumentConfig;
 }
 
-function EditorContent() {
+function EditorContent({
+    autoFocusTitle = false,
+}: {
+    autoFocusTitle?: boolean;
+}) {
     const {
         loading,
+        persisted,
         rootBlock,
         editable,
         handleUpdateTitle,
         handleUpdateDocumentIcon,
+        handleUpdateDocumentCover,
         handleTitleBlur,
         handleTitleEnter,
     } = useEditor();
     const { coverImage, handleAddCover, handleRemoveCover, isUploading } =
         useDocumentCover({
             rootBlock,
+            onUpdateCover: handleUpdateDocumentCover,
         });
-    const [shouldFocusTitle, setShouldFocusTitle] = useState(false);
     const documentIcon = rootBlock?.content.icon;
-
-    useEffect(() => {
-        if (!editable || !rootBlock?.id) return;
-
-        try {
-            if (
-                sessionStorage.getItem(NEW_DOCUMENT_TITLE_FOCUS_KEY) ===
-                rootBlock.id
-            ) {
-                sessionStorage.removeItem(NEW_DOCUMENT_TITLE_FOCUS_KEY);
-                setShouldFocusTitle(true);
-            }
-        } catch {
-            // The editor remains fully usable when storage is unavailable.
-        }
-    }, [editable, rootBlock?.id]);
+    const { t } = useI18n();
 
     const handleTitleKeyDown = useCallback(
         (event: KeyboardEvent) => {
@@ -133,12 +126,15 @@ function EditorContent() {
                                         onBlur={handleTitleBlur}
                                         onKeyDown={handleTitleKeyDown}
                                         editable={editable}
-                                        autoFocus={shouldFocusTitle}
+                                        autoFocus={autoFocusTitle}
+                                        placeholder={t('untitledPage')}
                                     />
-                                    <BlockInteractions
-                                        blockId={rootBlock.id}
-                                        variant="document-title"
-                                    />
+                                    {persisted && (
+                                        <BlockInteractions
+                                            blockId={rootBlock.id}
+                                            variant="document-title"
+                                        />
+                                    )}
                                 </div>
                             </div>
                             <Separator className="my-4" />
@@ -156,11 +152,11 @@ function EditorContent() {
     );
 }
 
-export default function TiptapBlockEditor({ pageId }: Props) {
+export default function TiptapBlockEditor({ pageId, draft }: Props) {
     return (
-        <EditorProvider pageId={pageId}>
-            <BlockInteractionsProvider pageId={pageId}>
-                <EditorContent />
+        <EditorProvider pageId={pageId} draft={draft}>
+            <BlockInteractionsProvider pageId={pageId} enabled={!draft}>
+                <EditorContent autoFocusTitle={Boolean(draft)} />
             </BlockInteractionsProvider>
         </EditorProvider>
     );

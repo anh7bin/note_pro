@@ -17,6 +17,14 @@ export type CreateUntitledPageMutationVariables = Types.Exact<{
 
 export type CreateUntitledPageMutation = { __typename?: 'mutation_root', insert_blocks_one?: { __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, workspace_id?: string | null, user_id?: string | null, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }> } | null };
 
+export type MaterializeDocumentMutationVariables = Types.Exact<{
+  document: Types.BlocksInsertInput;
+  blocks: Array<Types.BlocksInsertInput> | Types.BlocksInsertInput;
+}>;
+
+
+export type MaterializeDocumentMutation = { __typename?: 'mutation_root', insert_blocks_one?: { __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }>, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string } | null } | null, insert_blocks?: { __typename?: 'blocks_mutation_response', returning: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> } | null };
+
 export type UpdateBlockMutationVariables = Types.Exact<{
   id: Types.Scalars['uuid']['input'];
   input: Types.BlocksSetInput;
@@ -182,6 +190,94 @@ export function useCreateUntitledPageMutation(baseOptions?: Apollo.MutationHookO
 export type CreateUntitledPageMutationHookResult = ReturnType<typeof useCreateUntitledPageMutation>;
 export type CreateUntitledPageMutationResult = Apollo.MutationResult<CreateUntitledPageMutation>;
 export type CreateUntitledPageMutationOptions = Apollo.BaseMutationOptions<CreateUntitledPageMutation, CreateUntitledPageMutationVariables>;
+export const MaterializeDocumentDocument = gql`
+    mutation MaterializeDocument($document: blocks_insert_input!, $blocks: [blocks_insert_input!]!) {
+  insert_blocks_one(object: $document) {
+    id
+    content
+    cover_image
+    position
+    parent_id
+    page_id
+    type
+    workspace_id
+    user_id
+    created_at
+    updated_at
+    link_access {
+      permission_type
+    }
+    tasks {
+      id
+      status
+      deadline_date
+      schedule_date
+      priority
+      user_id
+    }
+    document_stars {
+      document_id
+    }
+    folder {
+      id
+      name
+    }
+  }
+  insert_blocks(objects: $blocks) {
+    returning {
+      id
+      content
+      cover_image
+      position
+      parent_id
+      page_id
+      type
+      workspace_id
+      user_id
+      created_at
+      updated_at
+      link_access {
+        permission_type
+      }
+      tasks {
+        id
+        status
+        deadline_date
+        schedule_date
+        priority
+        user_id
+      }
+    }
+  }
+}
+    `;
+export type MaterializeDocumentMutationFn = Apollo.MutationFunction<MaterializeDocumentMutation, MaterializeDocumentMutationVariables>;
+
+/**
+ * __useMaterializeDocumentMutation__
+ *
+ * To run a mutation, you first call `useMaterializeDocumentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMaterializeDocumentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [materializeDocumentMutation, { data, loading, error }] = useMaterializeDocumentMutation({
+ *   variables: {
+ *      document: // value for 'document'
+ *      blocks: // value for 'blocks'
+ *   },
+ * });
+ */
+export function useMaterializeDocumentMutation(baseOptions?: Apollo.MutationHookOptions<MaterializeDocumentMutation, MaterializeDocumentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MaterializeDocumentMutation, MaterializeDocumentMutationVariables>(MaterializeDocumentDocument, options);
+      }
+export type MaterializeDocumentMutationHookResult = ReturnType<typeof useMaterializeDocumentMutation>;
+export type MaterializeDocumentMutationResult = Apollo.MutationResult<MaterializeDocumentMutation>;
+export type MaterializeDocumentMutationOptions = Apollo.BaseMutationOptions<MaterializeDocumentMutation, MaterializeDocumentMutationVariables>;
 export const UpdateBlockDocument = gql`
     mutation UpdateBlock($id: uuid!, $input: blocks_set_input!) {
   update_blocks_by_pk(pk_columns: {id: $id}, _set: $input) {

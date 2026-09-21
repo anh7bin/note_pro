@@ -37,6 +37,70 @@ mutation CreateUntitledPage($input: blocks_insert_input!) {
     }
 }
 
+mutation MaterializeDocument(
+    $document: blocks_insert_input!
+    $blocks: [blocks_insert_input!]!
+) {
+    insert_blocks_one(object: $document) {
+        id
+        content
+        cover_image
+        position
+        parent_id
+        page_id
+        type
+        workspace_id
+        user_id
+        created_at
+        updated_at
+        link_access {
+            permission_type
+        }
+        tasks {
+            id
+            status
+            deadline_date
+            schedule_date
+            priority
+            user_id
+        }
+        document_stars {
+            document_id
+        }
+        folder {
+            id
+            name
+        }
+    }
+
+    insert_blocks(objects: $blocks) {
+        returning {
+            id
+            content
+            cover_image
+            position
+            parent_id
+            page_id
+            type
+            workspace_id
+            user_id
+            created_at
+            updated_at
+            link_access {
+                permission_type
+            }
+            tasks {
+                id
+                status
+                deadline_date
+                schedule_date
+                priority
+                user_id
+            }
+        }
+    }
+}
+
 mutation UpdateBlock($id: uuid!, $input: blocks_set_input!) {
     update_blocks_by_pk(pk_columns: { id: $id }, _set: $input) {
         id

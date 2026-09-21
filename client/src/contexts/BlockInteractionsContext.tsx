@@ -41,6 +41,7 @@ interface BlockInteractionsContextValue {
 interface BlockInteractionsProviderProps {
     children: React.ReactNode;
     pageId: string;
+    enabled?: boolean;
 }
 
 const BlockInteractionsContext =
@@ -49,13 +50,14 @@ const BlockInteractionsContext =
 export function BlockInteractionsProvider({
     children,
     pageId,
+    enabled = true,
 }: BlockInteractionsProviderProps) {
     const currentUser = useCurrentUser();
     const { t } = useI18n();
     const pendingReactionKeysRef = useRef(new Set<string>());
     const { data, loading, subscribeToMore } = useGetBlockInteractionsQuery({
         variables: { pageId },
-        skip: !pageId,
+        skip: !enabled || !pageId,
         fetchPolicy: 'cache-and-network',
         nextFetchPolicy: 'cache-first',
     });
@@ -65,7 +67,7 @@ export function BlockInteractionsProvider({
     const [deleteReactionMutation] = useDeleteBlockReactionMutation();
 
     useEffect(() => {
-        if (!pageId) return;
+        if (!enabled || !pageId) return;
 
         const unsubscribeComments =
             subscribeToMore<SubscribeToBlockCommentsSubscription>({
@@ -98,7 +100,7 @@ export function BlockInteractionsProvider({
             unsubscribeComments();
             unsubscribeReactions();
         };
-    }, [pageId, subscribeToMore]);
+    }, [enabled, pageId, subscribeToMore]);
 
     const commentsByBlock = useMemo(() => {
         const grouped = new Map<string, BlockComment[]>();
@@ -353,7 +355,7 @@ export function BlockInteractionsProvider({
         () => ({
             commentsByBlock,
             reactionsByBlock,
-            loading,
+            loading: enabled ? loading : false,
             addComment,
             deleteComment,
             toggleReaction,
@@ -362,6 +364,7 @@ export function BlockInteractionsProvider({
             addComment,
             commentsByBlock,
             deleteComment,
+            enabled,
             loading,
             reactionsByBlock,
             toggleReaction,

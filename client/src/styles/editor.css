@@ -36,7 +36,8 @@
     pointer-events: none;
 }
 
-.ProseMirror.show-placeholder p.is-editor-empty:first-child::before {
+.ProseMirror.show-placeholder:not(:focus)
+    p.is-editor-empty:first-child::before {
     content: attr(data-placeholder);
 }
 

@@ -20,6 +20,8 @@ export const vi: Messages = {
     noEmail: 'Không có email',
     account: 'Tài khoản',
     untitledPage: 'Trang chưa có tiêu đề',
+    documentCreateError:
+        'Không thể lưu tài liệu mới. Bản nháp vẫn đang mở—hãy tiếp tục chỉnh sửa để thử lại.',
     blockPlaceholder: 'Nhập nội dung hoặc gõ / để chèn...',
     untitledTask: 'Công việc chưa có tiêu đề',
     documentCount: '{{count}} tài liệu',

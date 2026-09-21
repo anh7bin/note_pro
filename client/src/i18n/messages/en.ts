@@ -19,6 +19,8 @@ export const en = {
     noEmail: 'No email',
     account: 'Account',
     untitledPage: 'Untitled Page',
+    documentCreateError:
+        'Could not save this new document. Your draft is still open—keep editing to retry.',
     blockPlaceholder: 'Type something, or press / for commands...',
     untitledTask: 'Untitled Task',
     documentCount: '{{count}} document',

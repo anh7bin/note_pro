@@ -19,6 +19,7 @@ export const SortableBlockItem = memo(
             focusedBlock,
             focusPosition,
             editable,
+            persisted,
             handleBlockFocus,
             handleBlockBlur,
             handleBackspaceAtStart,
@@ -255,7 +256,7 @@ export const SortableBlockItem = memo(
                     onConvertToTable={handleConvertToTable}
                     totalBlocks={totalBlocks}
                 />
-                <BlockInteractions blockId={block.id} />
+                {persisted && <BlockInteractions blockId={block.id} />}
             </div>
         );
     },

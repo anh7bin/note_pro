@@ -13,11 +13,13 @@ import { useI18n } from '@/contexts/I18nContext';
 interface DocumentAccessGuardProps {
     documentId: string;
     children: React.ReactNode;
+    draft?: boolean;
 }
 
 export function DocumentAccessGuard({
     documentId,
     children,
+    draft = false,
 }: DocumentAccessGuardProps) {
     const { isAuthenticated } = useAuth();
     const userId = useUserId();
@@ -26,7 +28,7 @@ export function DocumentAccessGuard({
 
     const { data, loading, error } = useGetDocumentBlocksQuery({
         variables: { pageId: documentId },
-        skip: !documentId || !isAuthenticated,
+        skip: draft || !documentId || !isAuthenticated,
         errorPolicy: 'all',
         fetchPolicy: 'cache-first',
     });
@@ -44,7 +46,7 @@ export function DocumentAccessGuard({
         linkPermission === PermissionType.WRITE;
 
     const shouldFetchAccessRequests =
-        !loading && data?.blocks && rootBlock && !isDocumentOwner;
+        !draft && !loading && data?.blocks && rootBlock && !isDocumentOwner;
 
     const { data: accessRequestData, loading: accessRequestLoading } =
         useGetAccessRequestByDocumentQuery({
@@ -52,11 +54,13 @@ export function DocumentAccessGuard({
                 documentId: documentId || '',
                 requesterId: userId || '',
             },
-            skip: !documentId || !userId || !shouldFetchAccessRequests,
+            skip: draft || !documentId || !userId || !shouldFetchAccessRequests,
             fetchPolicy: 'cache-and-network',
         });
 
     const hasAccess = useMemo(() => {
+        if (draft) return Boolean(userId && isAuthenticated);
+
         if (error) {
             return false;
         }
@@ -103,18 +107,19 @@ export function DocumentAccessGuard({
         rootBlock,
         isDocumentOwner,
         hasLinkAccess,
+        draft,
     ]);
 
     useEffect(() => {
         setHasAccess(hasAccess);
-        setDocumentId(documentId);
+        setDocumentId(draft ? null : documentId);
 
         return () => {
             setDocumentId(null);
         };
-    }, [hasAccess, setHasAccess, documentId, setDocumentId]);
+    }, [draft, hasAccess, setHasAccess, documentId, setDocumentId]);
 
-    if (loading) {
+    if (!draft && loading) {
         return (
             <div className="flex h-full min-h-40 items-center justify-center">
                 <Loading text={t('openingDocument')} />
@@ -122,7 +127,7 @@ export function DocumentAccessGuard({
         );
     }
 
-    if (accessRequestLoading) {
+    if (!draft && accessRequestLoading) {
         return (
             <div className="flex h-full min-h-40 items-center justify-center">
                 <Loading text={t('checkingDocumentAccess')} />

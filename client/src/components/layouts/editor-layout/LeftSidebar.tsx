@@ -10,7 +10,6 @@ import { BlockType } from '@/types/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { getPlainText } from '@/lib/text';
 import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
-import { Loading } from '@/components/ui/loading';
 import { CardDocumentPreview } from '@/components/features/page/CardDocumentPreview';
 import {
     SectionItem,
@@ -25,11 +24,8 @@ interface Props {
 }
 
 export const LeftSidebar = ({ pageId }: Props) => {
-    const {
-        processedRootBlock: rootBlock,
-        processedBlocks: blocks,
-        loading,
-    } = useDocumentBlocksData(pageId);
+    const { processedRootBlock: rootBlock, processedBlocks: blocks } =
+        useDocumentBlocksData(pageId);
     const [pendingTaskIds, setPendingTaskIds] = useState<Set<string>>(
         () => new Set()
     );
@@ -113,6 +109,10 @@ export const LeftSidebar = ({ pageId }: Props) => {
             };
         });
     }, [attachmentBlocks, t]);
+    const documentTitle = useMemo(
+        () => getPlainText(rootBlock?.content?.title).trim(),
+        [rootBlock?.content?.title]
+    );
 
     const handleScrollToBlock = useCallback((blockId: string) => {
         if (cleanupHighlightRef.current) {
@@ -173,52 +173,43 @@ export const LeftSidebar = ({ pageId }: Props) => {
     return (
         <div className="flex h-full min-h-0 flex-col overflow-hidden">
             <div className="h-full flex flex-col overflow-hidden">
-                <div className="sticky top-0 z-10 flex shrink-0 flex-row items-center gap-3 border-b border-border-subtle bg-background px-4 py-3">
-                    <div
-                        aria-hidden="true"
-                        className="relative shrink-0 overflow-hidden rounded-sm border border-border-subtle bg-card p-2"
-                        style={{ width: 24, height: 32 }}>
+                {documentTitle && (
+                    <div className="sticky top-0 z-10 flex shrink-0 flex-row items-center gap-3 border-b border-border-subtle bg-background px-4 py-3">
                         <div
-                            className="absolute inset-0.5 overflow-hidden"
-                            style={{
-                                transform: 'scale(0.07)',
-                                transformOrigin: 'top left',
-                                width: '266px',
-                                height: '266px',
-                            }}>
-                            <div className="text-[10px]">
-                                <CardDocumentPreview blocks={blocks || []} />
+                            aria-hidden="true"
+                            className="relative shrink-0 overflow-hidden rounded-sm border border-border-subtle bg-card p-2"
+                            style={{ width: 24, height: 32 }}>
+                            <div
+                                className="absolute inset-0.5 overflow-hidden"
+                                style={{
+                                    transform: 'scale(0.07)',
+                                    transformOrigin: 'top left',
+                                    width: '266px',
+                                    height: '266px',
+                                }}>
+                                <div className="text-[10px]">
+                                    <CardDocumentPreview
+                                        blocks={blocks || []}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="flex flex-col flex-1 min-w-0">
-                        {loading ? (
-                            <Loading />
-                        ) : (
-                            <>
-                                <TruncatedTooltip
-                                    text={
-                                        getPlainText(
-                                            rootBlock?.content?.title
-                                        ) || ''
-                                    }>
-                                    <span className="text-sm font-medium truncate">
-                                        {getPlainText(
-                                            rootBlock?.content?.title
-                                        ) || ''}
-                                    </span>
-                                </TruncatedTooltip>
-                                <span className="text-xs text-muted-foreground truncate">
-                                    {formatDate(rootBlock?.updated_at || '', {
-                                        relative: true,
-                                        locale,
-                                    })}
+                        <div className="flex min-w-0 flex-1 flex-col">
+                            <TruncatedTooltip text={documentTitle}>
+                                <span className="truncate text-sm font-medium">
+                                    {documentTitle}
                                 </span>
-                            </>
-                        )}
+                            </TruncatedTooltip>
+                            <span className="truncate text-xs text-muted-foreground">
+                                {formatDate(rootBlock?.updated_at || '', {
+                                    relative: true,
+                                    locale,
+                                })}
+                            </span>
+                        </div>
                     </div>
-                </div>
+                )}
 
                 <div className="flex-1 overflow-hidden px-4 pt-3">
                     <SidebarTabs

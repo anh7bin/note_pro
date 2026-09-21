@@ -38,6 +38,11 @@ type UpdateBlockContent = (
     content: BlockContent
 ) => Promise<Block | null>;
 
+type UpdateBlockCoverImage = (
+    id: string,
+    coverImage: string | null
+) => Promise<boolean>;
+
 type PersistenceState = Pick<
     EditorDocumentState,
     | 'blocksRef'
@@ -60,6 +65,8 @@ interface UseEditorPersistenceOptions {
     debounce: DebounceController;
     createBlocks: CreateBlocks;
     updateBlockContent: UpdateBlockContent;
+    updateBlockCoverImage: UpdateBlockCoverImage;
+    ensureDocumentPersisted?: () => Promise<boolean>;
 }
 
 export function useEditorPersistence({
@@ -70,6 +77,8 @@ export function useEditorPersistence({
     debounce,
     createBlocks,
     updateBlockContent,
+    updateBlockCoverImage,
+    ensureDocumentPersisted,
 }: UseEditorPersistenceOptions): EditorPersistenceController {
     const { debounced, flush, cancel } = debounce;
     const pendingCreationsRef = useRef<Map<string, Promise<Block | null>>>(
@@ -141,12 +150,13 @@ export function useEditorPersistence({
     const handleUpdateBlockContent = useCallback(
         (blockId: string, content: string) => {
             dirtyContentRef.current.set(blockId, content);
+            void ensureDocumentPersisted?.();
             debounced(
                 () => enqueueBlockSave(blockId, content),
                 `block-${blockId}`
             );
         },
-        [debounced, dirtyContentRef, enqueueBlockSave]
+        [debounced, dirtyContentRef, enqueueBlockSave, ensureDocumentPersisted]
     );
 
     const flushCreationBatch = useCallback(() => {
@@ -395,6 +405,7 @@ export function useEditorPersistence({
             if (!currentRootBlock) return;
 
             dirtyTitleRef.current = title;
+            void ensureDocumentPersisted?.();
             debounced(() => {
                 const previousSave = titleSaveQueueRef.current;
                 const nextSave = previousSave
@@ -418,7 +429,7 @@ export function useEditorPersistence({
                 return nextSave;
             }, `title-${currentRootBlock.id}`);
         },
-        [debounced, dirtyTitleRef, updateBlockContent]
+        [debounced, dirtyTitleRef, ensureDocumentPersisted, updateBlockContent]
     );
 
     const handleUpdateDocumentIcon = useCallback(
@@ -480,6 +491,32 @@ export function useEditorPersistence({
         [dirtyTitleRef, setRootBlock, updateBlockContent]
     );
 
+    const handleUpdateDocumentCover = useCallback(
+        async (coverImage: string | null) => {
+            const currentRootBlock = rootBlockRef.current;
+            if (!currentRootBlock) return false;
+
+            const updated = await updateBlockCoverImage(
+                currentRootBlock.id,
+                coverImage
+            );
+            if (!updated) return false;
+
+            setRootBlock((latestRootBlock) => {
+                if (!latestRootBlock) return latestRootBlock;
+
+                const nextRootBlock = {
+                    ...latestRootBlock,
+                    cover_image: coverImage,
+                };
+                rootBlockRef.current = nextRootBlock;
+                return nextRootBlock;
+            });
+            return true;
+        },
+        [setRootBlock, updateBlockCoverImage]
+    );
+
     const handleTitleBlur = useCallback(() => {
         const title = dirtyTitleRef.current;
         if (title !== null) {
@@ -535,6 +572,7 @@ export function useEditorPersistence({
         handleUpdateBlockContent,
         handleUpdateTitle,
         handleUpdateDocumentIcon,
+        handleUpdateDocumentCover,
         handleTitleBlur,
         handleTitleEnter,
         enqueueBlockSave,

@@ -2,18 +2,21 @@
 
 import { useCallback, useRef } from 'react';
 import { useImageUpload } from './useImageUpload';
-import { Block, useBlocks } from './useBlocks';
+import { Block } from './useBlocks';
 
 interface UseDocumentCoverProps {
     rootBlock: Block | null;
+    onUpdateCover: (coverImage: string | null) => Promise<boolean>;
 }
 
-export function useDocumentCover({ rootBlock }: UseDocumentCoverProps) {
+export function useDocumentCover({
+    rootBlock,
+    onUpdateCover,
+}: UseDocumentCoverProps) {
     const { uploadImage, isUploading } = useImageUpload({
         tags: ['document-cover'],
         maxSizeMB: 10,
     });
-    const { updateBlockCoverImage } = useBlocks();
 
     // Use ref to avoid recreating callbacks when rootBlock reference changes
     const rootBlockRef = useRef(rootBlock);
@@ -28,18 +31,18 @@ export function useDocumentCover({ rootBlock }: UseDocumentCoverProps) {
 
             const imageUrl = await uploadImage(file);
             if (imageUrl) {
-                await updateBlockCoverImage(currentRootBlock.id, imageUrl);
+                await onUpdateCover(imageUrl);
             }
         },
-        [uploadImage, updateBlockCoverImage]
+        [onUpdateCover, uploadImage]
     );
 
     const handleRemoveCover = useCallback(async () => {
         const currentRootBlock = rootBlockRef.current;
         if (!currentRootBlock) return;
 
-        await updateBlockCoverImage(currentRootBlock.id, null);
-    }, [updateBlockCoverImage]);
+        await onUpdateCover(null);
+    }, [onUpdateCover]);
 
     return {
         coverImage,

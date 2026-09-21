@@ -39,11 +39,18 @@ export const ROUTES = {
         `/s/${workspaceSlug}/calendar`,
     WORKSPACE_DOCUMENT: (workspaceSlug: string, documentId: string) =>
         `/editor/d/${workspaceSlug}/${documentId}`,
+    WORKSPACE_DOCUMENT_DRAFT: (workspaceSlug: string, documentId: string) =>
+        `/editor/d/${workspaceSlug}/new/${documentId}`,
     WORKSPACE_DOCUMENT_FOLDER: (
         workspaceSlug: string,
         folderId: string,
         documentId: string
     ) => `/editor/d/${workspaceSlug}/${folderId}/${documentId}`,
+    WORKSPACE_DOCUMENT_FOLDER_DRAFT: (
+        workspaceSlug: string,
+        folderId: string,
+        documentId: string
+    ) => `/editor/d/${workspaceSlug}/${folderId}/new/${documentId}`,
     WORKSPACE_FOLDER: (workspaceSlug: string, folderId: string) =>
         `/s/${workspaceSlug}/f/${folderId}`,
 } as const;

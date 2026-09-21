@@ -1,20 +1,12 @@
 'use client';
 
-import { useCreateUntitledPageMutation } from '@/graphql/mutations/__generated__/document.generated';
-import {
-    GetAllDocsDocument,
-    type GetAllDocsQuery,
-} from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { useLoading } from '@/contexts/LoadingContext';
 import { ROUTES } from '@/lib/routes';
-import { BlockType } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import { useState, useCallback, useRef } from 'react';
 import { flushSync } from 'react-dom';
-import { useI18n } from '@/contexts/I18nContext';
-import { NEW_DOCUMENT_TITLE_FOCUS_KEY } from '@/lib/constants';
 
 interface CreateDocumentOptions {
     folderId?: string | null;
@@ -26,10 +18,8 @@ export function useCreateDocument(options: CreateDocumentOptions = {}) {
     const router = useRouter();
     const userId = useUserId();
     const { startLoading, stopLoading } = useLoading();
-    const [createDocument] = useCreateUntitledPageMutation();
     const [isCreating, setIsCreating] = useState(false);
     const isCreatingRef = useRef(false);
-    const { t } = useI18n();
 
     const createNewDocument = useCallback(() => {
         if (isCreatingRef.current || isCreating || !workspace?.id || !userId) {
@@ -42,113 +32,25 @@ export function useCreateDocument(options: CreateDocumentOptions = {}) {
         });
         startLoading();
 
-        createDocument({
-            variables: {
-                input: {
-                    type: BlockType.PAGE,
-                    workspace_id: workspace.id,
-                    user_id: userId,
-                    folder_id: folderId || null,
-                    content: {
-                        title: t('untitledPage'),
-                    },
-                    position: 0,
-                    parent_id: null,
-                    page_id: null,
-                },
-            },
-            update(cache, { data }) {
-                const createdDocument = data?.insert_blocks_one;
-                if (!createdDocument) return;
+        const documentId = crypto.randomUUID();
+        const route = folderId
+            ? ROUTES.WORKSPACE_DOCUMENT_FOLDER_DRAFT(
+                  workspace.id,
+                  folderId,
+                  documentId
+              )
+            : ROUTES.WORKSPACE_DOCUMENT_DRAFT(workspace.id, documentId);
 
-                cache.updateQuery<GetAllDocsQuery>(
-                    {
-                        query: GetAllDocsDocument,
-                        variables: { workspaceId: workspace.id },
-                    },
-                    (existing) => {
-                        if (
-                            existing?.blocks.some(
-                                (document) => document.id === createdDocument.id
-                            )
-                        ) {
-                            return existing;
-                        }
-
-                        return {
-                            __typename: 'query_root',
-                            blocks: [
-                                createdDocument,
-                                ...(existing?.blocks ?? []),
-                            ],
-                        };
-                    }
-                );
-            },
-        })
-            .then((res) => {
-                const docId = res.data?.insert_blocks_one?.id;
-                if (!docId) {
-                    throw new Error('Failed to create document');
-                }
-
-                const route = folderId
-                    ? ROUTES.WORKSPACE_DOCUMENT_FOLDER(
-                          workspace.id,
-                          folderId,
-                          docId
-                      )
-                    : ROUTES.WORKSPACE_DOCUMENT(workspace.id, docId);
-
-                try {
-                    sessionStorage.setItem(
-                        NEW_DOCUMENT_TITLE_FOCUS_KEY,
-                        docId
-                    );
-                } catch {
-                    // Focusing the title is an enhancement; document creation
-                    // should still succeed when storage is unavailable.
-                }
-
-                router.push(route);
-
-                stopLoading();
-
-                createDocument({
-                    variables: {
-                        input: {
-                            type: BlockType.PARAGRAPH,
-                            workspace_id: workspace.id,
-                            user_id: userId,
-                            folder_id: null,
-                            content: {
-                                text: '',
-                            },
-                            position: 0,
-                            parent_id: null,
-                            page_id: docId,
-                        },
-                    },
-                }).catch((err) => {
-                    console.error('Failed to create paragraph block:', err);
-                });
-            })
-            .catch((err) => {
-                console.error('Failed to create document:', err);
-                setIsCreating(false);
-                isCreatingRef.current = false;
-                stopLoading();
-            });
+        router.push(route);
+        stopLoading();
     }, [
         isCreating,
         workspace?.id,
         userId,
         folderId,
-        createDocument,
         router,
         startLoading,
         stopLoading,
-        t,
     ]);
 
     return {

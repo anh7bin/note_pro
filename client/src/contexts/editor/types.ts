@@ -6,6 +6,12 @@ import type {
 } from '@/types/editor';
 import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 
+export interface DraftDocumentConfig {
+    workspaceId: string;
+    folderId?: string | null;
+    onPersisted?: () => void;
+}
+
 export type BlockNavigationDirection = 'previous' | 'next';
 
 export interface EditorDocumentState {
@@ -31,6 +37,7 @@ export interface EditorPersistenceController {
     handleUpdateBlockContent: (blockId: string, content: string) => void;
     handleUpdateTitle: (title: string) => void;
     handleUpdateDocumentIcon: (icon: string | null) => Promise<boolean>;
+    handleUpdateDocumentCover: (coverImage: string | null) => Promise<boolean>;
     handleTitleBlur: () => void;
     handleTitleEnter: () => void;
     enqueueBlockSave: (blockId: string, content: string) => Promise<void>;
@@ -74,10 +81,12 @@ export interface EditorContextValue
             | 'handleUpdateBlockContent'
             | 'handleUpdateTitle'
             | 'handleUpdateDocumentIcon'
+            | 'handleUpdateDocumentCover'
             | 'handleTitleBlur'
             | 'handleTitleEnter'
         > {
     loading: boolean;
+    persisted: boolean;
     blocks: Block[];
     rootBlock: Block | null;
     focusedBlock: string | null;
@@ -88,4 +97,5 @@ export interface EditorContextValue
 export interface EditorProviderProps {
     children: React.ReactNode;
     pageId: string;
+    draft?: DraftDocumentConfig;
 }
