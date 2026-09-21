@@ -1,6 +1,7 @@
 export { useAuth, useUserId, useIsAuthenticated, useToken } from './useAuth';
 export { useCurrentUser } from './useCurrentUser';
 export { useCurrentUserLocalStorage } from './useCurrentUserLocalStorage';
+export { useDeviceOnboardingSeen } from './useDeviceOnboardingSeen';
 export { useLogout } from './useLogout';
 export { useBlocks } from './useBlocks';
 export { useWorkspace } from './useWorkspace';

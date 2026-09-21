@@ -4,6 +4,7 @@ import { signOut } from 'next-auth/react';
 import { useCallback, useState } from 'react';
 import { useI18n } from '@/contexts/I18nContext';
 import { LOCALE_STORAGE_KEY } from '@/i18n/config';
+import { isDeviceOnboardingStorageKey } from '@/lib/onboarding';
 
 export function useLogout() {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -13,11 +14,16 @@ export function useLogout() {
         try {
             setIsLoggingOut(true);
             if (typeof window !== 'undefined') {
-                const themePreferences: Record<string, string> = {};
+                const preservedPreferences: Record<string, string> = {};
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
-                    if (key && key.includes('_theme_preference')) {
-                        themePreferences[key] = localStorage.getItem(key) || '';
+                    if (
+                        key &&
+                        (key.includes('_theme_preference') ||
+                            isDeviceOnboardingStorageKey(key))
+                    ) {
+                        preservedPreferences[key] =
+                            localStorage.getItem(key) || '';
                     }
                 }
                 const localePreference =
@@ -26,7 +32,7 @@ export function useLogout() {
                 localStorage.clear();
                 sessionStorage.clear();
 
-                Object.entries(themePreferences).forEach(([key, value]) => {
+                Object.entries(preservedPreferences).forEach(([key, value]) => {
                     localStorage.setItem(key, value);
                 });
                 if (localePreference) {

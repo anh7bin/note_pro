@@ -10,17 +10,15 @@ import {
 } from 'react-joyride';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import {
-    useCurrentUser,
-    useCurrentUserLocalStorage,
-    useWorkspace,
-} from '@/hooks';
+import { useCurrentUser, useDeviceOnboardingSeen, useWorkspace } from '@/hooks';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { OnboardingContext, type TourName } from '@/contexts/OnboardingContext';
 import { ROUTES } from '@/lib/routes';
-
-const TOUR_VERSION = 'v1';
+import {
+    ONBOARDING_EDITOR_STORAGE_KEY,
+    ONBOARDING_WORKSPACE_STORAGE_KEY,
+} from '@/lib/onboarding';
 
 function waitForTarget(selector: string, onReady: () => void) {
     if (document.querySelector(selector)) {
@@ -74,12 +72,13 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
     const { resolvedTheme } = useTheme();
     const pathname = usePathname();
     const router = useRouter();
-    const [workspaceSeen, setWorkspaceSeen] =
-        useCurrentUserLocalStorage<boolean>(
-            `onboarding_workspace_${TOUR_VERSION}`
-        );
-    const [editorSeen, setEditorSeen] = useCurrentUserLocalStorage<boolean>(
-        `onboarding_editor_${TOUR_VERSION}`
+    const [workspaceSeen, markWorkspaceSeen] = useDeviceOnboardingSeen(
+        ONBOARDING_WORKSPACE_STORAGE_KEY,
+        userId
+    );
+    const [editorSeen, markEditorSeen] = useDeviceOnboardingSeen(
+        ONBOARDING_EDITOR_STORAGE_KEY,
+        userId
     );
     const [activeTour, setActiveTour] = useState<TourName | null>(null);
     const [requestedTour, setRequestedTour] = useState<TourName | null>(null);
@@ -113,7 +112,15 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
     );
 
     useEffect(() => {
-        if (!userId || !workspaceSlug || run) return;
+        if (
+            !userId ||
+            !workspaceSlug ||
+            run ||
+            workspaceSeen === undefined ||
+            editorSeen === undefined
+        ) {
+            return;
+        }
 
         const tour: TourName | null = requestedTour
             ? requestedTour
@@ -355,11 +362,11 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
     );
 
     const finishTour = useCallback(() => {
-        if (activeTour === 'workspace') setWorkspaceSeen(true);
-        if (activeTour === 'editor') setEditorSeen(true);
+        if (activeTour === 'workspace') markWorkspaceSeen();
+        if (activeTour === 'editor') markEditorSeen();
         setRun(false);
         setActiveTour(null);
-    }, [activeTour, setEditorSeen, setWorkspaceSeen]);
+    }, [activeTour, markEditorSeen, markWorkspaceSeen]);
 
     const handleEvent = useCallback(
         (event: EventData) => {
