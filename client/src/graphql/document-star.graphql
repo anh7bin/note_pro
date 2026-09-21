@@ -18,6 +18,7 @@ query GetStarredDocuments {
             id
             content
             workspace_id
+            user_id
             folder {
                 id
             }

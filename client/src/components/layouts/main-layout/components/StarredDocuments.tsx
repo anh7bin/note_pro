@@ -1,16 +1,14 @@
 'use client';
 
 import { useId, useState } from 'react';
-import { SidebarButton } from '@/components/layouts/main-layout/components/SidebarButton';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
 import { useGetStarredDocumentsQuery } from '@/graphql/__generated__/document-star.generated';
-import { ROUTES } from '@/lib/routes';
-import { getPlainText } from '@/lib/text';
 import { cn } from '@/lib/utils';
-import { ChevronRight, FileText } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { StarDocumentPicker } from './StarDocumentPicker';
+import { StarredDocumentItem } from './StarredDocumentItem';
 
 export function StarredDocuments() {
     const { t } = useI18n();
@@ -73,43 +71,10 @@ export function StarredDocuments() {
                         </p>
                     ) : (
                         stars.map(({ document }) => {
-                            if (!document.workspace_id) return null;
-
-                            const title =
-                                getPlainText(document.content?.title) ||
-                                t('untitledPage');
-                            const icon = document.content?.icon;
-                            const href = document.folder?.id
-                                ? ROUTES.WORKSPACE_DOCUMENT_FOLDER(
-                                      document.workspace_id,
-                                      document.folder.id,
-                                      document.id
-                                  )
-                                : ROUTES.WORKSPACE_DOCUMENT(
-                                      document.workspace_id,
-                                      document.id
-                                  );
-
                             return (
-                                <SidebarButton
+                                <StarredDocumentItem
                                     key={document.id}
-                                    icon={
-                                        typeof icon === 'string' &&
-                                        icon.trim() ? (
-                                            <span
-                                                aria-hidden="true"
-                                                className="text-sm">
-                                                {icon}
-                                            </span>
-                                        ) : (
-                                            <FileText
-                                                aria-hidden="true"
-                                                className="h-4 w-4"
-                                            />
-                                        )
-                                    }
-                                    label={title}
-                                    href={href}
+                                    document={document}
                                 />
                             );
                         })

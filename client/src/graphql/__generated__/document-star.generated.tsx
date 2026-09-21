@@ -14,7 +14,7 @@ export type GetDocumentStarQuery = { __typename?: 'query_root', document_stars_b
 export type GetStarredDocumentsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetStarredDocumentsQuery = { __typename?: 'query_root', document_stars: Array<{ __typename?: 'document_stars', document_id: string, created_at: string, document: { __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, folder?: { __typename?: 'folders', id: string } | null } }> };
+export type GetStarredDocumentsQuery = { __typename?: 'query_root', document_stars: Array<{ __typename?: 'document_stars', document_id: string, created_at: string, document: { __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, user_id?: string | null, folder?: { __typename?: 'folders', id: string } | null } }> };
 
 export type GetDocumentsToStarQueryVariables = Types.Exact<{
   workspaceId: Types.Scalars['uuid']['input'];
@@ -109,6 +109,7 @@ export const GetStarredDocumentsDocument = gql`
       id
       content
       workspace_id
+      user_id
       folder {
         id
       }
