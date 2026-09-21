@@ -25,6 +25,8 @@ import React, { useEffect, useMemo } from 'react';
 import { CardDocumentPreview } from './CardDocumentPreview';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
+import { useDocumentStar } from '@/hooks/useDocumentStar';
+import { DocumentStarButton } from './DocumentStarButton';
 
 const CardDocumentComponent = ({ document }: { document: Document }) => {
     const router = useRouter();
@@ -45,6 +47,13 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
     const selected = isSelected(document.id);
     const hasMultipleSelected = selectedDocuments.size > 1;
     const isSelectionActive = selectedDocuments.size + selectedFolders.size > 0;
+    const {
+        isStarred,
+        isLoading: isUpdatingStar,
+        toggleStar,
+    } = useDocumentStar(document.id, {
+        initialIsStarred: document.document_stars.length > 0,
+    });
 
     const workspaceId = document.workspace_id || workspace?.id;
 
@@ -131,6 +140,18 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
             }`}
             onClick={handleClick}
             onKeyDown={handleKeyDown}>
+            {!isSelectionActive && (
+                <DocumentStarButton
+                    isStarred={isStarred}
+                    isLoading={isUpdatingStar}
+                    onToggle={() => void toggleStar()}
+                    className={`absolute right-10 top-3 z-10 h-5 w-5 rounded-full border transition-all focus-visible:opacity-100 ${
+                        isStarred
+                            ? 'border-amber-500 bg-amber-500 text-primary-foreground opacity-100 hover:bg-amber-500 hover:text-primary-foreground'
+                            : 'border-border bg-background text-muted-foreground opacity-100 hover:border-amber-500 hover:bg-background hover:text-amber-500 md:opacity-0 md:group-hover:opacity-100'
+                    }`}
+                />
+            )}
             <div className="absolute top-3 right-3 z-10">
                 <Button
                     variant="ghost"
@@ -151,7 +172,7 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
                 </Button>
             </div>
             <CardHeader className="flex flex-shrink-0 flex-col p-4">
-                <div className="flex justify-between items-start gap-2">
+                <div className="flex items-start justify-between gap-2 pr-16">
                     <div className="flex-1 min-w-0">
                         <TruncatedTooltip text={plainTitle}>
                             <CardTitle className="text-sm truncate">
@@ -196,7 +217,10 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
             documentId={document.id}
             workspaceId={workspaceId}
             folderId={document.folder?.id}
-            isOwner={isOwner}>
+            isOwner={isOwner}
+            isStarred={isStarred}
+            isUpdatingStar={isUpdatingStar}
+            onToggleStar={() => void toggleStar()}>
             {cardContent}
         </DocumentMoreMenu>
     );

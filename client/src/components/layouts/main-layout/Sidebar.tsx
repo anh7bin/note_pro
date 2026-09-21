@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
+import { StarredDocuments } from './components/StarredDocuments';
 interface Props {
     workspaceSlug: string;
     workspaceId: string;
@@ -172,6 +173,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                             <FolderMenu />
                         </div>
                     )}
+                    <StarredDocuments />
                 </div>
             </aside>
         </>

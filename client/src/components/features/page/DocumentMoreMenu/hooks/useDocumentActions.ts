@@ -20,6 +20,7 @@ export const useDocumentActions = (documentId: string) => {
         try {
             await softDeleteDocument({
                 variables: { id: documentId },
+                refetchQueries: ['GetStarredDocuments'],
                 optimisticResponse: {
                     update_blocks_by_pk: {
                         __typename: 'blocks',
@@ -71,6 +72,7 @@ export const useDocumentActions = (documentId: string) => {
         try {
             await removeDocumentAccess({
                 variables: { documentId, userId },
+                refetchQueries: ['GetStarredDocuments'],
                 update: (cache) => {
                     cache.modify({
                         fields: {
@@ -105,6 +107,7 @@ export const useDocumentActions = (documentId: string) => {
             try {
                 await moveDocumentToFolder({
                     variables: { id: documentId, folderId },
+                    refetchQueries: ['GetStarredDocuments'],
                 });
                 showToast.success(t('documentMoved'));
             } catch (error) {

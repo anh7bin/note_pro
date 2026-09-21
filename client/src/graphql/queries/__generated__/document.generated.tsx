@@ -8,7 +8,7 @@ export type GetAllDocsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetAllDocsQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, workspace_id?: string | null, user_id?: string | null, folder?: { __typename?: 'folders', id: string, name: string } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }> }> };
+export type GetAllDocsQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, workspace_id?: string | null, user_id?: string | null, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }> }> };
 
 export type GetDocumentBlocksQueryVariables = Types.Exact<{
   pageId: Types.Scalars['uuid']['input'];
@@ -36,7 +36,7 @@ export type GetSharedWithMeDocsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetSharedWithMeDocsQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, user_id?: string | null, workspace_id?: string | null, folder?: { __typename?: 'folders', id: string, name: string } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, position?: number | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }>, access_requests: Array<{ __typename?: 'access_requests', permission_type?: string | null, status?: string | null }> }> };
+export type GetSharedWithMeDocsQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, user_id?: string | null, workspace_id?: string | null, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, position?: number | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }>, access_requests: Array<{ __typename?: 'access_requests', permission_type?: string | null, status?: string | null }> }> };
 
 
 export const GetAllDocsDocument = gql`
@@ -52,6 +52,9 @@ export const GetAllDocsDocument = gql`
     updated_at
     workspace_id
     user_id
+    document_stars {
+      document_id
+    }
     folder {
       id
       name
@@ -277,6 +280,9 @@ export const GetSharedWithMeDocsDocument = gql`
     created_at
     updated_at
     user_id
+    document_stars {
+      document_id
+    }
     workspace_id
     folder {
       id

@@ -13,6 +13,9 @@ interface DocumentMoreMenuProps {
     workspaceId?: string;
     folderId?: string;
     isOwner?: boolean;
+    isStarred?: boolean;
+    isUpdatingStar?: boolean;
+    onToggleStar?: () => void;
     children?: React.ReactNode;
 }
 
@@ -21,6 +24,9 @@ export const DocumentMoreMenu = ({
     workspaceId,
     folderId,
     isOwner = true,
+    isStarred = false,
+    isUpdatingStar = false,
+    onToggleStar,
     children,
 }: DocumentMoreMenuProps) => {
     const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
@@ -64,6 +70,10 @@ export const DocumentMoreMenu = ({
         []
     );
 
+    const handleToggleStar = useCallback(() => {
+        onToggleStar?.();
+    }, [onToggleStar]);
+
     const handleOpenDeleteDialog = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {
             e.stopPropagation();
@@ -86,6 +96,9 @@ export const DocumentMoreMenu = ({
                 menuContent={
                     <MenuItems
                         isOwner={isOwner}
+                        isStarred={isStarred}
+                        isUpdatingStar={isUpdatingStar}
+                        onToggleStar={handleToggleStar}
                         onOpenInNewTab={handleOpenInNewTab}
                         onCopyLink={handleCopyLink}
                         onMove={handleOpenMoveDialog}

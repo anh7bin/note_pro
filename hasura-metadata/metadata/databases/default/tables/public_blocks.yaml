@@ -34,6 +34,13 @@ array_relationships:
         table:
           name: block_comments
           schema: public
+  - name: document_stars
+    using:
+      foreign_key_constraint_on:
+        column: document_id
+        table:
+          name: document_stars
+          schema: public
   - name: reactions
     using:
       foreign_key_constraint_on:

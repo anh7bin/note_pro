@@ -1207,6 +1207,10 @@ export type Blocks = {
   cover_image?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   deleted_at?: Maybe<Scalars['timetz']['output']>;
+  /** An array relationship */
+  document_stars: Array<DocumentStars>;
+  /** An aggregate relationship */
+  document_stars_aggregate: DocumentStarsAggregate;
   /** An object relationship */
   folder?: Maybe<Folders>;
   folder_id?: Maybe<Scalars['uuid']['output']>;
@@ -1371,6 +1375,26 @@ export type BlocksContentArgs = {
 
 
 /** columns and relationships of "blocks" */
+export type BlocksDocumentStarsArgs = {
+  distinct_on?: InputMaybe<Array<DocumentStarsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentStarsOrderBy>>;
+  where?: InputMaybe<DocumentStarsBoolExp>;
+};
+
+
+/** columns and relationships of "blocks" */
+export type BlocksDocumentStarsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<DocumentStarsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentStarsOrderBy>>;
+  where?: InputMaybe<DocumentStarsBoolExp>;
+};
+
+
+/** columns and relationships of "blocks" */
 export type BlocksReactionsArgs = {
   distinct_on?: InputMaybe<Array<BlockReactionsSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1529,6 +1553,8 @@ export type BlocksBoolExp = {
   cover_image?: InputMaybe<StringComparisonExp>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
   deleted_at?: InputMaybe<TimetzComparisonExp>;
+  document_stars?: InputMaybe<DocumentStarsBoolExp>;
+  document_stars_aggregate?: InputMaybe<DocumentStarsAggregateBoolExp>;
   folder?: InputMaybe<FoldersBoolExp>;
   folder_id?: InputMaybe<UuidComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
@@ -1591,6 +1617,7 @@ export type BlocksInsertInput = {
   cover_image?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   deleted_at?: InputMaybe<Scalars['timetz']['input']>;
+  document_stars?: InputMaybe<DocumentStarsArrRelInsertInput>;
   folder?: InputMaybe<FoldersObjRelInsertInput>;
   folder_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -1716,6 +1743,7 @@ export type BlocksOrderBy = {
   cover_image?: InputMaybe<OrderBy>;
   created_at?: InputMaybe<OrderBy>;
   deleted_at?: InputMaybe<OrderBy>;
+  document_stars_aggregate?: InputMaybe<DocumentStarsAggregateOrderBy>;
   folder?: InputMaybe<FoldersOrderBy>;
   folder_id?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
@@ -2323,6 +2351,202 @@ export type DocumentPresenceUpdates = {
   _set?: InputMaybe<DocumentPresenceSetInput>;
   /** filter the rows which have to be updated */
   where: DocumentPresenceBoolExp;
+};
+
+/** columns and relationships of "document_stars" */
+export type DocumentStars = {
+  __typename?: 'document_stars';
+  created_at: Scalars['timestamptz']['output'];
+  /** An object relationship */
+  document: Blocks;
+  document_id: Scalars['uuid']['output'];
+  /** An object relationship */
+  user: Users;
+  user_id: Scalars['uuid']['output'];
+};
+
+/** aggregated selection of "document_stars" */
+export type DocumentStarsAggregate = {
+  __typename?: 'document_stars_aggregate';
+  aggregate?: Maybe<DocumentStarsAggregateFields>;
+  nodes: Array<DocumentStars>;
+};
+
+export type DocumentStarsAggregateBoolExp = {
+  count?: InputMaybe<DocumentStarsAggregateBoolExpCount>;
+};
+
+export type DocumentStarsAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<DocumentStarsSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<DocumentStarsBoolExp>;
+  predicate: IntComparisonExp;
+};
+
+/** aggregate fields of "document_stars" */
+export type DocumentStarsAggregateFields = {
+  __typename?: 'document_stars_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<DocumentStarsMaxFields>;
+  min?: Maybe<DocumentStarsMinFields>;
+};
+
+
+/** aggregate fields of "document_stars" */
+export type DocumentStarsAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<DocumentStarsSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "document_stars" */
+export type DocumentStarsAggregateOrderBy = {
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<DocumentStarsMaxOrderBy>;
+  min?: InputMaybe<DocumentStarsMinOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "document_stars" */
+export type DocumentStarsArrRelInsertInput = {
+  data: Array<DocumentStarsInsertInput>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<DocumentStarsOnConflict>;
+};
+
+/** Boolean expression to filter rows from the table "document_stars". All fields are combined with a logical 'AND'. */
+export type DocumentStarsBoolExp = {
+  _and?: InputMaybe<Array<DocumentStarsBoolExp>>;
+  _not?: InputMaybe<DocumentStarsBoolExp>;
+  _or?: InputMaybe<Array<DocumentStarsBoolExp>>;
+  created_at?: InputMaybe<TimestamptzComparisonExp>;
+  document?: InputMaybe<BlocksBoolExp>;
+  document_id?: InputMaybe<UuidComparisonExp>;
+  user?: InputMaybe<UsersBoolExp>;
+  user_id?: InputMaybe<UuidComparisonExp>;
+};
+
+/** unique or primary key constraints on table "document_stars" */
+export enum DocumentStarsConstraint {
+  /** unique or primary key constraint on columns "document_id", "user_id" */
+  DocumentStarsPkey = 'document_stars_pkey'
+}
+
+/** input type for inserting data into table "document_stars" */
+export type DocumentStarsInsertInput = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document?: InputMaybe<BlocksObjRelInsertInput>;
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+  user?: InputMaybe<UsersObjRelInsertInput>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type DocumentStarsMaxFields = {
+  __typename?: 'document_stars_max_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  document_id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "document_stars" */
+export type DocumentStarsMaxOrderBy = {
+  created_at?: InputMaybe<OrderBy>;
+  document_id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type DocumentStarsMinFields = {
+  __typename?: 'document_stars_min_fields';
+  created_at?: Maybe<Scalars['timestamptz']['output']>;
+  document_id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "document_stars" */
+export type DocumentStarsMinOrderBy = {
+  created_at?: InputMaybe<OrderBy>;
+  document_id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "document_stars" */
+export type DocumentStarsMutationResponse = {
+  __typename?: 'document_stars_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<DocumentStars>;
+};
+
+/** on_conflict condition type for table "document_stars" */
+export type DocumentStarsOnConflict = {
+  constraint: DocumentStarsConstraint;
+  update_columns?: Array<DocumentStarsUpdateColumn>;
+  where?: InputMaybe<DocumentStarsBoolExp>;
+};
+
+/** Ordering options when selecting data from "document_stars". */
+export type DocumentStarsOrderBy = {
+  created_at?: InputMaybe<OrderBy>;
+  document?: InputMaybe<BlocksOrderBy>;
+  document_id?: InputMaybe<OrderBy>;
+  user?: InputMaybe<UsersOrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: document_stars */
+export type DocumentStarsPkColumnsInput = {
+  document_id: Scalars['uuid']['input'];
+  user_id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "document_stars" */
+export enum DocumentStarsSelectColumn {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DocumentId = 'document_id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** input type for updating data in table "document_stars" */
+export type DocumentStarsSetInput = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** Streaming cursor of the table "document_stars" */
+export type DocumentStarsStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: DocumentStarsStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type DocumentStarsStreamCursorValueInput = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "document_stars" */
+export enum DocumentStarsUpdateColumn {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DocumentId = 'document_id',
+  /** column name */
+  UserId = 'user_id'
+}
+
+export type DocumentStarsUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<DocumentStarsSetInput>;
+  /** filter the rows which have to be updated */
+  where: DocumentStarsBoolExp;
 };
 
 /** columns and relationships of "files" */
@@ -2953,6 +3177,10 @@ export type MutationRoot = {
   delete_document_presence?: Maybe<DocumentPresenceMutationResponse>;
   /** delete single row from the table: "document_presence" */
   delete_document_presence_by_pk?: Maybe<DocumentPresence>;
+  /** delete data from the table: "document_stars" */
+  delete_document_stars?: Maybe<DocumentStarsMutationResponse>;
+  /** delete single row from the table: "document_stars" */
+  delete_document_stars_by_pk?: Maybe<DocumentStars>;
   /** delete data from the table: "files" */
   delete_files?: Maybe<FilesMutationResponse>;
   /** delete single row from the table: "files" */
@@ -3013,6 +3241,10 @@ export type MutationRoot = {
   insert_document_presence?: Maybe<DocumentPresenceMutationResponse>;
   /** insert a single row into the table: "document_presence" */
   insert_document_presence_one?: Maybe<DocumentPresence>;
+  /** insert data into the table: "document_stars" */
+  insert_document_stars?: Maybe<DocumentStarsMutationResponse>;
+  /** insert a single row into the table: "document_stars" */
+  insert_document_stars_one?: Maybe<DocumentStars>;
   /** insert data into the table: "files" */
   insert_files?: Maybe<FilesMutationResponse>;
   /** insert a single row into the table: "files" */
@@ -3089,6 +3321,12 @@ export type MutationRoot = {
   update_document_presence_by_pk?: Maybe<DocumentPresence>;
   /** update multiples rows of table: "document_presence" */
   update_document_presence_many?: Maybe<Array<Maybe<DocumentPresenceMutationResponse>>>;
+  /** update data of the table: "document_stars" */
+  update_document_stars?: Maybe<DocumentStarsMutationResponse>;
+  /** update single row of the table: "document_stars" */
+  update_document_stars_by_pk?: Maybe<DocumentStars>;
+  /** update multiples rows of table: "document_stars" */
+  update_document_stars_many?: Maybe<Array<Maybe<DocumentStarsMutationResponse>>>;
   /** update data of the table: "files" */
   update_files?: Maybe<FilesMutationResponse>;
   /** update single row of the table: "files" */
@@ -3229,6 +3467,19 @@ export type MutationRootDeleteDocumentPresenceArgs = {
 /** mutation root */
 export type MutationRootDeleteDocumentPresenceByPkArgs = {
   session_id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type MutationRootDeleteDocumentStarsArgs = {
+  where: DocumentStarsBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootDeleteDocumentStarsByPkArgs = {
+  document_id: Scalars['uuid']['input'];
+  user_id: Scalars['uuid']['input'];
 };
 
 
@@ -3425,6 +3676,20 @@ export type MutationRootInsertDocumentPresenceArgs = {
 export type MutationRootInsertDocumentPresenceOneArgs = {
   object: DocumentPresenceInsertInput;
   on_conflict?: InputMaybe<DocumentPresenceOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertDocumentStarsArgs = {
+  objects: Array<DocumentStarsInsertInput>;
+  on_conflict?: InputMaybe<DocumentStarsOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertDocumentStarsOneArgs = {
+  object: DocumentStarsInsertInput;
+  on_conflict?: InputMaybe<DocumentStarsOnConflict>;
 };
 
 
@@ -3695,6 +3960,26 @@ export type MutationRootUpdateDocumentPresenceByPkArgs = {
 /** mutation root */
 export type MutationRootUpdateDocumentPresenceManyArgs = {
   updates: Array<DocumentPresenceUpdates>;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateDocumentStarsArgs = {
+  _set?: InputMaybe<DocumentStarsSetInput>;
+  where: DocumentStarsBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateDocumentStarsByPkArgs = {
+  _set?: InputMaybe<DocumentStarsSetInput>;
+  pk_columns: DocumentStarsPkColumnsInput;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateDocumentStarsManyArgs = {
+  updates: Array<DocumentStarsUpdates>;
 };
 
 
@@ -4188,6 +4473,12 @@ export type QueryRoot = {
   /** fetch data from the table: "document_presence" using primary key columns */
   document_presence_by_pk?: Maybe<DocumentPresence>;
   /** An array relationship */
+  document_stars: Array<DocumentStars>;
+  /** An aggregate relationship */
+  document_stars_aggregate: DocumentStarsAggregate;
+  /** fetch data from the table: "document_stars" using primary key columns */
+  document_stars_by_pk?: Maybe<DocumentStars>;
+  /** An array relationship */
   files: Array<Files>;
   /** An aggregate relationship */
   files_aggregate: FilesAggregate;
@@ -4418,6 +4709,30 @@ export type QueryRootDocumentPresenceByPkArgs = {
 };
 
 
+export type QueryRootDocumentStarsArgs = {
+  distinct_on?: InputMaybe<Array<DocumentStarsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentStarsOrderBy>>;
+  where?: InputMaybe<DocumentStarsBoolExp>;
+};
+
+
+export type QueryRootDocumentStarsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<DocumentStarsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentStarsOrderBy>>;
+  where?: InputMaybe<DocumentStarsBoolExp>;
+};
+
+
+export type QueryRootDocumentStarsByPkArgs = {
+  document_id: Scalars['uuid']['input'];
+  user_id: Scalars['uuid']['input'];
+};
+
+
 export type QueryRootFilesArgs = {
   distinct_on?: InputMaybe<Array<FilesSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -4644,6 +4959,14 @@ export type SubscriptionRoot = {
   document_presence_by_pk?: Maybe<DocumentPresence>;
   /** fetch data from the table in a streaming manner: "document_presence" */
   document_presence_stream: Array<DocumentPresence>;
+  /** An array relationship */
+  document_stars: Array<DocumentStars>;
+  /** An aggregate relationship */
+  document_stars_aggregate: DocumentStarsAggregate;
+  /** fetch data from the table: "document_stars" using primary key columns */
+  document_stars_by_pk?: Maybe<DocumentStars>;
+  /** fetch data from the table in a streaming manner: "document_stars" */
+  document_stars_stream: Array<DocumentStars>;
   /** An array relationship */
   files: Array<Files>;
   /** An aggregate relationship */
@@ -4942,6 +5265,37 @@ export type SubscriptionRootDocumentPresenceStreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<DocumentPresenceStreamCursorInput>>;
   where?: InputMaybe<DocumentPresenceBoolExp>;
+};
+
+
+export type SubscriptionRootDocumentStarsArgs = {
+  distinct_on?: InputMaybe<Array<DocumentStarsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentStarsOrderBy>>;
+  where?: InputMaybe<DocumentStarsBoolExp>;
+};
+
+
+export type SubscriptionRootDocumentStarsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<DocumentStarsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentStarsOrderBy>>;
+  where?: InputMaybe<DocumentStarsBoolExp>;
+};
+
+
+export type SubscriptionRootDocumentStarsByPkArgs = {
+  document_id: Scalars['uuid']['input'];
+  user_id: Scalars['uuid']['input'];
+};
+
+
+export type SubscriptionRootDocumentStarsStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<DocumentStarsStreamCursorInput>>;
+  where?: InputMaybe<DocumentStarsBoolExp>;
 };
 
 
@@ -5659,6 +6013,10 @@ export type Users = {
   /** An aggregate relationship */
   blocks_aggregate: BlocksAggregate;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  /** An array relationship */
+  document_stars: Array<DocumentStars>;
+  /** An aggregate relationship */
+  document_stars_aggregate: DocumentStarsAggregate;
   email: Scalars['String']['output'];
   /** An array relationship */
   files: Array<Files>;
@@ -5739,6 +6097,26 @@ export type UsersBlocksAggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   order_by?: InputMaybe<Array<BlocksOrderBy>>;
   where?: InputMaybe<BlocksBoolExp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersDocumentStarsArgs = {
+  distinct_on?: InputMaybe<Array<DocumentStarsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentStarsOrderBy>>;
+  where?: InputMaybe<DocumentStarsBoolExp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersDocumentStarsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<DocumentStarsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentStarsOrderBy>>;
+  where?: InputMaybe<DocumentStarsBoolExp>;
 };
 
 
@@ -5856,6 +6234,8 @@ export type UsersBoolExp = {
   blocks?: InputMaybe<BlocksBoolExp>;
   blocks_aggregate?: InputMaybe<BlocksAggregateBoolExp>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
+  document_stars?: InputMaybe<DocumentStarsBoolExp>;
+  document_stars_aggregate?: InputMaybe<DocumentStarsAggregateBoolExp>;
   email?: InputMaybe<StringComparisonExp>;
   files?: InputMaybe<FilesBoolExp>;
   files_aggregate?: InputMaybe<FilesAggregateBoolExp>;
@@ -5885,6 +6265,7 @@ export type UsersInsertInput = {
   block_reactions?: InputMaybe<BlockReactionsArrRelInsertInput>;
   blocks?: InputMaybe<BlocksArrRelInsertInput>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document_stars?: InputMaybe<DocumentStarsArrRelInsertInput>;
   email?: InputMaybe<Scalars['String']['input']>;
   files?: InputMaybe<FilesArrRelInsertInput>;
   folders?: InputMaybe<FoldersArrRelInsertInput>;
@@ -5947,6 +6328,7 @@ export type UsersOrderBy = {
   block_reactions_aggregate?: InputMaybe<BlockReactionsAggregateOrderBy>;
   blocks_aggregate?: InputMaybe<BlocksAggregateOrderBy>;
   created_at?: InputMaybe<OrderBy>;
+  document_stars_aggregate?: InputMaybe<DocumentStarsAggregateOrderBy>;
   email?: InputMaybe<OrderBy>;
   files_aggregate?: InputMaybe<FilesAggregateOrderBy>;
   folders_aggregate?: InputMaybe<FoldersAggregateOrderBy>;

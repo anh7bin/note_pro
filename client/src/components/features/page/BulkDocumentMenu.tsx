@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { ContextDropdownMenu } from './ContextDropdownMenu';
 import { MoveToDialog } from './MoveToDialog';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
@@ -13,8 +13,9 @@ import {
 } from '@/graphql/mutations/__generated__/document.generated';
 import { useBulkDeleteAccessRequestsMutation } from '@/graphql/mutations/__generated__/access-request.generated';
 import { useUserId } from '@/hooks/useAuth';
+import { useBulkDocumentStar } from '@/hooks/useBulkDocumentStar';
 import showToast from '@/lib/toast';
-import { FolderInput, LogOut, Trash2 } from 'lucide-react';
+import { FolderInput, LogOut, Star, Trash2 } from 'lucide-react';
 import {
     handleBulkDeleteDocuments,
     handleBulkRemoveShared,
@@ -40,12 +41,22 @@ export const BulkDocumentMenu = ({
     const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const { t } = useI18n();
+    const selectedDocumentIds = useMemo(
+        () => Array.from(selectedDocuments),
+        [selectedDocuments]
+    );
+    const {
+        allAreStarred,
+        isLoading: isUpdatingStars,
+        toggleDocumentsStar,
+    } = useBulkDocumentStar(selectedDocumentIds);
 
     const [bulkDeleteDocuments] = useBulkDeleteDocumentsMutation({
         refetchQueries: [
             'GetAllDocs',
             'GetWorkspaceFolderDocuments',
             'GetFolderById',
+            'GetStarredDocuments',
         ],
     });
 
@@ -54,11 +65,12 @@ export const BulkDocumentMenu = ({
             'GetAllDocs',
             'GetWorkspaceFolderDocuments',
             'GetFolderById',
+            'GetStarredDocuments',
         ],
     });
 
     const [bulkDeleteAccessRequests] = useBulkDeleteAccessRequestsMutation({
-        refetchQueries: ['GetSharedWithMeDocs'],
+        refetchQueries: ['GetSharedWithMeDocs', 'GetStarredDocuments'],
     });
 
     const handleMove = useCallback(
@@ -128,6 +140,21 @@ export const BulkDocumentMenu = ({
 
     const menuContent = (
         <div className="flex flex-col gap-1">
+            <ContextMenuItem
+                disabled={isUpdatingStars}
+                onSelect={() => void toggleDocumentsStar()}>
+                <Star
+                    className={
+                        allAreStarred ? 'fill-current text-amber-500' : ''
+                    }
+                />
+                {t(
+                    allAreStarred
+                        ? 'unstarSelectedDocuments'
+                        : 'starSelectedDocuments'
+                )}
+            </ContextMenuItem>
+            <Separator />
             {mode !== 'shared' && (
                 <>
                     <ContextMenuItem

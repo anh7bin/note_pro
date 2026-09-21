@@ -49,6 +49,9 @@ query GetFolderById($folderId: uuid!) {
             updated_at
             workspace_id
             user_id
+            document_stars {
+                document_id
+            }
             folder {
                 id
                 name

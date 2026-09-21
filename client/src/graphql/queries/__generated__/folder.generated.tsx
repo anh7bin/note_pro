@@ -15,7 +15,7 @@ export type GetFolderByIdQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetFolderByIdQuery = { __typename?: 'query_root', folders_by_pk?: { __typename?: 'folders', id: string, name: string, description?: string | null, color?: string | null, icon?: string | null, parent_id?: string | null, created_at?: string | null, workspace_id?: string | null, children: Array<{ __typename?: 'folders', id: string, name: string, description?: string | null, color?: string | null, icon?: string | null, created_at?: string | null, blocks_aggregate: { __typename?: 'blocks_aggregate', aggregate?: { __typename?: 'blocks_aggregate_fields', count: number } | null } }>, blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, workspace_id?: string | null, user_id?: string | null, folder?: { __typename?: 'folders', id: string, name: string } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }> }> } | null };
+export type GetFolderByIdQuery = { __typename?: 'query_root', folders_by_pk?: { __typename?: 'folders', id: string, name: string, description?: string | null, color?: string | null, icon?: string | null, parent_id?: string | null, created_at?: string | null, workspace_id?: string | null, children: Array<{ __typename?: 'folders', id: string, name: string, description?: string | null, color?: string | null, icon?: string | null, created_at?: string | null, blocks_aggregate: { __typename?: 'blocks_aggregate', aggregate?: { __typename?: 'blocks_aggregate_fields', count: number } | null } }>, blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, workspace_id?: string | null, user_id?: string | null, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }> }> } | null };
 
 
 export const GetFoldersDocument = gql`
@@ -102,6 +102,9 @@ export const GetFolderByIdDocument = gql`
       updated_at
       workspace_id
       user_id
+      document_stars {
+        document_id
+      }
       folder {
         id
         name

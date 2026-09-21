@@ -1,8 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { DocumentStarButton } from '@/components/features/page/DocumentStarButton';
 import { useI18n } from '@/contexts/I18nContext';
 import { useDocumentPermission } from '@/hooks/useDocumentPermission';
+import { useDocumentStar } from '@/hooks/useDocumentStar';
 import { SearchInputField } from 'components/features/search/SearchInputField';
 import { TopLoadingBar } from 'components/ui/TopLoadingBar';
 import { useDocumentAccess } from 'contexts/DocumentAccessContext';
@@ -39,6 +41,11 @@ export default function Header({ workspaceSlug }: Props) {
     const { permissionType } = useDocumentPermission(
         isDocumentPage ? documentId || '' : ''
     );
+    const {
+        isStarred,
+        isLoading: isUpdatingStar,
+        toggleStar,
+    } = useDocumentStar(isDocumentPage ? documentId || '' : '');
     const documentAccessRequestNotificationCount =
         getUnreadAccessRequestCountForDocument(
             notificationMenuProps.notifications,
@@ -107,6 +114,11 @@ export default function Header({ workspaceSlug }: Props) {
                         {isDocumentPage && documentId && permissionType && (
                             <>
                                 <DocumentPresence documentId={documentId} />
+                                <DocumentStarButton
+                                    isStarred={isStarred}
+                                    isLoading={isUpdatingStar}
+                                    onToggle={() => void toggleStar()}
+                                />
                                 <RequestEditButton documentId={documentId} />
                                 <ShareExportButton
                                     documentId={documentId}

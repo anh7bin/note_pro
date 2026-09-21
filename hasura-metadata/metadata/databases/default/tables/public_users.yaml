@@ -30,6 +30,13 @@ array_relationships:
         table:
           name: files
           schema: public
+  - name: document_stars
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: document_stars
+          schema: public
   - name: folders
     using:
       foreign_key_constraint_on:

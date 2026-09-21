@@ -6,12 +6,16 @@ import {
     ExternalLink,
     FolderInput,
     LogOut,
+    Star,
     Trash2,
 } from 'lucide-react';
 import { useI18n } from '@/contexts/I18nContext';
 
 interface MenuItemsProps {
     isOwner: boolean;
+    isStarred: boolean;
+    isUpdatingStar: boolean;
+    onToggleStar: () => void;
     onOpenInNewTab: (e: React.MouseEvent<HTMLDivElement>) => void;
     onCopyLink: (e: React.MouseEvent<HTMLDivElement>) => void;
     onMove: (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -20,6 +24,9 @@ interface MenuItemsProps {
 
 export const MenuItems = ({
     isOwner,
+    isStarred,
+    isUpdatingStar,
+    onToggleStar,
     onOpenInNewTab,
     onCopyLink,
     onMove,
@@ -32,6 +39,13 @@ export const MenuItems = ({
 
     return (
         <div className="flex flex-col gap-1">
+            <ContextMenuItem disabled={isUpdatingStar} onSelect={onToggleStar}>
+                <Star
+                    className={isStarred ? 'fill-current text-amber-500' : ''}
+                />
+                {t(isStarred ? 'unstarDocument' : 'starDocument')}
+            </ContextMenuItem>
+            <Separator />
             <ContextMenuItem onClick={onOpenInNewTab}>
                 <ExternalLink />
                 {t('openInNewTab')}
