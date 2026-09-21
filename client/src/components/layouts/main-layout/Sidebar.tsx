@@ -128,6 +128,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                         })}
                         <Separator />
                     </div>
+                    <StarredDocuments />
                     <div
                         data-tour="folders-nav"
                         className="flex min-h-8 items-center justify-between px-1">
@@ -173,7 +174,6 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                             <FolderMenu />
                         </div>
                     )}
-                    <StarredDocuments />
                 </div>
             </aside>
         </>
