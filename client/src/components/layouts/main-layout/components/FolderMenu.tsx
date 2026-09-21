@@ -18,13 +18,13 @@ export const FolderMenu = () => {
     return (
         <div className="space-y-1">
             {loading ? (
-                <div className="text-xs text-muted-foreground py-1 animate-pulse">
+                <div className="animate-pulse px-1 py-1.5 text-xs leading-5 text-muted-foreground motion-reduce:animate-none">
                     {t('loadingFolders')}
                 </div>
             ) : tree.length === 0 ? (
-                <div className="text-xs text-muted-foreground py-1">
-                    {t('noFolders')}
-                </div>
+                <p className="px-1 py-1.5 text-xs italic leading-5 text-muted-foreground/70">
+                    {t('foldersEmptyDescription')}
+                </p>
             ) : (
                 tree.map((folder) => (
                     <FolderItem

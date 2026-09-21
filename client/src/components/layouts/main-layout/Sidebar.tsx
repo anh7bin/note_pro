@@ -1,6 +1,5 @@
 'use client';
 
-import { Separator } from '@/components/ui/separator';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useGetDocsCountQuery } from '@/graphql/queries/__generated__/document.generated';
 import { MENU_ITEMS, ModalType } from '@/lib/constants';
@@ -84,7 +83,6 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                         label={t('sharedWithMe')}
                         href={ROUTES.SHARED_WITH_ME}
                     />
-                    <Separator />
                     <WorkspaceButton />
                     <div className="flex flex-col gap-2">
                         {MENU_ITEMS(workspaceSlug, {
@@ -126,7 +124,6 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                 </div>
                             );
                         })}
-                        <Separator />
                     </div>
                     <StarredDocuments />
                     <div
@@ -144,6 +141,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                         : t('collapseFolders')
                                 }>
                                 <Button
+                                    type="button"
                                     variant="ghost"
                                     size="icon"
                                     aria-label={
@@ -158,6 +156,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                         )
                                     }>
                                     <ChevronRight
+                                        aria-hidden="true"
                                         className={cn(
                                             'transition-transform duration-200',
                                             isFoldersCollapsed

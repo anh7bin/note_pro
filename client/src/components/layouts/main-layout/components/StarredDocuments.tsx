@@ -4,7 +4,6 @@ import { useId, useState } from 'react';
 import { SidebarButton } from '@/components/layouts/main-layout/components/SidebarButton';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { useI18n } from '@/contexts/I18nContext';
 import { useGetStarredDocumentsQuery } from '@/graphql/__generated__/document-star.generated';
 import { ROUTES } from '@/lib/routes';
@@ -17,7 +16,7 @@ export function StarredDocuments() {
     const { t } = useI18n();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const listId = useId();
-    const { data } = useGetStarredDocumentsQuery({
+    const { data, loading } = useGetStarredDocumentsQuery({
         fetchPolicy: 'cache-and-network',
         nextFetchPolicy: 'cache-first',
     });
@@ -27,7 +26,6 @@ export function StarredDocuments() {
         <section
             aria-label={t('starred')}
             className="flex min-h-0 flex-col gap-1">
-            <Separator />
             <div className="flex min-h-8 items-center justify-between px-1">
                 <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     {t('starred')}
@@ -69,46 +67,53 @@ export function StarredDocuments() {
                 <div
                     id={listId}
                     className="max-h-44 overflow-y-auto overscroll-contain">
-                    {stars.map(({ document }) => {
-                        if (!document.workspace_id) return null;
+                    {!loading && stars.length === 0 ? (
+                        <p className="px-1 py-1.5 text-xs italic leading-5 text-muted-foreground/70">
+                            {t('starredEmptyDescription')}
+                        </p>
+                    ) : (
+                        stars.map(({ document }) => {
+                            if (!document.workspace_id) return null;
 
-                        const title =
-                            getPlainText(document.content?.title) ||
-                            t('untitledPage');
-                        const icon = document.content?.icon;
-                        const href = document.folder?.id
-                            ? ROUTES.WORKSPACE_DOCUMENT_FOLDER(
-                                  document.workspace_id,
-                                  document.folder.id,
-                                  document.id
-                              )
-                            : ROUTES.WORKSPACE_DOCUMENT(
-                                  document.workspace_id,
-                                  document.id
-                              );
+                            const title =
+                                getPlainText(document.content?.title) ||
+                                t('untitledPage');
+                            const icon = document.content?.icon;
+                            const href = document.folder?.id
+                                ? ROUTES.WORKSPACE_DOCUMENT_FOLDER(
+                                      document.workspace_id,
+                                      document.folder.id,
+                                      document.id
+                                  )
+                                : ROUTES.WORKSPACE_DOCUMENT(
+                                      document.workspace_id,
+                                      document.id
+                                  );
 
-                        return (
-                            <SidebarButton
-                                key={document.id}
-                                icon={
-                                    typeof icon === 'string' && icon.trim() ? (
-                                        <span
-                                            aria-hidden="true"
-                                            className="text-sm">
-                                            {icon}
-                                        </span>
-                                    ) : (
-                                        <FileText
-                                            aria-hidden="true"
-                                            className="h-4 w-4"
-                                        />
-                                    )
-                                }
-                                label={title}
-                                href={href}
-                            />
-                        );
-                    })}
+                            return (
+                                <SidebarButton
+                                    key={document.id}
+                                    icon={
+                                        typeof icon === 'string' &&
+                                        icon.trim() ? (
+                                            <span
+                                                aria-hidden="true"
+                                                className="text-sm">
+                                                {icon}
+                                            </span>
+                                        ) : (
+                                            <FileText
+                                                aria-hidden="true"
+                                                className="h-4 w-4"
+                                            />
+                                        )
+                                    }
+                                    label={title}
+                                    href={href}
+                                />
+                            );
+                        })
+                    )}
                 </div>
             )}
         </section>
