@@ -33,19 +33,13 @@ export function StarredDocuments() {
                         onDocumentStarred={() => setIsCollapsed(false)}
                     />
                     <SimpleTooltip
-                        title={
-                            isCollapsed
-                                ? t('expandStarred')
-                                : t('collapseStarred')
-                        }>
+                        title={isCollapsed ? t('expand') : t('collapse')}>
                         <Button
                             type="button"
                             variant="ghost"
                             size="icon"
                             aria-label={
-                                isCollapsed
-                                    ? t('expandStarred')
-                                    : t('collapseStarred')
+                                isCollapsed ? t('expand') : t('collapse')
                             }
                             aria-expanded={!isCollapsed}
                             aria-controls={listId}

@@ -137,8 +137,8 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                             <SimpleTooltip
                                 title={
                                     isFoldersCollapsed
-                                        ? t('expandFolders')
-                                        : t('collapseFolders')
+                                        ? t('expand')
+                                        : t('collapse')
                                 }>
                                 <Button
                                     type="button"
@@ -146,8 +146,8 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                     size="icon"
                                     aria-label={
                                         isFoldersCollapsed
-                                            ? t('expandFolders')
-                                            : t('collapseFolders')
+                                            ? t('expand')
+                                            : t('collapse')
                                     }
                                     aria-expanded={!isFoldersCollapsed}
                                     onClick={() =>
