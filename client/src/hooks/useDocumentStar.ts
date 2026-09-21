@@ -1,5 +1,6 @@
 'use client';
 
+import type { ApolloCache } from '@apollo/client';
 import { useCallback, useEffect, useState } from 'react';
 import {
     GetStarredDocumentsDocument,
@@ -54,16 +55,38 @@ export function useDocumentStar(
 
         const nextIsStarred = !isStarred;
         setLocalIsStarred(nextIsStarred);
+        const updateDocumentCard = (cache: ApolloCache<unknown>) => {
+            cache.modify({
+                id: cache.identify({
+                    __typename: 'blocks',
+                    id: documentId,
+                }),
+                fields: {
+                    document_stars() {
+                        return nextIsStarred
+                            ? [
+                                  {
+                                      __typename: 'document_stars',
+                                      document_id: documentId,
+                                  },
+                              ]
+                            : [];
+                    },
+                },
+            });
+        };
 
         try {
             if (nextIsStarred) {
                 await starDocument({
                     variables: { documentId },
+                    update: updateDocumentCard,
                     refetchQueries: [GetStarredDocumentsDocument],
                 });
             } else {
                 await unstarDocument({
                     variables: { documentId, userId },
+                    update: updateDocumentCard,
                     refetchQueries: [GetStarredDocumentsDocument],
                 });
             }
