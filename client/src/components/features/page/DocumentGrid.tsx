@@ -73,22 +73,55 @@ export function DocumentGrid({ documents, view = 'card' }: DocumentGridProps) {
         return (
             <div className="flex h-full min-h-0 w-full flex-col">
                 <DocumentListHeader />
-                <div className="min-h-0 flex-1">
+                <div className="relative min-h-0 flex-1 overflow-hidden">
                     <AutoSizer>
-                        {({ width, height }) =>
-                            width > 0 && height > 0 ? (
-                                <List
-                                    height={height}
-                                    width={width}
-                                    itemCount={documents.length}
-                                    itemSize={76}
-                                    itemData={documents}
-                                    style={{ scrollbarGutter: 'stable' }}
-                                    overscanCount={5}>
-                                    {DocumentListRow}
-                                </List>
-                            ) : null
-                        }
+                        {({ width, height }) => {
+                            if (width <= 0 || height <= 0) return null;
+
+                            const totalHeight = documents.length * 76;
+                            const isScrollable = totalHeight > height;
+
+                            return (
+                                <>
+                                    <List
+                                        height={height}
+                                        width={width}
+                                        itemCount={documents.length}
+                                        itemSize={76}
+                                        itemData={documents}
+                                        style={{ scrollbarGutter: 'stable' }}
+                                        onScroll={(props: ListOnScrollProps) =>
+                                            handleScroll(
+                                                props.scrollOffset,
+                                                height,
+                                                totalHeight
+                                            )
+                                        }
+                                        onItemsRendered={() => {
+                                            if (
+                                                !dimensions ||
+                                                dimensions.height !== height ||
+                                                dimensions.totalHeight !==
+                                                    totalHeight
+                                            ) {
+                                                setDimensions({
+                                                    height,
+                                                    totalHeight,
+                                                });
+                                            }
+                                        }}
+                                        overscanCount={5}>
+                                        {DocumentListRow}
+                                    </List>
+                                    {isScrollable && showTopFade && (
+                                        <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background to-transparent" />
+                                    )}
+                                    {isScrollable && showBottomFade && (
+                                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent" />
+                                    )}
+                                </>
+                            );
+                        }}
                     </AutoSizer>
                 </div>
             </div>

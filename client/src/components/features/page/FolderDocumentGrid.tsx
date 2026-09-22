@@ -49,27 +49,38 @@ export function FolderDocumentGrid({
         updateFade();
         window.addEventListener('resize', updateFade);
         return () => window.removeEventListener('resize', updateFade);
-    }, [updateFade, folders.length, documents.length]);
+    }, [updateFade, folders.length, documents.length, view]);
 
     if (view === 'list') {
         return (
             <div className="flex h-full min-h-0 flex-col">
                 <DocumentListHeader />
-                <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable]">
-                    {folders.map((folder) => (
-                        <CardFolder
-                            key={folder.id}
-                            folder={folder}
-                            variant="list"
-                        />
-                    ))}
-                    {documents.map((document) => (
-                        <CardDocument
-                            key={document.id}
-                            document={document}
-                            variant="list"
-                        />
-                    ))}
+                <div className="relative min-h-0 flex-1 overflow-hidden">
+                    <div
+                        ref={containerRef}
+                        onScroll={updateFade}
+                        className="h-full overflow-y-auto [scrollbar-gutter:stable]">
+                        {folders.map((folder) => (
+                            <CardFolder
+                                key={folder.id}
+                                folder={folder}
+                                variant="list"
+                            />
+                        ))}
+                        {documents.map((document) => (
+                            <CardDocument
+                                key={document.id}
+                                document={document}
+                                variant="list"
+                            />
+                        ))}
+                    </div>
+                    {showTopFade && (
+                        <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background to-transparent" />
+                    )}
+                    {showBottomFade && (
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent" />
+                    )}
                 </div>
             </div>
         );
