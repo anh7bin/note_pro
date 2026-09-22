@@ -61,8 +61,7 @@ export const NewFolderButton = () => {
             <SimpleTooltip title={t('newFolder')}>
                 <Button
                     variant="ghost"
-                    size="icon"
-                    aria-label={t('createFolder')}
+                    size="icon-xs"
                     onClick={() => setIsOpen(true)}>
                     <Plus />
                 </Button>

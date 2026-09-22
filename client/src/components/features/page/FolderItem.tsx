@@ -89,12 +89,6 @@ export const FolderItem: React.FC<{
                                     <button
                                         type="button"
                                         onClick={handleToggle}
-                                        aria-label={
-                                            expanded
-                                                ? `Collapse ${folder.name}`
-                                                : `Expand ${folder.name}`
-                                        }
-                                        aria-expanded={expanded}
                                         className={cn(
                                             'pointer-events-none absolute inset-0 flex scale-75 items-center justify-center rounded-sm opacity-0 transition-all duration-200',
                                             'group-hover/folder-item:pointer-events-auto group-hover/folder-item:scale-100 group-hover/folder-item:opacity-100',

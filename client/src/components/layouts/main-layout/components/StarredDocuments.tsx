@@ -21,9 +21,7 @@ export function StarredDocuments() {
     const stars = data?.document_stars ?? [];
 
     return (
-        <section
-            aria-label={t('starred')}
-            className="flex min-h-0 flex-col gap-1">
+        <section className="flex min-h-0 flex-col gap-1">
             <div className="flex min-h-8 items-center justify-between px-1">
                 <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     {t('starred')}
@@ -35,17 +33,10 @@ export function StarredDocuments() {
                     <SimpleTooltip
                         title={isCollapsed ? t('expand') : t('collapse')}>
                         <Button
-                            type="button"
                             variant="ghost"
-                            size="icon"
-                            aria-label={
-                                isCollapsed ? t('expand') : t('collapse')
-                            }
-                            aria-expanded={!isCollapsed}
-                            aria-controls={listId}
+                            size="icon-xs"
                             onClick={() => setIsCollapsed((value) => !value)}>
                             <ChevronRight
-                                aria-hidden="true"
                                 className={cn(
                                     'transition-transform duration-200',
                                     isCollapsed ? 'rotate-0' : 'rotate-90'

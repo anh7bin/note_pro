@@ -187,13 +187,8 @@ export const BlockInteractions = memo(function BlockInteractions({
                     className: 'flex w-auto gap-1 p-1.5',
                 }}
                 trigger={
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        aria-label={t('addReaction')}>
-                        <SmilePlus aria-hidden="true" />
+                    <Button variant="ghost" size="icon-xs">
+                        <SmilePlus />
                     </Button>
                 }>
                 {QUICK_REACTIONS.map((emoji) => (
@@ -234,12 +229,10 @@ export const BlockInteractions = memo(function BlockInteractions({
                 }}
                 trigger={
                     <Button
-                        type="button"
                         variant="ghost"
-                        size="icon"
-                        className="relative h-7 w-7"
-                        aria-label={t('addComment')}>
-                        <MessageCirclePlus aria-hidden="true" />
+                        size="icon-xs"
+                        className="relative ">
+                        <MessageCirclePlus />
                         {comments.length > 0 && (
                             <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
                                 {comments.length > 99 ? '99+' : comments.length}
@@ -250,10 +243,8 @@ export const BlockInteractions = memo(function BlockInteractions({
                 <div className="flex h-11 items-center justify-between border-b border-border px-3">
                     <h3 className="text-sm font-semibold">{t('comments')}</h3>
                     <Button
-                        type="button"
                         variant="ghost"
-                        size="icon"
-                        aria-label={t('closeComments')}
+                        size="icon-xs"
                         onClick={() => setCommentOpen(false)}>
                         <X />
                     </Button>
@@ -275,10 +266,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                                     className="group/comment flex gap-2.5">
                                     <Avatar className="h-7 w-7">
                                         <AvatarImage
-                                            src={
-                                                comment.user.avatar_url ||
-                                                undefined
-                                            }
+                                            src={comment.user.avatar_url || ''}
                                         />
                                         <AvatarFallback className="text-[10px]">
                                             {getInitials(comment.user.name)}
@@ -287,8 +275,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                                     <div className="min-w-0 flex-1">
                                         <div className="flex items-center gap-1.5">
                                             <span className="truncate text-sm font-medium">
-                                                {comment.user.name ||
-                                                    t('unknownUser')}
+                                                {comment.user.name}
                                             </span>
                                             <time
                                                 className="shrink-0 text-xs text-muted-foreground"
@@ -304,19 +291,15 @@ export const BlockInteractions = memo(function BlockInteractions({
                                                     'optimistic-'
                                                 ) && (
                                                     <Button
-                                                        type="button"
                                                         variant="ghost"
-                                                        size="icon"
+                                                        size="icon-xs"
                                                         className="ml-auto h-6 w-6 opacity-0 group-hover/comment:opacity-100 focus-visible:opacity-100"
-                                                        aria-label={t(
-                                                            'deleteComment'
-                                                        )}
                                                         onClick={() =>
                                                             void deleteComment(
                                                                 comment.id
                                                             )
                                                         }>
-                                                        <Trash2 aria-hidden="true" />
+                                                        <Trash2 />
                                                     </Button>
                                                 )}
                                         </div>
@@ -333,7 +316,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                 <form
                     className="border-t border-border p-2"
                     onSubmit={handleSubmitComment}>
-                    <div className="flex items-end gap-2 rounded-md border border-input bg-background p-1 focus-within:ring-2 focus-within:ring-ring/30">
+                    <div className="flex items-end gap-2 rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring/30">
                         <Textarea
                             ref={textareaRef}
                             value={commentText}
@@ -348,18 +331,13 @@ export const BlockInteractions = memo(function BlockInteractions({
                             }}
                             rows={1}
                             maxLength={2000}
-                            aria-label={t('comment')}
                             placeholder={t('commentPlaceholder')}
-                            className="min-h-9 max-h-28 resize-none border-0 px-2 py-2 shadow-none focus-visible:ring-0"
+                            className="min-h-8 max-h-28 resize-none border-0 shadow-none focus-visible:ring-0"
                         />
                         <Button
-                            type="submit"
-                            size="icon"
-                            className="h-9 w-9 shrink-0"
-                            disabled={!commentText.trim() || isSubmitting}
-                            aria-label={t('sendComment')}
-                            aria-busy={isSubmitting}>
-                            <Send aria-hidden="true" />
+                            size="icon-lg"
+                            disabled={!commentText.trim() || isSubmitting}>
+                            <Send />
                         </Button>
                     </div>
                     <p className="px-1 pt-1 text-[11px] text-muted-foreground">
@@ -380,10 +358,6 @@ export const BlockInteractions = memo(function BlockInteractions({
                 <>
                     {reactionGroups.map(
                         ([emoji, { count, reactedByCurrentUser, users }]) => {
-                            const names = users.map(
-                                (user) => user.name || t('unknownUser')
-                            );
-
                             return (
                                 <SimpleTooltip
                                     key={emoji}
@@ -408,7 +382,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                                                             <AvatarImage
                                                                 src={
                                                                     user.avatar_url ||
-                                                                    undefined
+                                                                    ''
                                                                 }
                                                             />
                                                             <AvatarFallback className="text-[9px]">
@@ -418,10 +392,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                                                             </AvatarFallback>
                                                         </Avatar>
                                                         <span className="max-w-56 truncate text-xs font-medium">
-                                                            {user.name ||
-                                                                t(
-                                                                    'unknownUser'
-                                                                )}
+                                                            {user.name}
                                                         </span>
                                                     </div>
                                                 ))}
@@ -430,8 +401,6 @@ export const BlockInteractions = memo(function BlockInteractions({
                                     }>
                                     <button
                                         type="button"
-                                        aria-pressed={reactedByCurrentUser}
-                                        aria-label={`${emoji} reaction from ${names.join(', ')}`}
                                         className={cn(
                                             'inline-flex h-7 cursor-pointer items-center gap-1 rounded-full border px-2 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                                             reactedByCurrentUser
@@ -441,7 +410,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                                         onClick={() =>
                                             void toggleReaction(blockId, emoji)
                                         }>
-                                        <span aria-hidden="true">{emoji}</span>
+                                        <span>{emoji}</span>
                                         <span>{count}</span>
                                     </button>
                                 </SimpleTooltip>
@@ -458,7 +427,6 @@ export const BlockInteractions = memo(function BlockInteractions({
                                     ? 'border border-border/60 bg-muted/70 shadow-xs'
                                     : 'bg-muted'
                             )}
-                            aria-label={`Open ${comments.length} comment${comments.length === 1 ? '' : 's'}`}
                             onClick={openComments}>
                             <Avatar className="h-5 w-5">
                                 <AvatarImage
@@ -475,7 +443,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                                 {comments.length}{' '}
                                 {comments.length === 1 ? 'comment' : 'comments'}
                             </span>
-                            <span aria-hidden="true">·</span>
+                            <span>·</span>
                             <time dateTime={latestComment.created_at}>
                                 {getRelativeTime(
                                     latestComment.created_at,

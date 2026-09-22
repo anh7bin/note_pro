@@ -69,17 +69,15 @@ export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
                 <div className="space-y-2">
                     <Input
                         type="search"
-                        aria-label={t('searchInDocument')}
                         value={searchQuery}
                         onChange={(event) => setSearchQuery(event.target.value)}
                         placeholder={t('searchInDocument')}
-                        className="h-9"
+                        className="h-8"
                     />
                     <div className="flex flex-wrap gap-1">
                         {searchFilters.map((filter) => (
                             <Button
                                 key={filter.value}
-                                type="button"
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => setSearchFilter(filter.value)}
@@ -98,7 +96,7 @@ export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
 
                 {!searchQuery && (
                     <EmptyState
-                        icon={<Sparkles className="h-4 w-4" />}
+                        icon={<Sparkles />}
                         title={t('searchAnything')}
                         description={t('searchAnythingDescription')}
                     />
@@ -106,7 +104,7 @@ export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
 
                 {searchQuery && searchResults.length === 0 && (
                     <EmptyState
-                        icon={<Search className="h-4 w-4" />}
+                        icon={<Search />}
                         title={t('noMatches')}
                         description={t('differentKeyword')}
                     />

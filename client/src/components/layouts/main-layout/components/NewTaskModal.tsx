@@ -151,11 +151,9 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
             />
             <div className="flex shrink-0 justify-end border-t pt-3">
                 <Button
-                    type="button"
                     size="sm"
                     onClick={handleCreate}
-                    disabled={!taskData.title.trim() || isCreating}
-                    aria-busy={isCreating}>
+                    disabled={!taskData.title.trim() || isCreating}>
                     {isCreating ? t('creating') : t('create')}
                 </Button>
             </div>

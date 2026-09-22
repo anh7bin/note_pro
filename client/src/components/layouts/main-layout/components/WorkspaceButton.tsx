@@ -126,7 +126,6 @@ export const WorkspaceButton = () => {
                 <Button
                     size="sm"
                     onClick={handleSave}
-                    className="w-full sm:w-auto"
                     disabled={
                         isUploading ||
                         isSaving ||

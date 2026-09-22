@@ -1,21 +1,8 @@
 'use client';
 
-import * as React from 'react';
-import { format } from 'date-fns';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
-import {
-    ArrowDownUp,
-    CheckCircle2,
-    Plus,
-    Search,
-    SlidersHorizontal,
-} from 'lucide-react';
+import { NewTaskModal } from '@/components/layouts/main-layout/components/NewTaskModal';
 import { EmptyState } from '@/components/shared';
 import { Button } from '@/components/ui/button';
-import { InputField } from '@/components/ui/input-field';
-import { Label } from '@/components/ui/label';
-import { PopoverPanel } from '@/components/ui/popover-panel';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -23,6 +10,9 @@ import {
     DropdownMenuRadioItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { InputField } from '@/components/ui/input-field';
+import { Label } from '@/components/ui/label';
+import { PopoverPanel } from '@/components/ui/popover-panel';
 import {
     Select,
     SelectContent,
@@ -30,11 +20,21 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { NewTaskModal } from '@/components/layouts/main-layout/components/NewTaskModal';
 import { useI18n } from '@/contexts/I18nContext';
+import { TASK_STATUS } from '@/lib/constants';
 import { getPlainText } from '@/lib/text';
 import { Task } from '@/types/app';
-import { TASK_STATUS } from '@/lib/constants';
+import { format } from 'date-fns';
+import {
+    ArrowDownUp,
+    CheckCircle2,
+    Plus,
+    Search,
+    SlidersHorizontal,
+} from 'lucide-react';
+import * as React from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import { TaskDetailsModal } from './TaskDetailsModal';
 import { TaskItem } from './TaskItem';
 
@@ -244,7 +244,7 @@ export function VirtualizedTaskList({
     };
 
     return (
-        <div className="flex h-full min-h-0 w-full flex-col gap-3">
+        <div className="flex h-full min-h-0 w-full flex-col gap-2">
             {loadError && (
                 <div
                     role="alert"
@@ -262,24 +262,17 @@ export function VirtualizedTaskList({
                     <div className="min-w-0 flex-1 sm:max-w-sm">
                         <InputField
                             type="search"
-                            aria-label={t('searchTasks')}
                             placeholder={t('searchTasks')}
                             value={search}
                             onChange={(event) => setSearch(event.target.value)}
                             icon={<Search aria-hidden="true" />}
-                            className="h-9 w-full"
+                            className="h-8 w-full"
                         />
                     </div>
                     <PopoverPanel
                         trigger={
-                            <Button
-                                variant="outline"
-                                className="h-9 shrink-0 gap-2 px-2.5"
-                                aria-label={t('taskFilters')}>
-                                <SlidersHorizontal
-                                    aria-hidden="true"
-                                    className="h-4 w-4"
-                                />
+                            <Button size="sm" variant="outline">
+                                <SlidersHorizontal />
                                 <span className="hidden sm:inline">
                                     {t('taskFilters')}
                                 </span>
@@ -396,14 +389,8 @@ export function VirtualizedTaskList({
                     </PopoverPanel>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="outline"
-                                className="h-9 shrink-0 gap-2 px-2.5"
-                                aria-label={t('sortTasks')}>
-                                <ArrowDownUp
-                                    aria-hidden="true"
-                                    className="h-4 w-4"
-                                />
+                            <Button size="sm" variant="outline">
+                                <ArrowDownUp />
                                 <span className="hidden sm:inline">
                                     {t('sortTasks')}
                                 </span>
@@ -443,7 +430,7 @@ export function VirtualizedTaskList({
                         !hasFilters ? (
                             <NewTaskModal>
                                 <Button size="sm">
-                                    <Plus aria-hidden="true" />
+                                    <Plus />
                                     {t('createTask')}
                                 </Button>
                             </NewTaskModal>

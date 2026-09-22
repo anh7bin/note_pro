@@ -164,16 +164,13 @@ export const TaskItem = ({
                 <span className="flex min-w-0 items-center gap-2 overflow-hidden whitespace-nowrap text-xs text-muted-foreground">
                     {scheduleDate && (
                         <span className="inline-flex shrink-0 items-center gap-1">
-                            <CalendarDays
-                                aria-hidden="true"
-                                className="h-3.5 w-3.5"
-                            />
+                            <CalendarDays className="h-3.5 w-3.5" />
                             {formatDate(scheduleDate)}
                         </span>
                     )}
                     {deadlineDate && (
                         <span className="inline-flex shrink-0 items-center gap-1">
-                            <Flag aria-hidden="true" className="h-3.5 w-3.5" />
+                            <Flag className="h-3.5 w-3.5" />
                             {formatDate(deadlineDate)}
                         </span>
                     )}
@@ -188,10 +185,7 @@ export const TaskItem = ({
                     )}
                     {sourceTitle && (
                         <span className="hidden min-w-0 items-center gap-1 truncate md:inline-flex">
-                            <FileText
-                                aria-hidden="true"
-                                className="h-3.5 w-3.5 shrink-0"
-                            />
+                            <FileText className="h-3.5 w-3.5 shrink-0" />
                             <span className="truncate">{sourceTitle}</span>
                         </span>
                     )}
@@ -212,22 +206,14 @@ export const TaskItem = ({
                 type="button"
                 onClick={handleToggleComplete}
                 disabled={isSaving || !onToggleComplete}
-                aria-busy={isSaving}
-                aria-label={
-                    tempCompleted
-                        ? t('markTaskIncomplete', { title })
-                        : t('markTaskComplete', { title })
-                }
-                aria-pressed={tempCompleted}
                 className={cn(
-                    'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                    'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                     tempCompleted
                         ? 'text-primary'
                         : 'text-muted-foreground hover:text-foreground',
                     isSaving && 'cursor-not-allowed opacity-60'
                 )}>
                 <span
-                    aria-hidden="true"
                     className={cn(
                         'flex h-4 w-4 items-center justify-center rounded-sm border transition-colors',
                         tempCompleted
@@ -242,13 +228,8 @@ export const TaskItem = ({
                 <button
                     type="button"
                     onClick={() => onItemClick(id)}
-                    aria-current={isActive ? 'true' : undefined}
                     className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-md px-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40">
                     {content}
-                    <ChevronRight
-                        aria-hidden="true"
-                        className="h-4 w-4 shrink-0 text-muted-foreground"
-                    />
                 </button>
             ) : (
                 <div className="flex min-h-12 min-w-0 flex-1 items-center px-1">

@@ -56,22 +56,14 @@ export function DocumentIcon({
         display === 'large' && icon ? (
             <button
                 type="button"
-                aria-label={t('changeIcon')}
                 aria-expanded={isOpen}
                 className="flex h-20 w-20 touch-manipulation items-center justify-center rounded-lg text-7xl leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                 disabled={isSaving}>
-                <span aria-hidden="true">{icon}</span>
+                <span>{icon}</span>
             </button>
         ) : (
-            <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                aria-label={t('addIcon')}
-                aria-expanded={isOpen}
-                disabled={isSaving}
-                className="h-8 px-2 font-normal text-muted-foreground hover:text-foreground">
-                <SmilePlus aria-hidden="true" />
+            <Button variant="ghost" size="xs" disabled={isSaving}>
+                <SmilePlus />
                 {t('addIcon')}
             </Button>
         );
@@ -103,16 +95,15 @@ export function DocumentIcon({
                                 {t('documentIcon')}
                             </span>
                             <Button
-                                type="button"
                                 variant="ghost"
-                                size="sm"
+                                size="xs"
                                 disabled={isSaving}
                                 onClick={() => void updateIcon(null)}
                                 className={cn(
-                                    'h-7 px-2 text-xs font-normal text-muted-foreground',
+                                    'text-xs font-normal text-muted-foreground',
                                     'hover:bg-destructive/10 hover:text-destructive'
                                 )}>
-                                <Trash2 aria-hidden="true" />
+                                <Trash2 />
                                 {t('removeIcon')}
                             </Button>
                         </div>

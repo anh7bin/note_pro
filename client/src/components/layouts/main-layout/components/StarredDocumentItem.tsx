@@ -53,11 +53,9 @@ export function StarredDocumentItem({ document }: StarredDocumentItemProps) {
                 <SidebarButton
                     icon={
                         typeof icon === 'string' && icon.trim() ? (
-                            <span aria-hidden="true" className="text-sm">
-                                {icon}
-                            </span>
+                            <span className="text-sm">{icon}</span>
                         ) : (
-                            <FileText aria-hidden="true" className="h-4 w-4" />
+                            <FileText />
                         )
                     }
                     label={title}

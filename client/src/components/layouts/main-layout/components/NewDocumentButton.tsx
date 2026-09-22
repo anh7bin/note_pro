@@ -16,7 +16,7 @@ export default function NewDocumentButton() {
 
     return (
         <SidebarButton
-            icon={<FilePlus2 className="h-4 w-4" />}
+            icon={<FilePlus2 />}
             label={t('newDocument')}
             onClick={createNewDocument}
             disabled={!canCreate || isCreating}

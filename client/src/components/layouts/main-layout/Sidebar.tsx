@@ -66,25 +66,23 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
             )}
             <aside
                 id="app-sidebar"
-                aria-label={t('workspaceNavigation')}
-                aria-hidden={!isOpen}
                 className={cn(
                     'fixed bottom-0 left-0 top-[var(--header-height)] z-40 w-[var(--sidebar-width)] border-r border-border-subtle bg-background text-foreground shadow-md transition-[transform,visibility] duration-300 ease-out md:shadow-none',
                     isOpen
                         ? 'visible translate-x-0'
                         : 'invisible -translate-x-full pointer-events-none'
                 )}>
-                <div className="flex h-full flex-col gap-2 p-3 sm:p-4">
+                <div className="flex h-full flex-col gap-1 p-2 sm:p-4">
                     <div data-tour="new-document">
                         <NewDocumentButton />
                     </div>
                     <SidebarButton
-                        icon={<RiUserVoiceLine className="h-4 w-4" />}
+                        icon={<RiUserVoiceLine />}
                         label={t('sharedWithMe')}
                         href={ROUTES.SHARED_WITH_ME}
                     />
                     <WorkspaceButton />
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
                         {MENU_ITEMS(workspaceSlug, {
                             allDocs: docsCountLoading
                                 ? undefined
@@ -105,7 +103,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                               : 'calendar-nav'
                                     }>
                                     <SidebarButton
-                                        icon={<item.icon className="w-4 h-4" />}
+                                        icon={<item.icon />}
                                         label={
                                             menuLabels[item.label] ?? item.label
                                         }
@@ -141,22 +139,14 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                         : t('collapse')
                                 }>
                                 <Button
-                                    type="button"
                                     variant="ghost"
-                                    size="icon"
-                                    aria-label={
-                                        isFoldersCollapsed
-                                            ? t('expand')
-                                            : t('collapse')
-                                    }
-                                    aria-expanded={!isFoldersCollapsed}
+                                    size="icon-xs"
                                     onClick={() =>
                                         setIsFoldersCollapsed(
                                             !isFoldersCollapsed
                                         )
                                     }>
                                     <ChevronRight
-                                        aria-hidden="true"
                                         className={cn(
                                             'transition-transform duration-200',
                                             isFoldersCollapsed

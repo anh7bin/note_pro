@@ -64,8 +64,8 @@ export function TasksLayoutClient({ children }: TasksLayoutClientProps) {
                 <PageTitle>{t('tasks')}</PageTitle>
                 <div className="flex items-center gap-2">
                     <NewTaskModal>
-                        <Button size="sm" className="px-2.5">
-                            <Plus aria-hidden="true" />
+                        <Button size="sm">
+                            <Plus />
                             <span className="hidden sm:inline">
                                 {t('createTask')}
                             </span>
@@ -78,15 +78,12 @@ export function TasksLayoutClient({ children }: TasksLayoutClientProps) {
                 </div>
             </PageHeader>
 
-            <nav
-                aria-label={t('taskViews')}
-                className="flex w-fit max-w-full gap-1 overflow-x-auto rounded-md bg-muted p-1">
+            <nav className="flex w-fit max-w-full gap-1 overflow-x-auto rounded-lg bg-muted p-1">
                 {navItems.map(({ id, label, icon: Icon, href, active }) => (
                     <Button
                         key={id}
                         variant={active ? 'secondary' : 'ghost'}
                         size="sm"
-                        aria-current={active ? 'page' : undefined}
                         className={
                             active
                                 ? 'shrink-0 bg-background shadow-sm hover:bg-background'

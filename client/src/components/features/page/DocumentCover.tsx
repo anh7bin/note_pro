@@ -51,19 +51,16 @@ export function DocumentCover({
                 <>
                     <div className="absolute right-3 top-3 flex gap-2 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
                         <Button
-                            type="button"
                             variant="outline"
-                            size="sm"
+                            size="xs"
                             onClick={handleChangeCover}
-                            aria-busy={isUploading}
                             disabled={isUploading}>
                             <ImagePlus />
                             {isUploading ? t('uploading') : t('changeCover')}
                         </Button>
                         <Button
-                            type="button"
                             variant="destructive"
-                            size="sm"
+                            size="xs"
                             onClick={onRemove}
                             disabled={isUploading}>
                             <Trash2 />

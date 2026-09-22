@@ -104,22 +104,19 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                 open={isDropdownOpen}
                 onOpenChange={setIsDropdownOpen}>
                 <DropdownMenuTrigger asChild>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        aria-label={t('createDocumentOrFolder')}>
+                    <Button variant="outline" size="icon-sm">
                         <PlusIcon />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                    className="w-60 p-2 rounded-md"
+                    className="w-60 p-2 rounded-lg"
                     align="center">
                     <DropdownMenuItem
-                        className="flex items-start gap-2 cursor-pointer p-2 rounded-md"
+                        className="flex items-start gap-1 cursor-pointer p-1 rounded-md"
                         onClick={handleNewDoc}
                         disabled={!canCreate || isCreating}>
-                        <div className="w-12 h-12 flex-shrink-0">
-                            <NewDocumentIcon size={48} />
+                        <div className="w-10 h-10 flex-shrink-0">
+                            <NewDocumentIcon size={44} />
                         </div>
                         <div className="flex flex-col justify-center gap-1">
                             <span className="font-medium">{t('newDoc')}</span>
@@ -129,10 +126,10 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                         </div>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                        className="flex items-start gap-2 cursor-pointer p-2 rounded-md"
+                        className="flex items-start gap-1 cursor-pointer p-1 rounded-md"
                         onClick={handleNewFolder}>
-                        <div className="w-12 h-12 flex-shrink-0">
-                            <NewFolderIcon size={48} />
+                        <div className="w-10 h-10 flex-shrink-0">
+                            <NewFolderIcon size={44} />
                         </div>
                         <div className="flex flex-col gap-1">
                             <span className="font-medium">

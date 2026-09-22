@@ -115,24 +115,20 @@ export function StarDocumentPicker({
             }}
             trigger={
                 <Button
-                    type="button"
                     variant="ghost"
-                    size="icon"
-                    title={t('starADocument')}
-                    aria-label={t('starADocument')}
-                    aria-expanded={isOpen}>
-                    <Plus aria-hidden="true" />
+                    size="icon-xs"
+                    title={t('starADocument')}>
+                    <Plus />
                 </Button>
             }>
             <div className="p-3">
                 <InputField
                     autoFocus
                     type="search"
-                    aria-label={t('searchDocumentsToStar')}
                     placeholder={t('searchDocumentsToStar')}
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.target.value)}
-                    className="h-9"
+                    className="h-8"
                     icon={<Search />}
                 />
             </div>
@@ -155,29 +151,22 @@ export function StarDocumentPicker({
                             getPlainText(document.content?.title) ||
                             t('untitledPage');
                         const icon = document.content?.icon;
-                        const isSaving = activeDocumentId === document.id;
 
                         return (
                             <button
                                 type="button"
                                 key={document.id}
                                 disabled={Boolean(activeDocumentId)}
-                                aria-busy={isSaving}
                                 className="flex min-h-11 w-full min-w-0 items-center gap-2 overflow-hidden px-3 py-2 text-left transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50"
                                 onClick={() =>
                                     void handleStarDocument(document.id)
                                 }>
                                 {typeof icon === 'string' && icon.trim() ? (
-                                    <span
-                                        aria-hidden="true"
-                                        className="flex h-5 w-5 shrink-0 items-center justify-center text-sm">
+                                    <span className="flex h-5 w-5 shrink-0 items-center justify-center text-sm">
                                         {icon}
                                     </span>
                                 ) : (
-                                    <FileText
-                                        aria-hidden="true"
-                                        className="h-4 w-4 shrink-0 text-muted-foreground"
-                                    />
+                                    <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                                 )}
                                 <span className="min-w-0 flex-1">
                                     <span className="block truncate text-sm font-medium">

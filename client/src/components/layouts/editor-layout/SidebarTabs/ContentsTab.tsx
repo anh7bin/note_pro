@@ -23,7 +23,7 @@ export const ContentsTab = ({
             <div className="text-sm space-y-1.5">
                 {sections.length === 0 ? (
                     <EmptyState
-                        icon={<ListTree className="h-4 w-4" />}
+                        icon={<ListTree />}
                         title={t('noHeadings')}
                         description={t('noHeadingsDescription')}
                     />
@@ -37,7 +37,7 @@ export const ContentsTab = ({
                                 key={section.id}
                                 type="button"
                                 onClick={() => onScrollToBlock(section.id)}
-                                className={`min-h-9 w-full rounded-md border px-2 py-1.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${
+                                className={`min-h-8 w-full rounded-md border px-2 py-1 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${
                                     isActive
                                         ? 'border-border bg-muted/60'
                                         : 'border-transparent hover:border-border hover:bg-muted/60'

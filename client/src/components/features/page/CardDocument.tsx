@@ -155,23 +155,13 @@ const CardDocumentComponent = ({
         <div
             role={isSelectionActive ? 'button' : 'link'}
             tabIndex={0}
-            aria-label={
-                isSelectionActive
-                    ? t(selected ? 'deselectDocument' : 'selectDocument', {
-                          title: plainTitle,
-                      })
-                    : t('openDocument', { title: plainTitle })
-            }
-            aria-pressed={isSelectionActive ? selected : undefined}
             className={`group grid min-h-[76px] cursor-pointer grid-cols-[minmax(0,1fr)_64px] items-center border-b border-border/60 px-4 py-2.5 transition-colors hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:grid-cols-[minmax(0,1fr)_132px_116px_64px] ${
                 selected ? 'bg-primary/5' : ''
             }`}
             onClick={handleClick}
             onKeyDown={handleKeyDown}>
             <div className="flex min-w-0 items-center gap-3 pr-4">
-                <div
-                    aria-hidden="true"
-                    className="relative h-12 w-9 shrink-0 overflow-hidden rounded-md border border-border-subtle bg-card shadow-sm">
+                <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded-md border border-border-subtle bg-card shadow-sm">
                     <div
                         className="absolute inset-0.5 overflow-hidden"
                         style={{
@@ -221,27 +211,18 @@ const CardDocumentComponent = ({
                         isStarred={isStarred}
                         isLoading={isUpdatingStar}
                         onToggle={() => void toggleStar()}
-                        className="h-7 w-7"
                     />
                 )}
                 <Button
                     variant="ghost"
-                    size="icon"
-                    aria-label={
-                        selected
-                            ? t('deselectItem', { name: plainTitle })
-                            : t('selectItem', { name: plainTitle })
-                    }
-                    aria-pressed={selected}
-                    className={`h-6 w-6 rounded-full border focus-visible:opacity-100 ${
+                    size="icon-xs"
+                    className={`w-5 h-5 rounded-full border focus-visible:opacity-100 ${
                         selected
                             ? 'border-primary bg-primary text-primary-foreground'
                             : 'border-border bg-background opacity-100 md:opacity-0 md:group-hover:opacity-100'
                     }`}
                     onClick={handleSelectToggle}>
-                    {selected && (
-                        <Check aria-hidden="true" className="h-3 w-3" />
-                    )}
+                    {selected && <Check />}
                 </Button>
             </div>
         </div>
@@ -251,14 +232,6 @@ const CardDocumentComponent = ({
         <Card
             role={isSelectionActive ? 'button' : 'link'}
             tabIndex={0}
-            aria-label={
-                isSelectionActive
-                    ? t(selected ? 'deselectDocument' : 'selectDocument', {
-                          title: plainTitle,
-                      })
-                    : t('openDocument', { title: plainTitle })
-            }
-            aria-pressed={isSelectionActive ? selected : undefined}
             className={`group relative flex h-[304px] w-full cursor-pointer flex-col overflow-hidden transition-[border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 ${
                 selected
                     ? 'border-primary ring-1 ring-primary/25'
@@ -273,7 +246,7 @@ const CardDocumentComponent = ({
                     onToggle={() => void toggleStar()}
                     className={`absolute right-10 top-3 z-10 h-5 w-5 rounded-full border transition-all focus-visible:opacity-100 ${
                         isStarred
-                            ? 'border-amber-500 bg-amber-500 text-primary-foreground opacity-100 hover:bg-amber-500 hover:text-primary-foreground'
+                            ? 'bg-amber-500 text-primary-foreground opacity-100 hover:bg-amber-500 hover:text-primary-foreground'
                             : 'border-border bg-background text-muted-foreground opacity-100 hover:border-amber-500 hover:bg-background hover:text-amber-500 md:opacity-0 md:group-hover:opacity-100'
                     }`}
                 />
@@ -281,13 +254,7 @@ const CardDocumentComponent = ({
             <div className="absolute top-3 right-3 z-10">
                 <Button
                     variant="ghost"
-                    size="icon"
-                    aria-label={
-                        selected
-                            ? t('deselectItem', { name: plainTitle })
-                            : t('selectItem', { name: plainTitle })
-                    }
-                    aria-pressed={selected}
+                    size="icon-xs"
                     className={`h-5 w-5 rounded-full border transition-all focus-visible:opacity-100 ${
                         selected
                             ? 'opacity-100 bg-primary border-primary text-primary-foreground'

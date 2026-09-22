@@ -48,7 +48,7 @@ export function SidebarButton({
     };
 
     const baseClasses = cn(
-        'flex min-h-9 w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm whitespace-nowrap transition-colors',
+        'flex min-h-8 w-full items-center gap-1 rounded-md px-2 py-1 text-sm whitespace-nowrap transition-colors',
         'hover:bg-accent hover:text-accent-foreground focus-within:bg-accent focus-within:text-accent-foreground',
         isActive && 'bg-accent text-accent-foreground',
         disabled && 'opacity-50 cursor-not-allowed',
@@ -70,7 +70,7 @@ export function SidebarButton({
 
     const leftContent = (
         <div className="flex min-w-0 flex-1 items-center gap-2">
-            <div className="w-5 h-5 flex items-center justify-center shrink-0 transition-all duration-200">
+            <div className="w-4 h-4 flex items-center justify-center shrink-0 transition-all duration-200">
                 {icon}
             </div>
             <TruncatedTooltip text={displayText}>

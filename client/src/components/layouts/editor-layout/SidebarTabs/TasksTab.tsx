@@ -30,7 +30,7 @@ export const TasksTab = ({
             <div className="text-sm space-y-1.5">
                 {tasks.length === 0 ? (
                     <EmptyState
-                        icon={<ListChecks className="h-4 w-4" />}
+                        icon={<ListChecks />}
                         title={t('noDocumentTasks')}
                         description={t('noDocumentTasksDescription')}
                     />

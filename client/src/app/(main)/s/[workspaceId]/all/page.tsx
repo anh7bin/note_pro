@@ -52,15 +52,9 @@ export default function AllDocsPage() {
                     <SimpleTooltip title={t('createDocument')}>
                         <Button
                             variant="outline"
-                            size="icon"
+                            size="icon-sm"
                             onClick={createNewDocument}
-                            disabled={!canCreate || isCreating}
-                            aria-label={
-                                isCreating
-                                    ? t('creatingDocument')
-                                    : t('createDocument')
-                            }
-                            aria-busy={isCreating}>
+                            disabled={!canCreate || isCreating}>
                             <Plus />
                         </Button>
                     </SimpleTooltip>

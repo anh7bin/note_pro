@@ -68,8 +68,7 @@ export default function LoginPage() {
     return status === 'loading' || (hasValidSession && !hasWorkspaceError) ? (
         <div
             className="flex min-h-dvh items-center justify-center"
-            role="status"
-            aria-label={t('loading')}>
+            role="status">
             <PageLoading />
         </div>
     ) : (

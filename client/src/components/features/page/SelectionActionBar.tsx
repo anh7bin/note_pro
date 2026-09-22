@@ -162,32 +162,19 @@ export function SelectionActionBar({
         <>
             <div
                 role="status"
-                aria-live="polite"
-                className="flex items-center gap-1 rounded-md border border-border bg-card p-0.5 shadow-sm">
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    role="checkbox"
-                    aria-checked={allSelected ? true : 'mixed'}
-                    aria-label={
-                        allSelected ? t('clearSelection') : t('selectAllItems')
-                    }
-                    className="h-6 w-6 rounded-full"
-                    onClick={handleSelectAllChange}>
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                        {allSelected ? (
-                            <Check aria-hidden="true" />
-                        ) : (
-                            <Minus aria-hidden="true" />
-                        )}
-                    </span>
-                </Button>
-
+                className="flex shrink-0 items-center gap-1 p-0.5 rounded-lg border border-border bg-card shadow-sm">
                 <span className="px-1 text-sm font-medium tabular-nums text-foreground">
                     {t('selectedCount', { count: totalSelected })}
                 </span>
-
+                <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    role="checkbox"
+                    onClick={handleSelectAllChange}>
+                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        {allSelected ? <Check /> : <Minus />}
+                    </span>
+                </Button>
                 {selectedDocuments.size > 0 && (
                     <SimpleTooltip
                         title={t(
@@ -196,25 +183,11 @@ export function SelectionActionBar({
                                 : 'starSelectedDocuments'
                         )}>
                         <Button
-                            type="button"
                             variant="ghost"
-                            size="icon"
-                            aria-label={t(
-                                allAreStarred
-                                    ? 'unstarSelectedDocuments'
-                                    : 'starSelectedDocuments'
-                            )}
-                            aria-pressed={allAreStarred}
-                            aria-busy={isUpdatingStars}
+                            size="icon-xs"
                             disabled={isUpdatingStars}
-                            className={`h-8 w-8 hover:bg-accent-foreground/10 ${
-                                allAreStarred
-                                    ? 'text-amber-500 hover:text-amber-600'
-                                    : ''
-                            }`}
                             onClick={() => void toggleDocumentsStar()}>
                             <Star
-                                aria-hidden="true"
                                 className={
                                     allAreStarred ? 'fill-current' : undefined
                                 }
@@ -226,25 +199,18 @@ export function SelectionActionBar({
                 {mode !== 'shared' && (
                     <Button
                         variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 hover:bg-accent-foreground/10"
-                        aria-label={t('moveSelectedItems')}
+                        size="icon-xs"
                         onClick={() => setIsMoveDialogOpen(true)}>
-                        <FolderInput className="h-4 w-4" />
+                        <FolderInput />
                     </Button>
                 )}
 
                 <Button
                     variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 hover:bg-accent-foreground/10 hover:text-destructive"
-                    aria-label={
-                        mode === 'shared'
-                            ? t('removeSelectedItems')
-                            : t('deleteSelectedItems')
-                    }
+                    size="icon-xs"
+                    className="hover:bg-accent-foreground/10 hover:text-destructive"
                     onClick={handleDeleteClick}>
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 />
                 </Button>
             </div>
 

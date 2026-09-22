@@ -25,12 +25,8 @@ export function DocumentStarButton({
     return (
         <SimpleTooltip title={label}>
             <Button
-                type="button"
                 variant="ghost"
-                size="icon"
-                aria-label={label}
-                aria-pressed={isStarred}
-                aria-busy={isLoading}
+                size="icon-xs"
                 disabled={isLoading}
                 className={cn(
                     'shrink-0 text-muted-foreground',
@@ -42,10 +38,7 @@ export function DocumentStarButton({
                     event.stopPropagation();
                     onToggle();
                 }}>
-                <Star
-                    aria-hidden="true"
-                    className={cn(isStarred && 'fill-current')}
-                />
+                <Star className={cn(isStarred && 'fill-current')} />
             </Button>
         </SimpleTooltip>
     );

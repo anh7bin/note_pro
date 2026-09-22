@@ -34,14 +34,11 @@ export function AddCoverButton({
     return (
         <>
             <Button
-                type="button"
                 variant="ghost"
-                size="sm"
+                size="xs"
                 onClick={handleClick}
-                aria-busy={isUploading}
-                disabled={isUploading}
-                className="h-8 px-2 font-normal text-muted-foreground hover:text-foreground">
-                <ImagePlus aria-hidden="true" />
+                disabled={isUploading}>
+                <ImagePlus />
                 {isUploading ? t('uploading') : t('addCover')}
             </Button>
             <input

@@ -62,7 +62,7 @@ export default function Home() {
             <Card role="alert" className="w-full max-w-md text-center">
                 <CardHeader className="items-center space-y-3">
                     <span className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
-                        <CircleAlert className="h-6 w-6" aria-hidden="true" />
+                        <CircleAlert className="h-6 w-6" />
                     </span>
                     <CardTitle>Workspace unavailable</CardTitle>
                     <CardDescription className="max-w-sm leading-relaxed">

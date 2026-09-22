@@ -177,7 +177,6 @@ export const LeftSidebar = ({ pageId }: Props) => {
                 {documentTitle && (
                     <div className="sticky top-0 z-10 flex shrink-0 flex-row items-center gap-3 border-b border-border-subtle bg-background px-4 py-3">
                         <div
-                            aria-hidden="true"
                             className="relative shrink-0 overflow-hidden rounded-sm border border-border-subtle bg-card p-2"
                             style={{ width: 24, height: 32 }}>
                             <div

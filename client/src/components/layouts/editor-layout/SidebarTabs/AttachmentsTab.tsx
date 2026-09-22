@@ -26,7 +26,7 @@ export const AttachmentsTab = ({
             <div className="text-sm space-y-1.5">
                 {attachments.length === 0 ? (
                     <EmptyState
-                        icon={<Paperclip className="h-4 w-4" />}
+                        icon={<Paperclip />}
                         title={t('noAttachments')}
                         description={t('noAttachmentsDescription')}
                     />
@@ -61,15 +61,13 @@ function AttachmentRow({
         <button
             type="button"
             onClick={() => onScrollToBlock(file.blockId)}
-            className={`flex min-h-11 w-full items-center gap-3 rounded-md border px-2 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${
+            className={`flex min-h-10 w-full items-center gap-3 rounded-md border px-2 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${
                 isActive
                     ? 'border-border bg-muted/60'
                     : 'border-transparent hover:border-border hover:bg-muted/50'
             }`}>
-            <div
-                className="flex h-10 w-8 shrink-0 items-center justify-center"
-                aria-hidden="true">
-                <FileTypeIcon extension={extension} className="h-9 w-7" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+                <FileTypeIcon extension={extension} />
             </div>
             <div className="min-w-0 flex-1">
                 <TruncatedTooltip text={file.name}>
