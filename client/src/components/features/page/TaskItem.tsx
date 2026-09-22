@@ -1,10 +1,15 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Calendar, Check, Flag, MoreHorizontal } from 'lucide-react';
+import {
+    CalendarDays,
+    Check,
+    ChevronRight,
+    FileText,
+    Flag,
+} from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { isToday, isTomorrow, format, parseISO } from 'date-fns';
+import { isToday, isTomorrow, isSameYear, format, parseISO } from 'date-fns';
 import { enUS, vi } from 'date-fns/locale';
 import { useI18n } from '@/contexts/I18nContext';
 
@@ -14,8 +19,9 @@ interface TaskItemProps {
     completed?: boolean;
     scheduleDate?: string;
     deadlineDate?: string;
+    sourceTitle?: string;
+    priority?: string | null;
     onToggleComplete?: (id: string, completed: boolean) => Promise<void> | void;
-    onMoreClick?: (id: string) => void;
     onItemClick?: (id: string) => void;
     isActive?: boolean;
     className?: string;
@@ -30,8 +36,9 @@ export const TaskItem = ({
     completed = false,
     scheduleDate,
     deadlineDate,
+    sourceTitle,
+    priority,
     onToggleComplete,
-    onMoreClick,
     onItemClick,
     isActive = false,
     className,
@@ -120,24 +127,94 @@ export const TaskItem = ({
         } else if (isTomorrow(date)) {
             return t('tomorrow');
         } else {
-            return format(date, locale === 'vi' ? 'd MMM' : 'MMM d', {
+            const dateFormat = isSameYear(date, new Date())
+                ? locale === 'vi'
+                    ? 'd MMM'
+                    : 'MMM d'
+                : locale === 'vi'
+                  ? 'd MMM yyyy'
+                  : 'MMM d, yyyy';
+            return format(date, dateFormat, {
                 locale: dateLocale,
             });
         }
     };
 
+    const priorityLabel =
+        priority === 'high'
+            ? t('priorityHigh')
+            : priority === 'medium'
+              ? t('priorityMedium')
+              : priority === 'low'
+                ? t('priorityLow')
+                : null;
+    const hasMetadata = Boolean(
+        sourceTitle || scheduleDate || deadlineDate || priorityLabel
+    );
+    const content = (
+        <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5">
+            <span
+                className={cn(
+                    'block truncate text-sm font-medium leading-5',
+                    tempCompleted && 'text-muted-foreground line-through'
+                )}
+                title={title}>
+                {title}
+            </span>
+            {hasMetadata && (
+                <span className="flex min-w-0 items-center gap-2 overflow-hidden whitespace-nowrap text-xs text-muted-foreground">
+                    {scheduleDate && (
+                        <span className="inline-flex shrink-0 items-center gap-1">
+                            <CalendarDays
+                                aria-hidden="true"
+                                className="h-3.5 w-3.5"
+                            />
+                            {formatDate(scheduleDate)}
+                        </span>
+                    )}
+                    {deadlineDate && (
+                        <span className="inline-flex shrink-0 items-center gap-1">
+                            <Flag aria-hidden="true" className="h-3.5 w-3.5" />
+                            {formatDate(deadlineDate)}
+                        </span>
+                    )}
+                    {priorityLabel && (
+                        <span
+                            className={cn(
+                                'shrink-0 font-medium',
+                                priority === 'high' && 'text-destructive'
+                            )}>
+                            {priorityLabel}
+                        </span>
+                    )}
+                    {sourceTitle && (
+                        <span
+                            className="hidden min-w-0 items-center gap-1 truncate md:inline-flex"
+                            title={sourceTitle}>
+                            <FileText
+                                aria-hidden="true"
+                                className="h-3.5 w-3.5 shrink-0"
+                            />
+                            <span className="truncate">{sourceTitle}</span>
+                        </span>
+                    )}
+                </span>
+            )}
+        </span>
+    );
+
     return (
         <div
             className={cn(
-                'group flex min-h-10 items-center gap-2 rounded-md transition-colors hover:bg-accent/70',
-                variant === 'compact' ? 'px-2 py-1' : 'px-3 py-2',
+                'group flex min-w-0 items-center gap-2 rounded-md transition-colors hover:bg-accent/60',
+                variant === 'compact' ? 'px-2 py-1' : 'px-3 py-1.5',
                 isActive && 'bg-accent text-accent-foreground',
                 className
             )}>
             <button
                 type="button"
                 onClick={handleToggleComplete}
-                disabled={isSaving}
+                disabled={isSaving || !onToggleComplete}
                 aria-busy={isSaving}
                 aria-label={
                     tempCompleted
@@ -146,7 +223,7 @@ export const TaskItem = ({
                 }
                 aria-pressed={tempCompleted}
                 className={cn(
-                    'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                    'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                     tempCompleted
                         ? 'text-primary'
                         : 'text-muted-foreground hover:text-foreground',
@@ -164,56 +241,22 @@ export const TaskItem = ({
                 </span>
             </button>
 
-            <div className="flex min-w-0 flex-1 items-center gap-2">
-                {scheduleDate && (
-                    <span className="flex flex-shrink-0 items-center gap-1 text-xs text-muted-foreground">
-                        <Calendar aria-hidden="true" className="h-3 w-3" />
-                        <span>{formatDate(scheduleDate)}</span>
-                    </span>
-                )}
-
-                {onItemClick ? (
-                    <button
-                        type="button"
-                        className={cn(
-                            'min-w-0 flex-1 truncate rounded-sm text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
-                            tempCompleted &&
-                                'text-muted-foreground line-through'
-                        )}
-                        onClick={() => onItemClick(id)}>
-                        {title}
-                    </button>
-                ) : (
-                    <span
-                        className={cn(
-                            'min-w-0 flex-1 truncate text-sm font-medium transition-colors',
-                            tempCompleted &&
-                                'text-muted-foreground line-through'
-                        )}>
-                        {title}
-                    </span>
-                )}
-
-                {deadlineDate && (
-                    <span className="flex flex-shrink-0 items-center gap-1 text-xs text-destructive">
-                        <Flag aria-hidden="true" className="h-3 w-3" />
-                        <span>{formatDate(deadlineDate)}</span>
-                    </span>
-                )}
-            </div>
-
-            {onMoreClick && (
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
-                    aria-label={t('moreTaskOptions', { title })}
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        onMoreClick(id);
-                    }}>
-                    <MoreHorizontal className="h-4 w-4" />
-                </Button>
+            {onItemClick ? (
+                <button
+                    type="button"
+                    onClick={() => onItemClick(id)}
+                    aria-current={isActive ? 'true' : undefined}
+                    className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-md px-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40">
+                    {content}
+                    <ChevronRight
+                        aria-hidden="true"
+                        className="h-4 w-4 shrink-0 text-muted-foreground"
+                    />
+                </button>
+            ) : (
+                <div className="flex min-h-12 min-w-0 flex-1 items-center px-1">
+                    {content}
+                </div>
             )}
         </div>
     );

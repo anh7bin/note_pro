@@ -1,76 +1,46 @@
 'use client';
 
-import { getPlainText } from '@/lib/text';
-import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
+import { useRef, useState, type ReactElement } from 'react';
+import { useApolloClient } from '@apollo/client';
 import { Button } from '@/components/ui/button';
-import { DatePicker } from '@/components/ui/date-picker';
-import { InputField } from '@/components/ui/input-field';
-import { Label } from '@/components/ui/label';
 import { Modal } from '@/components/ui/modal';
-import { PopoverPanel } from '@/components/ui/popover-panel';
-import { useCreateUntitledPageMutation } from '@/graphql/mutations/__generated__/document.generated';
+import {
+    EMPTY_TASK_FORM,
+    TaskForm,
+    type TaskFormValues,
+} from '@/components/features/page/TaskForm';
 import { useCreateTaskMutation } from '@/graphql/mutations/__generated__/task.generated';
-import { useGetAllDocsLazyQuery } from '@/graphql/queries/__generated__/document.generated';
+import {
+    GetDocumentBlocksDocument,
+    type GetDocumentBlocksQuery,
+} from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { TASK_STATUS } from '@/lib/constants';
 import { showToast } from '@/lib/toast';
-import React, { useMemo, useRef, useState } from 'react';
-import { ChevronDown, Flag, Inbox, Search } from 'lucide-react';
 import { useI18n } from '@/contexts/I18nContext';
-interface NewTaskModalProps {
-    children: React.ReactElement;
-}
 
-interface TaskData {
-    text: string;
-    selectedDocumentId: string | null;
-    scheduleDate: string;
-    deadlineDate: string;
+interface NewTaskModalProps {
+    children: ReactElement;
 }
 
 export const NewTaskModal = ({ children }: NewTaskModalProps) => {
     const dialogContentRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
-    const [taskData, setTaskData] = useState<TaskData>({
-        text: '',
-        selectedDocumentId: null,
-        scheduleDate: '',
-        deadlineDate: '',
-    });
-
+    const [taskData, setTaskData] = useState<TaskFormValues>(EMPTY_TASK_FORM);
     const userId = useUserId();
+    const client = useApolloClient();
     const { workspace } = useWorkspace();
-    const [createDocument] = useCreateUntitledPageMutation();
     const [createTask] = useCreateTaskMutation();
-    const [searchTerm, setSearchTerm] = useState('');
-    const [isDocumentPopoverOpen, setIsDocumentPopoverOpen] = useState(false);
     const { t } = useI18n();
 
-    const [fetchDocs, { data: docsData, loading: docsLoading }] =
-        useGetAllDocsLazyQuery();
-
-    const handleInputChange = (field: keyof TaskData, value: string) => {
-        setTaskData((prev) => ({ ...prev, [field]: value }));
-    };
-
-    const resetForm = () => {
-        setTaskData({
-            text: '',
-            selectedDocumentId: null,
-            scheduleDate: '',
-            deadlineDate: '',
-        });
-        setSearchTerm('');
-    };
-
     const handleCreate = async () => {
-        if (!taskData.text.trim()) {
+        if (isCreating) return;
+        if (!taskData.title.trim()) {
             showToast.error(t('enterTaskTitle'));
             return;
         }
-
         if (!userId || !workspace?.id) {
             showToast.error(t('authenticationRequired'));
             return;
@@ -78,126 +48,84 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
 
         try {
             setIsCreating(true);
-
-            let blockId: string | undefined;
-
-            if (taskData.selectedDocumentId) {
-                const blockResult = await createDocument({
-                    variables: {
-                        input: {
-                            type: 'task',
-                            workspace_id: workspace.id,
-                            user_id: userId,
-                            folder_id: null,
-                            content: {
-                                text: taskData.text,
-                            },
-                            position: 0,
-                            parent_id: null,
-                            page_id: taskData.selectedDocumentId,
-                        },
-                    },
+            let position = 0;
+            if (taskData.destinationId) {
+                const { data } = await client.query<GetDocumentBlocksQuery>({
+                    query: GetDocumentBlocksDocument,
+                    variables: { pageId: taskData.destinationId },
+                    fetchPolicy: 'network-only',
                 });
-
-                blockId = blockResult.data?.insert_blocks_one?.id;
-                if (!blockId) {
-                    throw new Error('Failed to create task block');
-                }
-            } else {
-                const blockResult = await createDocument({
-                    variables: {
-                        input: {
-                            type: 'task',
-                            workspace_id: workspace.id,
-                            user_id: userId,
-                            folder_id: null,
-                            content: {
-                                text: taskData.text,
-                            },
-                            position: 0,
-                            parent_id: null,
-                            page_id: null,
-                        },
-                    },
-                });
-
-                blockId = blockResult.data?.insert_blocks_one?.id;
-                if (!blockId) {
-                    throw new Error('Failed to create task block');
-                }
+                position =
+                    Math.max(
+                        0,
+                        ...data.blocks
+                            .filter(
+                                (block) =>
+                                    block.page_id === taskData.destinationId
+                            )
+                            .map((block) => block.position || 0)
+                    ) + 1;
             }
 
-            if (!blockId) {
-                throw new Error('Failed to get block ID');
-            }
-
-            await createTask({
+            const result = await createTask({
                 variables: {
                     input: {
-                        block_id: blockId,
+                        block: {
+                            data: {
+                                type: 'task',
+                                workspace_id: workspace.id,
+                                user_id: userId,
+                                folder_id: null,
+                                content: { text: taskData.title.trim() },
+                                position,
+                                parent_id: null,
+                                page_id: taskData.destinationId,
+                            },
+                        },
                         user_id: userId,
                         status: TASK_STATUS.TODO,
                         deadline_date: taskData.deadlineDate || null,
                         schedule_date: taskData.scheduleDate || null,
-                        priority: null,
+                        priority:
+                            taskData.priority === 'none'
+                                ? null
+                                : taskData.priority,
                     },
                 },
-                update(cache, { data }) {
-                    if (!data?.insert_tasks_one) return;
-                    const newTask = data.insert_tasks_one;
-                    cache.modify({
-                        fields: {
-                            tasks(existingTasks = []) {
-                                return [...existingTasks, newTask];
-                            },
-                        },
-                    });
-                },
             });
+            if (!result.data?.insert_tasks_one) {
+                throw new Error('Task creation returned no data');
+            }
 
             showToast.success(t('taskCreated'));
             setIsOpen(false);
+            setTaskData(EMPTY_TASK_FORM);
+            void client
+                .refetchQueries({
+                    include: [
+                        'GetAllTasks',
+                        'GetTodoTasks',
+                        'GetAllScheduledTasks',
+                        'GetDocumentBlocks',
+                    ],
+                })
+                .catch((error) => {
+                    console.error('Failed to refresh tasks:', error);
+                    showToast.error(t('tasksLoadError'));
+                });
         } catch (error) {
             console.error('Failed to create task:', error);
             showToast.error(t('taskCreateError'));
         } finally {
             setIsCreating(false);
-            resetForm();
         }
     };
 
     const handleOpenChange = (open: boolean) => {
+        if (!open && isCreating) return;
         setIsOpen(open);
-        if (!open) {
-            resetForm();
-            setIsDocumentPopoverOpen(false);
-        }
+        if (!open) setTaskData(EMPTY_TASK_FORM);
     };
-
-    const handleDocumentPopoverOpenChange = (open: boolean) => {
-        setIsDocumentPopoverOpen(open);
-        if (open && workspace?.id && !docsData) {
-            fetchDocs({
-                variables: { workspaceId: workspace.id },
-            });
-        }
-    };
-
-    const filteredDocuments = useMemo(() => {
-        const normalizedSearch = searchTerm.trim().toLowerCase();
-        return (docsData?.blocks || []).filter((doc) => {
-            const title = getPlainText(doc.content?.title || t('untitledPage'));
-            return title.toLowerCase().includes(normalizedSearch);
-        });
-    }, [docsData?.blocks, searchTerm, t]);
-
-    const selectedDocumentTitle = useMemo(() => {
-        if (!taskData.selectedDocumentId) return t('inbox');
-        const document = docsData?.blocks.find(
-            (item) => item.id === taskData.selectedDocumentId
-        );
-        return getPlainText(document?.content?.title || t('untitledPage'));
-    }, [docsData?.blocks, taskData.selectedDocumentId, t]);
 
     return (
         <Modal
@@ -207,137 +135,26 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
             trigger={children}
             title={t('createTaskTitle')}
             description={t('createTaskDescription')}
+            titleClassName="text-base"
+            headerClassName="space-y-1"
             contentProps={{
-                className: 'min-w-0 overflow-visible sm:max-w-[500px]',
+                className:
+                    'flex max-h-[calc(100dvh-2rem)] min-w-0 flex-col gap-3 overflow-visible p-4 sm:max-w-[440px] sm:p-5',
             }}>
-            <div className="min-w-0 space-y-2">
-                <Label htmlFor="task-destination">{t('destination')}</Label>
-                <PopoverPanel
-                    open={isDocumentPopoverOpen}
-                    onOpenChange={handleDocumentPopoverOpenChange}
-                    contentProps={{
-                        container: dialogContentRef.current ?? undefined,
-                        align: 'start',
-                        className:
-                            'w-[var(--radix-popover-trigger-width)] max-w-[calc(100vw-3rem)] overflow-hidden p-0',
-                    }}
-                    trigger={
-                        <Button
-                            id="task-destination"
-                            variant="outline"
-                            aria-expanded={isDocumentPopoverOpen}
-                            className="min-w-0 max-w-full overflow-hidden w-full justify-start text-left font-normal text-muted-foreground">
-                            <Inbox className="shrink-0" />
-                            <span className="min-w-0 flex-1 truncate">
-                                {selectedDocumentTitle}
-                            </span>
-                            <ChevronDown className="ml-auto shrink-0" />
-                        </Button>
-                    }>
-                    <div className="p-3">
-                        <InputField
-                            type="search"
-                            aria-label={t('searchDocuments')}
-                            placeholder={t('searchDocuments')}
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="h-9"
-                            icon={<Search />}
-                        />
-                    </div>
-                    <div
-                        className="max-h-48 overflow-x-hidden overflow-y-auto overscroll-contain"
-                        onWheel={(event) => event.stopPropagation()}>
-                        {docsLoading ? (
-                            <div className="px-3 py-8 text-sm text-muted-foreground text-center">
-                                {t('loadingDocuments')}
-                            </div>
-                        ) : (
-                            filteredDocuments.map((doc) => {
-                                const title =
-                                    doc.content?.title || t('untitledPage');
-                                return (
-                                    <button
-                                        type="button"
-                                        key={doc.id}
-                                        className="flex min-h-11 min-w-0 w-full items-center gap-2 overflow-hidden px-3 py-2 text-left transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40"
-                                        onClick={() => {
-                                            handleInputChange(
-                                                'selectedDocumentId',
-                                                doc.id
-                                            );
-                                            handleDocumentPopoverOpenChange(
-                                                false
-                                            );
-                                            setSearchTerm('');
-                                        }}>
-                                        <span className="shrink-0">
-                                            <NewDocumentIcon size={24} />
-                                        </span>
-                                        <div className="min-w-0 flex-1">
-                                            <div className="text-sm font-medium truncate">
-                                                {getPlainText(title)}
-                                            </div>
-                                            {doc.folder && (
-                                                <div className="truncate text-xs text-muted-foreground">
-                                                    {t('inFolder', {
-                                                        folder: doc.folder.name,
-                                                    })}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </button>
-                                );
-                            })
-                        )}
-                        {!docsLoading && filteredDocuments.length === 0 && (
-                            <div className="px-3 py-2 text-sm text-muted-foreground">
-                                {t('noDocumentsFound')}
-                            </div>
-                        )}
-                    </div>
-                </PopoverPanel>
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="task-title">
-                    {t('taskTitle')} <span className="text-destructive">*</span>
-                </Label>
-                <InputField
-                    id="task-title"
-                    placeholder={t('taskTitlePlaceholder')}
-                    value={taskData.text}
-                    onChange={(e) => handleInputChange('text', e.target.value)}
-                    autoComplete="off"
-                    required
-                />
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex flex-wrap items-center gap-2">
-                    <DatePicker
-                        value={taskData.scheduleDate}
-                        onChange={(date) =>
-                            handleInputChange('scheduleDate', date)
-                        }
-                        placeholder={t('schedule')}
-                        textContent={t('schedule')}
-                        quickActions={true}
-                    />
-
-                    <DatePicker
-                        value={taskData.deadlineDate}
-                        onChange={(date) =>
-                            handleInputChange('deadlineDate', date)
-                        }
-                        placeholder={t('deadline')}
-                        icon={<Flag />}
-                        quickActions={true}
-                    />
-                </div>
-
+            <TaskForm
+                values={taskData}
+                onChange={(field, value) =>
+                    setTaskData((current) => ({ ...current, [field]: value }))
+                }
+                onSubmit={() => void handleCreate()}
+                dialogContentRef={dialogContentRef}
+            />
+            <div className="flex shrink-0 justify-end border-t pt-3">
                 <Button
                     type="button"
+                    size="sm"
                     onClick={handleCreate}
-                    disabled={!taskData.text.trim() || isCreating}
+                    disabled={!taskData.title.trim() || isCreating}
                     aria-busy={isCreating}>
                     {isCreating ? t('creating') : t('create')}
                 </Button>

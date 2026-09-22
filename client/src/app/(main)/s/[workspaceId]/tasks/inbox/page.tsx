@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { PageLoading } from '@/components/ui/loading';
 import {
     GetTodoTasksDocument,
@@ -10,17 +10,16 @@ import { useUpdateTaskMutation } from '@/graphql/mutations/__generated__/task.ge
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { Task } from '@/types/app';
 import { VirtualizedTaskList } from '@/components/features/page/VirtualizedTaskList';
+import { TaskQueryError } from '@/components/features/page/TaskQueryError';
 import { showToast } from '@/lib/toast';
 import { TASK_STATUS } from '@/lib/constants';
-import { useTaskSettings } from '@/contexts/TaskSettingsProvider';
 import { useI18n } from '@/contexts/I18nContext';
 
 export default function InboxPage() {
     const { workspace } = useWorkspace();
-    const { settings } = useTaskSettings();
     const { t } = useI18n();
 
-    const { loading, data } = useGetTodoTasksQuery({
+    const { loading, data, error, refetch } = useGetTodoTasksQuery({
         variables: { workspaceId: workspace?.id || '' },
         skip: !workspace?.id,
         fetchPolicy: 'cache-and-network',
@@ -28,18 +27,9 @@ export default function InboxPage() {
 
     const [updateTask] = useUpdateTaskMutation();
 
-    const tasks: Task[] = useMemo(() => {
-        const allTasks = data?.tasks || [];
-
-        if (settings.showScheduledTasks) {
-            return allTasks;
-        } else {
-            return allTasks.filter(
-                (task) =>
-                    !task.schedule_date || task.schedule_date.trim() === ''
-            );
-        }
-    }, [data?.tasks, settings.showScheduledTasks]);
+    const tasks: Task[] = (data?.tasks || []).filter(
+        (task) => task.status === TASK_STATUS.TODO && !task.schedule_date
+    );
 
     const handleToggleComplete = useCallback(
         async (taskId: string, completed: boolean) => {
@@ -68,23 +58,18 @@ export default function InboxPage() {
         [updateTask, t]
     );
 
-    const handleMoreClick = useCallback((taskId: string) => {
-        console.log('More options for task:', taskId);
-    }, []);
-
     return loading && tasks.length === 0 ? (
         <PageLoading />
+    ) : error && tasks.length === 0 ? (
+        <TaskQueryError retry={() => void refetch()} />
     ) : (
         <VirtualizedTaskList
             tasks={tasks}
-            emptyTitle={
-                settings.showScheduledTasks
-                    ? t('noInboxTasks')
-                    : t('noUnscheduledTasks')
-            }
+            emptyTitle={t('noInboxTasks')}
             emptyDescription={t('inboxEmptyDescription')}
             onToggleComplete={handleToggleComplete}
-            onMoreClick={handleMoreClick}
+            loadError={Boolean(error)}
+            onRetry={() => void refetch()}
         />
     );
 }

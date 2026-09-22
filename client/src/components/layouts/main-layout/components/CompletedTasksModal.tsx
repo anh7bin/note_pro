@@ -3,25 +3,21 @@
 import { useState, useEffect, useRef } from 'react';
 import { Modal } from '@/components/ui/modal';
 import { TaskItem } from '@/components/features/page/TaskItem';
+import { TaskDetailsModal } from '@/components/features/page/TaskDetailsModal';
+import { Task } from '@/types/app';
+import { getPlainText } from '@/lib/text';
 import { Button } from '@/components/ui/button';
 import { CheckCircle } from 'lucide-react';
 import { Loading } from '@/components/ui/loading';
 import { useI18n } from '@/contexts/I18nContext';
 
-interface CompletedTask {
-    id: string;
-    title: string;
-    completed: boolean;
-    scheduleDate?: string;
-    deadlineDate?: string;
-}
-
 interface CompletedTasksModalProps {
     children: React.ReactElement;
-    completedTasks?: CompletedTask[];
+    completedTasks?: Task[];
     onTaskToggle?: (id: string, completed: boolean) => Promise<void> | void;
     onModalOpen?: () => void;
     loading?: boolean;
+    error?: boolean;
 }
 
 export const CompletedTasksModal = ({
@@ -30,8 +26,10 @@ export const CompletedTasksModal = ({
     onTaskToggle,
     onModalOpen,
     loading = false,
+    error = false,
 }: CompletedTasksModalProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
     const hasLoadedDataRef = useRef(false);
     const { t } = useI18n();
 
@@ -64,14 +62,29 @@ export const CompletedTasksModal = ({
                     </span>
                 </span>
             }
+            titleClassName="text-base"
             contentProps={{
                 className:
-                    'flex h-[80vh] w-full max-w-3xl flex-col overflow-hidden',
+                    'flex max-h-[min(75dvh,600px)] w-[calc(100%-2rem)] max-w-2xl flex-col gap-3 overflow-hidden p-4 sm:p-5',
             }}>
-            <div className="flex-1 overflow-y-auto overflow-x-hidden pr-1">
+            <div className="min-h-0 max-h-[min(60dvh,480px)] overflow-y-auto overflow-x-hidden pr-1">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
                         <Loading size="lg" text={t('loadingCompletedTasks')} />
+                    </div>
+                ) : error ? (
+                    <div
+                        role="alert"
+                        className="flex flex-col items-center gap-3 py-12 text-center">
+                        <p className="text-sm text-destructive">
+                            {t('tasksLoadError')}
+                        </p>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={onModalOpen}>
+                            {t('retry')}
+                        </Button>
                     </div>
                 ) : completedTasks.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -89,11 +102,19 @@ export const CompletedTasksModal = ({
                             <TaskItem
                                 key={task.id}
                                 id={task.id}
-                                title={task.title}
-                                completed={task.completed}
-                                scheduleDate={task.scheduleDate}
-                                deadlineDate={task.deadlineDate}
+                                title={
+                                    task.block?.content?.text ||
+                                    t('untitledTask')
+                                }
+                                completed
+                                scheduleDate={task.schedule_date || undefined}
+                                deadlineDate={task.deadline_date || undefined}
+                                sourceTitle={getPlainText(
+                                    task.block?.page?.content?.title
+                                )}
+                                priority={task.priority}
                                 onToggleComplete={handleTaskToggle}
+                                onItemClick={setSelectedTaskId}
                                 variant="compact"
                                 className="hover:bg-accent/50 break-words"
                             />
@@ -102,16 +123,21 @@ export const CompletedTasksModal = ({
                 )}
             </div>
 
-            {(completedTasks.length > 0 || loading) && (
-                <div className="border-t pt-4 flex justify-end">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setIsOpen(false)}>
-                        {t('close')}
-                    </Button>
-                </div>
-            )}
+            <div className="flex shrink-0 justify-end border-t pt-3">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsOpen(false)}>
+                    {t('close')}
+                </Button>
+            </div>
+            <TaskDetailsModal
+                task={
+                    completedTasks.find((task) => task.id === selectedTaskId) ||
+                    null
+                }
+                onClose={() => setSelectedTaskId(null)}
+            />
         </Modal>
     );
 };

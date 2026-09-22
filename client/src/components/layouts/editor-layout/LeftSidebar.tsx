@@ -157,8 +157,9 @@ export const LeftSidebar = ({ pageId }: Props) => {
                 showToast.success(
                     completed ? t('taskCompleted') : t('taskReopened')
                 );
-            } catch {
+            } catch (error) {
                 showToast.error(t('updateTaskError'));
+                throw error;
             } finally {
                 setPendingTaskIds((prev) => {
                     const next = new Set(prev);

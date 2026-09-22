@@ -1,15 +1,16 @@
 'use client';
 
-import { useMemo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { PageLoading } from '@/components/ui/loading';
 import {
-    GetTodayTasksDocument,
-    useGetTodayTasksQuery,
+    GetAllTasksDocument,
+    useGetAllTasksQuery,
 } from '@/graphql/queries/__generated__/task.generated';
 import { useUpdateTaskMutation } from '@/graphql/mutations/__generated__/task.generated';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { Task } from '@/types/app';
 import { VirtualizedTaskList } from '@/components/features/page/VirtualizedTaskList';
+import { TaskQueryError } from '@/components/features/page/TaskQueryError';
 import { showToast } from '@/lib/toast';
 import { TASK_STATUS } from '@/lib/constants';
 import { useI18n } from '@/contexts/I18nContext';
@@ -18,15 +19,9 @@ export default function TodayPage() {
     const { workspace } = useWorkspace();
     const { t } = useI18n();
 
-    const today = useMemo(() => {
-        const now = new Date();
-        return now.toISOString().split('T')[0];
-    }, []);
-
-    const { loading, data } = useGetTodayTasksQuery({
+    const { loading, data, error, refetch } = useGetAllTasksQuery({
         variables: {
             workspaceId: workspace?.id || '',
-            today: today || '',
         },
         skip: !workspace?.id,
         fetchPolicy: 'cache-and-network',
@@ -34,9 +29,9 @@ export default function TodayPage() {
 
     const [updateTask] = useUpdateTaskMutation();
 
-    const tasks: Task[] = useMemo(() => {
-        return data?.tasks || [];
-    }, [data]);
+    const tasks: Task[] = (data?.tasks || []).filter(
+        (task) => task.status !== TASK_STATUS.COMPLETED
+    );
 
     const handleToggleComplete = useCallback(
         async (taskId: string, completed: boolean) => {
@@ -52,10 +47,9 @@ export default function TodayPage() {
                     },
                     refetchQueries: [
                         {
-                            query: GetTodayTasksDocument,
+                            query: GetAllTasksDocument,
                             variables: {
                                 workspaceId: workspace?.id || '',
-                                today: today,
                             },
                         },
                     ],
@@ -70,22 +64,22 @@ export default function TodayPage() {
                 throw error;
             }
         },
-        [updateTask, workspace?.id, today, t]
+        [updateTask, workspace?.id, t]
     );
-
-    const handleMoreClick = useCallback((taskId: string) => {
-        console.log('More options for task:', taskId);
-    }, []);
 
     return loading && tasks.length === 0 ? (
         <PageLoading />
+    ) : error && tasks.length === 0 ? (
+        <TaskQueryError retry={() => void refetch()} />
     ) : (
         <VirtualizedTaskList
             tasks={tasks}
-            emptyTitle={t('nothingToday')}
+            emptyTitle={t('noPlannedTasks')}
             emptyDescription={t('todayEmptyDescription')}
             onToggleComplete={handleToggleComplete}
-            onMoreClick={handleMoreClick}
+            view="today"
+            loadError={Boolean(error)}
+            onRetry={() => void refetch()}
         />
     );
 }

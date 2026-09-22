@@ -2,13 +2,11 @@
 
 import { NewTaskModal } from '@/components/layouts/main-layout/components/NewTaskModal';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { ROUTES } from '@/lib/routes';
-import { Inbox, ListTodo, Plus, Sun } from 'lucide-react';
+import { CalendarDays, Inbox, ListTodo, Plus } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Setting } from './Setting';
-import { TaskSettingsProvider } from '@/contexts/TaskSettingsProvider';
 import { useLoading } from '@/contexts/LoadingContext';
 import {
     PageContent,
@@ -39,8 +37,8 @@ export function TasksLayoutClient({ children }: TasksLayoutClientProps) {
         },
         {
             id: 'today',
-            label: t('today'),
-            icon: Sun,
+            label: t('taskPlan'),
+            icon: CalendarDays,
             href: ROUTES.WORKSPACE_TASKS_TODAY(workspaceSlug || ''),
             active: pathname.includes('/today'),
         },
@@ -61,49 +59,47 @@ export function TasksLayoutClient({ children }: TasksLayoutClientProps) {
     };
 
     return (
-        <TaskSettingsProvider>
-            <PageShell>
-                <PageHeader>
-                    <div className="flex items-center gap-2">
-                        <NewTaskModal>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                aria-label={t('createTask')}>
-                                <Plus />
-                            </Button>
-                        </NewTaskModal>
-                        <Separator orientation="vertical" />
-                        <PageTitle>{t('tasks')}</PageTitle>
-                    </div>
-                    <Setting />
-                </PageHeader>
-
-                <nav
-                    aria-label={t('taskViews')}
-                    className="flex w-fit gap-1 overflow-x-auto rounded-md bg-muted p-1">
-                    {navItems.map(({ id, label, icon: Icon, href, active }) => (
-                        <Button
-                            key={id}
-                            variant={active ? 'secondary' : 'ghost'}
-                            size="sm"
-                            aria-current={active ? 'page' : undefined}
-                            className={
-                                active
-                                    ? 'shrink-0 bg-background shadow-sm hover:bg-background'
-                                    : 'shrink-0'
-                            }
-                            onClick={() => navigateTo(href)}>
-                            <Icon />
-                            {label}
+        <PageShell>
+            <PageHeader>
+                <PageTitle>{t('tasks')}</PageTitle>
+                <div className="flex items-center gap-2">
+                    <NewTaskModal>
+                        <Button size="sm" className="px-2.5">
+                            <Plus aria-hidden="true" />
+                            <span className="hidden sm:inline">
+                                {t('createTask')}
+                            </span>
+                            <span className="sr-only sm:hidden">
+                                {t('createTask')}
+                            </span>
                         </Button>
-                    ))}
-                </nav>
+                    </NewTaskModal>
+                    <Setting />
+                </div>
+            </PageHeader>
 
-                <PageContent className="overflow-hidden">
-                    {children}
-                </PageContent>
-            </PageShell>
-        </TaskSettingsProvider>
+            <nav
+                aria-label={t('taskViews')}
+                className="flex w-fit max-w-full gap-1 overflow-x-auto rounded-md bg-muted p-1">
+                {navItems.map(({ id, label, icon: Icon, href, active }) => (
+                    <Button
+                        key={id}
+                        variant={active ? 'secondary' : 'ghost'}
+                        size="sm"
+                        aria-current={active ? 'page' : undefined}
+                        className={
+                            active
+                                ? 'shrink-0 bg-background shadow-sm hover:bg-background'
+                                : 'shrink-0'
+                        }
+                        onClick={() => navigateTo(href)}>
+                        <Icon />
+                        {label}
+                    </Button>
+                ))}
+            </nav>
+
+            <PageContent className="overflow-hidden">{children}</PageContent>
+        </PageShell>
     );
 }

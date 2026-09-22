@@ -25,3 +25,22 @@ mutation UpdateTask($id: uuid!, $input: tasks_set_input!) {
         updated_at
     }
 }
+
+mutation UpdateTaskDetails(
+    $id: uuid!
+    $taskInput: tasks_set_input!
+    $blockId: uuid!
+    $blockInput: blocks_set_input!
+) {
+    update_tasks_by_pk(pk_columns: { id: $id }, _set: $taskInput) {
+        id
+        schedule_date
+        deadline_date
+        priority
+    }
+    update_blocks_by_pk(pk_columns: { id: $blockId }, _set: $blockInput) {
+        id
+        content
+        page_id
+    }
+}
