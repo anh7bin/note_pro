@@ -2,6 +2,7 @@
 
 import { DocumentGrid } from '@/components/features/page/DocumentGrid';
 import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
+import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import {
     EmptyState,
@@ -17,6 +18,7 @@ import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { useGetAllDocsQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useCreateDocument, useWorkspace } from '@/hooks';
+import { useDocumentView } from '@/hooks/useDocumentView';
 import { Document } from '@/types/app';
 import { FilePlus2, Files, Plus } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
@@ -26,6 +28,7 @@ export default function AllDocsPage() {
     const { createNewDocument, isCreating, canCreate } = useCreateDocument();
     const { clearSelection, setMode } = useDocumentSelection();
     const { t } = useI18n();
+    const { view, changeView } = useDocumentView();
 
     const { loading, data } = useGetAllDocsQuery({
         variables: { workspaceId: workspace?.id || '' },
@@ -66,14 +69,17 @@ export default function AllDocsPage() {
                         {t('allDocs')}
                     </PageTitle>
                 </div>
-                <SelectionActionBar
-                    documentIds={allDocs.map((document) => document.id)}
-                />
+                <div className="flex items-center gap-2">
+                    <SelectionActionBar
+                        documentIds={allDocs.map((document) => document.id)}
+                    />
+                    <DocumentViewToggle view={view} onChange={changeView} />
+                </div>
             </PageHeader>
 
             <PageContent>
                 {allDocs.length > 0 ? (
-                    <DocumentGrid documents={allDocs} />
+                    <DocumentGrid documents={allDocs} view={view} />
                 ) : (
                     <EmptyState
                         icon={<Files />}

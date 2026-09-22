@@ -2,12 +2,13 @@
 
 import { DocumentGrid } from '@/components/features/page/DocumentGrid';
 import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
+import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
 import { PageLoading } from '@/components/ui/loading';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useGetSharedWithMeDocsQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
+import { useDocumentView } from '@/hooks/useDocumentView';
 import { Document } from '@/types/app';
-import { pluralize } from '@/lib/bulk-actions';
 import { useMemo, useEffect } from 'react';
 import { Users } from 'lucide-react';
 import {
@@ -23,6 +24,7 @@ export default function SharedWithMePage() {
     const userId = useUserId();
     const { setMode, clearSelection } = useDocumentSelection();
     const { t } = useI18n();
+    const { view, changeView } = useDocumentView();
 
     const { loading, data } = useGetSharedWithMeDocsQuery({
         variables: { userId: userId || '' },
@@ -49,20 +51,13 @@ export default function SharedWithMePage() {
                         mode="shared"
                         documentIds={sharedDocs.map((document) => document.id)}
                     />
-                    <span className="text-sm tabular-nums text-muted-foreground">
-                        {t(
-                            sharedDocs.length === 1
-                                ? 'documentCount'
-                                : 'documentCountPlural',
-                            { count: sharedDocs.length }
-                        )}
-                    </span>
+                    <DocumentViewToggle view={view} onChange={changeView} />
                 </div>
             </PageHeader>
 
             <PageContent>
                 {sharedDocs.length > 0 ? (
-                    <DocumentGrid documents={sharedDocs} />
+                    <DocumentGrid documents={sharedDocs} view={view} />
                 ) : (
                     <EmptyState
                         icon={<Users />}

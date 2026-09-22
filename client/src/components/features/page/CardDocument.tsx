@@ -19,6 +19,7 @@ import { ROUTES } from '@/lib/routes';
 import { getPlainText } from '@/lib/text';
 import { formatDate } from '@/lib/utils';
 import { Document } from '@/types/app';
+import { BlockType } from '@/types/types';
 import { Folder, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo } from 'react';
@@ -28,7 +29,13 @@ import { useI18n } from '@/contexts/I18nContext';
 import { useDocumentStar } from '@/hooks/useDocumentStar';
 import { DocumentStarButton } from './DocumentStarButton';
 
-const CardDocumentComponent = ({ document }: { document: Document }) => {
+const CardDocumentComponent = ({
+    document,
+    variant = 'card',
+}: {
+    document: Document;
+    variant?: 'card' | 'list';
+}) => {
     const router = useRouter();
     const { workspace } = useWorkspace();
     const currentUserId = useUserId();
@@ -44,6 +51,29 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
 
     const plainTitle =
         getPlainText(document.content?.title) || t('untitledPage');
+    const listDescription =
+        variant === 'list'
+            ? document.sub_blocks
+                  .map((block) => {
+                      const text = getPlainText(block.content?.text)
+                          .replace(/\s+/g, ' ')
+                          .trim();
+                      if (text) return text;
+                      if (block.type === BlockType.FILE) {
+                          return block.content?.fileName || t('attachment');
+                      }
+                      if (block.type === BlockType.TASK) {
+                          return t('untitledTask');
+                      }
+                      if (block.type === BlockType.TABLE) {
+                          return t('emptyTable');
+                      }
+                      return '';
+                  })
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .join(' · ') || t('emptyDocument')
+            : '';
     const selected = isSelected(document.id);
     const hasMultipleSelected = selectedDocuments.size > 1;
     const isSelectionActive = selectedDocuments.size + selectedFolders.size > 0;
@@ -120,6 +150,102 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
             openDocument();
         }
     };
+
+    const listContent = (
+        <div
+            role={isSelectionActive ? 'button' : 'link'}
+            tabIndex={0}
+            aria-label={
+                isSelectionActive
+                    ? t(selected ? 'deselectDocument' : 'selectDocument', {
+                          title: plainTitle,
+                      })
+                    : t('openDocument', { title: plainTitle })
+            }
+            aria-pressed={isSelectionActive ? selected : undefined}
+            className={`group grid min-h-[76px] cursor-pointer grid-cols-[minmax(0,1fr)_64px] items-center border-b border-border/60 px-4 py-2.5 transition-colors hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:grid-cols-[minmax(0,1fr)_132px_116px_64px] ${
+                selected ? 'bg-primary/5' : ''
+            }`}
+            onClick={handleClick}
+            onKeyDown={handleKeyDown}>
+            <div className="flex min-w-0 items-center gap-3 pr-4">
+                <div
+                    aria-hidden="true"
+                    className="relative h-12 w-9 shrink-0 overflow-hidden rounded-md border border-border-subtle bg-card shadow-sm">
+                    <div
+                        className="absolute inset-0.5 overflow-hidden"
+                        style={{
+                            transform: 'scale(0.16)',
+                            transformOrigin: 'top left',
+                            width: '200px',
+                            height: '275px',
+                        }}>
+                        <CardDocumentPreview blocks={document.sub_blocks} />
+                    </div>
+                </div>
+                <div className="min-w-0 flex-1">
+                    <TruncatedTooltip text={plainTitle}>
+                        <span className="block truncate text-sm font-semibold leading-5 text-foreground">
+                            {plainTitle}
+                        </span>
+                    </TruncatedTooltip>
+                    <span
+                        className={`block max-w-[72ch] truncate text-xs leading-5 text-muted-foreground ${
+                            listDescription === t('emptyDocument')
+                                ? 'italic'
+                                : ''
+                        }`}>
+                        {listDescription}
+                    </span>
+                </div>
+            </div>
+            <span className="hidden truncate pr-3 text-xs text-muted-foreground sm:block">
+                {document.updated_at
+                    ? formatDate(document.updated_at, {
+                          relative: true,
+                          locale,
+                      })
+                    : '—'}
+            </span>
+            <span className="hidden truncate pr-3 text-xs text-muted-foreground sm:block">
+                {document.created_at
+                    ? formatDate(document.created_at, {
+                          relative: true,
+                          locale,
+                      })
+                    : '—'}
+            </span>
+            <div className="flex items-center justify-end gap-1">
+                {!isSelectionActive && (
+                    <DocumentStarButton
+                        isStarred={isStarred}
+                        isLoading={isUpdatingStar}
+                        onToggle={() => void toggleStar()}
+                        className="h-7 w-7"
+                    />
+                )}
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={
+                        selected
+                            ? t('deselectItem', { name: plainTitle })
+                            : t('selectItem', { name: plainTitle })
+                    }
+                    aria-pressed={selected}
+                    className={`h-6 w-6 rounded-full border focus-visible:opacity-100 ${
+                        selected
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : 'border-border bg-background opacity-100 md:opacity-0 md:group-hover:opacity-100'
+                    }`}
+                    onClick={handleSelectToggle}>
+                    {selected && (
+                        <Check aria-hidden="true" className="h-3 w-3" />
+                    )}
+                </Button>
+            </div>
+        </div>
+    );
 
     const cardContent = (
         <Card
@@ -210,8 +336,10 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
         </Card>
     );
 
+    const content = variant === 'list' ? listContent : cardContent;
+
     return hasMultipleSelected && selected ? (
-        <BulkDocumentMenu mode={mode}>{cardContent}</BulkDocumentMenu>
+        <BulkDocumentMenu mode={mode}>{content}</BulkDocumentMenu>
     ) : (
         <DocumentMoreMenu
             documentId={document.id}
@@ -221,7 +349,7 @@ const CardDocumentComponent = ({ document }: { document: Document }) => {
             isStarred={isStarred}
             isUpdatingStar={isUpdatingStar}
             onToggleStar={() => void toggleStar()}>
-            {cardContent}
+            {content}
         </DocumentMoreMenu>
     );
 };

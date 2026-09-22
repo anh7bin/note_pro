@@ -2,6 +2,8 @@
 
 import { CardFolder } from '@/components/features/page/CardFolder';
 import { CardDocument } from '@/components/features/page/CardDocument';
+import { DocumentListHeader } from '@/components/features/page/DocumentListHeader';
+import { DocumentView } from '@/hooks/useDocumentView';
 import { Document } from '@/types/app';
 import { GetFolderByIdQuery } from '@/graphql/queries/__generated__/folder.generated';
 import { useEffect, useRef, useState, useCallback } from 'react';
@@ -14,11 +16,13 @@ type FolderType = NonNullable<
 interface FolderDocumentGridProps {
     folders: FolderType[];
     documents: Document[];
+    view?: DocumentView;
 }
 
 export function FolderDocumentGrid({
     folders,
     documents,
+    view = 'card',
 }: FolderDocumentGridProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [showTopFade, setShowTopFade] = useState(false);
@@ -46,6 +50,30 @@ export function FolderDocumentGrid({
         window.addEventListener('resize', updateFade);
         return () => window.removeEventListener('resize', updateFade);
     }, [updateFade, folders.length, documents.length]);
+
+    if (view === 'list') {
+        return (
+            <div className="flex h-full min-h-0 flex-col">
+                <DocumentListHeader />
+                <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable]">
+                    {folders.map((folder) => (
+                        <CardFolder
+                            key={folder.id}
+                            folder={folder}
+                            variant="list"
+                        />
+                    ))}
+                    {documents.map((document) => (
+                        <CardDocument
+                            key={document.id}
+                            document={document}
+                            variant="list"
+                        />
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="relative h-full min-h-0 w-full overflow-hidden pb-1">

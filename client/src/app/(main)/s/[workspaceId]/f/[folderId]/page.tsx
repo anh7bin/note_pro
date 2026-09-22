@@ -2,11 +2,13 @@
 
 import { FolderDocumentGrid } from '@/components/features/page/FolderDocumentGrid';
 import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
+import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
 import { PageLoading } from '@/components/ui/loading';
 import { Separator } from '@/components/ui/separator';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useGetFolderByIdQuery } from '@/graphql/queries/__generated__/folder.generated';
 import { Document } from '@/types/app';
+import { useDocumentView } from '@/hooks/useDocumentView';
 import { useMemo, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { NewItemMenu } from '@/components/features/page/NewItemMenu';
@@ -25,6 +27,7 @@ export default function FolderPage() {
     const folderId = params.folderId as string;
     const { clearSelection, setMode } = useDocumentSelection();
     const { t } = useI18n();
+    const { view, changeView } = useDocumentView();
 
     const { loading, data } = useGetFolderByIdQuery({
         variables: { folderId },
@@ -64,10 +67,13 @@ export default function FolderPage() {
                     <Separator orientation="vertical" />
                     <PageTitle className="truncate">{folder.name}</PageTitle>
                 </div>
-                <SelectionActionBar
-                    documentIds={documents.map((document) => document.id)}
-                    folderIds={subFolders.map((subFolder) => subFolder.id)}
-                />
+                <div className="flex items-center gap-2">
+                    <SelectionActionBar
+                        documentIds={documents.map((document) => document.id)}
+                        folderIds={subFolders.map((subFolder) => subFolder.id)}
+                    />
+                    <DocumentViewToggle view={view} onChange={changeView} />
+                </div>
             </PageHeader>
 
             <PageContent>
@@ -82,6 +88,7 @@ export default function FolderPage() {
                     <FolderDocumentGrid
                         folders={subFolders}
                         documents={documents}
+                        view={view}
                     />
                 )}
             </PageContent>
