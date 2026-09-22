@@ -124,6 +124,7 @@ export const WorkspaceButton = () => {
             }}
             footer={
                 <Button
+                    size="sm"
                     onClick={handleSave}
                     className="w-full sm:w-auto"
                     disabled={

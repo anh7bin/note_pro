@@ -95,14 +95,14 @@ export const FolderDialog = ({
             footer={
                 <>
                     <Button
-                        type="button"
+                        size="sm"
                         variant="outline"
                         onClick={() => onOpenChange(false)}
                         disabled={isSubmitting}>
                         {t('cancel')}
                     </Button>
                     <Button
-                        type="button"
+                        size="sm"
                         onClick={handleSubmit}
                         disabled={!folderData.name.trim() || isSubmitting}
                         aria-busy={isSubmitting}>

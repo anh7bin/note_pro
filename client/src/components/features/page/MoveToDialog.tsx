@@ -49,12 +49,14 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
             footer={
                 <>
                     <Button
+                        size="sm"
                         variant="outline"
                         onClick={() => onOpenChange(false)}
                         disabled={isSubmitting}>
                         {t('cancel')}
                     </Button>
                     <Button
+                        size="sm"
                         onClick={handleSelect}
                         disabled={isSubmitting}
                         aria-busy={isSubmitting}>
