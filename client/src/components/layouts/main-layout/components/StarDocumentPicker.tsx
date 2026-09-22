@@ -1,7 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { FileText, Plus, Search } from 'lucide-react';
+import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
 import { Button } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
 import { PopoverPanel } from '@/components/ui/popover-panel';
@@ -16,6 +15,8 @@ import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { getPlainText } from '@/lib/text';
 import showToast from '@/lib/toast';
+import { Plus, Search } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 interface StarDocumentPickerProps {
     onDocumentStarred: () => void;
@@ -166,7 +167,7 @@ export function StarDocumentPicker({
                                         {icon}
                                     </span>
                                 ) : (
-                                    <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                                    <NewDocumentIcon size={20} />
                                 )}
                                 <span className="min-w-0 flex-1">
                                     <span className="block truncate text-sm font-medium">

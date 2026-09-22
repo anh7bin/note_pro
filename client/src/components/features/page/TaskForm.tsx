@@ -187,28 +187,23 @@ export function TaskForm({
                         <Button
                             id={`${formId}-destination`}
                             variant="outline"
-                            aria-expanded={destinationOpen}
                             className="h-9 w-full min-w-0 justify-start overflow-hidden text-left font-normal">
-                            <Inbox aria-hidden="true" className="shrink-0" />
+                            <Inbox className="shrink-0" />
                             <span className="min-w-0 flex-1 truncate">
                                 {destinationTitle}
                             </span>
-                            <ChevronDown
-                                aria-hidden="true"
-                                className="shrink-0"
-                            />
+                            <ChevronDown className="shrink-0" />
                         </Button>
                     }>
                     <div className="p-3">
                         <InputField
                             type="search"
-                            aria-label={t('searchDocuments')}
                             placeholder={t('searchDocuments')}
                             value={searchTerm}
                             onChange={(event) =>
                                 setSearchTerm(event.target.value)
                             }
-                            icon={<Search aria-hidden="true" />}
+                            icon={<Search />}
                             className="h-9"
                         />
                     </div>
@@ -217,7 +212,7 @@ export function TaskForm({
                             type="button"
                             className="flex min-h-9 w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                             onClick={() => selectDestination(null)}>
-                            <Inbox aria-hidden="true" className="h-4 w-4" />
+                            <Inbox className="h-4 w-4" />
                             {t('inbox')}
                         </button>
                         {loading ? (
@@ -251,7 +246,14 @@ export function TaskForm({
                                     key={doc.id}
                                     className="flex min-h-9 w-full min-w-0 items-center gap-2 overflow-hidden px-3 py-2 text-left hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                                     onClick={() => selectDestination(doc.id)}>
-                                    <NewDocumentIcon size={24} />
+                                    {typeof doc.content?.icon === 'string' &&
+                                    doc.content?.icon.trim() ? (
+                                        <span className="flex h-5 w-5 shrink-0 items-center justify-center text-sm">
+                                            {doc.content?.icon}
+                                        </span>
+                                    ) : (
+                                        <NewDocumentIcon size={20} />
+                                    )}
                                     <span className="min-w-0 flex-1 text-left">
                                         <span className="block truncate text-sm font-medium">
                                             {getPlainText(doc.content?.title) ||
