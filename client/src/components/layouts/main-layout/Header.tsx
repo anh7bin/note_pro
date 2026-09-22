@@ -1,10 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { DocumentStarButton } from '@/components/features/page/DocumentStarButton';
 import { useI18n } from '@/contexts/I18nContext';
 import { useDocumentPermission } from '@/hooks/useDocumentPermission';
-import { useDocumentStar } from '@/hooks/useDocumentStar';
 import { SearchInputField } from 'components/features/search/SearchInputField';
 import { TopLoadingBar } from 'components/ui/TopLoadingBar';
 import { useDocumentAccess } from 'contexts/DocumentAccessContext';
@@ -41,11 +39,6 @@ export default function Header({ workspaceSlug }: Props) {
     const { permissionType } = useDocumentPermission(
         isDocumentPage ? documentId || '' : ''
     );
-    const {
-        isStarred,
-        isLoading: isUpdatingStar,
-        toggleStar,
-    } = useDocumentStar(isDocumentPage ? documentId || '' : '');
     const documentAccessRequestNotificationCount =
         getUnreadAccessRequestCountForDocument(
             notificationMenuProps.notifications,
@@ -65,15 +58,7 @@ export default function Header({ workspaceSlug }: Props) {
                 <TopLoadingBar isLoading={isLoading} />
                 <header className="fixed inset-x-0 top-0 z-50 grid h-[var(--header-height)] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 border-b border-border-subtle bg-background/95 px-3 backdrop-blur-sm sm:px-4">
                     <div className="flex items-center gap-0.5">
-                        <Button
-                            asChild
-                            variant="ghost"
-                            size="icon"
-                            className={
-                                isDocumentPage
-                                    ? 'max-md:size-11 max-[374px]:hidden'
-                                    : undefined
-                            }>
+                        <Button variant="ghost" size="icon-xs">
                             <Link
                                 href={ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug)}
                                 onClick={handleLogoClick}>
@@ -86,14 +71,7 @@ export default function Header({ workspaceSlug }: Props) {
                                 />
                             </Link>
                         </Button>
-                        <div
-                            className={
-                                isDocumentPage
-                                    ? 'max-md:[&_button]:size-11'
-                                    : undefined
-                            }>
-                            <SidebarToggleButton />
-                        </div>
+                        <SidebarToggleButton />
                     </div>
                     <div className="min-w-0 justify-self-end lg:w-full lg:max-w-xl lg:justify-self-center">
                         <div data-tour="mobile-search" className="lg:hidden">
@@ -108,17 +86,12 @@ export default function Header({ workspaceSlug }: Props) {
                     <div
                         className={
                             isDocumentPage
-                                ? 'flex min-w-0 items-center justify-end gap-1 max-md:[&_button]:min-h-11 max-md:[&_button]:min-w-11'
-                                : 'flex min-w-0 items-center justify-end gap-1'
+                                ? 'flex min-w-0 items-center justify-end gap-1.5 max-md:[&_button]:min-h-11 max-md:[&_button]:min-w-11'
+                                : 'flex min-w-0 items-center justify-end gap-1.5'
                         }>
                         {isDocumentPage && documentId && permissionType && (
                             <>
                                 <DocumentPresence documentId={documentId} />
-                                <DocumentStarButton
-                                    isStarred={isStarred}
-                                    isLoading={isUpdatingStar}
-                                    onToggle={() => void toggleStar()}
-                                />
                                 <RequestEditButton documentId={documentId} />
                                 <ShareExportButton
                                     documentId={documentId}

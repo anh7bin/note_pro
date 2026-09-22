@@ -16,10 +16,8 @@ export function TourHelpButton() {
         <SimpleTooltip title={t('tourStartAgain')}>
             <span data-tour="tour-help" className="inline-flex">
                 <Button
-                    type="button"
                     variant="ghost"
-                    size="icon"
-                    aria-label={t('tourStartAgain')}
+                    size="icon-xs"
                     disabled={isTourRunning}
                     onClick={() =>
                         startTour(
@@ -28,7 +26,7 @@ export function TourHelpButton() {
                                 : 'workspace'
                         )
                     }>
-                    <CircleHelp aria-hidden="true" className="h-4 w-4" />
+                    <CircleHelp />
                 </Button>
             </span>
         </SimpleTooltip>

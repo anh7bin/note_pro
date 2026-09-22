@@ -1,8 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { PendingAccessRequest } from './share.types';
-import { getUserInitials } from './share.utils';
 import { useI18n } from '@/contexts/I18nContext';
+import { PendingAccessRequest } from './share.types';
 
 type PendingAccessRequestsProps = {
     requests: PendingAccessRequest[];
@@ -25,7 +24,7 @@ export const PendingAccessRequests = ({
             aria-labelledby="pending-requests-heading">
             <h3
                 id="pending-requests-heading"
-                className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t('pendingRequests')}
             </h3>
             {requests.map((request) => {
@@ -34,18 +33,12 @@ export const PendingAccessRequests = ({
                 return (
                     <div
                         key={request.id}
-                        className="flex flex-col gap-3 rounded-md border border-info/20 bg-info-subtle p-3 sm:flex-row sm:items-center">
-                        <Avatar className="h-10 w-10 shrink-0">
+                        className="flex flex-col gap-3 rounded-md border border-info/20 bg-info-subtle p-1.5 sm:flex-row sm:items-center">
+                        <Avatar className="h-8 w-8 shrink-0">
                             <AvatarImage
                                 src={request.requester?.avatar_url || ''}
                                 alt={request.requester?.name || t('user')}
                             />
-                            <AvatarFallback className="bg-primary text-primary-foreground">
-                                {getUserInitials(
-                                    request.requester?.name,
-                                    request.requester?.email
-                                )}
-                            </AvatarFallback>
                         </Avatar>
 
                         <div className="min-w-0 flex-1">
@@ -66,7 +59,7 @@ export const PendingAccessRequests = ({
                             </p>
                         </div>
 
-                        <div className="flex shrink-0 gap-2 self-end sm:self-auto">
+                        <div className="flex shrink-0 gap-1.5 self-end sm:self-auto">
                             <Button
                                 variant="outline"
                                 size="sm"

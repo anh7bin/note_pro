@@ -25,12 +25,7 @@ export function SidebarToggleButton() {
 
     return (
         <SimpleTooltip title={t('toggleSidebar')}>
-            <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                aria-label={t('toggleSidebar')}
-                onClick={toggle}>
+            <Button variant="ghost" size="icon-xs" onClick={toggle}>
                 <PiSidebar />
             </Button>
         </SimpleTooltip>

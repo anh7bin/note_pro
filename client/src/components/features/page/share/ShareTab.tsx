@@ -70,14 +70,10 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
                 />
             )}
 
-            <section
-                aria-labelledby="invite-collaborators-heading"
-                className="rounded-lg bg-muted/40 p-3">
+            <section className="rounded-lg bg-muted/40">
                 <div className="flex items-center gap-2">
                     <TbUsers />
-                    <h3
-                        id="invite-collaborators-heading"
-                        className="text-sm font-semibold">
+                    <h3 className="text-sm font-semibold">
                         {t('inviteCollaborators')}
                     </h3>
                 </div>
@@ -113,10 +109,8 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
                 />
             </section>
 
-            <section
-                aria-label={t('linkAccess')}
-                className="rounded-lg bg-muted/40 p-3">
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_9rem]">
+            <section className="rounded-lg bg-muted/40">
+                <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[minmax(0,1fr)_9rem]">
                     <PermissionSelector
                         value={linkPermission}
                         disabled={
@@ -127,10 +121,10 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
                         }
                     />
                     <Button
-                        type="button"
+                        size="sm"
                         className="w-full px-3"
                         onClick={() => void onCopyLink()}>
-                        <Copy aria-hidden="true" />
+                        <Copy />
                         {t('copyLink')}
                     </Button>
                 </div>

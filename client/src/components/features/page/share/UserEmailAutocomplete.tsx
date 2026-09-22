@@ -4,6 +4,7 @@ import { UserAvatar } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
+import { Loading } from '@/components/ui/loading';
 import {
     Select,
     SelectContent,
@@ -11,15 +12,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
+import { useI18n } from '@/contexts/I18nContext';
 import { useSearchUsersByEmailLazyQuery } from '@/graphql/queries/__generated__/user.generated';
 import { PermissionType } from '@/types/types';
 import debounce from 'lodash/debounce';
 import differenceBy from 'lodash/differenceBy';
 import { X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { useI18n } from '@/contexts/I18nContext';
-import { Loading } from '@/components/ui/loading';
-import { Spinner } from '@/components/ui/spinner';
 
 export type UserSearchResult = {
     id: string;
@@ -116,14 +116,8 @@ export function UserEmailAutocomplete({
                         title: documentTitle || t('untitledPage'),
                     })}
                 </h2>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 shrink-0"
-                    aria-label={t('backToShare')}
-                    onClick={onClose}>
-                    <X aria-hidden="true" />
+                <Button variant="ghost" size="icon-xs" onClick={onClose}>
+                    <X />
                 </Button>
             </div>
 
@@ -168,9 +162,7 @@ export function UserEmailAutocomplete({
                 </Select>
             </div>
 
-            <div
-                className="min-h-0 flex-1 space-y-1 overflow-y-auto pb-3"
-                aria-live="polite">
+            <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pb-1">
                 {loading && !data ? (
                     <div className="flex min-h-32 items-center justify-center">
                         <Loading size="sm" text={t('searchingUsers')} />
@@ -188,7 +180,7 @@ export function UserEmailAutocomplete({
                             <label
                                 key={user.id}
                                 htmlFor={checkboxId}
-                                className="flex min-h-12 cursor-pointer items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-accent">
+                                className="flex min-h-12 cursor-pointer items-center gap-1.5 rounded-md p-1.5 transition-colors hover:bg-accent">
                                 <UserAvatar
                                     avatarUrl={user.avatar_url}
                                     name={user.name}
@@ -208,16 +200,7 @@ export function UserEmailAutocomplete({
                                     onCheckedChange={(value) =>
                                         toggleUser(user, value === true)
                                     }
-                                    aria-label={t(
-                                        checked ? 'deselectUser' : 'selectUser',
-                                        {
-                                            name: getDisplayName(
-                                                user,
-                                                t('unknown')
-                                            ),
-                                        }
-                                    )}
-                                    className="h-5 w-5"
+                                    className="h-4 w-4"
                                 />
                             </label>
                         );
@@ -226,7 +209,7 @@ export function UserEmailAutocomplete({
             </div>
 
             <Button
-                type="button"
+                size="sm"
                 className="w-full"
                 disabled={selectedUsers.size === 0 || isInviting}
                 aria-busy={isInviting}

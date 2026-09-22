@@ -1,3 +1,6 @@
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
+import { UserAvatar } from '@/components/shared';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,15 +16,12 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { FlagIcon } from '@/components/ui/language-switcher';
+import { useI18n } from '@/contexts/I18nContext';
+import { useTheme } from '@/contexts/ThemeProvider';
+import { useLogout } from '@/hooks/useLogout';
+import { isLocale } from '@/i18n/config';
 import { LogOut, Moon, Sun } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useLogout } from '@/hooks/useLogout';
-import { UserAvatar } from '@/components/shared';
-import { Button } from '@/components/ui/button';
-import { useI18n } from '@/contexts/I18nContext';
-import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
-import { useTheme } from '@/contexts/ThemeProvider';
-import { isLocale } from '@/i18n/config';
 
 export const SettingButton = () => {
     const { data: session } = useSession();
@@ -34,16 +34,12 @@ export const SettingButton = () => {
             <DropdownMenu modal={false}>
                 <SimpleTooltip title={t('account')}>
                     <DropdownMenuTrigger asChild>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            aria-label={t('account')}>
+                        <Button variant="ghost" size="icon-xs">
                             <UserAvatar
                                 avatarUrl={session?.user?.image}
                                 name={session?.user?.name}
                                 email={session?.user?.email || ''}
-                                size={24}
+                                size={20}
                             />
                         </Button>
                     </DropdownMenuTrigger>
@@ -61,7 +57,7 @@ export const SettingButton = () => {
                                 {session?.user?.name}
                             </p>
                             <p className="text-xs leading-none text-muted-foreground">
-                                {session?.user?.email ?? t('noEmail')}
+                                {session?.user?.email}
                             </p>
                         </div>
                     </DropdownMenuLabel>

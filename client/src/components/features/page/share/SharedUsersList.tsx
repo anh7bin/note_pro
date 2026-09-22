@@ -1,5 +1,6 @@
 'use client';
 
+import { UserAvatar } from '@/components/shared';
 import {
     Select,
     SelectContent,
@@ -9,7 +10,6 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
-import { UserAvatar } from '@/components/shared';
 import { useI18n } from '@/contexts/I18nContext';
 
 export type SharedUser = {
@@ -57,12 +57,12 @@ function UserCard({
 
     return (
         <div
-            className={`flex items-center justify-between gap-2 rounded-md p-2 ${
+            className={`flex items-center justify-between gap-1.5 rounded-md p-1.5 ${
                 isOwner
                     ? 'bg-accent/30'
                     : 'hover:bg-accent/50 transition-colors'
             }`}>
-            <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
                 <UserAvatar
                     avatarUrl={user.avatar_url}
                     name={user.name}
@@ -102,15 +102,7 @@ function UserCard({
                         }
                     }}
                     disabled={!canOpenPermissionMenu}>
-                    <SelectTrigger
-                        className="h-9 w-32 shrink-0 text-sm"
-                        aria-label={
-                            isCurrentUser
-                                ? t('manageYourAccess')
-                                : t('changeUserAccess', {
-                                      name: displayName,
-                                  })
-                        }>
+                    <SelectTrigger className="w-32 shrink-0 text-sm">
                         <SelectValue>
                             {user.role === 'editor' ? t('editor') : t('viewer')}
                         </SelectValue>

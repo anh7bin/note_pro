@@ -18,14 +18,8 @@ export const MobileSearch = () => {
                 className: 'w-[calc(100vw-1rem)] p-2 lg:hidden',
             }}
             trigger={
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="max-md:size-11"
-                    aria-label={t('search')}
-                    aria-expanded={open}>
-                    <Search aria-hidden="true" />
+                <Button variant="ghost" size="icon-xs">
+                    <Search />
                 </Button>
             }>
             <SearchInputField onResultClick={() => setOpen(false)} />

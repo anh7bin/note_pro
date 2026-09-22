@@ -71,27 +71,14 @@ export function ShareExportButton({
                 <Button
                     data-tour="editor-share"
                     variant={isShared ? 'default' : 'outline'}
-                    size="sm"
-                    className="relative"
-                    aria-label={
-                        accessRequestCount > 0
-                            ? `${t('shareAndExport')}. ${t(
-                                  'pendingAccessRequestCount',
-                                  {
-                                      count: accessRequestCount,
-                                  }
-                              )}`
-                            : t('shareAndExport')
-                    }>
+                    size="xs"
+                    className="relative">
                     <ShareIcon />
                     <span className="hidden lg:inline">
                         {isShared ? t('shared') : t('share')}
                     </span>
                     {accessRequestCount > 0 && (
-                        <span
-                            aria-hidden="true"
-                            className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background"
-                        />
+                        <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-background" />
                     )}
                 </Button>
             }>
@@ -102,13 +89,13 @@ export function ShareExportButton({
                         <TabsTrigger value="export">{t('export')}</TabsTrigger>
                     </TabsList>
                 )}
-                <TabsContent value="share" className="m-0">
+                <TabsContent value="share">
                     <ShareTab
                         documentId={documentId}
                         onInviteModeChange={setInviteMode}
                     />
                 </TabsContent>
-                <TabsContent value="export" className="m-0">
+                <TabsContent value="export">
                     <ExportTab />
                 </TabsContent>
             </Tabs>
