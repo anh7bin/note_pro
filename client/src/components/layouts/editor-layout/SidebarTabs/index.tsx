@@ -43,18 +43,16 @@ export function SidebarTabs({
             <TabsList
                 data-tour="editor-sidebar-tabs"
                 className="grid shrink-0 grid-cols-4">
-                <TabsTrigger
-                    value="contents"
-                    aria-label={t('documentContents')}>
+                <TabsTrigger value="contents">
                     <Menu className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="tasks" aria-label={t('documentTasks')}>
+                <TabsTrigger value="tasks">
                     <CheckCircle className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="attachments" aria-label={t('attachments')}>
+                <TabsTrigger value="attachments">
                     <Paperclip className="h-4 w-4" />
                 </TabsTrigger>
-                <TabsTrigger value="find" aria-label={t('searchInDocument')}>
+                <TabsTrigger value="find">
                     <Search className="h-4 w-4" />
                 </TabsTrigger>
             </TabsList>

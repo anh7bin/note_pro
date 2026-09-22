@@ -60,10 +60,7 @@ export const NotificationItem = ({
             </span>
 
             {!notification.is_read && (
-                <span
-                    className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-info"
-                    aria-label={t('unreadCount', { count: 1 })}
-                />
+                <span className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-info" />
             )}
         </button>
     );

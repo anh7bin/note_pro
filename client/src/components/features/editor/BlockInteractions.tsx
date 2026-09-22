@@ -195,8 +195,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                     <button
                         key={emoji}
                         type="button"
-                        className="flex h-9 w-9 items-center justify-center rounded-md text-lg transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
-                        aria-label={t('reactWith', { emoji })}
+                        className="flex h-6 w-6 items-center justify-center rounded-md text-lg transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                         onClick={() => {
                             void toggleReaction(blockId, emoji);
                             setReactionOpen(false);
@@ -240,7 +239,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                         )}
                     </Button>
                 }>
-                <div className="flex h-11 items-center justify-between border-b border-border px-3">
+                <div className="flex h-10 items-center justify-between border-b border-border px-3">
                     <h3 className="text-sm font-semibold">{t('comments')}</h3>
                     <Button
                         variant="ghost"
@@ -252,8 +251,7 @@ export const BlockInteractions = memo(function BlockInteractions({
 
                 <div
                     ref={commentsScrollRef}
-                    className="max-h-72 min-h-24 overflow-y-auto p-3"
-                    aria-live="polite">
+                    className="max-h-72 min-h-24 overflow-y-auto p-3">
                     {comments.length === 0 ? (
                         <div className="flex min-h-20 items-center justify-center text-center text-sm text-muted-foreground">
                             {t('startConversation')}

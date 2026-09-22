@@ -91,11 +91,6 @@ export const DatePicker = ({
             trigger={
                 <Button
                     variant="ghost"
-                    aria-label={
-                        value
-                            ? `${displayPlaceholder}: ${getDateDisplayText(value)}`
-                            : displayPlaceholder
-                    }
                     className="h-10 justify-start border border-input bg-background px-3 text-left font-normal text-muted-foreground hover:border-border-strong hover:bg-accent hover:text-foreground">
                     {icon ? icon : <CalendarDays className="h-4 w-4" />}
                     {value

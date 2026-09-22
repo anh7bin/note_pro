@@ -216,9 +216,6 @@ export const SortableBlockItem = memo(
                 style={style}
                 data-block-id={block.id}
                 role={usesBlockLevelFocus ? 'group' : undefined}
-                aria-label={
-                    usesBlockLevelFocus ? `${block.type} block` : undefined
-                }
                 tabIndex={usesBlockLevelFocus ? -1 : undefined}
                 onFocusCapture={() => {
                     if (usesBlockLevelFocus) handleBlockFocus(block.id);

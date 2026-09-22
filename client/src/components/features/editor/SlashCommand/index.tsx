@@ -99,7 +99,6 @@ export const SlashCommand = memo(function SlashCommand({
                             <div
                                 key={group.id}
                                 role="group"
-                                aria-label={group.label}
                                 className="py-1 first:pt-0">
                                 <div className="px-1 pb-1 pt-1 text-xs font-medium text-muted-foreground">
                                     {group.label}

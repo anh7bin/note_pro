@@ -8,7 +8,6 @@ interface InputFieldProps extends React.ComponentProps<'input'> {
     popoverContent?: React.ReactNode;
     popoverClassName?: string;
     popoverHeight?: string | number;
-    popoverLabel?: string;
     triggerClassName?: string;
     icon?: React.ReactNode;
     iconPosition?: 'left' | 'right';
@@ -20,7 +19,6 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             popoverContent,
             popoverClassName,
             popoverHeight = '200px',
-            popoverLabel = 'Suggestions',
             triggerClassName,
             className,
             icon,
@@ -121,9 +119,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             <div className="relative min-w-0">
                 <div className="relative">
                     {icon && iconPosition === 'left' && (
-                        <div
-                            aria-hidden="true"
-                            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                        <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                             {icon}
                         </div>
                     )}
@@ -139,14 +135,10 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
                         onClick={handleInputClick}
                         onBlur={handleInputBlur}
                         onKeyDown={handleInputKeyDown}
-                        aria-expanded={hasPopover ? open : undefined}
-                        aria-controls={hasPopover ? popoverId : undefined}
                         {...props}
                     />
                     {icon && iconPosition === 'right' && (
-                        <div
-                            aria-hidden="true"
-                            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                             {icon}
                         </div>
                     )}
@@ -156,7 +148,6 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
                         id={popoverId}
                         ref={dropdownRef}
                         role="region"
-                        aria-label={popoverLabel}
                         className={cn(
                             'absolute z-50 mt-2 w-full animate-in rounded-md border border-border bg-popover shadow-md fade-in-0 zoom-in-95',
                             popoverClassName

@@ -81,7 +81,6 @@ export const SearchTab = ({ blocks, onScrollToBlock }: SearchTabProps) => {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => setSearchFilter(filter.value)}
-                                aria-pressed={searchFilter === filter.value}
                                 className={cn(
                                     'h-8 border px-2 text-xs',
                                     searchFilter === filter.value

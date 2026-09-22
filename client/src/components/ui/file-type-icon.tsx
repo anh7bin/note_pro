@@ -41,7 +41,6 @@ export function FileTypeIcon({ extension, className }: FileTypeIconProps) {
     if (!iconUrl) {
         return (
             <FileIcon
-                aria-hidden="true"
                 className={cn('shrink-0 text-muted-foreground', className)}
                 strokeWidth={1.5}
             />
@@ -54,7 +53,6 @@ export function FileTypeIcon({ extension, className }: FileTypeIconProps) {
         <img
             src={iconUrl}
             alt=""
-            aria-hidden="true"
             draggable={false}
             className={cn('shrink-0 object-contain', className)}
             onError={() =>

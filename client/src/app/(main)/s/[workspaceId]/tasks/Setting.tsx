@@ -83,12 +83,8 @@ export const Setting = () => {
             onModalOpen={handleModalOpen}
             loading={completedTasksLoading}
             error={Boolean(completedTasksError)}>
-            <Button
-                variant="outline"
-                size="sm"
-                className="gap-2 px-2.5"
-                aria-label={t('viewCompletedTasks')}>
-                <CheckCircle2 aria-hidden="true" />
+            <Button variant="outline" size="sm">
+                <CheckCircle2 />
                 <span className="hidden md:inline">{t('completedTasks')}</span>
             </Button>
         </CompletedTasksModal>

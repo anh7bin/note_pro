@@ -36,7 +36,6 @@ export function SearchInputField({ onResultClick, autoFocus }: Props) {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             type="search"
-            aria-label={t('searchPlaceholder')}
             placeholder={t('searchPlaceholder')}
             className={cn('h-8 w-full bg-background')}
             icon={<Search className="h-4 w-4" />}

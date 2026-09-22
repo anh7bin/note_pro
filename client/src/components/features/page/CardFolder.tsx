@@ -89,14 +89,6 @@ const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
         <div
             role={isSelectionActive ? 'button' : 'link'}
             tabIndex={0}
-            aria-label={
-                isSelectionActive
-                    ? t(selected ? 'deselectFolder' : 'selectFolder', {
-                          name: folder.name,
-                      })
-                    : t('openFolder', { name: folder.name })
-            }
-            aria-pressed={isSelectionActive ? selected : undefined}
             className={`group grid min-h-[76px] cursor-pointer grid-cols-[minmax(0,1fr)_64px] items-center border-b border-border/60 px-4 py-2.5 transition-colors hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:grid-cols-[minmax(0,1fr)_132px_116px_64px] ${
                 selected ? 'bg-primary/5' : ''
             }`}
@@ -107,7 +99,7 @@ const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
                     {folder.icon ? (
                         <span className="text-xl">{folder.icon}</span>
                     ) : (
-                        <Folder className="h-5 w-5" aria-hidden="true" />
+                        <Folder className="h-5 w-5" />
                     )}
                 </span>
                 <div className="min-w-0 flex-1">
@@ -135,22 +127,14 @@ const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
             <div className="flex justify-end">
                 <Button
                     variant="ghost"
-                    size="icon"
-                    aria-label={
-                        selected
-                            ? t('deselectItem', { name: folder.name })
-                            : t('selectItem', { name: folder.name })
-                    }
-                    aria-pressed={selected}
-                    className={`h-6 w-6 rounded-full border focus-visible:opacity-100 ${
+                    size="icon-xs"
+                    className={`h-5 w-5 rounded-full border focus-visible:opacity-100 ${
                         selected
                             ? 'border-primary bg-primary text-primary-foreground'
                             : 'border-border bg-background opacity-100 md:opacity-0 md:group-hover:opacity-100'
                     }`}
                     onClick={handleSelectToggle}>
-                    {selected && (
-                        <Check aria-hidden="true" className="h-3 w-3" />
-                    )}
+                    {selected && <Check />}
                 </Button>
             </div>
         </div>
@@ -170,14 +154,6 @@ const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
                     key={folder.id}
                     role={isSelectionActive ? 'button' : 'link'}
                     tabIndex={0}
-                    aria-label={
-                        isSelectionActive
-                            ? t(selected ? 'deselectFolder' : 'selectFolder', {
-                                  name: folder.name,
-                              })
-                            : t('openFolder', { name: folder.name })
-                    }
-                    aria-pressed={isSelectionActive ? selected : undefined}
                     className={`group relative flex h-[140px] w-full cursor-pointer flex-col bg-primary/5 transition-[border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 ${
                         selected
                             ? 'border-primary ring-1 ring-primary/25'
@@ -190,14 +166,6 @@ const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                aria-label={
-                                    selected
-                                        ? t('deselectItem', {
-                                              name: folder.name,
-                                          })
-                                        : t('selectItem', { name: folder.name })
-                                }
-                                aria-pressed={selected}
                                 className={`h-5 w-5 rounded-full border transition-all focus-visible:opacity-100 ${
                                     selected
                                         ? 'opacity-100 bg-primary border-primary text-primary-foreground'

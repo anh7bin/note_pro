@@ -20,14 +20,12 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
             {isOpen && (
                 <button
                     type="button"
-                    aria-label={t('closeDocumentSidebar')}
                     className="fixed inset-x-0 bottom-0 top-[var(--header-height)] z-30 bg-black/35 md:hidden"
                     onClick={toggle}
                 />
             )}
             <div
                 data-tour="editor-sidebar"
-                aria-hidden={!isOpen}
                 className={cn(
                     'fixed bottom-0 left-0 top-[var(--header-height)] z-40 w-[var(--sidebar-width)] flex-shrink-0 overflow-hidden border-border-subtle bg-background shadow-md transition-[transform,width,visibility] duration-300 md:static md:h-full md:shadow-none',
                     isOpen

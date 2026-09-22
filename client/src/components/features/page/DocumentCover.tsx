@@ -73,7 +73,6 @@ export function DocumentCover({
                         accept="image/*"
                         onChange={handleFileChange}
                         className="hidden"
-                        aria-label={t('chooseCover')}
                     />
                 </>
             )}

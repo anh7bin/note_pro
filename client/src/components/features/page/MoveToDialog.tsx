@@ -58,8 +58,7 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
                     <Button
                         size="sm"
                         onClick={handleSelect}
-                        disabled={isSubmitting}
-                        aria-busy={isSubmitting}>
+                        disabled={isSubmitting}>
                         {isSubmitting ? t('moving') : t('move')}
                     </Button>
                 </>
@@ -71,7 +70,6 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
                 <div className="max-h-72 space-y-1 overflow-y-auto pr-1">
                     <button
                         type="button"
-                        aria-pressed={selectedFolderId === null}
                         className={cn(
                             'flex min-h-11 w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                             selectedFolderId === null
@@ -98,7 +96,6 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
                             <button
                                 type="button"
                                 key={folder.id}
-                                aria-pressed={isSelected}
                                 className={cn(
                                     'flex min-h-11 w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                                     isSelected

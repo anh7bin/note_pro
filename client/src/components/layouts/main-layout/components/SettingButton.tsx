@@ -67,11 +67,7 @@ export const SettingButton = () => {
                         onClick={() =>
                             setTheme(theme === 'light' ? 'dark' : 'light')
                         }>
-                        {theme === 'light' ? (
-                            <Moon aria-hidden="true" />
-                        ) : (
-                            <Sun aria-hidden="true" />
-                        )}
+                        {theme === 'light' ? <Moon /> : <Sun />}
                         {mounted
                             ? t(
                                   theme === 'light'

@@ -40,11 +40,11 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                                   : 'bg-muted text-muted-foreground'
                         }`}>
                         {requestStatus === AccessRequestStatus.PENDING ? (
-                            <Clock3 className="h-7 w-7" />
+                            <Clock3 />
                         ) : requestStatus === AccessRequestStatus.REJECTED ? (
-                            <XCircle className="h-7 w-7" />
+                            <XCircle />
                         ) : (
-                            <LockKeyhole className="h-7 w-7" />
+                            <LockKeyhole />
                         )}
                     </div>
                 </div>
@@ -68,10 +68,10 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                 {!requestStatus && (
                     <Button
                         variant="default"
+                        size="sm"
                         className="w-full"
                         onClick={requestReadAccess}
-                        disabled={isRequesting}
-                        aria-busy={isRequesting}>
+                        disabled={isRequesting}>
                         <LockKeyhole />
                         {isRequesting
                             ? t('sendingRequest')
@@ -82,7 +82,7 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                 {requestStatus === AccessRequestStatus.PENDING && (
                     <div className="rounded-md border border-warning/20 bg-warning-subtle p-4">
                         <div className="flex items-center gap-2 text-warning-foreground">
-                            <Clock3 className="h-5 w-5" />
+                            <Clock3 />
                             <p className="text-sm font-medium">
                                 {t('waitingForApproval')}
                             </p>
@@ -93,7 +93,7 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                 {requestStatus === AccessRequestStatus.REJECTED && (
                     <div className="rounded-md border border-destructive/20 bg-destructive/10 p-4">
                         <div className="flex items-center gap-2 text-destructive">
-                            <XCircle className="h-5 w-5" />
+                            <XCircle />
                             <p className="text-sm font-medium">
                                 {t('requestWasDenied')}
                             </p>
@@ -105,10 +105,9 @@ export function RequestAccessView({ documentId }: RequestAccessViewProps) {
                     <p>{t('loggedInAs', { email: userEmail || '' })}</p>
                     <Button
                         variant="outline"
-                        size="sm"
+                        size="xs"
                         onClick={logout}
-                        disabled={isLoggingOut}
-                        aria-busy={isLoggingOut}>
+                        disabled={isLoggingOut}>
                         <LogOut />
                         {isLoggingOut ? t('signingOut') : t('signOut')}
                     </Button>

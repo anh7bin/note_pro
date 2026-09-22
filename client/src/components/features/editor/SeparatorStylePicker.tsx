@@ -80,7 +80,6 @@ export const SeparatorStylePicker = ({
         <div
             ref={ref}
             role="dialog"
-            aria-label={t('chooseSeparatorStyle')}
             className="fixed z-50 min-w-52 rounded-md border border-border bg-popover p-2 text-popover-foreground shadow-md"
             style={{ top: position.top, left: position.left }}>
             <div className="mb-2 px-2 pt-1 text-xs font-semibold text-muted-foreground">

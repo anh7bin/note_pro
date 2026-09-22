@@ -45,19 +45,8 @@ export function FileUploadPreview({
               : errorMessage || 'Upload failed. Please try again.';
 
     return (
-        <div
-            className={cn('relative py-1', className)}
-            role="group"
-            aria-busy={!hasError}
-            aria-label={
-                hasError
-                    ? `Upload failed for ${fileName}${queueProgress ? ` (${queueProgress})` : ''}`
-                    : `Uploading ${fileName}${queueProgress ? ` (${queueProgress})` : ''}`
-            }>
-            <span
-                className="sr-only"
-                role={hasError ? 'alert' : 'status'}
-                aria-live={hasError ? 'assertive' : 'polite'}>
+        <div className={cn('relative py-1', className)} role="group">
+            <span className="sr-only" role={hasError ? 'alert' : 'status'}>
                 {statusText} {fileName}
                 {queueProgress ? ` (${queueProgress})` : ''}
             </span>
@@ -109,11 +98,7 @@ export function FileUploadPreview({
                         {!hasError && (
                             <div
                                 className="mt-2 h-1 overflow-hidden rounded-full bg-muted"
-                                role="progressbar"
-                                aria-label={`Upload progress for ${fileName}`}
-                                aria-valuemin={0}
-                                aria-valuemax={100}
-                                aria-valuenow={normalizedProgress}>
+                                role="progressbar">
                                 <div
                                     className="h-full origin-left rounded-full bg-primary transition-transform duration-150 ease-out motion-reduce:transition-none"
                                     style={{
@@ -126,38 +111,32 @@ export function FileUploadPreview({
                     {hasError ? (
                         <div className="flex shrink-0 items-center gap-1">
                             <Button
-                                type="button"
                                 variant="ghost"
-                                size="sm"
-                                className="h-8 px-2 text-xs"
+                                size="xs"
                                 onPointerDown={(event) =>
                                     event.stopPropagation()
                                 }
                                 onClick={onRetry}>
-                                <RotateCcw aria-hidden="true" />
+                                <RotateCcw />
                                 Try again
                             </Button>
                             <Button
-                                type="button"
                                 variant="ghost"
-                                size="icon"
-                                aria-label={`Dismiss failed upload for ${fileName}`}
+                                size="icon-xs"
                                 onPointerDown={(event) =>
                                     event.stopPropagation()
                                 }
                                 onClick={onDismiss}>
-                                <X aria-hidden="true" />
+                                <X />
                             </Button>
                         </div>
                     ) : status === 'uploading' ? (
                         <Button
-                            type="button"
                             variant="ghost"
-                            size="icon"
-                            aria-label={`Cancel upload for ${fileName}`}
+                            size="icon-xs"
                             onPointerDown={(event) => event.stopPropagation()}
                             onClick={onCancel}>
-                            <X aria-hidden="true" />
+                            <X />
                         </Button>
                     ) : (
                         <Spinner size="sm" className="shrink-0" />

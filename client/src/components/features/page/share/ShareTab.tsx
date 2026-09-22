@@ -84,7 +84,6 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
                 {isOwner && (
                     <Input
                         readOnly
-                        aria-label={t('addPeople')}
                         placeholder={t('addEmails')}
                         className="cursor-text bg-background"
                         onClick={() => {

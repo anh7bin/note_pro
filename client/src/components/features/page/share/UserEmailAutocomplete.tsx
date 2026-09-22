@@ -128,7 +128,6 @@ export function UserEmailAutocomplete({
                     value={inputValue}
                     onChange={(event) => setInputValue(event.target.value)}
                     placeholder={t('addEmails')}
-                    aria-label={t('searchUsersByEmail')}
                     autoComplete="off"
                     className="min-w-0"
                 />
@@ -142,9 +141,7 @@ export function UserEmailAutocomplete({
                             setPermission(value);
                         }
                     }}>
-                    <SelectTrigger
-                        className="w-full"
-                        aria-label={t('invitedUserPermission')}>
+                    <SelectTrigger className="w-full">
                         <SelectValue>
                             {permission === PermissionType.WRITE
                                 ? t('editor')
@@ -212,7 +209,6 @@ export function UserEmailAutocomplete({
                 size="sm"
                 className="w-full"
                 disabled={selectedUsers.size === 0 || isInviting}
-                aria-busy={isInviting}
                 onClick={() => void handleInvite()}>
                 {isInviting ? (
                     <>

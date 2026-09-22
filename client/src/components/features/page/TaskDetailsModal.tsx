@@ -215,7 +215,6 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
                     <Button
                         size="sm"
                         disabled={saving || !taskData.title.trim()}
-                        aria-busy={saving}
                         onClick={handleSave}>
                         {saving ? t('saving') : t('save')}
                     </Button>

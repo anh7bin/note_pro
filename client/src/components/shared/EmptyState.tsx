@@ -28,9 +28,7 @@ export function EmptyState({
             )}
             {...props}>
             {icon && (
-                <div
-                    aria-hidden="true"
-                    className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground [&_svg]:h-5 [&_svg]:w-5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground [&_svg]:h-5 [&_svg]:w-5">
                     {icon}
                 </div>
             )}

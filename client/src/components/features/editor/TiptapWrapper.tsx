@@ -18,7 +18,6 @@ export const TiptapWrapper = ({ children }: TiptapWrapperProps) => {
         return (
             <div
                 role="status"
-                aria-label="Loading editor"
                 className="min-h-24 rounded-md border border-border-subtle bg-muted/30">
                 <div className="p-4">
                     <Skeleton className="mb-2 h-4 w-3/4" />

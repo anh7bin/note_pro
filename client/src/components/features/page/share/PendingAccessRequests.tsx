@@ -19,9 +19,7 @@ export const PendingAccessRequests = ({
     const { t } = useI18n();
 
     return (
-        <section
-            className="space-y-2"
-            aria-labelledby="pending-requests-heading">
+        <section className="space-y-2">
             <h3
                 id="pending-requests-heading"
                 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">

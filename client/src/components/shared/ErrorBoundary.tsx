@@ -20,7 +20,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
                 role="alert"
                 className="w-full max-w-lg space-y-4 rounded-lg border border-border-subtle bg-card p-6 text-center shadow-sm sm:p-8">
                 <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
-                    <CircleAlert className="h-6 w-6" aria-hidden="true" />
+                    <CircleAlert className="h-6 w-6" />
                 </span>
                 <h1 className="text-xl font-semibold text-foreground">
                     Something went wrong

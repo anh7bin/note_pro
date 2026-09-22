@@ -133,8 +133,7 @@ export function ImageModal({
                             <button
                                 type="button"
                                 onClick={handleDownload}
-                                className={controlClassName}
-                                aria-label={t('downloadImage')}>
+                                className={controlClassName}>
                                 <Download size={20} />
                             </button>
                         </SimpleTooltip>
@@ -143,8 +142,7 @@ export function ImageModal({
                                 type="button"
                                 onClick={handleZoomOut}
                                 disabled={zoom <= 0.5}
-                                className={controlClassName}
-                                aria-label={t('zoomOut')}>
+                                className={controlClassName}>
                                 <ZoomOut size={20} />
                             </button>
                         </SimpleTooltip>
@@ -152,8 +150,7 @@ export function ImageModal({
                             <button
                                 type="button"
                                 onClick={handleZoomReset}
-                                className={`${controlClassName} min-w-14 text-sm font-medium tabular-nums`}
-                                aria-label={t('resetZoom')}>
+                                className={`${controlClassName} min-w-14 text-sm font-medium tabular-nums`}>
                                 {Math.round(zoom * 100)}%
                             </button>
                         </SimpleTooltip>
@@ -162,8 +159,7 @@ export function ImageModal({
                                 type="button"
                                 onClick={handleZoomIn}
                                 disabled={zoom >= 3}
-                                className={controlClassName}
-                                aria-label={t('zoomIn')}>
+                                className={controlClassName}>
                                 <ZoomIn size={20} />
                             </button>
                         </SimpleTooltip>
@@ -177,12 +173,7 @@ export function ImageModal({
                             <button
                                 type="button"
                                 onClick={handleFullscreen}
-                                className={controlClassName}
-                                aria-label={
-                                    isFullscreen
-                                        ? t('exitFullscreen')
-                                        : t('enterFullscreen')
-                                }>
+                                className={controlClassName}>
                                 {isFullscreen ? (
                                     <Minimize2 size={20} />
                                 ) : (
@@ -196,8 +187,7 @@ export function ImageModal({
                         <button
                             type="button"
                             onClick={onClose}
-                            className={controlClassName}
-                            aria-label={t('closeModal')}>
+                            className={controlClassName}>
                             <X size={24} />
                         </button>
                     </SimpleTooltip>

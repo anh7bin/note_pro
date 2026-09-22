@@ -27,10 +27,8 @@ export function LanguageMenu({ compact = false }: LanguageMenuProps) {
     const trigger = (
         <DropdownMenuTrigger asChild>
             <Button
-                type="button"
                 variant={compact ? 'ghost' : 'outline'}
-                size={compact ? 'icon' : 'sm'}
-                aria-label={`${t('language')}: ${currentLanguage}`}>
+                size={compact ? 'icon' : 'sm'}>
                 <FlagIcon locale={locale} />
                 {!compact && <span>{locale.toUpperCase()}</span>}
             </Button>
@@ -66,9 +64,7 @@ export function LanguageMenu({ compact = false }: LanguageMenuProps) {
 
 export function FlagIcon({ locale }: { locale: Locale }) {
     return (
-        <span
-            className="inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-[2px] border border-black/10 shadow-sm"
-            aria-hidden="true">
+        <span className="inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-[2px] border border-black/10 shadow-sm">
             {locale === 'vi' ? (
                 <svg
                     viewBox="0 0 24 16"

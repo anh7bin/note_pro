@@ -104,8 +104,7 @@ export const FolderDialog = ({
                     <Button
                         size="sm"
                         onClick={handleSubmit}
-                        disabled={!folderData.name.trim() || isSubmitting}
-                        aria-busy={isSubmitting}>
+                        disabled={!folderData.name.trim() || isSubmitting}>
                         {isSubmitting
                             ? t('saving')
                             : mode === FolderMode.CREATE
@@ -127,7 +126,6 @@ export const FolderDialog = ({
                             handleInputChange('name', e.target.value)
                         }
                         required
-                        aria-required="true"
                     />
                 </div>
 

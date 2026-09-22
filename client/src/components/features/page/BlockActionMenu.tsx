@@ -147,12 +147,9 @@ export function BlockActionMenu({
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
                 <Button
-                    type="button"
                     data-block-action-trigger
                     variant="ghost"
-                    size="icon"
-                    aria-label={t('openBlockActions')}
-                    className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                    size="icon-xs"
                     onClick={handleButtonClick}>
                     <MoreVertical />
                 </Button>

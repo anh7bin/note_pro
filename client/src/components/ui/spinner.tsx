@@ -14,7 +14,6 @@ const sizeVariants = {
 export function Spinner({ size = 'md', className }: SpinnerProps) {
     return (
         <span
-            aria-hidden="true"
             className={cn(
                 'relative inline-flex shrink-0 rounded-full text-primary',
                 sizeVariants[size],

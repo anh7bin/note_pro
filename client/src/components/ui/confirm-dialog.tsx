@@ -61,8 +61,7 @@ export const ConfirmDialog = ({
                         size="sm"
                         variant={variant}
                         onClick={handleConfirm}
-                        disabled={isBusy}
-                        aria-busy={isBusy}>
+                        disabled={isBusy}>
                         {isBusy ? 'Processing...' : confirmText}
                     </Button>
                 </>

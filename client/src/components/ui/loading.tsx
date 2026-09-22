@@ -40,8 +40,6 @@ export function Loading({
         return (
             <div
                 role="status"
-                aria-live="polite"
-                aria-label={text ? undefined : t('loading')}
                 className={cn(
                     'flex items-center justify-center',
                     text &&
@@ -102,7 +100,6 @@ export function LoadingDots({ size = 'md', className }: LoadingDotsProps) {
     return (
         <div
             role="status"
-            aria-label={t('loading')}
             className={cn('flex items-center justify-center gap-1', className)}>
             {[0, 1, 2].map((i) => (
                 <div

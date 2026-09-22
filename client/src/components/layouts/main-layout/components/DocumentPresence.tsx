@@ -51,9 +51,7 @@ export function DocumentPresence({ documentId }: { documentId: string }) {
                             +{overflowCount}
                         </span>
                     )}
-                    <span className="sr-only" aria-live="polite">
-                        {statusText}
-                    </span>
+                    <span className="sr-only">{statusText}</span>
                 </button>
             }>
             <div className="px-2 pb-2 pt-1">

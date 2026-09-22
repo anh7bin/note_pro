@@ -45,7 +45,6 @@ export function DocumentIcon({
         return (
             <div
                 role="img"
-                aria-label={t('documentIcon')}
                 className="flex h-20 w-20 items-center justify-center text-7xl leading-none">
                 {icon}
             </div>
@@ -56,7 +55,6 @@ export function DocumentIcon({
         display === 'large' && icon ? (
             <button
                 type="button"
-                aria-expanded={isOpen}
                 className="flex h-20 w-20 touch-manipulation items-center justify-center rounded-lg text-7xl leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                 disabled={isSaving}>
                 <span>{icon}</span>

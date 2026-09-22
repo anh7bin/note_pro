@@ -47,7 +47,6 @@ export function AddCoverButton({
                 accept="image/*"
                 onChange={handleFileChange}
                 className="hidden"
-                aria-label={t('chooseCover')}
             />
         </>
     );

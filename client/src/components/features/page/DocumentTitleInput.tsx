@@ -47,9 +47,7 @@ export const DocumentTitleInput = memo(
         return (
             <div className="relative">
                 {editable && isEmpty && placeholder && (
-                    <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-x-0 top-0 z-10 break-words text-3xl font-bold leading-tight text-muted-foreground opacity-70 sm:text-[40px]">
+                    <span className="pointer-events-none absolute inset-x-0 top-0 z-10 break-words text-3xl font-bold leading-tight text-muted-foreground opacity-70 sm:text-[40px]">
                         {placeholder}
                     </span>
                 )}

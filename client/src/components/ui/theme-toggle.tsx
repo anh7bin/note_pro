@@ -14,11 +14,7 @@ export function ThemeToggle() {
 
     if (!mounted) {
         return (
-            <Button
-                variant="ghost"
-                size="icon"
-                aria-label={t('loadingTheme')}
-                disabled>
+            <Button variant="ghost" size="icon" disabled>
                 <div className="h-4 w-4" />
             </Button>
         );
@@ -39,13 +35,7 @@ export function ThemeToggle() {
     return (
         <SimpleTooltip
             title={theme === 'light' ? t('switchToDark') : t('switchToLight')}>
-            <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                aria-label={
-                    theme === 'light' ? t('switchToDark') : t('switchToLight')
-                }>
+            <Button variant="ghost" size="icon" onClick={toggleTheme}>
                 {getIcon()}
             </Button>
         </SimpleTooltip>

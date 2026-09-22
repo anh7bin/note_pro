@@ -174,7 +174,6 @@ export const WorkspaceButton = () => {
                         <div className="group relative">
                             <button
                                 type="button"
-                                aria-label={t('changeWorkspaceImage')}
                                 className={cn(
                                     'relative h-24 w-24 cursor-pointer overflow-hidden rounded-lg transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2',
                                     tempImageUrl ? 'bg-muted' : 'bg-muted/50'
@@ -203,12 +202,7 @@ export const WorkspaceButton = () => {
                                     fileInputRef.current?.click();
                                 }}
                                 disabled={isUploading}
-                                className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-background shadow-md transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50"
-                                aria-label={
-                                    tempImageUrl
-                                        ? t('changeImage')
-                                        : t('uploadImage')
-                                }>
+                                className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-background shadow-md transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50">
                                 <Camera className="w-3.5 h-3.5 text-foreground" />
                             </button>
 
@@ -221,8 +215,7 @@ export const WorkspaceButton = () => {
                                             e.stopPropagation();
                                             handleRemoveImage();
                                         }}
-                                        className="absolute -right-1 -top-1 flex h-8 w-8 items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-100 shadow-md transition-all hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
-                                        aria-label={t('restoreWorkspaceImage')}>
+                                        className="absolute -right-1 -top-1 flex h-8 w-8 items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-100 shadow-md transition-all hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100">
                                         <X className="w-3 h-3" />
                                     </button>
                                 )}

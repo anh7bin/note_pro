@@ -55,10 +55,8 @@ export function MobileEditorMenu({ workspaceSlug }: { workspaceSlug: string }) {
                     variant="ghost"
                     size="icon"
                     className="size-11"
-                    data-tour="editor-more"
-                    aria-label={t('moreOptions')}
-                    aria-expanded={open}>
-                    <Ellipsis aria-hidden="true" />
+                    data-tour="editor-more">
+                    <Ellipsis />
                 </Button>
             }>
             {showSearch ? (
@@ -69,7 +67,7 @@ export function MobileEditorMenu({ workspaceSlug }: { workspaceSlug: string }) {
                         size="sm"
                         className="h-11 w-full justify-start"
                         onClick={() => setShowSearch(false)}>
-                        <ArrowLeft aria-hidden="true" />
+                        <ArrowLeft />
                         {t('back')}
                     </Button>
                     <SearchInputField autoFocus onResultClick={closeMenu} />
@@ -83,7 +81,7 @@ export function MobileEditorMenu({ workspaceSlug }: { workspaceSlug: string }) {
                         <Link
                             href={ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug)}
                             onClick={closeMenu}>
-                            <House aria-hidden="true" />
+                            <House />
                             {t('allDocs')}
                         </Link>
                     </Button>
@@ -92,7 +90,7 @@ export function MobileEditorMenu({ workspaceSlug }: { workspaceSlug: string }) {
                         variant="ghost"
                         className="h-11 w-full justify-start px-3"
                         onClick={() => setShowSearch(true)}>
-                        <Search aria-hidden="true" />
+                        <Search />
                         {t('search')}
                     </Button>
                     <Button
@@ -104,11 +102,7 @@ export function MobileEditorMenu({ workspaceSlug }: { workspaceSlug: string }) {
                             setTheme(theme === 'light' ? 'dark' : 'light');
                             closeMenu();
                         }}>
-                        {theme === 'light' ? (
-                            <Moon aria-hidden="true" />
-                        ) : (
-                            <Sun aria-hidden="true" />
-                        )}
+                        {theme === 'light' ? <Moon /> : <Sun />}
                         {mounted
                             ? t(
                                   theme === 'light'
@@ -133,7 +127,6 @@ export function MobileEditorMenu({ workspaceSlug }: { workspaceSlug: string }) {
                                             : 'ghost'
                                     }
                                     className="h-11 justify-between px-2 text-xs"
-                                    aria-pressed={locale === language}
                                     onClick={() => {
                                         setLocale(language);
                                         closeMenu();
@@ -143,24 +136,20 @@ export function MobileEditorMenu({ workspaceSlug }: { workspaceSlug: string }) {
                                             ? 'vietnamese'
                                             : 'english'
                                     )}
-                                    {locale === language && (
-                                        <Check aria-hidden="true" />
-                                    )}
+                                    {locale === language && <Check />}
                                 </Button>
                             ))}
                         </div>
                     </div>
 
                     <Button
-                        type="button"
                         variant="ghost"
-                        className="h-11 w-full justify-start px-3"
                         disabled={isTourRunning}
                         onClick={() => {
                             closeMenu();
                             startTour('editor');
                         }}>
-                        <CircleHelp aria-hidden="true" />
+                        <CircleHelp />
                         {t('tourStartAgain')}
                     </Button>
 
@@ -174,21 +163,19 @@ export function MobileEditorMenu({ workspaceSlug }: { workspaceSlug: string }) {
                             />
                             <div className="min-w-0">
                                 <p className="truncate text-sm font-medium">
-                                    {session?.user?.name || t('account')}
+                                    {session?.user?.name}
                                 </p>
                                 <p className="truncate text-xs text-muted-foreground">
-                                    {session?.user?.email || t('noEmail')}
+                                    {session?.user?.email}
                                 </p>
                             </div>
                         </div>
                     </div>
                     <Button
-                        type="button"
                         variant="ghost"
-                        className="h-11 w-full justify-start px-3"
                         disabled={isLoggingOut}
                         onClick={logout}>
-                        <LogOut aria-hidden="true" />
+                        <LogOut />
                         {t('logout')}
                     </Button>
                 </div>

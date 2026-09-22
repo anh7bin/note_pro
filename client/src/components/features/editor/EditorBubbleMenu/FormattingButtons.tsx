@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useCallback } from 'react';
+import type { TranslationKey } from '@/i18n/messages';
 import { Editor } from '@tiptap/react';
 import {
     Bold,
@@ -10,9 +10,8 @@ import {
     Strikethrough,
     Underline,
 } from 'lucide-react';
+import { memo, useCallback } from 'react';
 import { BubbleButton } from '../BubbleButton';
-import { useI18n } from '@/contexts/I18nContext';
-import type { TranslationKey } from '@/i18n/messages';
 
 interface Props {
     editor: Editor;
@@ -76,7 +75,6 @@ export const FormattingButtons = memo(function FormattingButtons({
     editor,
     isMarkActive,
 }: Props) {
-    const { t } = useI18n();
     const handleClick = useCallback(
         (action: (editor: Editor) => void) => {
             action(editor);
@@ -89,7 +87,6 @@ export const FormattingButtons = memo(function FormattingButtons({
             {FORMATTING_BUTTONS.map((button) => (
                 <BubbleButton
                     key={button.id}
-                    ariaLabel={t(button.label)}
                     onClick={() => handleClick(button.action)}
                     isActive={
                         button.type ? isMarkActive(button.type) : undefined

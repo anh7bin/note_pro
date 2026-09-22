@@ -59,7 +59,6 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
                                         workspaceId={workspace?.id || ''}
                                     />
                                     <div
-                                        aria-hidden="true"
                                         className={cn(
                                             'hidden shrink-0 overflow-hidden transition-[width] duration-300 md:block',
                                             isOpen

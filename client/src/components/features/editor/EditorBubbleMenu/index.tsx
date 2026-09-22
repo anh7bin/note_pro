@@ -156,7 +156,6 @@ export const EditorBubbleMenu = memo(function EditorBubbleMenu({
             <div
                 key={contentKey}
                 role="toolbar"
-                aria-label={t('textFormatting')}
                 className="flex max-w-[calc(100vw-1rem)] flex-wrap items-center gap-1 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md">
                 <FormattingButtons
                     editor={editor}

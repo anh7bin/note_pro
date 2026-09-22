@@ -265,7 +265,7 @@ export function VirtualizedTaskList({
                             placeholder={t('searchTasks')}
                             value={search}
                             onChange={(event) => setSearch(event.target.value)}
-                            icon={<Search aria-hidden="true" />}
+                            icon={<Search />}
                             className="h-8 w-full"
                         />
                     </div>
@@ -310,9 +310,7 @@ export function VirtualizedTaskList({
                             <Select
                                 value={priority}
                                 onValueChange={setPriority}>
-                                <SelectTrigger
-                                    className="h-9 w-full"
-                                    aria-label={t('filterPriority')}>
+                                <SelectTrigger className="h-9 w-full">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -337,9 +335,7 @@ export function VirtualizedTaskList({
                         <div className="space-y-1.5">
                             <Label>{t('filterSource')}</Label>
                             <Select value={source} onValueChange={setSource}>
-                                <SelectTrigger
-                                    className="h-9 w-full"
-                                    aria-label={t('filterSource')}>
+                                <SelectTrigger className="h-9 w-full">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -360,9 +356,7 @@ export function VirtualizedTaskList({
                             <Select
                                 value={dateFilter}
                                 onValueChange={setDateFilter}>
-                                <SelectTrigger
-                                    className="h-9 w-full"
-                                    aria-label={t('filterDate')}>
+                                <SelectTrigger className="h-9 w-full">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>

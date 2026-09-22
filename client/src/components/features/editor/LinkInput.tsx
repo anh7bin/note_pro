@@ -24,7 +24,6 @@ export const LinkInput = ({ onSubmit, onCancel }: Props) => {
             }}>
             <Input
                 type="url"
-                aria-label={t('linkUrl')}
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://"
@@ -44,7 +43,6 @@ export const LinkInput = ({ onSubmit, onCancel }: Props) => {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8"
-                aria-label={t('cancelLinkEditing')}
                 onClick={onCancel}>
                 <X />
             </Button>

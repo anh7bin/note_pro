@@ -76,7 +76,6 @@ export function PermissionSelector({
             {permissionOptions.map((option) => (
                 <button
                     type="button"
-                    aria-pressed={value === option.value}
                     key={option.value}
                     onClick={() => {
                         onChange(option.value as LinkPermissionType);

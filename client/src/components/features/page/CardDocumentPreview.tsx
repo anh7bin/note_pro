@@ -35,9 +35,7 @@ export const CardDocumentPreview = memo(function CardDocumentPreview({
         .slice(0, MAX_PREVIEW_BLOCKS);
 
     return (
-        <div
-            aria-hidden="true"
-            className="pointer-events-none relative h-full min-w-0 select-none overflow-hidden">
+        <div className="pointer-events-none relative h-full min-w-0 select-none overflow-hidden">
             <div
                 className="h-full space-y-2 overflow-hidden"
                 style={{

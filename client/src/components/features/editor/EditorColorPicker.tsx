@@ -67,9 +67,6 @@ export const EditorColorPicker = ({
         <div className="relative shrink-0" ref={ref}>
             <button
                 type="button"
-                aria-label={triggerLabel}
-                aria-expanded={show}
-                aria-pressed={isActive}
                 onClick={toggle}
                 className="flex h-8 cursor-pointer items-center gap-1 rounded-sm px-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40">
                 <div className="relative">
@@ -77,7 +74,6 @@ export const EditorColorPicker = ({
                         className={
                             isActive ? 'h-4 w-4 text-primary' : 'h-4 w-4'
                         }
-                        aria-hidden="true"
                     />
                     {currentColor && (
                         <span
@@ -86,13 +82,12 @@ export const EditorColorPicker = ({
                         />
                     )}
                 </div>
-                <ChevronDown className="h-3 w-3" aria-hidden="true" />
+                <ChevronDown className="h-3 w-3" />
             </button>
 
             {show && (
                 <div
                     role="group"
-                    aria-label={groupLabel}
                     className="absolute left-0 top-full z-50 mt-1 w-max rounded-md border border-border bg-popover p-3 shadow-md">
                     <div className="grid grid-cols-6 gap-3">
                         {HIGHLIGHT_COLORS.map((colorOption) => {
@@ -108,9 +103,7 @@ export const EditorColorPicker = ({
                                         onSelect(colorOption.value);
                                         close();
                                     }}
-                                    className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-transform duration-150 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 motion-reduce:transition-none"
-                                    aria-label={colorOption.name}
-                                    aria-pressed={isSelected}>
+                                    className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-transform duration-150 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 motion-reduce:transition-none">
                                     <span
                                         className="block h-5 w-5 rounded-full border border-black/10"
                                         style={

@@ -42,7 +42,6 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                     <Button
                         type="button"
                         variant="outline"
-                        aria-label={t('chooseIcon')}
                         className="w-full justify-start gap-3 p-3 bg-card border-border text-foreground">
                         <span
                             className={cn(

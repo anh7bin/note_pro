@@ -77,7 +77,6 @@ export const TableSizePicker = ({
         <div
             ref={ref}
             role="dialog"
-            aria-label={t('chooseTableSize')}
             className="fixed z-50 min-w-60 rounded-md border border-border bg-popover p-3 text-popover-foreground shadow-md"
             style={{ top: position.top, left: position.left }}>
             <div className="mb-3 text-center text-xs font-semibold">
@@ -87,9 +86,6 @@ export const TableSizePicker = ({
             </div>
             <div
                 role="grid"
-                aria-label={t('chooseTableSize')}
-                aria-rowcount={MAX_TABLE_ROWS}
-                aria-colcount={MAX_TABLE_COLS}
                 className="grid gap-[3px] rounded bg-muted/30 p-1"
                 style={{
                     gridTemplateColumns: `repeat(${MAX_TABLE_COLS}, 1fr)`,
@@ -148,16 +144,6 @@ export const TableSizePicker = ({
                                         ? 'bg-primary/90 border-primary scale-105 shadow-sm'
                                         : 'bg-background border-border/50 hover:border-primary/30 hover:bg-accent/50'
                                 )}
-                                aria-rowindex={row + 1}
-                                aria-colindex={col + 1}
-                                aria-selected={
-                                    row === activeCell.row &&
-                                    col === activeCell.col
-                                }
-                                aria-label={t('tableDimensions', {
-                                    rows: row + 1,
-                                    cols: col + 1,
-                                })}
                             />
                         );
                     }

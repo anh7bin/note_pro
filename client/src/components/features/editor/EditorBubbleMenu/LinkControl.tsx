@@ -1,7 +1,7 @@
 'use client';
 
-import { memo, useState, useCallback } from 'react';
 import { Link } from 'lucide-react';
+import { memo, useCallback, useState } from 'react';
 import { BubbleButton } from '../BubbleButton';
 import { LinkInput } from '../LinkInput';
 
@@ -37,10 +37,7 @@ export const LinkControl = memo(function LinkControl({
     }
 
     return (
-        <BubbleButton
-            ariaLabel={isActive ? 'Edit link' : 'Add link'}
-            onClick={handleToggle}
-            isActive={isActive}>
+        <BubbleButton onClick={handleToggle} isActive={isActive}>
             <Link />
         </BubbleButton>
     );
