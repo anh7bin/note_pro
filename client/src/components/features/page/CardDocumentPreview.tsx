@@ -2,7 +2,6 @@
 
 import type { Block } from '@/hooks';
 import { BlockType } from '@/types/types';
-import { FileText } from 'lucide-react';
 import { memo } from 'react';
 import {
     ParagraphPreview,

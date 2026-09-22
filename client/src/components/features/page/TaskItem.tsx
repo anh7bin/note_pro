@@ -157,8 +157,7 @@ export const TaskItem = ({
                 className={cn(
                     'block truncate text-sm font-medium leading-5',
                     tempCompleted && 'text-muted-foreground line-through'
-                )}
-                title={title}>
+                )}>
                 {title}
             </span>
             {hasMetadata && (
@@ -188,9 +187,7 @@ export const TaskItem = ({
                         </span>
                     )}
                     {sourceTitle && (
-                        <span
-                            className="hidden min-w-0 items-center gap-1 truncate md:inline-flex"
-                            title={sourceTitle}>
+                        <span className="hidden min-w-0 items-center gap-1 truncate md:inline-flex">
                             <FileText
                                 aria-hidden="true"
                                 className="h-3.5 w-3.5 shrink-0"
