@@ -41,7 +41,6 @@ export function SearchInputField({ onResultClick, autoFocus }: Props) {
             icon={<Search className="h-4 w-4" />}
             iconPosition="left"
             popoverHeight="auto"
-            popoverLabel={t('searchResults')}
             popoverClassName="max-h-[60vh] max-w-full overflow-hidden"
             popoverContent={popoverContent}
         />

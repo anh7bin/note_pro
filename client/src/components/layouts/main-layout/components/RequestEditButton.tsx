@@ -17,7 +17,7 @@ export function RequestEditButton({ documentId }: { documentId: string }) {
             <Button
                 variant="outline"
                 size="xs"
-                className="max-md:size-11 max-md:p-0"
+                className="max-md:size-7 max-md:p-0"
                 onClick={requestEdit}
                 disabled={isRequesting}>
                 {isRequesting ? (

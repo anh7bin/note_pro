@@ -159,11 +159,40 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
                 if (!open && !saving) onClose();
             }}
             title={t('taskDetails')}
-            titleClassName="text-base"
             contentProps={{
-                className:
-                    'flex max-h-[calc(100dvh-2rem)] flex-col gap-3 overflow-visible p-4 sm:max-w-[440px] sm:p-5',
-            }}>
+                className: 'overflow-visible',
+            }}
+            footerClassName="justify-between"
+            footer={
+                <>
+                    <Button
+                        size="sm"
+                        variant={confirmDelete ? 'destructive' : 'ghost'}
+                        disabled={saving}
+                        onClick={() =>
+                            confirmDelete
+                                ? void handleDelete()
+                                : setConfirmDelete(true)
+                        }>
+                        {confirmDelete ? t('confirmDeleteTask') : t('delete')}
+                    </Button>
+                    <div className="flex gap-2">
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={saving}
+                            onClick={onClose}>
+                            {t('cancel')}
+                        </Button>
+                        <Button
+                            size="sm"
+                            disabled={saving || !taskData.title.trim()}
+                            onClick={handleSave}>
+                            {saving ? t('saving') : t('save')}
+                        </Button>
+                    </div>
+                </>
+            }>
             <TaskForm
                 values={taskData}
                 onChange={(field, value) =>
@@ -192,34 +221,6 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
                     {t('deleteTaskDescription')}
                 </p>
             )}
-            <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t pt-3">
-                <Button
-                    size="sm"
-                    variant={confirmDelete ? 'destructive' : 'ghost'}
-                    disabled={saving}
-                    onClick={() =>
-                        confirmDelete
-                            ? void handleDelete()
-                            : setConfirmDelete(true)
-                    }>
-                    {confirmDelete ? t('confirmDeleteTask') : t('delete')}
-                </Button>
-                <div className="flex gap-2">
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={saving}
-                        onClick={onClose}>
-                        {t('cancel')}
-                    </Button>
-                    <Button
-                        size="sm"
-                        disabled={saving || !taskData.title.trim()}
-                        onClick={handleSave}>
-                        {saving ? t('saving') : t('save')}
-                    </Button>
-                </div>
-            </div>
         </Modal>
     );
 }

@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useI18n } from '@/contexts/I18nContext';
+import { X } from 'lucide-react';
+import { useState } from 'react';
 
 interface Props {
     onSubmit: (url: string) => void;
@@ -13,7 +12,6 @@ interface Props {
 
 export const LinkInput = ({ onSubmit, onCancel }: Props) => {
     const [url, setUrl] = useState('');
-    const { t } = useI18n();
 
     return (
         <form

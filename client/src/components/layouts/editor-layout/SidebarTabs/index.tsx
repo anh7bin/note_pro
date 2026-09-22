@@ -1,13 +1,12 @@
-import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle, Menu, Paperclip, Search } from 'lucide-react';
 import { Block } from '@/hooks';
-import { ContentsTab } from './ContentsTab';
-import { TasksTab } from './TasksTab';
+import { CheckCircle, Menu, Paperclip, Search } from 'lucide-react';
+import { useState } from 'react';
 import { AttachmentsTab } from './AttachmentsTab';
+import { ContentsTab } from './ContentsTab';
 import { SearchTab } from './SearchTab';
+import { TasksTab } from './TasksTab';
 import { SectionItem, SidebarAttachment, SidebarTask } from './types';
-import { useI18n } from '@/contexts/I18nContext';
 
 interface SidebarTabsProps {
     sections: SectionItem[];
@@ -29,7 +28,6 @@ export function SidebarTabs({
     onToggleTask,
 }: SidebarTabsProps) {
     const [activeBlockId, setActiveBlockId] = useState<string>();
-    const { t } = useI18n();
 
     const handleScrollToBlock = (blockId: string) => {
         setActiveBlockId(blockId);
@@ -91,4 +89,4 @@ export function SidebarTabs({
     );
 }
 
-export type { SectionItem, SidebarTask, SidebarAttachment };
+export type { SectionItem, SidebarAttachment, SidebarTask };

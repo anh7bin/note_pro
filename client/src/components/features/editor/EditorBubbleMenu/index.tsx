@@ -1,15 +1,14 @@
 'use client';
 
+import { TextSelection } from '@tiptap/pm/state';
 import { Editor } from '@tiptap/react';
 import { BubbleMenu } from '@tiptap/react/menus';
-import { TextSelection } from '@tiptap/pm/state';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { FormattingButtons } from './FormattingButtons';
 import { HighlightControl } from './HighlightControl';
 import { LinkControl } from './LinkControl';
 import { TextColorControl } from './TextColorControl';
 import { useEditorState } from './useEditorState';
-import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     editor: Editor;
@@ -21,7 +20,6 @@ export const EditorBubbleMenu = memo(function EditorBubbleMenu({
     editor,
 }: Props) {
     const bubbleMenuRef = useRef<HTMLDivElement>(null);
-    const { t } = useI18n();
     const [isVisible, setIsVisible] = useState(false);
     const [contentKey, setContentKey] = useState(0);
     const { isMarkActive, getCurrentHighlightColor, getCurrentTextColor } =

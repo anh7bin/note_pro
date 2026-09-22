@@ -129,8 +129,6 @@ export const en = {
     tourReplayTitle: 'Need this guide later?',
     tourReplayBody:
         'Use this help button to replay the guide for the screen you are on at any time.',
-    tourReplayMobileBody:
-        'Open More options to find the guide, search, appearance, language, and account controls.',
     tourEditorWelcomeTitle: 'Name this document',
     tourEditorWelcomeBody:
         'Click the title to rename this page. A clear title makes it easier to find later.',

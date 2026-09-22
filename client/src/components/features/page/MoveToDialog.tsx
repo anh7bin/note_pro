@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
 import { Folder, FolderOpen } from 'lucide-react';
 import { useI18n } from '@/contexts/I18nContext';
+import { Label } from '@/components/ui/label';
 
 interface Props {
     open: boolean;
@@ -45,7 +46,6 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
             onOpenChange={onOpenChange}
             title={t('moveItems')}
             description={t('moveItemsDescription')}
-            contentProps={{ className: 'sm:max-w-[500px]' }}
             footer={
                 <>
                     <Button
@@ -63,21 +63,19 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
                     </Button>
                 </>
             }>
-            <div className="flex flex-col min-h-0">
-                <p className="flex-shrink-0 px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    {t('folders')}
-                </p>
+            <div className="flex min-h-0 flex-col gap-1.5">
+                <Label className="shrink-0">{t('folders')}</Label>
                 <div className="max-h-72 space-y-1 overflow-y-auto pr-1">
                     <button
                         type="button"
                         className={cn(
-                            'flex min-h-11 w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                            'flex min-h-9 w-full items-center gap-2 rounded-md px-2.5 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                             selectedFolderId === null
                                 ? 'bg-primary/10 text-primary'
                                 : 'hover:bg-accent'
                         )}
                         onClick={() => setSelectedFolderId(null)}>
-                        <FolderOpen className="h-5 w-5" />
+                        <FolderOpen className="h-4 w-4" />
                         <span className="text-sm font-medium">
                             {t('workspaceRoot')}
                         </span>
@@ -97,20 +95,20 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
                                 type="button"
                                 key={folder.id}
                                 className={cn(
-                                    'flex min-h-11 w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                                    'flex min-h-9 w-full items-center gap-2 rounded-md px-2.5 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                                     isSelected
                                         ? 'bg-primary/10 text-primary'
                                         : 'hover:bg-accent'
                                 )}
                                 onClick={() => setSelectedFolderId(folder.id)}>
                                 {folder.icon ? (
-                                    <span className="text-lg">
+                                    <span className="text-base">
                                         {folder.icon}
                                     </span>
                                 ) : isSelected ? (
-                                    <FolderOpen className="h-5 w-5 text-primary" />
+                                    <FolderOpen className="h-4 w-4 text-primary" />
                                 ) : (
-                                    <Folder className="h-5 w-5 text-muted-foreground" />
+                                    <Folder className="h-4 w-4 text-muted-foreground" />
                                 )}
                                 <span className="text-sm font-medium">
                                     {folder.name}

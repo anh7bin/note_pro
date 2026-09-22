@@ -119,7 +119,7 @@ export function ImageModal({
     }, [t]);
 
     const controlClassName =
-        'inline-flex h-10 min-w-10 items-center justify-center rounded-md border border-white/25 bg-black/60 px-2 text-white transition-colors hover:border-white/40 hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 disabled:cursor-not-allowed disabled:opacity-50';
+        'inline-flex h-9 min-w-9 items-center justify-center rounded-md border border-white/25 bg-black/60 px-2 text-white transition-colors hover:border-white/40 hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 disabled:cursor-not-allowed disabled:opacity-50';
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -134,7 +134,7 @@ export function ImageModal({
                                 type="button"
                                 onClick={handleDownload}
                                 className={controlClassName}>
-                                <Download size={20} />
+                                <Download size={18} />
                             </button>
                         </SimpleTooltip>
                         <SimpleTooltip title={t('zoomOut')} side="bottom">
@@ -143,14 +143,14 @@ export function ImageModal({
                                 onClick={handleZoomOut}
                                 disabled={zoom <= 0.5}
                                 className={controlClassName}>
-                                <ZoomOut size={20} />
+                                <ZoomOut size={18} />
                             </button>
                         </SimpleTooltip>
                         <SimpleTooltip title={t('resetZoom')} side="bottom">
                             <button
                                 type="button"
                                 onClick={handleZoomReset}
-                                className={`${controlClassName} min-w-14 text-sm font-medium tabular-nums`}>
+                                className={`${controlClassName} min-w-12 text-sm font-medium tabular-nums`}>
                                 {Math.round(zoom * 100)}%
                             </button>
                         </SimpleTooltip>
@@ -160,7 +160,7 @@ export function ImageModal({
                                 onClick={handleZoomIn}
                                 disabled={zoom >= 3}
                                 className={controlClassName}>
-                                <ZoomIn size={20} />
+                                <ZoomIn size={18} />
                             </button>
                         </SimpleTooltip>
                         <SimpleTooltip
@@ -175,9 +175,9 @@ export function ImageModal({
                                 onClick={handleFullscreen}
                                 className={controlClassName}>
                                 {isFullscreen ? (
-                                    <Minimize2 size={20} />
+                                    <Minimize2 size={18} />
                                 ) : (
-                                    <Maximize2 size={20} />
+                                    <Maximize2 size={18} />
                                 )}
                             </button>
                         </SimpleTooltip>
@@ -188,7 +188,7 @@ export function ImageModal({
                             type="button"
                             onClick={onClose}
                             className={controlClassName}>
-                            <X size={24} />
+                            <X size={18} />
                         </button>
                     </SimpleTooltip>
                 </div>

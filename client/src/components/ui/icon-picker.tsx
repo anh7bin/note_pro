@@ -32,8 +32,8 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                 onOpenChange={setIsOpen}
                 contentProps={{
                     align: 'end',
-                    side: 'right',
-                    sideOffset: 12,
+                    side: 'bottom',
+                    sideOffset: 8,
                     collisionPadding: 8,
                     onOpenAutoFocus: (event) => event.preventDefault(),
                     className: 'z-[9999] w-auto border-0 p-0 shadow-none',
@@ -42,10 +42,10 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                     <Button
                         type="button"
                         variant="outline"
-                        className="w-full justify-start gap-3 p-3 bg-card border-border text-foreground">
+                        className="h-9 w-full justify-start gap-2 bg-card px-3 py-1.5 text-foreground">
                         <span
                             className={cn(
-                                'w-8 h-8 rounded-full border flex items-center justify-center text-xl'
+                                'flex h-5 w-5 items-center justify-center rounded-full border text-base'
                             )}>
                             {selectedIcon || IconDefault}
                         </span>

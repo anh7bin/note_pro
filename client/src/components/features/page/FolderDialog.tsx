@@ -91,7 +91,6 @@ export const FolderDialog = ({
                     ? t('createFolderDescription')
                     : t('editFolderDescription')
             }
-            contentProps={{ className: 'sm:max-w-[400px]' }}
             footer={
                 <>
                     <Button
@@ -113,8 +112,8 @@ export const FolderDialog = ({
                     </Button>
                 </>
             }>
-            <div className="space-y-4">
-                <div className="space-y-2">
+            <div className="space-y-3">
+                <div className="space-y-1.5">
                     <Label htmlFor="title" className="text-sm font-medium">
                         {t('name')} <span className="text-destructive">*</span>
                     </Label>
@@ -126,10 +125,11 @@ export const FolderDialog = ({
                             handleInputChange('name', e.target.value)
                         }
                         required
+                        className="h-9"
                     />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                     <Label
                         htmlFor="description"
                         className="text-sm font-medium">
@@ -142,11 +142,11 @@ export const FolderDialog = ({
                         onChange={(e) =>
                             handleInputChange('description', e.target.value)
                         }
-                        className="resize-none"
+                        className="min-h-20 resize-none"
                     />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                     <Label className="text-sm font-medium">{t('icon')}</Label>
                     <IconPicker
                         selectedIcon={folderData.icon}

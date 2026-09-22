@@ -46,7 +46,7 @@ export const ConfirmDialog = ({
             onOpenChange={onOpenChange}
             title={title}
             description={description}
-            descriptionClassName="pt-1 leading-relaxed"
+            descriptionClassName="leading-relaxed"
             contentProps={{ className: 'sm:max-w-sm' }}
             footer={
                 <>

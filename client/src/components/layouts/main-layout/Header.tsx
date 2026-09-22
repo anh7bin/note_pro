@@ -83,12 +83,7 @@ export default function Header({ workspaceSlug }: Props) {
                             <SearchInputField />
                         </div>
                     </div>
-                    <div
-                        className={
-                            isDocumentPage
-                                ? 'flex min-w-0 items-center justify-end gap-1.5 max-md:[&_button]:min-h-11 max-md:[&_button]:min-w-11'
-                                : 'flex min-w-0 items-center justify-end gap-1.5'
-                        }>
+                    <div className="flex min-w-0 items-center justify-end gap-1.5">
                         {isDocumentPage && documentId && permissionType && (
                             <>
                                 <DocumentPresence documentId={documentId} />
@@ -102,19 +97,8 @@ export default function Header({ workspaceSlug }: Props) {
                             </>
                         )}
                         <NotificationButton {...notificationMenuProps} />
-                        {isDocumentPage ? (
-                            <>
-                                <div className="hidden md:block">
-                                    <TourHelpButton />
-                                </div>
-                                <SettingButton />
-                            </>
-                        ) : (
-                            <>
-                                <TourHelpButton />
-                                <SettingButton />
-                            </>
-                        )}
+                        <TourHelpButton />
+                        <SettingButton />
                     </div>
                 </header>
             </>

@@ -3,7 +3,6 @@
 import { cn } from '@/lib/utils';
 import { Skeleton } from './skeleton';
 import { Spinner } from './spinner';
-import { useI18n } from '@/contexts/I18nContext';
 
 interface LoadingProps {
     variant?: 'spinner' | 'skeleton' | 'dots';
@@ -28,8 +27,6 @@ export function Loading({
     className,
     text,
 }: LoadingProps) {
-    const { t } = useI18n();
-
     if (variant === 'spinner') {
         const iconContainerSizes = {
             sm: 'h-8 w-8',
@@ -90,7 +87,6 @@ export function LoadingSkeleton({
 }
 
 export function LoadingDots({ size = 'md', className }: LoadingDotsProps) {
-    const { t } = useI18n();
     const sizeClasses = {
         sm: 'w-1 h-1',
         md: 'w-2 h-2',
@@ -119,15 +115,9 @@ export function LoadingDots({ size = 'md', className }: LoadingDotsProps) {
 }
 
 export function PageLoading({ text }: { text?: string }) {
-    const { t } = useI18n();
-
     return (
         <div className="flex h-full min-h-40 items-center justify-center">
-            <Loading
-                variant="spinner"
-                size="lg"
-                text={text ?? t('loadingEllipsis')}
-            />
+            <Loading variant="spinner" size="lg" text={text} />
         </div>
     );
 }

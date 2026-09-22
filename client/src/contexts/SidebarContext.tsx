@@ -6,9 +6,11 @@ import { useCurrentUserLocalStorage } from '@/hooks';
 const SidebarContext = createContext<{
     isOpen: boolean | undefined;
     toggle: () => void;
+    setOpen: (open: boolean) => void;
 }>({
     isOpen: true,
     toggle: () => {},
+    setOpen: () => {},
 });
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
@@ -18,9 +20,13 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
     );
 
     const toggle = useCallback(() => setIsOpen((prev) => !prev), [setIsOpen]);
+    const setOpen = useCallback(
+        (open: boolean) => setIsOpen(open),
+        [setIsOpen]
+    );
 
     return (
-        <SidebarContext.Provider value={{ isOpen, toggle }}>
+        <SidebarContext.Provider value={{ isOpen, toggle, setOpen }}>
             {children}
         </SidebarContext.Provider>
     );

@@ -135,12 +135,17 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
             trigger={children}
             title={t('createTaskTitle')}
             description={t('createTaskDescription')}
-            titleClassName="text-base"
-            headerClassName="space-y-1"
             contentProps={{
-                className:
-                    'flex max-h-[calc(100dvh-2rem)] min-w-0 flex-col gap-3 overflow-visible p-4 sm:max-w-[440px] sm:p-5',
-            }}>
+                className: 'min-w-0 overflow-visible',
+            }}
+            footer={
+                <Button
+                    size="sm"
+                    onClick={handleCreate}
+                    disabled={!taskData.title.trim() || isCreating}>
+                    {isCreating ? t('creating') : t('create')}
+                </Button>
+            }>
             <TaskForm
                 values={taskData}
                 onChange={(field, value) =>
@@ -149,14 +154,6 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                 onSubmit={() => void handleCreate()}
                 dialogContentRef={dialogContentRef}
             />
-            <div className="flex shrink-0 justify-end border-t pt-3">
-                <Button
-                    size="sm"
-                    onClick={handleCreate}
-                    disabled={!taskData.title.trim() || isCreating}>
-                    {isCreating ? t('creating') : t('create')}
-                </Button>
-            </div>
         </Modal>
     );
 };

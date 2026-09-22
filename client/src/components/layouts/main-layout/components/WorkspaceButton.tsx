@@ -119,9 +119,6 @@ export const WorkspaceButton = () => {
             onOpenChange={setIsOpen}
             title={t('workspaceSettings')}
             description={t('workspaceSettingsDescription')}
-            contentProps={{
-                className: 'max-h-[90vh] overflow-y-auto sm:max-w-[500px]',
-            }}
             footer={
                 <Button
                     size="sm"
@@ -168,14 +165,14 @@ export const WorkspaceButton = () => {
                     </div>
                 </Button>
             }>
-            <div className="space-y-6 py-4">
-                <div className="space-y-3">
+            <div className="space-y-3">
+                <div>
                     <div className="flex items-center justify-center">
                         <div className="group relative">
                             <button
                                 type="button"
                                 className={cn(
-                                    'relative h-24 w-24 cursor-pointer overflow-hidden rounded-lg transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2',
+                                    'relative h-20 w-20 cursor-pointer overflow-hidden rounded-lg transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2',
                                     tempImageUrl ? 'bg-muted' : 'bg-muted/50'
                                 )}
                                 onClick={() =>
@@ -191,7 +188,7 @@ export const WorkspaceButton = () => {
                                     alt={t('workspace')}
                                     fill
                                     className="object-cover"
-                                    sizes="96px"
+                                    sizes="80px"
                                 />
                             </button>
 
@@ -231,7 +228,7 @@ export const WorkspaceButton = () => {
                     />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                     <label
                         htmlFor="workspace-name"
                         className="text-sm font-medium">
@@ -242,6 +239,7 @@ export const WorkspaceButton = () => {
                         value={tempName}
                         onChange={(e) => setTempName(e.target.value)}
                         placeholder={t('workspaceNamePlaceholder')}
+                        className="h-9"
                     />
                 </div>
             </div>

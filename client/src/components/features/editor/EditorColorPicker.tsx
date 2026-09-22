@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useRef, type CSSProperties } from 'react';
-import { Baseline, ChevronDown, Highlighter } from 'lucide-react';
 import { HIGHLIGHT_COLORS } from '@/lib/constants';
-import { useI18n } from '@/contexts/I18nContext';
+import { Baseline, ChevronDown, Highlighter } from 'lucide-react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 
 interface Props {
     kind: 'highlight' | 'text';
@@ -25,12 +24,7 @@ export const EditorColorPicker = ({
     close,
 }: Props) => {
     const ref = useRef<HTMLDivElement>(null);
-    const { t } = useI18n();
     const isHighlight = kind === 'highlight';
-    const triggerLabel = t(
-        isHighlight ? 'chooseHighlightColor' : 'chooseTextColor'
-    );
-    const groupLabel = t(isHighlight ? 'highlightColors' : 'textColors');
     const Icon = isHighlight ? Highlighter : Baseline;
 
     useEffect(() => {

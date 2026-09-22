@@ -62,11 +62,17 @@ export const CompletedTasksModal = ({
                     </span>
                 </span>
             }
-            titleClassName="text-base"
             contentProps={{
-                className:
-                    'flex max-h-[min(75dvh,600px)] w-[calc(100%-2rem)] max-w-2xl flex-col gap-3 overflow-hidden p-4 sm:p-5',
-            }}>
+                className: 'max-h-[min(75dvh,600px)] max-w-2xl overflow-hidden',
+            }}
+            footer={
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsOpen(false)}>
+                    {t('close')}
+                </Button>
+            }>
             <div className="min-h-0 max-h-[min(60dvh,480px)] overflow-y-auto overflow-x-hidden pr-1">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -123,14 +129,6 @@ export const CompletedTasksModal = ({
                 )}
             </div>
 
-            <div className="flex shrink-0 justify-end border-t pt-3">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsOpen(false)}>
-                    {t('close')}
-                </Button>
-            </div>
             <TaskDetailsModal
                 task={
                     completedTasks.find((task) => task.id === selectedTaskId) ||

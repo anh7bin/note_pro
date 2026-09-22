@@ -1,7 +1,6 @@
 import { useSidebar } from '@/contexts/SidebarContext';
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { useI18n } from '@/contexts/I18nContext';
 
 interface LayoutEditorProps {
     left?: React.ReactNode;
@@ -13,7 +12,6 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
     children,
 }) => {
     const { isOpen, toggle } = useSidebar();
-    const { t } = useI18n();
 
     return (
         <div className="flex h-full min-h-0 w-full flex-row">

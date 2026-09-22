@@ -72,7 +72,7 @@ export function ShareExportButton({
                     data-tour="editor-share"
                     variant={isShared ? 'default' : 'outline'}
                     size="xs"
-                    className="relative">
+                    className="relative max-lg:size-7 max-lg:p-0">
                     <ShareIcon />
                     <span className="hidden lg:inline">
                         {isShared ? t('shared') : t('share')}

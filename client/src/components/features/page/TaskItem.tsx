@@ -1,17 +1,11 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import {
-    CalendarDays,
-    Check,
-    ChevronRight,
-    FileText,
-    Flag,
-} from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { isToday, isTomorrow, isSameYear, format, parseISO } from 'date-fns';
-import { enUS, vi } from 'date-fns/locale';
 import { useI18n } from '@/contexts/I18nContext';
+import { cn } from '@/lib/utils';
+import { format, isSameYear, isToday, isTomorrow, parseISO } from 'date-fns';
+import { enUS, vi } from 'date-fns/locale';
+import { CalendarDays, Check, FileText, Flag } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface TaskItemProps {
     id: string;
