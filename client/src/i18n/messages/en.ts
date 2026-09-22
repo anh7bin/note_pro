@@ -23,6 +23,8 @@ export const en = {
     documentCountPlural: '{{count}} documents',
     updatedAt: 'Updated',
     createdAt: 'Created',
+    sortAscending: 'Ascending',
+    sortDescending: 'Descending',
     actions: 'Actions',
     itemCount: '{{count}} item',
     itemCountPlural: '{{count}} items',

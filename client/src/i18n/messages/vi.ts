@@ -24,6 +24,8 @@ export const vi: Messages = {
     documentCountPlural: '{{count}} tài liệu',
     updatedAt: 'Đã cập nhật',
     createdAt: 'Đã tạo',
+    sortAscending: 'Tăng dần',
+    sortDescending: 'Giảm dần',
     actions: 'Thao tác',
     itemCount: '{{count}} mục',
     itemCountPlural: '{{count}} mục',
