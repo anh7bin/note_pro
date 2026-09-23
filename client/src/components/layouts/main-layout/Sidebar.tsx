@@ -19,6 +19,8 @@ import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { StarredDocuments } from './components/StarredDocuments';
+import Link from 'next/link';
+import { useLoading } from '@/contexts/LoadingContext';
 interface Props {
     workspaceSlug: string;
     workspaceId: string;
@@ -29,6 +31,11 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
     const pathname = usePathname();
     const [isFoldersCollapsed, setIsFoldersCollapsed] = useState(false);
     const { t } = useI18n();
+    const { startLoading } = useLoading();
+    const foldersHref = ROUTES.WORKSPACE_FOLDERS(workspaceSlug);
+    const foldersActive =
+        pathname === foldersHref ||
+        pathname.startsWith(`/s/${workspaceSlug}/f/`);
 
     const menuLabels: Record<string, string> = {
         'All Docs': t('allDocs'),
@@ -123,13 +130,24 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                             );
                         })}
                     </div>
-                    <StarredDocuments />
+                    <StarredDocuments workspaceSlug={workspaceSlug} />
                     <div
                         data-tour="folders-nav"
-                        className="flex min-h-8 items-center justify-between px-1">
-                        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        className={cn(
+                            'flex min-h-8 items-center justify-between rounded-md px-1 transition-colors hover:bg-accent',
+                            foldersActive && 'bg-accent'
+                        )}>
+                        <Link
+                            href={foldersHref}
+                            className={cn(
+                                'flex min-h-7 min-w-0 flex-1 items-center rounded px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40',
+                                foldersActive && 'text-foreground'
+                            )}
+                            onClick={() => {
+                                if (!foldersActive) startLoading();
+                            }}>
                             {t('folders')}
-                        </span>
+                        </Link>
                         <div className="flex items-center gap-1">
                             <NewFolderButton />
                             <SimpleTooltip

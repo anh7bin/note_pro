@@ -16,6 +16,11 @@ export type GetStarredDocumentsQueryVariables = Types.Exact<{ [key: string]: nev
 
 export type GetStarredDocumentsQuery = { __typename?: 'query_root', document_stars: Array<{ __typename?: 'document_stars', document_id: string, created_at: string, document: { __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, user_id?: string | null, folder?: { __typename?: 'folders', id: string } | null } }> };
 
+export type GetStarredDocumentsPageQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type GetStarredDocumentsPageQuery = { __typename?: 'query_root', document_stars: Array<{ __typename?: 'document_stars', document: { __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, workspace_id?: string | null, user_id?: string | null, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }> } }> };
+
 export type GetDocumentsToStarQueryVariables = Types.Exact<{
   workspaceId: Types.Scalars['uuid']['input'];
   userId: Types.Scalars['uuid']['input'];
@@ -149,6 +154,74 @@ export type GetStarredDocumentsQueryHookResult = ReturnType<typeof useGetStarred
 export type GetStarredDocumentsLazyQueryHookResult = ReturnType<typeof useGetStarredDocumentsLazyQuery>;
 export type GetStarredDocumentsSuspenseQueryHookResult = ReturnType<typeof useGetStarredDocumentsSuspenseQuery>;
 export type GetStarredDocumentsQueryResult = Apollo.QueryResult<GetStarredDocumentsQuery, GetStarredDocumentsQueryVariables>;
+export const GetStarredDocumentsPageDocument = gql`
+    query GetStarredDocumentsPage {
+  document_stars(
+    where: {document: {type: {_eq: "page"}, deleted_at: {_is_null: true}}}
+    order_by: {created_at: desc}
+  ) {
+    document {
+      id
+      content
+      cover_image
+      created_at
+      updated_at
+      workspace_id
+      user_id
+      document_stars {
+        document_id
+      }
+      folder {
+        id
+        name
+      }
+      sub_blocks(order_by: {position: asc}, limit: 10) {
+        id
+        type
+        content
+        tasks {
+          id
+          status
+          schedule_date
+          deadline_date
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetStarredDocumentsPageQuery__
+ *
+ * To run a query within a React component, call `useGetStarredDocumentsPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStarredDocumentsPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStarredDocumentsPageQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetStarredDocumentsPageQuery(baseOptions?: Apollo.QueryHookOptions<GetStarredDocumentsPageQuery, GetStarredDocumentsPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetStarredDocumentsPageQuery, GetStarredDocumentsPageQueryVariables>(GetStarredDocumentsPageDocument, options);
+      }
+export function useGetStarredDocumentsPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStarredDocumentsPageQuery, GetStarredDocumentsPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetStarredDocumentsPageQuery, GetStarredDocumentsPageQueryVariables>(GetStarredDocumentsPageDocument, options);
+        }
+export function useGetStarredDocumentsPageSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetStarredDocumentsPageQuery, GetStarredDocumentsPageQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetStarredDocumentsPageQuery, GetStarredDocumentsPageQueryVariables>(GetStarredDocumentsPageDocument, options);
+        }
+export type GetStarredDocumentsPageQueryHookResult = ReturnType<typeof useGetStarredDocumentsPageQuery>;
+export type GetStarredDocumentsPageLazyQueryHookResult = ReturnType<typeof useGetStarredDocumentsPageLazyQuery>;
+export type GetStarredDocumentsPageSuspenseQueryHookResult = ReturnType<typeof useGetStarredDocumentsPageSuspenseQuery>;
+export type GetStarredDocumentsPageQueryResult = Apollo.QueryResult<GetStarredDocumentsPageQuery, GetStarredDocumentsPageQueryVariables>;
 export const GetDocumentsToStarDocument = gql`
     query GetDocumentsToStar($workspaceId: uuid!, $userId: uuid!) {
   blocks(

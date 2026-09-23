@@ -1,13 +1,14 @@
 'use client';
 
 import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
-import { Button } from '@/components/ui/button';
+import { Button, type ButtonProps } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
 import { PopoverPanel } from '@/components/ui/popover-panel';
 import { useI18n } from '@/contexts/I18nContext';
 import {
     GetDocumentsToStarDocument,
     GetStarredDocumentsDocument,
+    GetStarredDocumentsPageDocument,
     useGetDocumentsToStarQuery,
     useStarDocumentMutation,
 } from '@/graphql/__generated__/document-star.generated';
@@ -19,11 +20,17 @@ import { Plus, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 interface StarDocumentPickerProps {
-    onDocumentStarred: () => void;
+    onDocumentStarred?: () => void;
+    variant?: ButtonProps['variant'];
+    size?: ButtonProps['size'];
+    placement?: 'sidebar' | 'page';
 }
 
 export function StarDocumentPicker({
     onDocumentStarred,
+    variant = 'ghost',
+    size = 'icon-xs',
+    placement = 'sidebar',
 }: StarDocumentPickerProps) {
     const { t } = useI18n();
     const userId = useUserId();
@@ -88,11 +95,12 @@ export function StarDocumentPicker({
                 },
                 refetchQueries: [
                     GetStarredDocumentsDocument,
+                    GetStarredDocumentsPageDocument,
                     GetDocumentsToStarDocument,
                 ],
                 awaitRefetchQueries: true,
             });
-            onDocumentStarred();
+            onDocumentStarred?.();
             handleOpenChange(false);
         } catch (error) {
             console.error('Failed to star document from picker:', error);
@@ -107,7 +115,7 @@ export function StarDocumentPicker({
             open={isOpen}
             onOpenChange={handleOpenChange}
             contentProps={{
-                side: 'right',
+                side: placement === 'page' ? 'bottom' : 'right',
                 align: 'start',
                 sideOffset: 8,
                 collisionPadding: 12,
@@ -116,8 +124,8 @@ export function StarDocumentPicker({
             }}
             trigger={
                 <Button
-                    variant="ghost"
-                    size="icon-xs"
+                    variant={variant}
+                    size={size}
                     title={t('starADocument')}>
                     <Plus />
                 </Button>

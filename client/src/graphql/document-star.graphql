@@ -26,6 +26,43 @@ query GetStarredDocuments {
     }
 }
 
+query GetStarredDocumentsPage {
+    document_stars(
+        where: {
+            document: { type: { _eq: "page" }, deleted_at: { _is_null: true } }
+        }
+        order_by: { created_at: desc }
+    ) {
+        document {
+            id
+            content
+            cover_image
+            created_at
+            updated_at
+            workspace_id
+            user_id
+            document_stars {
+                document_id
+            }
+            folder {
+                id
+                name
+            }
+            sub_blocks(order_by: { position: asc }, limit: 10) {
+                id
+                type
+                content
+                tasks {
+                    id
+                    status
+                    schedule_date
+                    deadline_date
+                }
+            }
+        }
+    }
+}
+
 query GetDocumentsToStar($workspaceId: uuid!, $userId: uuid!) {
     blocks(
         where: {

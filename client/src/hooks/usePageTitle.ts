@@ -33,6 +33,8 @@ function createEmojiFavicon(emoji: string) {
 function getTitleKeyFromPathname(pathname: string): TranslationKey | null {
     if (pathname.includes('/tasks')) return 'tasks';
     if (pathname.includes('/calendar')) return 'calendar';
+    if (pathname.includes('/folders')) return 'folders';
+    if (pathname.includes('/starred')) return 'starred';
     if (pathname.includes('/all') || pathname.includes('/documents'))
         return 'allDocs';
     if (pathname.includes('/shared-with-me')) return 'sharedWithMe';

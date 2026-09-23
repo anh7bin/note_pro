@@ -37,6 +37,8 @@ export const ROUTES = {
         `/s/${workspaceSlug}/tasks/all`,
     WORKSPACE_CALENDAR: (workspaceSlug: string) =>
         `/s/${workspaceSlug}/calendar`,
+    WORKSPACE_FOLDERS: (workspaceSlug: string) => `/s/${workspaceSlug}/folders`,
+    WORKSPACE_STARRED: (workspaceSlug: string) => `/s/${workspaceSlug}/starred`,
     WORKSPACE_DOCUMENT: (workspaceSlug: string, documentId: string) =>
         `/editor/d/${workspaceSlug}/${documentId}`,
     WORKSPACE_DOCUMENT_DRAFT: (workspaceSlug: string, documentId: string) =>

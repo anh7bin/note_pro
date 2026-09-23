@@ -8,7 +8,7 @@ export type GetFoldersQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetFoldersQuery = { __typename?: 'query_root', folders: Array<{ __typename?: 'folders', id: string, name: string, description?: string | null, color?: string | null, icon?: string | null, parent_id?: string | null, created_at?: string | null }> };
+export type GetFoldersQuery = { __typename?: 'query_root', folders: Array<{ __typename?: 'folders', id: string, name: string, description?: string | null, color?: string | null, icon?: string | null, parent_id?: string | null, created_at?: string | null, blocks_aggregate: { __typename?: 'blocks_aggregate', aggregate?: { __typename?: 'blocks_aggregate_fields', count: number } | null } }> };
 
 export type GetFolderByIdQueryVariables = Types.Exact<{
   folderId: Types.Scalars['uuid']['input'];
@@ -31,6 +31,11 @@ export const GetFoldersDocument = gql`
     icon
     parent_id
     created_at
+    blocks_aggregate(where: {type: {_eq: "page"}, deleted_at: {_is_null: true}}) {
+      aggregate {
+        count
+      }
+    }
   }
 }
     `;

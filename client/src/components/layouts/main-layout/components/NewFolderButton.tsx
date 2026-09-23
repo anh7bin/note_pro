@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button, type ButtonProps } from '@/components/ui/button';
 import {
     FolderDialog,
     FolderMode,
@@ -12,7 +12,17 @@ import { Plus } from 'lucide-react';
 import { useI18n } from '@/contexts/I18nContext';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 
-export const NewFolderButton = () => {
+interface NewFolderButtonProps {
+    showLabel?: boolean;
+    variant?: ButtonProps['variant'];
+    size?: ButtonProps['size'];
+}
+
+export const NewFolderButton = ({
+    showLabel = false,
+    variant,
+    size,
+}: NewFolderButtonProps) => {
     const userId = useUserId();
     const { workspace } = useWorkspace();
     const [isOpen, setIsOpen] = useState(false);
@@ -60,10 +70,11 @@ export const NewFolderButton = () => {
         <>
             <SimpleTooltip title={t('newFolder')}>
                 <Button
-                    variant="ghost"
-                    size="icon-xs"
+                    variant={variant ?? (showLabel ? 'default' : 'ghost')}
+                    size={size ?? (showLabel ? 'sm' : 'icon-xs')}
                     onClick={() => setIsOpen(true)}>
                     <Plus />
+                    {showLabel && t('newFolder')}
                 </Button>
             </SimpleTooltip>
             <FolderDialog

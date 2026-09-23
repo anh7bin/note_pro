@@ -4,6 +4,7 @@ import { useCallback, useMemo } from 'react';
 import type { ApolloCache } from '@apollo/client';
 import {
     GetStarredDocumentsDocument,
+    GetStarredDocumentsPageDocument,
     useGetStarredDocumentsQuery,
     useStarDocumentsMutation,
     useUnstarDocumentsMutation,
@@ -69,14 +70,20 @@ export function useBulkDocumentStar(documentIds: readonly string[]) {
                         })),
                     },
                     update: updateDocumentCards,
-                    refetchQueries: [GetStarredDocumentsDocument],
+                    refetchQueries: [
+                        GetStarredDocumentsDocument,
+                        GetStarredDocumentsPageDocument,
+                    ],
                     awaitRefetchQueries: true,
                 });
             } else {
                 await unstarDocuments({
                     variables: { documentIds: ids },
                     update: updateDocumentCards,
-                    refetchQueries: [GetStarredDocumentsDocument],
+                    refetchQueries: [
+                        GetStarredDocumentsDocument,
+                        GetStarredDocumentsPageDocument,
+                    ],
                     awaitRefetchQueries: true,
                 });
             }

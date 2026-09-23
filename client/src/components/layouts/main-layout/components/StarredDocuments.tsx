@@ -7,11 +7,17 @@ import { useI18n } from '@/contexts/I18nContext';
 import { useGetStarredDocumentsQuery } from '@/graphql/__generated__/document-star.generated';
 import { cn } from '@/lib/utils';
 import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ROUTES } from '@/lib/routes';
+import { useLoading } from '@/contexts/LoadingContext';
 import { StarDocumentPicker } from './StarDocumentPicker';
 import { StarredDocumentItem } from './StarredDocumentItem';
 
-export function StarredDocuments() {
+export function StarredDocuments({ workspaceSlug }: { workspaceSlug: string }) {
     const { t } = useI18n();
+    const pathname = usePathname();
+    const { startLoading } = useLoading();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const listId = useId();
     const { data, loading } = useGetStarredDocumentsQuery({
@@ -19,13 +25,27 @@ export function StarredDocuments() {
         nextFetchPolicy: 'cache-first',
     });
     const stars = data?.document_stars ?? [];
+    const href = ROUTES.WORKSPACE_STARRED(workspaceSlug);
+    const isActive = pathname === href;
 
     return (
         <section className="flex min-h-0 flex-col gap-1">
-            <div className="flex min-h-8 items-center justify-between px-1">
-                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <div
+                className={cn(
+                    'flex min-h-8 items-center justify-between rounded-md px-1 transition-colors hover:bg-accent',
+                    isActive && 'bg-accent'
+                )}>
+                <Link
+                    href={href}
+                    className={cn(
+                        'flex min-h-7 min-w-0 flex-1 items-center rounded px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40',
+                        isActive && 'text-foreground'
+                    )}
+                    onClick={() => {
+                        if (!isActive) startLoading();
+                    }}>
                     {t('starred')}
-                </span>
+                </Link>
                 <div className="flex items-center gap-1">
                     <StarDocumentPicker
                         onDocumentStarred={() => setIsCollapsed(false)}

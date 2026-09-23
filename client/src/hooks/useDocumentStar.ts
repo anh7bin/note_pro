@@ -4,6 +4,7 @@ import type { ApolloCache } from '@apollo/client';
 import { useCallback, useEffect, useState } from 'react';
 import {
     GetStarredDocumentsDocument,
+    GetStarredDocumentsPageDocument,
     useGetDocumentStarQuery,
     useStarDocumentMutation,
     useUnstarDocumentMutation,
@@ -81,13 +82,19 @@ export function useDocumentStar(
                 await starDocument({
                     variables: { documentId },
                     update: updateDocumentCard,
-                    refetchQueries: [GetStarredDocumentsDocument],
+                    refetchQueries: [
+                        GetStarredDocumentsDocument,
+                        GetStarredDocumentsPageDocument,
+                    ],
                 });
             } else {
                 await unstarDocument({
                     variables: { documentId, userId },
                     update: updateDocumentCard,
-                    refetchQueries: [GetStarredDocumentsDocument],
+                    refetchQueries: [
+                        GetStarredDocumentsDocument,
+                        GetStarredDocumentsPageDocument,
+                    ],
                 });
             }
         } catch (error) {
