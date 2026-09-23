@@ -124,11 +124,10 @@ export function TaskForm({
                     autoComplete="off"
                     maxLength={500}
                     required
-                    className="h-9"
                 />
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
-                <div className="flex min-w-0 flex-col gap-1.5 [&>button]:h-9 [&>button]:w-full">
+                <div className="flex min-w-0 flex-col gap-1.5 [&>button]:w-full">
                     <Label>{t('scheduleDate')}</Label>
                     <DatePicker
                         value={values.scheduleDate}
@@ -136,7 +135,7 @@ export function TaskForm({
                         placeholder={t('schedule')}
                     />
                 </div>
-                <div className="flex min-w-0 flex-col gap-1.5 [&>button]:h-9 [&>button]:w-full">
+                <div className="flex min-w-0 flex-col gap-1.5 [&>button]:w-full">
                     <Label>{t('deadline')}</Label>
                     <DatePicker
                         value={values.deadlineDate}
@@ -151,9 +150,7 @@ export function TaskForm({
                 <Select
                     value={values.priority}
                     onValueChange={(value) => onChange('priority', value)}>
-                    <SelectTrigger
-                        id={`${formId}-priority`}
-                        className="h-9 w-full">
+                    <SelectTrigger id={`${formId}-priority`}>
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -187,7 +184,8 @@ export function TaskForm({
                         <Button
                             id={`${formId}-destination`}
                             variant="outline"
-                            className="h-9 w-full min-w-0 justify-start overflow-hidden text-left font-normal">
+                            size="sm"
+                            className="w-full min-w-0 justify-start overflow-hidden text-left font-normal">
                             <Inbox className="shrink-0" />
                             <span className="min-w-0 flex-1 truncate">
                                 {destinationTitle}
@@ -204,13 +202,12 @@ export function TaskForm({
                                 setSearchTerm(event.target.value)
                             }
                             icon={<Search />}
-                            className="h-9"
                         />
                     </div>
                     <div className="max-h-48 overflow-y-auto overscroll-contain">
                         <button
                             type="button"
-                            className="flex min-h-9 w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                            className="flex min-h-8 w-full items-center gap-2 px-2.5 py-1.5 text-left text-sm hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                             onClick={() => selectDestination(null)}>
                             <Inbox className="h-4 w-4" />
                             {t('inbox')}
@@ -244,7 +241,7 @@ export function TaskForm({
                                 <button
                                     type="button"
                                     key={doc.id}
-                                    className="flex min-h-9 w-full min-w-0 items-center gap-2 overflow-hidden px-3 py-2 text-left hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                                    className="flex min-h-8 w-full min-w-0 items-center gap-2 overflow-hidden px-2.5 py-1.5 text-left hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                                     onClick={() => selectDestination(doc.id)}>
                                     {typeof doc.content?.icon === 'string' &&
                                     doc.content?.icon.trim() ? (

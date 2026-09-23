@@ -44,7 +44,7 @@ export const SettingButton = () => {
                         </Button>
                     </DropdownMenuTrigger>
                 </SimpleTooltip>
-                <DropdownMenuContent className="w-58 p-2" align="end">
+                <DropdownMenuContent className="w-58" align="end">
                     <DropdownMenuLabel>
                         <div className="flex flex-col items-center gap-2">
                             <UserAvatar

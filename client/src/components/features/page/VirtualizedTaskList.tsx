@@ -310,7 +310,7 @@ export function VirtualizedTaskList({
                             <Select
                                 value={priority}
                                 onValueChange={setPriority}>
-                                <SelectTrigger className="h-9 w-full">
+                                <SelectTrigger className="w-full">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -335,7 +335,7 @@ export function VirtualizedTaskList({
                         <div className="space-y-1.5">
                             <Label>{t('filterSource')}</Label>
                             <Select value={source} onValueChange={setSource}>
-                                <SelectTrigger className="h-9 w-full">
+                                <SelectTrigger className="w-full">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -356,7 +356,7 @@ export function VirtualizedTaskList({
                             <Select
                                 value={dateFilter}
                                 onValueChange={setDateFilter}>
-                                <SelectTrigger className="h-9 w-full">
+                                <SelectTrigger className="w-full">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>

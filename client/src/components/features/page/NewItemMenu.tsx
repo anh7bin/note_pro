@@ -108,34 +108,32 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                         <PlusIcon />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent
-                    className="w-60 p-2 rounded-lg"
-                    align="center">
+                <DropdownMenuContent className="w-60" align="center">
                     <DropdownMenuItem
-                        className="flex items-start gap-1 cursor-pointer p-1 rounded-md"
+                        className="items-start gap-2"
                         onClick={handleNewDoc}
                         disabled={!canCreate || isCreating}>
-                        <div className="w-10 h-10 flex-shrink-0">
-                            <NewDocumentIcon size={44} />
+                        <div className="h-8 w-8 flex-shrink-0">
+                            <NewDocumentIcon size={34} />
                         </div>
-                        <div className="flex flex-col justify-center gap-1">
+                        <div className="flex flex-col justify-center gap-0.5">
                             <span className="font-medium">{t('newDoc')}</span>
-                            <span className="text-sm text-muted-foreground">
+                            <span className="text-xs text-muted-foreground">
                                 {t('startSomethingNew')}
                             </span>
                         </div>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                        className="flex items-start gap-1 cursor-pointer p-1 rounded-md"
+                        className="items-start gap-2"
                         onClick={handleNewFolder}>
-                        <div className="w-10 h-10 flex-shrink-0">
-                            <NewFolderIcon size={44} />
+                        <div className="h-8 w-8 flex-shrink-0">
+                            <NewFolderIcon size={34} />
                         </div>
-                        <div className="flex flex-col gap-1">
+                        <div className="flex flex-col gap-0.5">
                             <span className="font-medium">
                                 {t('newFolder')}
                             </span>
-                            <span className="text-sm text-muted-foreground">
+                            <span className="text-xs text-muted-foreground">
                                 {t('keepThingsTidy')}
                             </span>
                         </div>

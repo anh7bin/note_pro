@@ -27,18 +27,18 @@ export const NotificationItem = ({
     return (
         <button
             type="button"
-            className={`relative flex w-full gap-3 rounded-lg p-3 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+            className={`relative flex w-full gap-2 rounded-md p-2 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 notification.is_read ? '' : 'bg-info-subtle'
             }`}
             onClick={() => onSelect(notification)}>
             {presentation.avatar ? (
-                <Avatar className="h-9 w-9 shrink-0">
+                <Avatar className="h-8 w-8 shrink-0">
                     <AvatarImage src={presentation.avatar} alt="" />
                     <AvatarFallback>{initial || <Icon />}</AvatarFallback>
                 </Avatar>
             ) : (
                 <span
-                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${presentation.accentClass}`}>
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${presentation.accentClass}`}>
                     <Icon className="h-4 w-4" />
                 </span>
             )}

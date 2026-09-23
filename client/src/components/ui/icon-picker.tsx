@@ -42,7 +42,8 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                     <Button
                         type="button"
                         variant="outline"
-                        className="h-9 w-full justify-start gap-2 bg-card px-3 py-1.5 text-foreground">
+                        size="sm"
+                        className="w-full justify-start gap-2 bg-card text-foreground">
                         <span
                             className={cn(
                                 'flex h-5 w-5 items-center justify-center rounded-full border text-base'

@@ -177,7 +177,7 @@ export function UserEmailAutocomplete({
                             <label
                                 key={user.id}
                                 htmlFor={checkboxId}
-                                className="flex min-h-12 cursor-pointer items-center gap-1.5 rounded-md p-1.5 transition-colors hover:bg-accent">
+                                className="flex min-h-10 cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-accent">
                                 <UserAvatar
                                     avatarUrl={user.avatar_url}
                                     name={user.name}

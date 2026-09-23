@@ -48,7 +48,7 @@ export const NotificationMenu = ({
             <DropdownMenuContent
                 className="w-[min(24rem,calc(100vw-1rem))] p-0"
                 align="end">
-                <DropdownMenuLabel className="p-3">
+                <DropdownMenuLabel className="p-2.5">
                     <div className="flex items-center justify-between gap-3">
                         <div>
                             <p className="text-sm font-semibold">
@@ -74,9 +74,9 @@ export const NotificationMenu = ({
 
                 <DropdownMenuSeparator className="m-0" />
 
-                <div className="max-h-[28rem] overflow-y-auto p-2">
+                <div className="max-h-[28rem] overflow-y-auto p-1.5">
                     {notifications.length === 0 ? (
-                        <div className="px-4 py-10 text-center">
+                        <div className="px-4 py-8 text-center">
                             <Bell className="mx-auto mb-3 h-6 w-6 text-muted-foreground" />
                             <p className="text-sm font-medium">
                                 {t('noNotifications')}

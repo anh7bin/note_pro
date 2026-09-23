@@ -192,7 +192,7 @@ export const TaskItem = ({
         <div
             className={cn(
                 'group flex min-w-0 items-center gap-2 rounded-md transition-colors hover:bg-accent/60',
-                variant === 'compact' ? 'px-2 py-1' : 'px-3 py-1.5',
+                variant === 'compact' ? 'px-2 py-0.5' : 'px-3 py-1',
                 isActive && 'bg-accent text-accent-foreground',
                 className
             )}>
@@ -222,11 +222,18 @@ export const TaskItem = ({
                 <button
                     type="button"
                     onClick={() => onItemClick(id)}
-                    className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-md px-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40">
+                    className={cn(
+                        'flex min-w-0 flex-1 items-center gap-2 rounded-md px-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                        variant === 'compact' ? 'min-h-8' : 'min-h-10'
+                    )}>
                     {content}
                 </button>
             ) : (
-                <div className="flex min-h-12 min-w-0 flex-1 items-center px-1">
+                <div
+                    className={cn(
+                        'flex min-w-0 flex-1 items-center px-1',
+                        variant === 'compact' ? 'min-h-8' : 'min-h-10'
+                    )}>
                     {content}
                 </div>
             )}

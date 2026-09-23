@@ -125,7 +125,6 @@ export const FolderDialog = ({
                             handleInputChange('name', e.target.value)
                         }
                         required
-                        className="h-9"
                     />
                 </div>
 

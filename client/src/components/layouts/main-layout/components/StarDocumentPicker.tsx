@@ -166,7 +166,7 @@ export function StarDocumentPicker({
                                 type="button"
                                 key={document.id}
                                 disabled={Boolean(activeDocumentId)}
-                                className="flex min-h-11 w-full min-w-0 items-center gap-2 overflow-hidden px-3 py-2 text-left transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex min-h-10 w-full min-w-0 items-center gap-2 overflow-hidden px-2.5 py-1.5 text-left transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50"
                                 onClick={() =>
                                     void handleStarDocument(document.id)
                                 }>

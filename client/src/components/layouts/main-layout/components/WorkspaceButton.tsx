@@ -239,7 +239,6 @@ export const WorkspaceButton = () => {
                         value={tempName}
                         onChange={(e) => setTempName(e.target.value)}
                         placeholder={t('workspaceNamePlaceholder')}
-                        className="h-9"
                     />
                 </div>
             </div>

@@ -81,7 +81,7 @@ export function PermissionSelector({
                         onChange(option.value as LinkPermissionType);
                         setIsOpen(false);
                     }}
-                    className="flex min-h-10 w-full items-start gap-2 rounded-md p-1.5 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
+                    className="flex min-h-9 w-full items-start gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
                     <option.icon className="h-5 w-5 flex-shrink-0" />
                     <div className="flex-1">
                         <div className="flex items-center justify-between">
@@ -92,13 +92,13 @@ export function PermissionSelector({
                                 <Check className="h-4 w-4" />
                             )}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <p className="mt-0.5 text-xs text-muted-foreground">
                             {t(option.descriptionKey)}
                         </p>
                     </div>
                 </button>
             ))}
-            <div className="border-t border-border mt-2 pt-2">
+            <div className="mt-1.5 border-t border-border pt-1.5">
                 <p className="text-xs text-muted-foreground">
                     {t('permissionHelp')}
                 </p>

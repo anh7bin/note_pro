@@ -80,9 +80,9 @@ export const SeparatorStylePicker = ({
         <div
             ref={ref}
             role="dialog"
-            className="fixed z-50 min-w-52 rounded-md border border-border bg-popover p-2 text-popover-foreground shadow-md"
+            className="fixed z-50 min-w-52 rounded-lg border border-border/70 bg-popover p-1 text-popover-foreground shadow-lg"
             style={{ top: position.top, left: position.left }}>
-            <div className="mb-2 px-2 pt-1 text-xs font-semibold text-muted-foreground">
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
                 {t('insertSeparator')}
             </div>
             <div className="space-y-1">
@@ -94,8 +94,8 @@ export const SeparatorStylePicker = ({
                             onSelect(style);
                             close();
                         }}
-                        className="group min-h-11 w-full rounded-md px-3 py-2.5 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
-                        <div className="mb-1.5 text-sm font-medium text-foreground group-hover:text-primary">
+                        className="group min-h-10 w-full rounded-md px-2 py-2 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
+                        <div className="mb-1 text-sm font-medium text-foreground group-hover:text-primary">
                             {t(labelKey)}
                         </div>
                         <div className={cn('w-full', previewClass)} />
