@@ -9,7 +9,7 @@ export type GetAccessRequestByDocumentQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetAccessRequestByDocumentQuery = { __typename?: 'query_root', access_requests: Array<{ __typename?: 'access_requests', id: string, status?: string | null, permission_type?: string | null, created_at?: string | null, owner_id: string, document: { __typename?: 'blocks', id: string, type: string, content?: any | null, user_id?: string | null } }>, blocks_by_pk?: { __typename?: 'blocks', id: string, user_id?: string | null, type: string, content?: any | null } | null };
+export type GetAccessRequestByDocumentQuery = { __typename?: 'query_root', access_requests: Array<{ __typename?: 'access_requests', status?: string | null, permission_type?: string | null }> };
 
 
 export const GetAccessRequestByDocumentDocument = gql`
@@ -18,23 +18,8 @@ export const GetAccessRequestByDocumentDocument = gql`
     where: {document_id: {_eq: $documentId}, requester_id: {_eq: $requesterId}}
     order_by: {created_at: desc}
   ) {
-    id
     status
     permission_type
-    created_at
-    owner_id
-    document {
-      id
-      type
-      content
-      user_id
-    }
-  }
-  blocks_by_pk(id: $documentId) {
-    id
-    user_id
-    type
-    content
   }
 }
     `;

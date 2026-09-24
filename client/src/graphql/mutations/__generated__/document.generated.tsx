@@ -10,13 +10,6 @@ export type SoftDeleteDocumentMutationVariables = Types.Exact<{
 
 export type SoftDeleteDocumentMutation = { __typename?: 'mutation_root', update_blocks_by_pk?: { __typename?: 'blocks', id: string } | null };
 
-export type CreateUntitledPageMutationVariables = Types.Exact<{
-  input: Types.BlocksInsertInput;
-}>;
-
-
-export type CreateUntitledPageMutation = { __typename?: 'mutation_root', insert_blocks_one?: { __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, workspace_id?: string | null, user_id?: string | null, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }> } | null };
-
 export type MaterializeDocumentMutationVariables = Types.Exact<{
   document: Types.BlocksInsertInput;
   blocks: Array<Types.BlocksInsertInput> | Types.BlocksInsertInput;
@@ -39,19 +32,6 @@ export type DeleteBlockMutationVariables = Types.Exact<{
 
 
 export type DeleteBlockMutation = { __typename?: 'mutation_root', delete_blocks_by_pk?: { __typename?: 'blocks', id: string } | null };
-
-export type InsertBlockAndUpdatePositionMutationVariables = Types.Exact<{
-  id: Types.Scalars['uuid']['input'];
-  pageId: Types.Scalars['uuid']['input'];
-  position: Types.Scalars['Int']['input'];
-  type: Types.Scalars['String']['input'];
-  workspaceId: Types.Scalars['uuid']['input'];
-  userId: Types.Scalars['uuid']['input'];
-  content: Types.Scalars['jsonb']['input'];
-}>;
-
-
-export type InsertBlockAndUpdatePositionMutation = { __typename?: 'mutation_root', update_blocks?: { __typename?: 'blocks_mutation_response', affected_rows: number } | null, insert_blocks_one?: { __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, created_at?: string | null, updated_at?: string | null } | null };
 
 export type InsertBlocksAndUpdatePositionsMutationVariables = Types.Exact<{
   blocks: Array<Types.BlocksInsertInput> | Types.BlocksInsertInput;
@@ -133,63 +113,6 @@ export function useSoftDeleteDocumentMutation(baseOptions?: Apollo.MutationHookO
 export type SoftDeleteDocumentMutationHookResult = ReturnType<typeof useSoftDeleteDocumentMutation>;
 export type SoftDeleteDocumentMutationResult = Apollo.MutationResult<SoftDeleteDocumentMutation>;
 export type SoftDeleteDocumentMutationOptions = Apollo.BaseMutationOptions<SoftDeleteDocumentMutation, SoftDeleteDocumentMutationVariables>;
-export const CreateUntitledPageDocument = gql`
-    mutation CreateUntitledPage($input: blocks_insert_input!) {
-  insert_blocks_one(object: $input) {
-    id
-    content
-    cover_image
-    created_at
-    updated_at
-    workspace_id
-    user_id
-    document_stars {
-      document_id
-    }
-    folder {
-      id
-      name
-    }
-    sub_blocks(order_by: {position: asc}, limit: 10) {
-      id
-      type
-      content
-      tasks {
-        id
-        status
-        schedule_date
-        deadline_date
-      }
-    }
-  }
-}
-    `;
-export type CreateUntitledPageMutationFn = Apollo.MutationFunction<CreateUntitledPageMutation, CreateUntitledPageMutationVariables>;
-
-/**
- * __useCreateUntitledPageMutation__
- *
- * To run a mutation, you first call `useCreateUntitledPageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateUntitledPageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createUntitledPageMutation, { data, loading, error }] = useCreateUntitledPageMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateUntitledPageMutation(baseOptions?: Apollo.MutationHookOptions<CreateUntitledPageMutation, CreateUntitledPageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateUntitledPageMutation, CreateUntitledPageMutationVariables>(CreateUntitledPageDocument, options);
-      }
-export type CreateUntitledPageMutationHookResult = ReturnType<typeof useCreateUntitledPageMutation>;
-export type CreateUntitledPageMutationResult = Apollo.MutationResult<CreateUntitledPageMutation>;
-export type CreateUntitledPageMutationOptions = Apollo.BaseMutationOptions<CreateUntitledPageMutation, CreateUntitledPageMutationVariables>;
 export const MaterializeDocumentDocument = gql`
     mutation MaterializeDocument($document: blocks_insert_input!, $blocks: [blocks_insert_input!]!) {
   insert_blocks_one(object: $document) {
@@ -353,62 +276,6 @@ export function useDeleteBlockMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteBlockMutationHookResult = ReturnType<typeof useDeleteBlockMutation>;
 export type DeleteBlockMutationResult = Apollo.MutationResult<DeleteBlockMutation>;
 export type DeleteBlockMutationOptions = Apollo.BaseMutationOptions<DeleteBlockMutation, DeleteBlockMutationVariables>;
-export const InsertBlockAndUpdatePositionDocument = gql`
-    mutation InsertBlockAndUpdatePosition($id: uuid!, $pageId: uuid!, $position: Int!, $type: String!, $workspaceId: uuid!, $userId: uuid!, $content: jsonb!) {
-  update_blocks(
-    where: {page_id: {_eq: $pageId}, position: {_gte: $position}}
-    _inc: {position: 1}
-    _set: {updated_at: "now()"}
-  ) {
-    affected_rows
-  }
-  insert_blocks_one(
-    object: {id: $id, page_id: $pageId, position: $position, type: $type, workspace_id: $workspaceId, user_id: $userId, content: $content}
-  ) {
-    id
-    content
-    cover_image
-    position
-    parent_id
-    page_id
-    type
-    created_at
-    updated_at
-  }
-}
-    `;
-export type InsertBlockAndUpdatePositionMutationFn = Apollo.MutationFunction<InsertBlockAndUpdatePositionMutation, InsertBlockAndUpdatePositionMutationVariables>;
-
-/**
- * __useInsertBlockAndUpdatePositionMutation__
- *
- * To run a mutation, you first call `useInsertBlockAndUpdatePositionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useInsertBlockAndUpdatePositionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [insertBlockAndUpdatePositionMutation, { data, loading, error }] = useInsertBlockAndUpdatePositionMutation({
- *   variables: {
- *      id: // value for 'id'
- *      pageId: // value for 'pageId'
- *      position: // value for 'position'
- *      type: // value for 'type'
- *      workspaceId: // value for 'workspaceId'
- *      userId: // value for 'userId'
- *      content: // value for 'content'
- *   },
- * });
- */
-export function useInsertBlockAndUpdatePositionMutation(baseOptions?: Apollo.MutationHookOptions<InsertBlockAndUpdatePositionMutation, InsertBlockAndUpdatePositionMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<InsertBlockAndUpdatePositionMutation, InsertBlockAndUpdatePositionMutationVariables>(InsertBlockAndUpdatePositionDocument, options);
-      }
-export type InsertBlockAndUpdatePositionMutationHookResult = ReturnType<typeof useInsertBlockAndUpdatePositionMutation>;
-export type InsertBlockAndUpdatePositionMutationResult = Apollo.MutationResult<InsertBlockAndUpdatePositionMutation>;
-export type InsertBlockAndUpdatePositionMutationOptions = Apollo.BaseMutationOptions<InsertBlockAndUpdatePositionMutation, InsertBlockAndUpdatePositionMutationVariables>;
 export const InsertBlocksAndUpdatePositionsDocument = gql`
     mutation InsertBlocksAndUpdatePositions($blocks: [blocks_insert_input!]!, $updates: [blocks_updates!]!) {
   update_blocks_many(updates: $updates) {

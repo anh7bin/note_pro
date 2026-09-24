@@ -1,33 +1,3 @@
-mutation ShareDocumentWithUser(
-    $documentId: uuid!
-    $userId: uuid!
-    $ownerId: uuid!
-    $permissionType: String!
-) {
-    insert_access_requests_one(
-        object: {
-            document_id: $documentId
-            requester_id: $userId
-            owner_id: $ownerId
-            status: "approved"
-            permission_type: $permissionType
-        }
-        on_conflict: {
-            constraint: access_requests_document_id_requester_id_key
-            update_columns: [permission_type, status, updated_at]
-        }
-    ) {
-        id
-        document_id
-        requester_id
-        owner_id
-        status
-        permission_type
-        created_at
-        updated_at
-    }
-}
-
 mutation ShareDocumentWithUsers($objects: [access_requests_insert_input!]!) {
     insert_access_requests(
         objects: $objects
@@ -78,11 +48,6 @@ mutation UpdateDocumentPermission(
         _set: { permission_type: $permissionType, updated_at: "now()" }
     ) {
         affected_rows
-        returning {
-            id
-            permission_type
-            updated_at
-        }
     }
 }
 
@@ -99,13 +64,10 @@ query GetDocumentSharedUsers($documentId: uuid!) {
             ]
         }
     ) {
-        id
         requester_id
         status
         permission_type
-        created_at
         requester {
-            id
             email
             name
             avatar_url
@@ -117,11 +79,8 @@ query GetDocumentSharedUsers($documentId: uuid!) {
         order_by: { created_at: desc }
     ) {
         id
-        requester_id
         permission_type
-        created_at
         requester {
-            id
             email
             name
             avatar_url
@@ -129,8 +88,6 @@ query GetDocumentSharedUsers($documentId: uuid!) {
     }
 
     blocks_by_pk(id: $documentId) {
-        id
-        user_id
         content
         link_access {
             permission_type
@@ -150,10 +107,6 @@ mutation ApproveAccessRequest($requestId: uuid!) {
         _set: { status: "approved", updated_at: "now()" }
     ) {
         id
-        status
-        requester_id
-        document_id
-        permission_type
     }
 }
 
@@ -163,9 +116,5 @@ mutation DeclineAccessRequest($requestId: uuid!, $status: String!) {
         _set: { status: $status, permission_type: "read", updated_at: "now()" }
     ) {
         id
-        status
-        requester_id
-        document_id
-        permission_type
     }
 }

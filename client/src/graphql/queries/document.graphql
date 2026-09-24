@@ -153,9 +153,5 @@ query GetSharedWithMeDocs($userId: uuid!) {
                 deadline_date
             }
         }
-        access_requests(where: { requester_id: { _eq: $userId } }) {
-            permission_type
-            status
-        }
     }
 }

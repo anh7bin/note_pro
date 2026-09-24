@@ -31,13 +31,6 @@ export type GetTodoTasksQueryVariables = Types.Exact<{
 
 export type GetTodoTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: string, block_id?: string | null, user_id?: string | null, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, created_at?: string | null, updated_at?: string | null, block?: { __typename?: 'blocks', id: string, content?: any | null, type: string, page_id?: string | null, page?: { __typename?: 'blocks', id: string, content?: any | null } | null } | null }> };
 
-export type GetTasksQueryVariables = Types.Exact<{
-  workspaceId: Types.Scalars['uuid']['input'];
-}>;
-
-
-export type GetTasksQuery = { __typename?: 'query_root', tasks: Array<{ __typename?: 'tasks', id: string, block_id?: string | null, user_id?: string | null, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, created_at?: string | null, updated_at?: string | null, block?: { __typename?: 'blocks', id: string, content?: any | null, type: string, page_id?: string | null, page?: { __typename?: 'blocks', id: string, content?: any | null } | null } | null }> };
-
 
 export const GetAllTasksDocument = gql`
     query GetAllTasks($workspaceId: uuid!) {
@@ -283,64 +276,3 @@ export type GetTodoTasksQueryHookResult = ReturnType<typeof useGetTodoTasksQuery
 export type GetTodoTasksLazyQueryHookResult = ReturnType<typeof useGetTodoTasksLazyQuery>;
 export type GetTodoTasksSuspenseQueryHookResult = ReturnType<typeof useGetTodoTasksSuspenseQuery>;
 export type GetTodoTasksQueryResult = Apollo.QueryResult<GetTodoTasksQuery, GetTodoTasksQueryVariables>;
-export const GetTasksDocument = gql`
-    query GetTasks($workspaceId: uuid!) {
-  tasks(
-    where: {block: {workspace_id: {_eq: $workspaceId}, deleted_at: {_is_null: true}, _or: [{page_id: {_is_null: true}}, {page: {deleted_at: {_is_null: true}}}]}}
-    order_by: {created_at: desc}
-  ) {
-    id
-    block_id
-    user_id
-    status
-    deadline_date
-    schedule_date
-    priority
-    created_at
-    updated_at
-    block {
-      id
-      content
-      type
-      page_id
-      page {
-        id
-        content
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetTasksQuery__
- *
- * To run a query within a React component, call `useGetTasksQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTasksQuery({
- *   variables: {
- *      workspaceId: // value for 'workspaceId'
- *   },
- * });
- */
-export function useGetTasksQuery(baseOptions: Apollo.QueryHookOptions<GetTasksQuery, GetTasksQueryVariables> & ({ variables: GetTasksQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTasksQuery, GetTasksQueryVariables>(GetTasksDocument, options);
-      }
-export function useGetTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTasksQuery, GetTasksQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTasksQuery, GetTasksQueryVariables>(GetTasksDocument, options);
-        }
-export function useGetTasksSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTasksQuery, GetTasksQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetTasksQuery, GetTasksQueryVariables>(GetTasksDocument, options);
-        }
-export type GetTasksQueryHookResult = ReturnType<typeof useGetTasksQuery>;
-export type GetTasksLazyQueryHookResult = ReturnType<typeof useGetTasksLazyQuery>;
-export type GetTasksSuspenseQueryHookResult = ReturnType<typeof useGetTasksSuspenseQuery>;
-export type GetTasksQueryResult = Apollo.QueryResult<GetTasksQuery, GetTasksQueryVariables>;

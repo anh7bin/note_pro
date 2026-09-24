@@ -7,36 +7,6 @@ mutation SoftDeleteDocument($id: uuid!) {
     }
 }
 
-mutation CreateUntitledPage($input: blocks_insert_input!) {
-    insert_blocks_one(object: $input) {
-        id
-        content
-        cover_image
-        created_at
-        updated_at
-        workspace_id
-        user_id
-        document_stars {
-            document_id
-        }
-        folder {
-            id
-            name
-        }
-        sub_blocks(order_by: { position: asc }, limit: 10) {
-            id
-            type
-            content
-            tasks {
-                id
-                status
-                schedule_date
-                deadline_date
-            }
-        }
-    }
-}
-
 mutation MaterializeDocument(
     $document: blocks_insert_input!
     $blocks: [blocks_insert_input!]!
@@ -118,46 +88,6 @@ mutation UpdateBlock($id: uuid!, $input: blocks_set_input!) {
 mutation DeleteBlock($id: uuid!) {
     delete_blocks_by_pk(id: $id) {
         id
-    }
-}
-
-mutation InsertBlockAndUpdatePosition(
-    $id: uuid!
-    $pageId: uuid!
-    $position: Int!
-    $type: String!
-    $workspaceId: uuid!
-    $userId: uuid!
-    $content: jsonb!
-) {
-    update_blocks(
-        where: { page_id: { _eq: $pageId }, position: { _gte: $position } }
-        _inc: { position: 1 }
-        _set: { updated_at: "now()" }
-    ) {
-        affected_rows
-    }
-
-    insert_blocks_one(
-        object: {
-            id: $id
-            page_id: $pageId
-            position: $position
-            type: $type
-            workspace_id: $workspaceId
-            user_id: $userId
-            content: $content
-        }
-    ) {
-        id
-        content
-        cover_image
-        position
-        parent_id
-        page_id
-        type
-        created_at
-        updated_at
     }
 }
 

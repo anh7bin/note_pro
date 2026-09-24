@@ -7,8 +7,6 @@ mutation CreateTask($input: tasks_insert_input!) {
         deadline_date
         schedule_date
         priority
-        created_at
-        updated_at
     }
 }
 

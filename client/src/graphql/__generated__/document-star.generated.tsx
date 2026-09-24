@@ -9,12 +9,12 @@ export type GetDocumentStarQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetDocumentStarQuery = { __typename?: 'query_root', document_stars_by_pk?: { __typename?: 'document_stars', document_id: string, created_at: string } | null };
+export type GetDocumentStarQuery = { __typename?: 'query_root', document_stars_by_pk?: { __typename?: 'document_stars', document_id: string } | null };
 
 export type GetStarredDocumentsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetStarredDocumentsQuery = { __typename?: 'query_root', document_stars: Array<{ __typename?: 'document_stars', document_id: string, created_at: string, document: { __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, user_id?: string | null, folder?: { __typename?: 'folders', id: string } | null } }> };
+export type GetStarredDocumentsQuery = { __typename?: 'query_root', document_stars: Array<{ __typename?: 'document_stars', document_id: string, document: { __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, user_id?: string | null, folder?: { __typename?: 'folders', id: string } | null } }> };
 
 export type GetStarredDocumentsPageQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -27,14 +27,14 @@ export type GetDocumentsToStarQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetDocumentsToStarQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, folder?: { __typename?: 'folders', id: string, name: string } | null, document_stars: Array<{ __typename?: 'document_stars', document_id: string }> }> };
+export type GetDocumentsToStarQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, folder?: { __typename?: 'folders', name: string } | null, document_stars: Array<{ __typename?: 'document_stars', document_id: string }> }> };
 
 export type StarDocumentMutationVariables = Types.Exact<{
   documentId: Types.Scalars['uuid']['input'];
 }>;
 
 
-export type StarDocumentMutation = { __typename?: 'mutation_root', delete_existing_star?: { __typename?: 'document_stars_mutation_response', affected_rows: number } | null, insert_document_stars_one?: { __typename?: 'document_stars', document_id: string, created_at: string } | null };
+export type StarDocumentMutation = { __typename?: 'mutation_root', delete_existing_star?: { __typename?: 'document_stars_mutation_response', affected_rows: number } | null, insert_document_stars_one?: { __typename?: 'document_stars', document_id: string } | null };
 
 export type UnstarDocumentMutationVariables = Types.Exact<{
   documentId: Types.Scalars['uuid']['input'];
@@ -50,21 +50,20 @@ export type StarDocumentsMutationVariables = Types.Exact<{
 }>;
 
 
-export type StarDocumentsMutation = { __typename?: 'mutation_root', delete_existing_stars?: { __typename?: 'document_stars_mutation_response', affected_rows: number } | null, insert_document_stars?: { __typename?: 'document_stars_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'document_stars', document_id: string }> } | null };
+export type StarDocumentsMutation = { __typename?: 'mutation_root', delete_existing_stars?: { __typename?: 'document_stars_mutation_response', affected_rows: number } | null, insert_document_stars?: { __typename?: 'document_stars_mutation_response', affected_rows: number } | null };
 
 export type UnstarDocumentsMutationVariables = Types.Exact<{
   documentIds: Array<Types.Scalars['uuid']['input']> | Types.Scalars['uuid']['input'];
 }>;
 
 
-export type UnstarDocumentsMutation = { __typename?: 'mutation_root', delete_document_stars?: { __typename?: 'document_stars_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'document_stars', document_id: string }> } | null };
+export type UnstarDocumentsMutation = { __typename?: 'mutation_root', delete_document_stars?: { __typename?: 'document_stars_mutation_response', affected_rows: number } | null };
 
 
 export const GetDocumentStarDocument = gql`
     query GetDocumentStar($documentId: uuid!, $userId: uuid!) {
   document_stars_by_pk(document_id: $documentId, user_id: $userId) {
     document_id
-    created_at
   }
 }
     `;
@@ -109,7 +108,6 @@ export const GetStarredDocumentsDocument = gql`
     order_by: {created_at: desc}
   ) {
     document_id
-    created_at
     document {
       id
       content
@@ -230,9 +228,7 @@ export const GetDocumentsToStarDocument = gql`
   ) {
     id
     content
-    workspace_id
     folder {
-      id
       name
     }
     document_stars {
@@ -284,7 +280,6 @@ export const StarDocumentDocument = gql`
   }
   insert_document_stars_one(object: {document_id: $documentId}) {
     document_id
-    created_at
   }
 }
     `;
@@ -357,9 +352,6 @@ export const StarDocumentsDocument = gql`
   }
   insert_document_stars(objects: $objects) {
     affected_rows
-    returning {
-      document_id
-    }
   }
 }
     `;
@@ -394,9 +386,6 @@ export const UnstarDocumentsDocument = gql`
     mutation UnstarDocuments($documentIds: [uuid!]!) {
   delete_document_stars(where: {document_id: {_in: $documentIds}}) {
     affected_rows
-    returning {
-      document_id
-    }
   }
 }
     `;

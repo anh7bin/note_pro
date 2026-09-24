@@ -8,7 +8,7 @@ export type CreateAccessRequestMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateAccessRequestMutation = { __typename?: 'mutation_root', insert_access_requests_one?: { __typename?: 'access_requests', id: string, document_id: string, requester_id: string, owner_id: string, status?: string | null, message?: string | null, permission_type?: string | null, created_at?: string | null, updated_at?: string | null } | null };
+export type CreateAccessRequestMutation = { __typename?: 'mutation_root', insert_access_requests_one?: { __typename?: 'access_requests', id: string } | null };
 
 export type RequestEditAccessMutationVariables = Types.Exact<{
   documentId: Types.Scalars['uuid']['input'];
@@ -18,7 +18,7 @@ export type RequestEditAccessMutationVariables = Types.Exact<{
 }>;
 
 
-export type RequestEditAccessMutation = { __typename?: 'mutation_root', update_access_requests?: { __typename?: 'access_requests_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'access_requests', id: string, document_id: string, requester_id: string, owner_id: string, status?: string | null, permission_type?: string | null, updated_at?: string | null }> } | null };
+export type RequestEditAccessMutation = { __typename?: 'mutation_root', update_access_requests?: { __typename?: 'access_requests_mutation_response', affected_rows: number } | null };
 
 export type BulkDeleteAccessRequestsMutationVariables = Types.Exact<{
   document_ids: Array<Types.Scalars['uuid']['input']> | Types.Scalars['uuid']['input'];
@@ -26,7 +26,7 @@ export type BulkDeleteAccessRequestsMutationVariables = Types.Exact<{
 }>;
 
 
-export type BulkDeleteAccessRequestsMutation = { __typename?: 'mutation_root', delete_access_requests?: { __typename?: 'access_requests_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'access_requests', id: string, document_id: string }> } | null };
+export type BulkDeleteAccessRequestsMutation = { __typename?: 'mutation_root', delete_access_requests?: { __typename?: 'access_requests_mutation_response', affected_rows: number } | null };
 
 
 export const CreateAccessRequestDocument = gql`
@@ -36,14 +36,6 @@ export const CreateAccessRequestDocument = gql`
     on_conflict: {constraint: access_requests_document_id_requester_id_key, update_columns: [permission_type, status, message, updated_at]}
   ) {
     id
-    document_id
-    requester_id
-    owner_id
-    status
-    message
-    permission_type
-    created_at
-    updated_at
   }
 }
     `;
@@ -80,15 +72,6 @@ export const RequestEditAccessDocument = gql`
     _set: {message: $message, permission_type: "write", status: "pending", updated_at: $updatedAt}
   ) {
     affected_rows
-    returning {
-      id
-      document_id
-      requester_id
-      owner_id
-      status
-      permission_type
-      updated_at
-    }
   }
 }
     `;
@@ -127,10 +110,6 @@ export const BulkDeleteAccessRequestsDocument = gql`
     where: {document_id: {_in: $document_ids}, requester_id: {_eq: $requester_id}}
   ) {
     affected_rows
-    returning {
-      id
-      document_id
-    }
   }
 }
     `;

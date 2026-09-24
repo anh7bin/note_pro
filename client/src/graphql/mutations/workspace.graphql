@@ -10,7 +10,5 @@ mutation UpdateWorkspace(
         id
         name
         image_url
-        created_at
-        created_by
     }
 }

@@ -12,12 +12,7 @@ query SearchAll($workspaceId: uuid!, $searchTerm: String!, $userId: uuid!) {
     ) {
         id
         name
-        user {
-            id
-            avatar_url
-        }
         workspace {
-            id
             name
         }
     }
@@ -35,11 +30,9 @@ query SearchAll($workspaceId: uuid!, $searchTerm: String!, $userId: uuid!) {
         id
         content
         user {
-            id
             avatar_url
         }
         workspace {
-            id
             name
         }
     }
@@ -61,7 +54,6 @@ query SearchAll($workspaceId: uuid!, $searchTerm: String!, $userId: uuid!) {
         content
         workspace_id
         user {
-            id
             name
             avatar_url
         }

@@ -10,7 +10,7 @@ export type UpdateWorkspaceMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateWorkspaceMutation = { __typename?: 'mutation_root', update_workspaces_by_pk?: { __typename?: 'workspaces', id: string, name?: string | null, image_url?: string | null, created_at?: string | null, created_by?: string | null } | null };
+export type UpdateWorkspaceMutation = { __typename?: 'mutation_root', update_workspaces_by_pk?: { __typename?: 'workspaces', id: string, name?: string | null, image_url?: string | null } | null };
 
 
 export const UpdateWorkspaceDocument = gql`
@@ -22,8 +22,6 @@ export const UpdateWorkspaceDocument = gql`
     id
     name
     image_url
-    created_at
-    created_by
   }
 }
     `;

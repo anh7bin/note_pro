@@ -6,22 +6,7 @@ query GetAccessRequestByDocument($documentId: uuid!, $requesterId: uuid!) {
         }
         order_by: { created_at: desc }
     ) {
-        id
         status
         permission_type
-        created_at
-        owner_id
-        document {
-            id
-            type
-            content
-            user_id
-        }
-    }
-    blocks_by_pk(id: $documentId) {
-        id
-        user_id
-        type
-        content
     }
 }

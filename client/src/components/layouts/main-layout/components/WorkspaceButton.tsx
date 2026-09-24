@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
 import { Modal } from '@/components/ui/modal';
 import { useUpdateWorkspaceMutation } from '@/graphql/mutations/__generated__/workspace.generated';
-import { useGetWorkspaceByIdQuery } from '@/graphql/queries/__generated__/workspace.generated';
 import { useImageUpload } from '@/hooks/useImageUpload';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { DEFAULT_WORKSPACE_IMAGE } from '@/lib/constants';
@@ -30,15 +29,8 @@ export const WorkspaceButton = () => {
     const [updateWorkspace] = useUpdateWorkspaceMutation();
     const { workspace } = useWorkspace();
 
-    const { data, refetch } = useGetWorkspaceByIdQuery({
-        variables: { id: workspace?.id || '' },
-        skip: !workspace?.id,
-    });
-
-    const displayWorkspace = data?.workspaces_by_pk ?? workspace;
-    const workspaceImage =
-        displayWorkspace?.image_url || DEFAULT_WORKSPACE_IMAGE;
-    const workspaceName = displayWorkspace?.name || '';
+    const workspaceImage = workspace?.image_url || DEFAULT_WORKSPACE_IMAGE;
+    const workspaceName = workspace?.name || '';
 
     const { uploadImage, isUploading } = useImageUpload({
         tags: ['workspace', workspace?.id || ''],
@@ -49,9 +41,9 @@ export const WorkspaceButton = () => {
     });
 
     useEffect(() => {
-        if (isOpen && data?.workspaces_by_pk) {
-            const dbImageUrl = data.workspaces_by_pk.image_url || null;
-            setTempName(data.workspaces_by_pk.name || '');
+        if (isOpen && workspace) {
+            const dbImageUrl = workspace.image_url || null;
+            setTempName(workspace.name || '');
             setTempImageUrl(dbImageUrl);
             setOriginalImageUrl(dbImageUrl);
             setHasImageChanged(false);
@@ -61,7 +53,7 @@ export const WorkspaceButton = () => {
             setOriginalImageUrl(null);
             setHasImageChanged(false);
         }
-    }, [isOpen, data]);
+    }, [isOpen, workspace]);
 
     const handleFileSelect = async (
         event: React.ChangeEvent<HTMLInputElement>
@@ -74,15 +66,12 @@ export const WorkspaceButton = () => {
 
     const handleRemoveImage = () => {
         setTempImageUrl(originalImageUrl);
-        setHasImageChanged(
-            originalImageUrl !== data?.workspaces_by_pk?.image_url
-        );
+        setHasImageChanged(originalImageUrl !== workspace?.image_url);
     };
 
     const handleSave = async () => {
         try {
-            const nameChanged =
-                tempName.trim() && tempName !== data?.workspaces_by_pk?.name;
+            const nameChanged = tempName.trim() && tempName !== workspace?.name;
 
             if (!nameChanged && !hasImageChanged) {
                 setIsOpen(false);
@@ -93,16 +82,13 @@ export const WorkspaceButton = () => {
             await updateWorkspace({
                 variables: {
                     workspaceId: workspace?.id || '',
-                    name: nameChanged
-                        ? tempName.trim()
-                        : data?.workspaces_by_pk?.name,
+                    name: nameChanged ? tempName.trim() : workspace?.name,
                     imageUrl: hasImageChanged
                         ? tempImageUrl
-                        : data?.workspaces_by_pk?.image_url,
+                        : workspace?.image_url,
                 },
             });
 
-            await refetch();
             setIsOpen(false);
             showToast.success(t('workspaceUpdated'));
         } catch (error) {
@@ -127,8 +113,7 @@ export const WorkspaceButton = () => {
                         isUploading ||
                         isSaving ||
                         !tempName.trim() ||
-                        (tempName === data?.workspaces_by_pk?.name &&
-                            !hasImageChanged)
+                        (tempName === workspace?.name && !hasImageChanged)
                     }>
                     {isUploading
                         ? t('uploading')

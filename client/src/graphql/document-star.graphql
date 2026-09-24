@@ -1,7 +1,6 @@
 query GetDocumentStar($documentId: uuid!, $userId: uuid!) {
     document_stars_by_pk(document_id: $documentId, user_id: $userId) {
         document_id
-        created_at
     }
 }
 
@@ -13,7 +12,6 @@ query GetStarredDocuments {
         order_by: { created_at: desc }
     ) {
         document_id
-        created_at
         document {
             id
             content
@@ -82,9 +80,7 @@ query GetDocumentsToStar($workspaceId: uuid!, $userId: uuid!) {
     ) {
         id
         content
-        workspace_id
         folder {
-            id
             name
         }
         document_stars {
@@ -101,7 +97,6 @@ mutation StarDocument($documentId: uuid!) {
     }
     insert_document_stars_one(object: { document_id: $documentId }) {
         document_id
-        created_at
     }
 }
 
@@ -122,17 +117,11 @@ mutation StarDocuments(
     }
     insert_document_stars(objects: $objects) {
         affected_rows
-        returning {
-            document_id
-        }
     }
 }
 
 mutation UnstarDocuments($documentIds: [uuid!]!) {
     delete_document_stars(where: { document_id: { _in: $documentIds } }) {
         affected_rows
-        returning {
-            document_id
-        }
     }
 }

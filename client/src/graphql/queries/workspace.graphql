@@ -5,11 +5,3 @@ query GetWorkspaceByUserId($userId: uuid!) {
         image_url
     }
 }
-
-query GetWorkspaceById($id: uuid!) {
-    workspaces_by_pk(id: $id) {
-        id
-        name
-        image_url
-    }
-}

@@ -10,7 +10,7 @@ export type SearchAllQueryVariables = Types.Exact<{
 }>;
 
 
-export type SearchAllQuery = { __typename?: 'query_root', folders: Array<{ __typename?: 'folders', id: string, name: string, user?: { __typename?: 'users', id: string, avatar_url?: string | null } | null, workspace?: { __typename?: 'workspaces', id: string, name?: string | null } | null }>, documents: Array<{ __typename?: 'blocks', id: string, content?: any | null, user?: { __typename?: 'users', id: string, avatar_url?: string | null } | null, workspace?: { __typename?: 'workspaces', id: string, name?: string | null } | null }>, sharedDocuments: Array<{ __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, user?: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } | null }> };
+export type SearchAllQuery = { __typename?: 'query_root', folders: Array<{ __typename?: 'folders', id: string, name: string, workspace?: { __typename?: 'workspaces', name?: string | null } | null }>, documents: Array<{ __typename?: 'blocks', id: string, content?: any | null, user?: { __typename?: 'users', avatar_url?: string | null } | null, workspace?: { __typename?: 'workspaces', name?: string | null } | null }>, sharedDocuments: Array<{ __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, user?: { __typename?: 'users', name?: string | null, avatar_url?: string | null } | null }> };
 
 
 export const SearchAllDocument = gql`
@@ -22,12 +22,7 @@ export const SearchAllDocument = gql`
   ) {
     id
     name
-    user {
-      id
-      avatar_url
-    }
     workspace {
-      id
       name
     }
   }
@@ -39,11 +34,9 @@ export const SearchAllDocument = gql`
     id
     content
     user {
-      id
       avatar_url
     }
     workspace {
-      id
       name
     }
   }
@@ -56,7 +49,6 @@ export const SearchAllDocument = gql`
     content
     workspace_id
     user {
-      id
       name
       avatar_url
     }
