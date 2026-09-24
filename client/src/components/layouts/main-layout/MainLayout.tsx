@@ -1,7 +1,6 @@
 'use client';
 
 import AuthGuard from '@/components/features/auth/AuthGuard';
-import { PageLoading } from '@/components/ui/loading';
 import { RouteChangeHandler } from '@/components/shared/RouteChangeHandler';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
 import { useWorkspace, usePageTitle } from '@/hooks';
@@ -13,6 +12,7 @@ import Sidebar from './Sidebar';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/contexts/I18nContext';
 import { OnboardingTour } from '@/components/features/onboarding/OnboardingTour';
+import { MainLayoutSkeleton } from './MainLayoutSkeleton';
 
 function LayoutMain({ children }: { children: React.ReactNode }) {
     const { workspaceSlug, loading, workspace } = useWorkspace();
@@ -47,7 +47,7 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
                     {t('skipToContent')}
                 </a>
                 {loading && !isGlobalRoute ? (
-                    <PageLoading />
+                    <MainLayoutSkeleton sidebarOpen={!editorPage && isOpen} />
                 ) : (
                     <>
                         <Header workspaceSlug={workspaceSlug ?? ''} />

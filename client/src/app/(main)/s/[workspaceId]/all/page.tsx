@@ -1,6 +1,7 @@
 'use client';
 
 import { DocumentGrid } from '@/components/features/page/DocumentGrid';
+import { DocumentPageSkeleton } from '@/components/features/page/DocumentPageSkeleton';
 import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
@@ -12,7 +13,6 @@ import {
     PageTitle,
 } from '@/components/shared';
 import { Button } from '@/components/ui/button';
-import { PageLoading } from '@/components/ui/loading';
 import { Separator } from '@/components/ui/separator';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useI18n } from '@/contexts/I18nContext';
@@ -44,7 +44,7 @@ export default function AllDocsPage() {
     }, [clearSelection, setMode]);
 
     return loading && allDocs.length === 0 ? (
-        <PageLoading />
+        <DocumentPageSkeleton />
     ) : (
         <PageShell data-tour="documents-page">
             <PageHeader>

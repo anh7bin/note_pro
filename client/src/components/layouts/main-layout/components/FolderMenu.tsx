@@ -3,6 +3,7 @@ import { useGetFoldersQuery } from '@/graphql/queries/__generated__/folder.gener
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { buildTree, FolderNode } from '@/lib/folder';
 import { useI18n } from '@/contexts/I18nContext';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const FolderMenu = () => {
     const { workspace, workspaceSlug } = useWorkspace();
@@ -18,8 +19,13 @@ export const FolderMenu = () => {
     return (
         <div className="space-y-1">
             {loading ? (
-                <div className="animate-pulse px-1 py-1.5 text-xs leading-5 text-muted-foreground motion-reduce:animate-none">
-                    {t('loadingFolders')}
+                <div
+                    className="space-y-2 px-1 py-1.5"
+                    role="status"
+                    aria-label={t('loadingFolders')}>
+                    <Skeleton className="h-6 w-5/6" />
+                    <Skeleton className="h-6 w-3/4" />
+                    <Skeleton className="h-6 w-2/3" />
                 </div>
             ) : tree.length === 0 ? (
                 <p className="px-1 py-1.5 text-xs italic leading-5 text-muted-foreground/70">

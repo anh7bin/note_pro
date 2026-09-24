@@ -13,6 +13,7 @@ import { ROUTES } from '@/lib/routes';
 import { useLoading } from '@/contexts/LoadingContext';
 import { StarDocumentPicker } from './StarDocumentPicker';
 import { StarredDocumentItem } from './StarredDocumentItem';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function StarredDocuments({ workspaceSlug }: { workspaceSlug: string }) {
     const { t } = useI18n();
@@ -70,7 +71,12 @@ export function StarredDocuments({ workspaceSlug }: { workspaceSlug: string }) {
                 <div
                     id={listId}
                     className="max-h-44 overflow-y-auto overscroll-contain">
-                    {!loading && stars.length === 0 ? (
+                    {loading && stars.length === 0 ? (
+                        <div className="space-y-2 px-1 py-1.5">
+                            <Skeleton className="h-6 w-4/5" />
+                            <Skeleton className="h-6 w-2/3" />
+                        </div>
+                    ) : stars.length === 0 ? (
                         <p className="px-1 py-1.5 text-xs italic leading-5 text-muted-foreground/70">
                             {t('starredEmptyDescription')}
                         </p>

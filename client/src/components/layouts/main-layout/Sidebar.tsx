@@ -7,6 +7,7 @@ import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { RiUserVoiceLine } from 'react-icons/ri';
 import { FolderMenu } from './components/FolderMenu';
 import NewDocumentButton from './components/NewDocumentButton';
@@ -14,24 +15,34 @@ import { NewFolderButton } from './components/NewFolderButton';
 import { NewTaskModal } from './components/NewTaskModal';
 import { SidebarButton } from './components/SidebarButton';
 import { WorkspaceButton } from './components/WorkspaceButton';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { StarredDocuments } from './components/StarredDocuments';
 import Link from 'next/link';
 import { useLoading } from '@/contexts/LoadingContext';
+
 interface Props {
     workspaceSlug: string;
     workspaceId: string;
 }
 
 export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
-    const { isOpen, toggle } = useSidebar();
+    const { isOpen, toggle, setOpen } = useSidebar();
     const pathname = usePathname();
+    const previousPathname = useRef(pathname);
     const [isFoldersCollapsed, setIsFoldersCollapsed] = useState(false);
     const { t } = useI18n();
     const { startLoading } = useLoading();
+
+    useEffect(() => {
+        const pathChanged = previousPathname.current !== pathname;
+        previousPathname.current = pathname;
+
+        if (pathChanged && window.matchMedia('(max-width: 767px)').matches) {
+            setOpen(false);
+        }
+    }, [pathname, setOpen]);
     const foldersHref = ROUTES.WORKSPACE_FOLDERS(workspaceSlug);
     const foldersActive =
         pathname === foldersHref ||
@@ -67,6 +78,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
             {isOpen && (
                 <button
                     type="button"
+                    aria-label={t('close')}
                     className="fixed inset-x-0 bottom-0 top-[var(--header-height)] z-30 bg-black/35 md:hidden"
                     onClick={toggle}
                 />
@@ -117,6 +129,10 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                         href={item.href}
                                         isActive={isActive}
                                         count={item.count}
+                                        countLoading={
+                                            item.label === 'All Docs' &&
+                                            docsCountLoading
+                                        }
                                         action={
                                             item.modalType && item.action
                                                 ? renderModalWrapper(
