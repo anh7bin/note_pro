@@ -2,6 +2,7 @@
 import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
 import { Button } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
+import { LoadingOverlay } from '@/components/ui/loading-overlay';
 import { Modal } from '@/components/ui/modal';
 import { useUpdateWorkspaceMutation } from '@/graphql/mutations/__generated__/workspace.generated';
 import { useImageUpload } from '@/hooks/useImageUpload';
@@ -227,6 +228,7 @@ export const WorkspaceButton = () => {
                     />
                 </div>
             </div>
+            <LoadingOverlay open={isUploading} text={t('uploading')} />
         </Modal>
     );
 };

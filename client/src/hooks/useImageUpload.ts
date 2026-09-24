@@ -3,7 +3,6 @@ import {
     uploadImageToCloudinary,
 } from '@/lib/cloudinary/index';
 import { useState } from 'react';
-import { useLoading } from '@/contexts/LoadingContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { showToast } from '@/lib/toast';
 
@@ -30,7 +29,6 @@ export function useImageUpload({
 }: UseImageUploadOptions = {}) {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
-    const { startLoading, stopLoading } = useLoading();
     const { t } = useI18n();
 
     const uploadImage = async (file: File): Promise<string | null> => {
@@ -56,7 +54,6 @@ export function useImageUpload({
         }
 
         setIsUploading(true);
-        startLoading();
 
         try {
             const uploadResult = await uploadImageToCloudinary(file, {
@@ -79,7 +76,6 @@ export function useImageUpload({
             return null;
         } finally {
             setIsUploading(false);
-            stopLoading();
         }
     };
 
