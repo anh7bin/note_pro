@@ -44,9 +44,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
         }
     }, [pathname, setOpen]);
     const foldersHref = ROUTES.WORKSPACE_FOLDERS(workspaceSlug);
-    const foldersActive =
-        pathname === foldersHref ||
-        pathname.startsWith(`/s/${workspaceSlug}/f/`);
+    const isFoldersPageActive = pathname === foldersHref;
 
     const menuLabels: Record<string, string> = {
         'All Docs': t('allDocs'),
@@ -151,16 +149,16 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                         data-tour="folders-nav"
                         className={cn(
                             'flex min-h-8 items-center justify-between rounded-md px-1 transition-colors hover:bg-accent',
-                            foldersActive && 'bg-accent'
+                            isFoldersPageActive && 'bg-accent'
                         )}>
                         <Link
                             href={foldersHref}
                             className={cn(
                                 'flex min-h-7 min-w-0 flex-1 items-center rounded px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40',
-                                foldersActive && 'text-foreground'
+                                isFoldersPageActive && 'text-foreground'
                             )}
                             onClick={() => {
-                                if (!foldersActive) startLoading();
+                                if (!isFoldersPageActive) startLoading();
                             }}>
                             {t('folders')}
                         </Link>

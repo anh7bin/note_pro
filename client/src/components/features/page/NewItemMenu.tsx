@@ -17,6 +17,7 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import showToast from '@/lib/toast';
 import { NewFolderIcon } from '@/components/shared/icons/NewFolderIcon';
 import { useI18n } from '@/contexts/I18nContext';
+import { SimpleTooltip } from './SimpleTooltip';
 
 interface NewItemMenuProps {
     folderId?: string;
@@ -104,9 +105,11 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                 open={isDropdownOpen}
                 onOpenChange={setIsDropdownOpen}>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon-sm">
-                        <PlusIcon />
-                    </Button>
+                    <SimpleTooltip title={t('newFolder')}>
+                        <Button variant="outline" size="icon-sm">
+                            <PlusIcon />
+                        </Button>
+                    </SimpleTooltip>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-60" align="center">
                     <DropdownMenuItem
