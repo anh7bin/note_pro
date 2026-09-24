@@ -926,8 +926,10 @@ export type tasks_mutation_responseFieldPolicy = {
 	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
 	returning?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type usersKeySpecifier = ('avatar_url' | 'block_comments' | 'block_comments_aggregate' | 'block_reactions' | 'block_reactions_aggregate' | 'blocks' | 'blocks_aggregate' | 'created_at' | 'document_stars' | 'document_stars_aggregate' | 'email' | 'files' | 'files_aggregate' | 'folders' | 'folders_aggregate' | 'id' | 'name' | 'role' | 'tasks' | 'tasks_aggregate' | 'workspaces' | 'workspaces_aggregate' | usersKeySpecifier)[];
+export type usersKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'avatar_url' | 'block_comments' | 'block_comments_aggregate' | 'block_reactions' | 'block_reactions_aggregate' | 'blocks' | 'blocks_aggregate' | 'created_at' | 'document_presences' | 'document_presences_aggregate' | 'document_stars' | 'document_stars_aggregate' | 'email' | 'files' | 'files_aggregate' | 'folders' | 'folders_aggregate' | 'id' | 'name' | 'role' | 'tasks' | 'tasks_aggregate' | 'workspaces' | 'workspaces_aggregate' | usersKeySpecifier)[];
 export type usersFieldPolicy = {
+	access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
+	access_requests_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	avatar_url?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_comments?: FieldPolicy<any> | FieldReadFunction<any>,
 	block_comments_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -936,6 +938,8 @@ export type usersFieldPolicy = {
 	blocks?: FieldPolicy<any> | FieldReadFunction<any>,
 	blocks_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	created_at?: FieldPolicy<any> | FieldReadFunction<any>,
+	document_presences?: FieldPolicy<any> | FieldReadFunction<any>,
+	document_presences_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	document_stars?: FieldPolicy<any> | FieldReadFunction<any>,
 	document_stars_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	email?: FieldPolicy<any> | FieldReadFunction<any>,

@@ -4,11 +4,7 @@ import { ChangeEvent, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Check, ImagePlus, LoaderCircle, UploadCloud } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
+import { PopoverPanel } from '@/components/ui/popover-panel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useI18n } from '@/contexts/I18nContext';
 import showToast from '@/lib/toast';
@@ -115,8 +111,10 @@ export function DocumentCoverPicker({
     };
 
     return (
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-            <PopoverTrigger asChild>
+        <PopoverPanel
+            open={isOpen}
+            onOpenChange={setIsOpen}
+            trigger={
                 <Button
                     variant={triggerVariant}
                     size="xs"
@@ -136,109 +134,110 @@ export function DocumentCoverPicker({
                             : t('updatingCover')
                         : triggerLabel}
                 </Button>
-            </PopoverTrigger>
-            <PopoverContent
-                align="start"
-                side="bottom"
-                sideOffset={8}
-                collisionPadding={16}
-                className="w-[min(26rem,calc(100vw-2rem))] overflow-hidden p-0">
-                <Tabs defaultValue="library" className="w-full">
-                    <div className="border-b border-border px-3 pt-3">
-                        <TabsList className="grid w-full grid-cols-2 bg-transparent p-0">
-                            <TabsTrigger
-                                value="library"
-                                className="rounded-b-none border-b-2 border-transparent shadow-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
-                                {t('coverLibrary')}
-                            </TabsTrigger>
-                            <TabsTrigger
-                                value="upload"
-                                className="rounded-b-none border-b-2 border-transparent shadow-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
-                                {t('uploadCover')}
-                            </TabsTrigger>
-                        </TabsList>
-                    </div>
+            }
+            contentProps={{
+                align: 'start',
+                side: 'bottom',
+                sideOffset: 8,
+                collisionPadding: 16,
+                className:
+                    'w-[min(26rem,calc(100vw-2rem))] overflow-hidden p-0',
+            }}>
+            <Tabs defaultValue="library" className="w-full">
+                <div className="border-b border-border px-3 pt-3">
+                    <TabsList className="grid w-full grid-cols-2 bg-transparent p-0">
+                        <TabsTrigger
+                            value="library"
+                            className="rounded-b-none border-b-2 border-transparent shadow-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+                            {t('coverLibrary')}
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="upload"
+                            className="rounded-b-none border-b-2 border-transparent shadow-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none">
+                            {t('uploadCover')}
+                        </TabsTrigger>
+                    </TabsList>
+                </div>
 
-                    <TabsContent
-                        value="library"
-                        className="m-0 max-h-[min(28rem,60vh)] overflow-y-auto p-3">
-                        <section aria-labelledby="cover-colors-heading">
-                            <h3
-                                id="cover-colors-heading"
-                                className="mb-2 text-xs font-medium text-muted-foreground">
-                                {t('coverColorsGradients')}
-                            </h3>
-                            <div className="grid grid-cols-4 gap-2">
-                                {COLOR_COVERS.map(renderCoverOption)}
-                            </div>
-                        </section>
+                <TabsContent
+                    value="library"
+                    className="m-0 max-h-[min(28rem,60vh)] overflow-y-auto p-3">
+                    <section aria-labelledby="cover-colors-heading">
+                        <h3
+                            id="cover-colors-heading"
+                            className="mb-2 text-xs font-medium text-muted-foreground">
+                            {t('coverColorsGradients')}
+                        </h3>
+                        <div className="grid grid-cols-4 gap-2">
+                            {COLOR_COVERS.map(renderCoverOption)}
+                        </div>
+                    </section>
 
-                        <section
-                            aria-labelledby="cover-textures-heading"
-                            className="mt-4">
-                            <h3
-                                id="cover-textures-heading"
-                                className="mb-2 text-xs font-medium text-muted-foreground">
-                                {t('coverTextures')}
-                            </h3>
-                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                                {TEXTURE_COVERS.map((cover, index) =>
-                                    renderCoverOption(
-                                        cover,
-                                        COLOR_COVERS.length + index
-                                    )
-                                )}
-                            </div>
-                        </section>
-                    </TabsContent>
+                    <section
+                        aria-labelledby="cover-textures-heading"
+                        className="mt-4">
+                        <h3
+                            id="cover-textures-heading"
+                            className="mb-2 text-xs font-medium text-muted-foreground">
+                            {t('coverTextures')}
+                        </h3>
+                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                            {TEXTURE_COVERS.map((cover, index) =>
+                                renderCoverOption(
+                                    cover,
+                                    COLOR_COVERS.length + index
+                                )
+                            )}
+                        </div>
+                    </section>
+                </TabsContent>
 
-                    <TabsContent value="upload" className="m-0 p-3">
-                        <button
-                            type="button"
-                            disabled={isBusy}
-                            aria-busy={isUploading}
-                            onClick={() => fileInputRef.current?.click()}
-                            className={cn(
-                                'flex min-h-48 w-full touch-manipulation flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 px-6 py-8 text-center',
-                                'transition-colors hover:border-primary/50 hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
-                                'disabled:cursor-not-allowed disabled:opacity-50'
-                            )}>
-                            <span className="mb-3 flex size-11 items-center justify-center rounded-full bg-background text-muted-foreground shadow-sm ring-1 ring-border">
-                                {isUploading ? (
-                                    <LoaderCircle
-                                        aria-hidden="true"
-                                        className="size-5 animate-spin motion-reduce:animate-none"
-                                    />
-                                ) : (
-                                    <UploadCloud
-                                        aria-hidden="true"
-                                        className="size-5"
-                                    />
-                                )}
-                            </span>
-                            <span className="text-sm font-medium text-foreground">
-                                {isUploading
-                                    ? t('uploading')
-                                    : t('uploadCoverTitle')}
-                            </span>
-                            <span className="mt-1 text-xs leading-5 text-muted-foreground">
-                                {t('uploadCoverDescription')}
-                            </span>
-                            <span className="mt-3 text-[11px] text-muted-foreground">
-                                {t('supportedCoverFormats')}
-                            </span>
-                        </button>
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
-                            onChange={(event) => void handleFileChange(event)}
-                            className="sr-only"
-                            tabIndex={-1}
-                        />
-                    </TabsContent>
-                </Tabs>
-            </PopoverContent>
-        </Popover>
+                <TabsContent value="upload" className="m-0 p-3">
+                    <button
+                        type="button"
+                        disabled={isBusy}
+                        aria-busy={isUploading}
+                        onClick={() => fileInputRef.current?.click()}
+                        className={cn(
+                            'flex min-h-48 w-full touch-manipulation flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 px-6 py-8 text-center',
+                            'transition-colors hover:border-primary/50 hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
+                            'disabled:cursor-not-allowed disabled:opacity-50'
+                        )}>
+                        <span className="mb-3 flex size-11 items-center justify-center rounded-full bg-background text-muted-foreground shadow-sm ring-1 ring-border">
+                            {isUploading ? (
+                                <LoaderCircle
+                                    aria-hidden="true"
+                                    className="size-5 animate-spin motion-reduce:animate-none"
+                                />
+                            ) : (
+                                <UploadCloud
+                                    aria-hidden="true"
+                                    className="size-5"
+                                />
+                            )}
+                        </span>
+                        <span className="text-sm font-medium text-foreground">
+                            {isUploading
+                                ? t('uploading')
+                                : t('uploadCoverTitle')}
+                        </span>
+                        <span className="mt-1 text-xs leading-5 text-muted-foreground">
+                            {t('uploadCoverDescription')}
+                        </span>
+                        <span className="mt-3 text-[11px] text-muted-foreground">
+                            {t('supportedCoverFormats')}
+                        </span>
+                    </button>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                        onChange={(event) => void handleFileChange(event)}
+                        className="sr-only"
+                        tabIndex={-1}
+                    />
+                </TabsContent>
+            </Tabs>
+        </PopoverPanel>
     );
 }

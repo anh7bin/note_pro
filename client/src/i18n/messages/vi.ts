@@ -376,7 +376,7 @@ export const vi: Messages = {
         'Tính năng xuất PDF và hình ảnh chưa khả dụng.',
     inviteCollaborators: 'Mời cộng tác viên',
     inviteCollaboratorsDescription:
-        'Dễ dàng cộng tác với bất kỳ ai, kể cả khi chưa có tài khoản Bin Craft.',
+        'Nhập đầy đủ email của tài khoản Bin Craft mà bạn muốn mời.',
     addEmails: 'Thêm email để mời',
     chooseLinkAccess: 'Chọn người có thể mở liên kết này.',
     editAccessRequiredForLinkAccess:
@@ -407,6 +407,9 @@ export const vi: Messages = {
     shareDocument: 'Chia sẻ “{{title}}”',
     searchingUsers: 'Đang tìm người dùng...',
     noUsersFound: 'Không tìm thấy người dùng',
+    enterCompleteEmail: 'Nhập đầy đủ địa chỉ email để tìm một người.',
+    userAlreadyHasAccess: 'Người này đã có quyền truy cập.',
+    inviteSearchError: 'Hiện chưa thể tìm kiếm. Vui lòng thử lại.',
     inviting: 'Đang mời...',
     invite: 'Mời',
     invitePeople: 'Mời {{count}} người',

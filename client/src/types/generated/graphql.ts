@@ -2194,6 +2194,17 @@ export type DocumentPresenceAggregate = {
   nodes: Array<DocumentPresence>;
 };
 
+export type DocumentPresenceAggregateBoolExp = {
+  count?: InputMaybe<DocumentPresenceAggregateBoolExpCount>;
+};
+
+export type DocumentPresenceAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<DocumentPresenceSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<DocumentPresenceBoolExp>;
+  predicate: IntComparisonExp;
+};
+
 /** aggregate fields of "document_presence" */
 export type DocumentPresenceAggregateFields = {
   __typename?: 'document_presence_aggregate_fields';
@@ -2207,6 +2218,20 @@ export type DocumentPresenceAggregateFields = {
 export type DocumentPresenceAggregateFieldsCountArgs = {
   columns?: InputMaybe<Array<DocumentPresenceSelectColumn>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "document_presence" */
+export type DocumentPresenceAggregateOrderBy = {
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<DocumentPresenceMaxOrderBy>;
+  min?: InputMaybe<DocumentPresenceMinOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "document_presence" */
+export type DocumentPresenceArrRelInsertInput = {
+  data: Array<DocumentPresenceInsertInput>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<DocumentPresenceOnConflict>;
 };
 
 /** Boolean expression to filter rows from the table "document_presence". All fields are combined with a logical 'AND'. */
@@ -2250,6 +2275,15 @@ export type DocumentPresenceMaxFields = {
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
+/** order by max() on columns of table "document_presence" */
+export type DocumentPresenceMaxOrderBy = {
+  created_at?: InputMaybe<OrderBy>;
+  document_id?: InputMaybe<OrderBy>;
+  last_seen?: InputMaybe<OrderBy>;
+  session_id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
 /** aggregate min on columns */
 export type DocumentPresenceMinFields = {
   __typename?: 'document_presence_min_fields';
@@ -2258,6 +2292,15 @@ export type DocumentPresenceMinFields = {
   last_seen?: Maybe<Scalars['timestamptz']['output']>;
   session_id?: Maybe<Scalars['uuid']['output']>;
   user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "document_presence" */
+export type DocumentPresenceMinOrderBy = {
+  created_at?: InputMaybe<OrderBy>;
+  document_id?: InputMaybe<OrderBy>;
+  last_seen?: InputMaybe<OrderBy>;
+  session_id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
 };
 
 /** response of any mutation on the table "document_presence" */
@@ -5999,6 +6042,10 @@ export type TimetzComparisonExp = {
 /** columns and relationships of "users" */
 export type Users = {
   __typename?: 'users';
+  /** An array relationship */
+  access_requests: Array<AccessRequests>;
+  /** An aggregate relationship */
+  access_requests_aggregate: AccessRequestsAggregate;
   avatar_url?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   block_comments: Array<BlockComments>;
@@ -6013,6 +6060,10 @@ export type Users = {
   /** An aggregate relationship */
   blocks_aggregate: BlocksAggregate;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  /** An array relationship */
+  document_presences: Array<DocumentPresence>;
+  /** An aggregate relationship */
+  document_presences_aggregate: DocumentPresenceAggregate;
   /** An array relationship */
   document_stars: Array<DocumentStars>;
   /** An aggregate relationship */
@@ -6037,6 +6088,26 @@ export type Users = {
   workspaces: Array<Workspaces>;
   /** An aggregate relationship */
   workspaces_aggregate: WorkspacesAggregate;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersAccessRequestsArgs = {
+  distinct_on?: InputMaybe<Array<AccessRequestsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<AccessRequestsOrderBy>>;
+  where?: InputMaybe<AccessRequestsBoolExp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersAccessRequestsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<AccessRequestsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<AccessRequestsOrderBy>>;
+  where?: InputMaybe<AccessRequestsBoolExp>;
 };
 
 
@@ -6097,6 +6168,26 @@ export type UsersBlocksAggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   order_by?: InputMaybe<Array<BlocksOrderBy>>;
   where?: InputMaybe<BlocksBoolExp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersDocumentPresencesArgs = {
+  distinct_on?: InputMaybe<Array<DocumentPresenceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentPresenceOrderBy>>;
+  where?: InputMaybe<DocumentPresenceBoolExp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersDocumentPresencesAggregateArgs = {
+  distinct_on?: InputMaybe<Array<DocumentPresenceSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<DocumentPresenceOrderBy>>;
+  where?: InputMaybe<DocumentPresenceBoolExp>;
 };
 
 
@@ -6226,6 +6317,8 @@ export type UsersBoolExp = {
   _and?: InputMaybe<Array<UsersBoolExp>>;
   _not?: InputMaybe<UsersBoolExp>;
   _or?: InputMaybe<Array<UsersBoolExp>>;
+  access_requests?: InputMaybe<AccessRequestsBoolExp>;
+  access_requests_aggregate?: InputMaybe<AccessRequestsAggregateBoolExp>;
   avatar_url?: InputMaybe<StringComparisonExp>;
   block_comments?: InputMaybe<BlockCommentsBoolExp>;
   block_comments_aggregate?: InputMaybe<BlockCommentsAggregateBoolExp>;
@@ -6234,6 +6327,8 @@ export type UsersBoolExp = {
   blocks?: InputMaybe<BlocksBoolExp>;
   blocks_aggregate?: InputMaybe<BlocksAggregateBoolExp>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
+  document_presences?: InputMaybe<DocumentPresenceBoolExp>;
+  document_presences_aggregate?: InputMaybe<DocumentPresenceAggregateBoolExp>;
   document_stars?: InputMaybe<DocumentStarsBoolExp>;
   document_stars_aggregate?: InputMaybe<DocumentStarsAggregateBoolExp>;
   email?: InputMaybe<StringComparisonExp>;
@@ -6260,11 +6355,13 @@ export enum UsersConstraint {
 
 /** input type for inserting data into table "users" */
 export type UsersInsertInput = {
+  access_requests?: InputMaybe<AccessRequestsArrRelInsertInput>;
   avatar_url?: InputMaybe<Scalars['String']['input']>;
   block_comments?: InputMaybe<BlockCommentsArrRelInsertInput>;
   block_reactions?: InputMaybe<BlockReactionsArrRelInsertInput>;
   blocks?: InputMaybe<BlocksArrRelInsertInput>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  document_presences?: InputMaybe<DocumentPresenceArrRelInsertInput>;
   document_stars?: InputMaybe<DocumentStarsArrRelInsertInput>;
   email?: InputMaybe<Scalars['String']['input']>;
   files?: InputMaybe<FilesArrRelInsertInput>;
@@ -6323,11 +6420,13 @@ export type UsersOnConflict = {
 
 /** Ordering options when selecting data from "users". */
 export type UsersOrderBy = {
+  access_requests_aggregate?: InputMaybe<AccessRequestsAggregateOrderBy>;
   avatar_url?: InputMaybe<OrderBy>;
   block_comments_aggregate?: InputMaybe<BlockCommentsAggregateOrderBy>;
   block_reactions_aggregate?: InputMaybe<BlockReactionsAggregateOrderBy>;
   blocks_aggregate?: InputMaybe<BlocksAggregateOrderBy>;
   created_at?: InputMaybe<OrderBy>;
+  document_presences_aggregate?: InputMaybe<DocumentPresenceAggregateOrderBy>;
   document_stars_aggregate?: InputMaybe<DocumentStarsAggregateOrderBy>;
   email?: InputMaybe<OrderBy>;
   files_aggregate?: InputMaybe<FilesAggregateOrderBy>;

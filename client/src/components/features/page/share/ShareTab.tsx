@@ -48,6 +48,7 @@ export function ShareTab({ documentId, onInviteModeChange }: ShareTabProps) {
     if (inviteOpen) {
         return (
             <UserEmailAutocomplete
+                documentId={documentId}
                 documentTitle={documentTitle}
                 excludeUserIds={excludeUserIds}
                 onInviteUsers={onInviteUsers}

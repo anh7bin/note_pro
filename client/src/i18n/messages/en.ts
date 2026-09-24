@@ -381,7 +381,7 @@ export const en = {
     exportComingSoonDescription: 'PDF and image export are not available yet.',
     inviteCollaborators: 'Invite collaborators',
     inviteCollaboratorsDescription:
-        'Collaborate easily with anyone, even without a Bin Craft account.',
+        'Enter the full email address of a Bin Craft account to invite them.',
     addEmails: 'Add emails to invite',
     chooseLinkAccess: 'Choose who can open this link.',
     editAccessRequiredForLinkAccess:
@@ -412,6 +412,9 @@ export const en = {
     shareDocument: 'Share “{{title}}”',
     searchingUsers: 'Searching users...',
     noUsersFound: 'No users found',
+    enterCompleteEmail: 'Enter a complete email address to find someone.',
+    userAlreadyHasAccess: 'This person already has access.',
+    inviteSearchError: 'Could not search right now. Please try again.',
     inviting: 'Inviting...',
     invite: 'Invite',
     invitePeople: 'Invite {{count}} people',
