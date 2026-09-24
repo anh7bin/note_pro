@@ -24,6 +24,7 @@ export const SlashCommandItem = memo(function SlashCommandItem({
             id={`slash-command-${command.id}`}
             type="button"
             role="option"
+            aria-selected={isActive}
             data-active={isActive}
             onMouseEnter={onMouseEnter}
             onClick={() => onSelect(command.id)}

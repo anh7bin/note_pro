@@ -457,6 +457,7 @@ export const vi: Messages = {
     basicBlocks: 'Khối cơ bản',
     insertContent: 'Chèn nội dung',
     noCommandsFound: 'Không tìm thấy lệnh',
+    slashCommands: 'Lệnh khối',
     paragraph: 'Đoạn văn',
     heading1: 'Tiêu đề 1',
     heading2: 'Tiêu đề 2',

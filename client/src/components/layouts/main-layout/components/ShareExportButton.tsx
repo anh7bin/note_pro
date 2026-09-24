@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button';
 import { PopoverPanel } from '@/components/ui/popover-panel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useI18n } from '@/contexts/I18nContext';
+import { LockKeyhole } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FaShare } from 'react-icons/fa';
 import { FiLink } from 'react-icons/fi';
 import { HiOutlineUsers } from 'react-icons/hi2';
 
@@ -38,7 +38,7 @@ export function ShareExportButton({
         ? FiLink
         : hasSharedUsers
           ? HiOutlineUsers
-          : FaShare;
+          : LockKeyhole;
 
     useEffect(() => {
         const openShare = searchParams.get('openShare');

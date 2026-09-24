@@ -80,12 +80,11 @@ export const SlashCommand = memo(function SlashCommand({
             ref={ref}
             className="fixed z-50 max-h-[min(24rem,calc(100vh-1rem))] w-[min(20rem,calc(100vw-1rem))] origin-top-left overflow-hidden rounded-lg border border-border bg-popover p-2 text-popover-foreground shadow-lg animate-in fade-in-0 zoom-in-95 slide-in-from-top-1 duration-150 motion-reduce:animate-none"
             style={{ top: position.top, left: position.left }}
-            role="listbox">
+            role={commands.length > 0 ? 'listbox' : 'status'}
+            aria-label={commands.length > 0 ? t('slashCommands') : undefined}>
             <div className="max-h-[min(20rem,calc(100vh-5rem))] overflow-y-auto overscroll-contain">
                 {commands.length === 0 ? (
-                    <p
-                        className="px-2 py-3 text-sm text-muted-foreground"
-                        role="option">
+                    <p className="px-2 py-3 text-sm text-muted-foreground">
                         {t('noCommandsFound')}
                     </p>
                 ) : (

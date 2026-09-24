@@ -464,6 +464,7 @@ export const en = {
     basicBlocks: 'Basic blocks',
     insertContent: 'Insert',
     noCommandsFound: 'No commands found',
+    slashCommands: 'Block commands',
     paragraph: 'Paragraph',
     heading1: 'Heading 1',
     heading2: 'Heading 2',
