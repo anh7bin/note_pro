@@ -9,14 +9,16 @@ import { useRequestEdit } from './hooks/useRequestEdit';
 export function RequestEditButton({ documentId }: { documentId: string }) {
     const { t } = useI18n();
     const { isVisible, isRequesting, requestEdit } = useRequestEdit(documentId);
+    const label = isRequesting ? t('requestSent') : t('askToEdit');
 
     if (!isVisible) return null;
 
     return (
-        <SimpleTooltip title={isRequesting ? t('requestSent') : t('askToEdit')}>
+        <SimpleTooltip title={label}>
             <Button
                 variant="outline"
                 size="xs"
+                aria-label={label}
                 className="max-md:size-7 max-md:p-0"
                 onClick={requestEdit}
                 disabled={isRequesting}>
@@ -25,9 +27,7 @@ export function RequestEditButton({ documentId }: { documentId: string }) {
                 ) : (
                     <PencilLine className="md:hidden" />
                 )}
-                <span className="max-md:sr-only">
-                    {isRequesting ? t('requestSent') : t('askToEdit')}
-                </span>
+                <span className="max-md:sr-only">{label}</span>
             </Button>
         </SimpleTooltip>
     );

@@ -1,5 +1,6 @@
 'use client';
 
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { UserAvatar } from '@/components/shared';
 import { PopoverPanel } from '@/components/ui/popover-panel';
 import { useI18n } from '@/contexts/I18nContext';
@@ -23,36 +24,38 @@ export function DocumentPresence({ documentId }: { documentId: string }) {
         <PopoverPanel
             contentProps={{ align: 'end', className: 'w-70 p-1' }}
             trigger={
-                <button
-                    type="button"
-                    className="flex h-6 cursor-pointer items-center rounded-md px-1 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                    <span className="flex -space-x-2">
-                        {visibleUsers.map((user) => (
-                            <span
-                                key={user.id}
-                                className="relative rounded-full ring-2 ring-background first:block [&:not(:first-child)]:hidden sm:[&:not(:first-child)]:block">
-                                <UserAvatar
-                                    avatarUrl={user.avatarUrl}
-                                    name={user.name}
-                                    email={user.email}
-                                    className="size-[20px]"
-                                />
-                                <span className="absolute bottom-0 right-0 size-2 rounded-full border-2 border-background bg-emerald-500" />
+                <SimpleTooltip title={statusText}>
+                    <button
+                        type="button"
+                        aria-label={statusText}
+                        className="flex h-6 cursor-pointer items-center rounded-md px-1 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                        <span className="flex -space-x-2">
+                            {visibleUsers.map((user) => (
+                                <span
+                                    key={user.id}
+                                    className="relative rounded-full ring-2 ring-background first:block [&:not(:first-child)]:hidden sm:[&:not(:first-child)]:block">
+                                    <UserAvatar
+                                        avatarUrl={user.avatarUrl}
+                                        name={user.name}
+                                        email={user.email}
+                                        className="size-[20px]"
+                                    />
+                                    <span className="absolute bottom-0 right-0 size-2 rounded-full border-2 border-background bg-emerald-500" />
+                                </span>
+                            ))}
+                        </span>
+                        {users.length > 1 && (
+                            <span className="ml-1 hidden text-xs font-medium text-muted-foreground min-[375px]:inline sm:hidden">
+                                +{users.length - 1}
                             </span>
-                        ))}
-                    </span>
-                    {users.length > 1 && (
-                        <span className="ml-1 hidden text-xs font-medium text-muted-foreground min-[375px]:inline sm:hidden">
-                            +{users.length - 1}
-                        </span>
-                    )}
-                    {overflowCount > 0 && (
-                        <span className="ml-1 hidden text-xs font-medium text-muted-foreground sm:inline">
-                            +{overflowCount}
-                        </span>
-                    )}
-                    <span className="sr-only">{statusText}</span>
-                </button>
+                        )}
+                        {overflowCount > 0 && (
+                            <span className="ml-1 hidden text-xs font-medium text-muted-foreground sm:inline">
+                                +{overflowCount}
+                            </span>
+                        )}
+                    </button>
+                </SimpleTooltip>
             }>
             <div className="px-2 pb-2 pt-1">
                 <p className="text-sm font-semibold">{t('currentlyViewing')}</p>

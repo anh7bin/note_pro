@@ -1,5 +1,6 @@
 'use client';
 
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { ExportTab } from '@/components/features/page/share/ExportTab';
 import { useDocumentSharing } from '@/components/features/page/share/hooks/useDocumentSharing';
 import { ShareTab } from '@/components/features/page/share/ShareTab';
@@ -68,19 +69,22 @@ export function ShareExportButton({
                 className: 'w-[min(30rem,calc(100vw-1rem))] p-3',
             }}
             trigger={
-                <Button
-                    data-tour="editor-share"
-                    variant={isShared ? 'default' : 'outline'}
-                    size="xs"
-                    className="relative max-lg:size-7 max-lg:p-0">
-                    <ShareIcon />
-                    <span className="hidden lg:inline">
-                        {isShared ? t('shared') : t('share')}
-                    </span>
-                    {accessRequestCount > 0 && (
-                        <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-background" />
-                    )}
-                </Button>
+                <SimpleTooltip title={t('share')}>
+                    <Button
+                        data-tour="editor-share"
+                        variant={isShared ? 'default' : 'outline'}
+                        size="xs"
+                        aria-label={t('share')}
+                        className="relative max-lg:size-7 max-lg:p-0">
+                        <ShareIcon />
+                        <span className="hidden lg:inline">
+                            {isShared ? t('shared') : t('share')}
+                        </span>
+                        {accessRequestCount > 0 && (
+                            <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-background" />
+                        )}
+                    </Button>
+                </SimpleTooltip>
             }>
             <Tabs defaultValue="share" className="w-full">
                 {!inviteMode && (

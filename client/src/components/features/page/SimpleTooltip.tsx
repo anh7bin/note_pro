@@ -4,25 +4,37 @@ import * as React from 'react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { cn } from '@/lib/utils';
 
-interface Props {
+type TooltipTriggerProps = Omit<
+    React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger>,
+    'asChild' | 'children' | 'className' | 'title'
+>;
+
+interface Props extends TooltipTriggerProps {
     title: React.ReactNode | string;
-    children: React.ReactNode;
+    children: React.ReactElement;
     side?: 'top' | 'right' | 'bottom' | 'left';
     sideOffset?: number;
     className?: string;
 }
 
-export function SimpleTooltip({
-    title,
-    children,
-    side = 'bottom',
-    sideOffset = 6,
-    className,
-}: Props) {
-    return (
+export const SimpleTooltip = React.forwardRef<
+    React.ElementRef<typeof TooltipPrimitive.Trigger>,
+    Props
+>(
+    (
+        {
+            title,
+            children,
+            side = 'bottom',
+            sideOffset = 6,
+            className,
+            ...triggerProps
+        },
+        ref
+    ) => (
         <TooltipPrimitive.Provider delayDuration={300} skipDelayDuration={100}>
             <TooltipPrimitive.Root>
-                <TooltipPrimitive.Trigger asChild>
+                <TooltipPrimitive.Trigger ref={ref} asChild {...triggerProps}>
                     {children}
                 </TooltipPrimitive.Trigger>
                 <TooltipPrimitive.Portal>
@@ -43,5 +55,6 @@ export function SimpleTooltip({
                 </TooltipPrimitive.Portal>
             </TooltipPrimitive.Root>
         </TooltipPrimitive.Provider>
-    );
-}
+    )
+);
+SimpleTooltip.displayName = 'SimpleTooltip';

@@ -1,6 +1,7 @@
 'use client';
 
 import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { Button, type ButtonProps } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
 import { PopoverPanel } from '@/components/ui/popover-panel';
@@ -108,12 +109,11 @@ export function StarDocumentPicker({
                     'w-72 max-w-[calc(100vw-1.5rem)] overflow-hidden p-0',
             }}
             trigger={
-                <Button
-                    variant={variant}
-                    size={size}
-                    title={t('starADocument')}>
-                    <Plus />
-                </Button>
+                <SimpleTooltip title={t('starADocument')}>
+                    <Button variant={variant} size={size}>
+                        <Plus />
+                    </Button>
+                </SimpleTooltip>
             }>
             <div className="p-3">
                 <InputField
