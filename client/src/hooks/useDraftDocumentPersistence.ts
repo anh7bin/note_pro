@@ -13,10 +13,12 @@ import {
     type GetDocumentBlocksQuery,
 } from '@/graphql/queries/__generated__/document.generated';
 import { useI18n } from '@/contexts/I18nContext';
-import { showToast } from '@/lib/toast';
 import {
     isBlockType,
     normalizeBlockContent,
+} from '@/lib/editor/block-normalization';
+import { showToast } from '@/lib/toast';
+import {
     type Block,
     type BlockContent,
     type BlockPositionUpdate,

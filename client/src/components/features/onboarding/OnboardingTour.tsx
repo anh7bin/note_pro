@@ -1,13 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-    Joyride,
-    EVENTS,
-    STATUS,
-    type EventData,
-    type Step,
-} from 'react-joyride';
+import { Joyride, EVENTS, STATUS, type EventData } from 'react-joyride';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useCurrentUser, useDeviceOnboardingSeen, useWorkspace } from '@/hooks';
@@ -19,50 +13,8 @@ import {
     ONBOARDING_EDITOR_STORAGE_KEY,
     ONBOARDING_WORKSPACE_STORAGE_KEY,
 } from '@/lib/onboarding';
-
-function waitForTarget(selector: string, onReady: () => void) {
-    if (document.querySelector(selector)) {
-        onReady();
-        return () => {};
-    }
-
-    const observer = new MutationObserver(() => {
-        if (document.querySelector(selector)) {
-            observer.disconnect();
-            onReady();
-        }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-}
-
-async function revealEditorTarget(
-    selector: string,
-    placement: 'top' | 'bottom'
-) {
-    const target = document.querySelector<HTMLElement>(selector);
-    const scroller = target?.closest<HTMLElement>(
-        '[data-tour="editor-scroll"]'
-    );
-    if (!target || !scroller) return;
-
-    const targetTop = target.getBoundingClientRect().top;
-    const scrollerRect = scroller.getBoundingClientRect();
-    const safeTop = scrollerRect.top + (placement === 'top' ? 220 : 120);
-    const safeBottom =
-        scrollerRect.bottom - (placement === 'bottom' ? 220 : 100);
-
-    if (targetTop < safeTop || targetTop > safeBottom) {
-        const desiredTop =
-            placement === 'top'
-                ? safeTop + 20
-                : scrollerRect.top + Math.min(320, scrollerRect.height * 0.36);
-        scroller.scrollTop += targetTop - desiredTop;
-        await new Promise<void>((resolve) =>
-            requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
-        );
-    }
-}
+import { waitForTarget } from './tour-dom';
+import { createEditorTourSteps, createWorkspaceTourSteps } from './tour-steps';
 
 export function OnboardingTour({ children }: { children: React.ReactNode }) {
     const { id: userId } = useCurrentUser();
@@ -219,119 +171,26 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
         }
     }, [setSidebarOpen]);
 
-    const workspaceSteps = useMemo<Step[]>(
-        () => [
-            {
-                target: 'body',
-                title: t('tourWorkspaceWelcomeTitle'),
-                content: t('tourWorkspaceWelcomeBody'),
-                placement: 'center',
-            },
-            {
-                target: '[data-tour="new-document"]',
-                title: t('tourNewDocumentTitle'),
-                content: t('tourNewDocumentBody'),
-                placement: mobile ? 'bottom' : 'right',
-                before: () => setSidebarOpen(true),
-            },
-            {
-                target: '[data-tour="all-docs-nav"]',
-                title: t('tourAllDocsTitle'),
-                content: t('tourAllDocsBody'),
-                placement: mobile ? 'bottom' : 'right',
-                before: () => setSidebarOpen(true),
-            },
-            {
-                target: '[data-tour="tasks-nav"]',
-                title: t('tourTasksTitle'),
-                content: t('tourTasksBody'),
-                placement: mobile ? 'bottom' : 'right',
-                before: () => setSidebarOpen(true),
-            },
-            {
-                target: '[data-tour="calendar-nav"]',
-                title: t('tourCalendarTitle'),
-                content: t('tourCalendarBody'),
-                placement: mobile ? 'bottom' : 'right',
-                before: () => setSidebarOpen(true),
-            },
-            {
-                target: '[data-tour="folders-nav"]',
-                title: t('tourFoldersTitle'),
-                content: t('tourFoldersBody'),
-                placement: mobile ? 'bottom' : 'right',
-                before: () => setSidebarOpen(true),
-            },
-            {
-                target: mobile
-                    ? '[data-tour="mobile-search"]'
-                    : '[data-tour="desktop-search"]',
-                title: t('tourSearchTitle'),
-                content: t('tourSearchBody'),
-                placement: 'bottom',
-                before: closeSidebarOnMobile,
-            },
-            {
-                target: '[data-tour="documents-heading"]',
-                title: t('tourDocumentsTitle'),
-                content: t('tourDocumentsBody'),
-                placement: 'bottom',
-                before: closeSidebarOnMobile,
-            },
-            {
-                target: '[data-tour="tour-help"]',
-                title: t('tourReplayTitle'),
-                content: t('tourReplayBody'),
-                placement: 'bottom',
-            },
-        ],
+    const workspaceSteps = useMemo(
+        () =>
+            createWorkspaceTourSteps({
+                t,
+                mobile,
+                setSidebarOpen,
+                closeSidebarOnMobile,
+            }),
         [closeSidebarOnMobile, mobile, setSidebarOpen, t]
     );
 
-    const editorSteps = useMemo<Step[]>(
-        () => [
-            {
-                target: '[data-tour="editor-title"]',
-                title: t('tourEditorWelcomeTitle'),
-                content: t('tourEditorWelcomeBody'),
-                placement: 'bottom',
-                before: () =>
-                    revealEditorTarget('[data-tour="editor-title"]', 'bottom'),
-            },
-            {
-                target: '[data-tour="editor-blocks"]',
-                title: t('tourBlocksTitle'),
-                content: t('tourBlocksBody'),
-                placement: 'top',
-                before: () =>
-                    revealEditorTarget('[data-tour="editor-blocks"]', 'top'),
-            },
-            {
-                target: '[data-tour="editor-sidebar-tabs"]',
-                title: t('tourEditorSidebarTitle'),
-                content: t('tourEditorSidebarBody'),
-                placement: mobile ? 'bottom' : 'right',
-                before: () => setSidebarOpen(true),
-            },
-            ...(showShareStep
-                ? [
-                      {
-                          target: '[data-tour="editor-share"]',
-                          title: t('tourShareTitle'),
-                          content: t('tourShareBody'),
-                          placement: 'bottom' as const,
-                          before: closeSidebarOnMobile,
-                      },
-                  ]
-                : []),
-            {
-                target: '[data-tour="tour-help"]',
-                title: t('tourReplayTitle'),
-                content: t('tourReplayBody'),
-                placement: 'bottom',
-                before: closeSidebarOnMobile,
-            },
-        ],
+    const editorSteps = useMemo(
+        () =>
+            createEditorTourSteps({
+                t,
+                mobile,
+                setSidebarOpen,
+                closeSidebarOnMobile,
+                showShareStep,
+            }),
         [closeSidebarOnMobile, mobile, setSidebarOpen, showShareStep, t]
     );
 

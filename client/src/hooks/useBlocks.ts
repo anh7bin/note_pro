@@ -12,12 +12,14 @@ import {
 } from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
 import {
+    isBlockType,
+    normalizeBlockContent,
+} from '@/lib/editor/block-normalization';
+import {
     type Block as EditorBlock,
     type BlockContent,
     type BlockPositionUpdate,
     type FileBlockContent,
-    isBlockType,
-    normalizeBlockContent,
 } from '@/types/editor';
 import { BlockType } from '@/types/types';
 import type { Reference, StoreObject } from '@apollo/client';

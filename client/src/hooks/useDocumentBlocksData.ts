@@ -6,7 +6,8 @@ import {
     useGetDocumentBlocksQuery,
     useSubscribeToDocumentBlocksSubscription,
 } from '@/graphql/queries/__generated__/document.generated';
-import { type Block, normalizeBlock } from '@/types/editor';
+import { normalizeBlock } from '@/lib/editor/block-normalization';
+import type { Block } from '@/types/editor';
 import { BlockType } from '@/types/types';
 import { useMemo } from 'react';
 
