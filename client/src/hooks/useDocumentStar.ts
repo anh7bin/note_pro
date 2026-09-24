@@ -3,8 +3,6 @@
 import type { ApolloCache } from '@apollo/client';
 import { useCallback, useEffect, useState } from 'react';
 import {
-    GetStarredDocumentsDocument,
-    GetStarredDocumentsPageDocument,
     useGetDocumentStarQuery,
     useStarDocumentMutation,
     useUnstarDocumentMutation,
@@ -12,6 +10,10 @@ import {
 import { useI18n } from '@/contexts/I18nContext';
 import { useUserId } from '@/hooks/useAuth';
 import showToast from '@/lib/toast';
+import {
+    DOCUMENT_STAR_REFETCH_QUERIES,
+    updateDocumentStarCache,
+} from '@/lib/apollo/document-star-cache';
 
 interface UseDocumentStarOptions {
     initialIsStarred?: boolean;
@@ -56,45 +58,21 @@ export function useDocumentStar(
 
         const nextIsStarred = !isStarred;
         setLocalIsStarred(nextIsStarred);
-        const updateDocumentCard = (cache: ApolloCache<unknown>) => {
-            cache.modify({
-                id: cache.identify({
-                    __typename: 'blocks',
-                    id: documentId,
-                }),
-                fields: {
-                    document_stars() {
-                        return nextIsStarred
-                            ? [
-                                  {
-                                      __typename: 'document_stars',
-                                      document_id: documentId,
-                                  },
-                              ]
-                            : [];
-                    },
-                },
-            });
-        };
+        const updateDocumentCard = (cache: ApolloCache<unknown>) =>
+            updateDocumentStarCache(cache, [documentId], nextIsStarred);
 
         try {
             if (nextIsStarred) {
                 await starDocument({
                     variables: { documentId },
                     update: updateDocumentCard,
-                    refetchQueries: [
-                        GetStarredDocumentsDocument,
-                        GetStarredDocumentsPageDocument,
-                    ],
+                    refetchQueries: DOCUMENT_STAR_REFETCH_QUERIES,
                 });
             } else {
                 await unstarDocument({
                     variables: { documentId, userId },
                     update: updateDocumentCard,
-                    refetchQueries: [
-                        GetStarredDocumentsDocument,
-                        GetStarredDocumentsPageDocument,
-                    ],
+                    refetchQueries: DOCUMENT_STAR_REFETCH_QUERIES,
                 });
             }
         } catch (error) {

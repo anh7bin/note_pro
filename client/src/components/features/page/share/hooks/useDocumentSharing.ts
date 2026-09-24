@@ -18,6 +18,7 @@ import {
 import { AccessRequestStatus, PermissionType } from '@/types/types';
 import { ROUTES } from '@/lib/routes';
 import { showToast } from '@/lib/toast';
+import { getPlainText } from '@/lib/text';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import { useI18n } from '@/contexts/I18nContext';
@@ -63,11 +64,14 @@ export function useDocumentSharing(documentId: string) {
         () => getExcludedUserIds(sharedUsers, owner),
         [owner, sharedUsers]
     );
-    const documentTitle = useMemo(() => {
-        const title = data?.blocks_by_pk?.content?.title;
-        if (typeof title !== 'string') return 'Untitled';
-        return title.replace(/<[^>]*>/g, '').trim() || 'Untitled';
-    }, [data?.blocks_by_pk?.content]);
+    const rawDocumentTitle = data?.blocks_by_pk?.content?.title;
+    const documentTitle = useMemo(
+        () =>
+            typeof rawDocumentTitle === 'string'
+                ? getPlainText(rawDocumentTitle).trim() || 'Untitled'
+                : 'Untitled',
+        [rawDocumentTitle]
+    );
     const linkPermission =
         (data?.blocks_by_pk?.link_access
             ?.permission_type as LinkPermissionType) || 'restricted';

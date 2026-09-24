@@ -56,10 +56,3 @@ export function formatDate(
         locale: options.locale === 'vi' ? vi : enUS,
     });
 }
-export function stripHtmlTags(html: string | undefined | null): string {
-    if (!html) return 'Untitled Document';
-    const text = html.replace(/<[^>]*>/g, '');
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    return textarea.value || 'Untitled Document';
-}

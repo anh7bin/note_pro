@@ -1,4 +1,4 @@
-import { stripHtmlTags } from '@/lib/utils';
+import { getPlainText } from '@/lib/text';
 import { Notification } from '@/types/app';
 import type { TranslationKey } from '@/i18n/messages';
 import { formatDistanceToNow } from 'date-fns';
@@ -129,7 +129,7 @@ export function getNotificationMessage(
 }
 
 export function getNotificationTitle(notification: Notification): string {
-    return stripHtmlTags(notification.title);
+    return getPlainText(notification.title);
 }
 
 export function getNotificationInitial(actor?: string): string | undefined {

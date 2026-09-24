@@ -21,3 +21,4 @@ export { useDocumentCover } from './useDocumentCover';
 export { useDocumentStar } from './useDocumentStar';
 export { useBulkDocumentStar } from './useBulkDocumentStar';
 export { useImageUpload } from './useImageUpload';
+export { useTaskCompletion } from './useTaskCompletion';

@@ -1,10 +1,7 @@
-import { TASK_STATUS } from '@/lib/constants';
-import { useUpdateTaskMutation } from '@/graphql/mutations/__generated__/task.generated';
 import { GetDocumentBlocksDocument } from '@/graphql/queries/__generated__/document.generated';
-import { useDocumentBlocksData } from '@/hooks';
+import { useDocumentBlocksData, useTaskCompletion } from '@/hooks';
 import { highlightBlock } from '@/lib/blockHighlight';
 import { formatFileSize } from '@/lib/fileUtils';
-import { showToast } from '@/lib/toast';
 import { formatDate } from '@/lib/utils';
 import { BlockType } from '@/types/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -29,7 +26,15 @@ export const LeftSidebar = ({ pageId }: Props) => {
     const [pendingTaskIds, setPendingTaskIds] = useState<Set<string>>(
         () => new Set()
     );
-    const [updateTask] = useUpdateTaskMutation();
+    const { setTaskCompleted } = useTaskCompletion({
+        refetchQueries: [
+            {
+                query: GetDocumentBlocksDocument,
+                variables: { pageId },
+            },
+        ],
+        awaitRefetchQueries: true,
+    });
     const cleanupHighlightRef = useRef<(() => void) | null>(null);
     const { locale, t } = useI18n();
 
@@ -137,29 +142,7 @@ export const LeftSidebar = ({ pageId }: Props) => {
                 return next;
             });
             try {
-                await updateTask({
-                    variables: {
-                        id: taskId,
-                        input: {
-                            status: completed
-                                ? TASK_STATUS.COMPLETED
-                                : TASK_STATUS.TODO,
-                        },
-                    },
-                    refetchQueries: [
-                        {
-                            query: GetDocumentBlocksDocument,
-                            variables: { pageId },
-                        },
-                    ],
-                    awaitRefetchQueries: true,
-                });
-                showToast.success(
-                    completed ? t('taskCompleted') : t('taskReopened')
-                );
-            } catch (error) {
-                showToast.error(t('updateTaskError'));
-                throw error;
+                await setTaskCompleted(taskId, completed);
             } finally {
                 setPendingTaskIds((prev) => {
                     const next = new Set(prev);
@@ -168,7 +151,7 @@ export const LeftSidebar = ({ pageId }: Props) => {
                 });
             }
         },
-        [updateTask, pageId, t]
+        [setTaskCompleted]
     );
 
     return (

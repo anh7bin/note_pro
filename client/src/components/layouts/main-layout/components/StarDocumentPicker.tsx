@@ -7,8 +7,6 @@ import { PopoverPanel } from '@/components/ui/popover-panel';
 import { useI18n } from '@/contexts/I18nContext';
 import {
     GetDocumentsToStarDocument,
-    GetStarredDocumentsDocument,
-    GetStarredDocumentsPageDocument,
     useGetDocumentsToStarQuery,
     useStarDocumentMutation,
 } from '@/graphql/__generated__/document-star.generated';
@@ -18,6 +16,10 @@ import { getPlainText } from '@/lib/text';
 import showToast from '@/lib/toast';
 import { Plus, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import {
+    DOCUMENT_STAR_REFETCH_QUERIES,
+    updateDocumentStarCache,
+} from '@/lib/apollo/document-star-cache';
 
 interface StarDocumentPickerProps {
     onDocumentStarred?: () => void;
@@ -75,27 +77,10 @@ export function StarDocumentPicker({
         try {
             await starDocument({
                 variables: { documentId },
-                update: (cache) => {
-                    cache.modify({
-                        id: cache.identify({
-                            __typename: 'blocks',
-                            id: documentId,
-                        }),
-                        fields: {
-                            document_stars() {
-                                return [
-                                    {
-                                        __typename: 'document_stars',
-                                        document_id: documentId,
-                                    },
-                                ];
-                            },
-                        },
-                    });
-                },
+                update: (cache) =>
+                    updateDocumentStarCache(cache, [documentId], true),
                 refetchQueries: [
-                    GetStarredDocumentsDocument,
-                    GetStarredDocumentsPageDocument,
+                    ...DOCUMENT_STAR_REFETCH_QUERIES,
                     GetDocumentsToStarDocument,
                 ],
                 awaitRefetchQueries: true,

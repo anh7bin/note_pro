@@ -1,13 +1,10 @@
 'use client';
 
 import { memo, useCallback } from 'react';
-import { TASK_STATUS } from '@/lib/constants';
-import { useUpdateTaskMutation } from '@/graphql/mutations/__generated__/task.generated';
-import showToast from '@/lib/toast';
 import { cn } from '@/lib/utils';
 import { Task } from '@/types/app';
 import { Check } from 'lucide-react';
-import { useI18n } from '@/contexts/I18nContext';
+import { useTaskCompletion } from '@/hooks/useTaskCompletion';
 
 interface CheckTaskProps {
     task: Task;
@@ -53,34 +50,27 @@ export const CheckTask = memo(function CheckTask({
     setIsUpdating,
     editable,
 }: CheckTaskProps) {
-    const [updateTask] = useUpdateTaskMutation();
-    const { t } = useI18n();
+    const { setTaskCompleted } = useTaskCompletion();
 
     const handleToggleComplete = useCallback(async () => {
         if (!task || isUpdating || !editable) return;
 
         try {
             setIsUpdating(true);
-            await updateTask({
-                variables: {
-                    id: task.id,
-                    input: {
-                        status: isCompleted
-                            ? TASK_STATUS.TODO
-                            : TASK_STATUS.COMPLETED,
-                    },
-                },
-            });
-            showToast.success(
-                isCompleted ? t('taskReopened') : t('taskCompleted')
-            );
-        } catch (error) {
-            console.error('Failed to update task:', error);
-            showToast.error(t('updateTaskError'));
+            await setTaskCompleted(task.id, !isCompleted);
+        } catch {
+            // The shared mutation hook reports the failure and restores control.
         } finally {
             setIsUpdating(false);
         }
-    }, [task, isUpdating, editable, updateTask, isCompleted, setIsUpdating, t]);
+    }, [
+        task,
+        isUpdating,
+        editable,
+        setTaskCompleted,
+        isCompleted,
+        setIsUpdating,
+    ]);
 
     if (!isTask) return null;
 

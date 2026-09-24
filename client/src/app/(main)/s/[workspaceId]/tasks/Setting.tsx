@@ -7,12 +7,10 @@ import {
     GetAllTasksDocument,
     GetTodoTasksDocument,
 } from '@/graphql/queries/__generated__/task.generated';
-import { useUpdateTaskMutation } from '@/graphql/mutations/__generated__/task.generated';
 import { useWorkspace } from '@/hooks/useWorkspace';
-import { showToast } from '@/lib/toast';
-import { TASK_STATUS } from '@/lib/constants';
 import { useCallback } from 'react';
 import { useI18n } from '@/contexts/I18nContext';
+import { useTaskCompletion } from '@/hooks/useTaskCompletion';
 
 export const Setting = () => {
     const { workspace } = useWorkspace();
@@ -27,7 +25,23 @@ export const Setting = () => {
         },
     ] = useGetCompletedTasksLazyQuery();
 
-    const [updateTask] = useUpdateTaskMutation();
+    const { setTaskCompleted } = useTaskCompletion({
+        refetchQueries: [
+            {
+                query: GetCompletedTasksDocument,
+                variables: { workspaceId: workspace?.id || '' },
+            },
+            {
+                query: GetAllTasksDocument,
+                variables: { workspaceId: workspace?.id || '' },
+            },
+            {
+                query: GetTodoTasksDocument,
+                variables: { workspaceId: workspace?.id || '' },
+            },
+        ],
+        awaitRefetchQueries: true,
+    });
 
     const completedTasksForDisplay = completedTasksData?.tasks || [];
 
@@ -39,47 +53,10 @@ export const Setting = () => {
         }
     }, [workspace?.id, getCompletedTasks]);
 
-    const handleTaskToggle = async (id: string, completed: boolean) => {
-        try {
-            await updateTask({
-                variables: {
-                    id,
-                    input: {
-                        status: completed
-                            ? TASK_STATUS.COMPLETED
-                            : TASK_STATUS.TODO,
-                    },
-                },
-                refetchQueries: [
-                    {
-                        query: GetCompletedTasksDocument,
-                        variables: { workspaceId: workspace?.id || '' },
-                    },
-                    {
-                        query: GetAllTasksDocument,
-                        variables: { workspaceId: workspace?.id || '' },
-                    },
-                    {
-                        query: GetTodoTasksDocument,
-                        variables: { workspaceId: workspace?.id || '' },
-                    },
-                ],
-                awaitRefetchQueries: true,
-            });
-            showToast.success(
-                completed ? t('taskCompleted') : t('taskReopened')
-            );
-        } catch (error) {
-            console.error('Failed to update task:', error);
-            showToast.error(t('updateTaskError'));
-            throw error;
-        }
-    };
-
     return (
         <CompletedTasksModal
             completedTasks={completedTasksForDisplay}
-            onTaskToggle={handleTaskToggle}
+            onTaskToggle={setTaskCompleted}
             onModalOpen={handleModalOpen}
             loading={completedTasksLoading}
             error={Boolean(completedTasksError)}>

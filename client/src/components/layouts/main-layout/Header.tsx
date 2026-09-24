@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DocumentPresence } from './components/DocumentPresence';
 import { MobileSearch } from './components/MobileSearch';
-import { NotificationButton } from './components/NotificationButton';
+import { NotificationMenu } from './components/notifications/NotificationMenu';
 import { useNotifications } from './components/notifications/hooks/useNotifications';
 import { getUnreadAccessRequestCountForDocument } from './components/notifications/notification.utils';
 import { RequestEditButton } from './components/RequestEditButton';
@@ -58,7 +58,7 @@ export default function Header({ workspaceSlug }: Props) {
                 <TopLoadingBar isLoading={isLoading} />
                 <header className="fixed inset-x-0 top-0 z-50 grid h-[var(--header-height)] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 border-b border-border-subtle bg-background/95 px-3 backdrop-blur-sm sm:px-4">
                     <div className="flex items-center gap-0.5">
-                        <Button variant="ghost" size="icon-xs">
+                        <Button asChild variant="ghost" size="icon-xs">
                             <Link
                                 href={ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug)}
                                 onClick={handleLogoClick}>
@@ -96,7 +96,7 @@ export default function Header({ workspaceSlug }: Props) {
                                 />
                             </>
                         )}
-                        <NotificationButton {...notificationMenuProps} />
+                        <NotificationMenu {...notificationMenuProps} />
                         <TourHelpButton />
                         <SettingButton />
                     </div>

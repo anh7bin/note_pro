@@ -1,16 +1,18 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
 import type { ApolloCache } from '@apollo/client';
+import { useCallback, useMemo } from 'react';
 import {
-    GetStarredDocumentsDocument,
-    GetStarredDocumentsPageDocument,
     useGetStarredDocumentsQuery,
     useStarDocumentsMutation,
     useUnstarDocumentsMutation,
 } from '@/graphql/__generated__/document-star.generated';
 import { useI18n } from '@/contexts/I18nContext';
 import showToast from '@/lib/toast';
+import {
+    DOCUMENT_STAR_REFETCH_QUERIES,
+    updateDocumentStarCache,
+} from '@/lib/apollo/document-star-cache';
 
 export function useBulkDocumentStar(documentIds: readonly string[]) {
     const { t } = useI18n();
@@ -37,28 +39,8 @@ export function useBulkDocumentStar(documentIds: readonly string[]) {
 
         const ids = [...documentIds];
         const shouldStar = !allAreStarred;
-        const updateDocumentCards = (cache: ApolloCache<unknown>) => {
-            ids.forEach((documentId) => {
-                cache.modify({
-                    id: cache.identify({
-                        __typename: 'blocks',
-                        id: documentId,
-                    }),
-                    fields: {
-                        document_stars() {
-                            return shouldStar
-                                ? [
-                                      {
-                                          __typename: 'document_stars',
-                                          document_id: documentId,
-                                      },
-                                  ]
-                                : [];
-                        },
-                    },
-                });
-            });
-        };
+        const updateDocumentCards = (cache: ApolloCache<unknown>) =>
+            updateDocumentStarCache(cache, ids, shouldStar);
 
         try {
             if (shouldStar) {
@@ -70,20 +52,14 @@ export function useBulkDocumentStar(documentIds: readonly string[]) {
                         })),
                     },
                     update: updateDocumentCards,
-                    refetchQueries: [
-                        GetStarredDocumentsDocument,
-                        GetStarredDocumentsPageDocument,
-                    ],
+                    refetchQueries: DOCUMENT_STAR_REFETCH_QUERIES,
                     awaitRefetchQueries: true,
                 });
             } else {
                 await unstarDocuments({
                     variables: { documentIds: ids },
                     update: updateDocumentCards,
-                    refetchQueries: [
-                        GetStarredDocumentsDocument,
-                        GetStarredDocumentsPageDocument,
-                    ],
+                    refetchQueries: DOCUMENT_STAR_REFETCH_QUERIES,
                     awaitRefetchQueries: true,
                 });
             }

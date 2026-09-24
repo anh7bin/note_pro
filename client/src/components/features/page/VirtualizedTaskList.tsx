@@ -3,40 +3,18 @@
 import { NewTaskModal } from '@/components/layouts/main-layout/components/NewTaskModal';
 import { EmptyState } from '@/components/shared';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { InputField } from '@/components/ui/input-field';
-import { Label } from '@/components/ui/label';
-import { PopoverPanel } from '@/components/ui/popover-panel';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { useI18n } from '@/contexts/I18nContext';
 import { TASK_STATUS } from '@/lib/constants';
 import { getPlainText } from '@/lib/text';
 import { Task } from '@/types/app';
 import { format } from 'date-fns';
-import {
-    ArrowDownUp,
-    CheckCircle2,
-    Plus,
-    Search,
-    SlidersHorizontal,
-} from 'lucide-react';
+import { CheckCircle2, Plus } from 'lucide-react';
 import * as React from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import { TaskDetailsModal } from './TaskDetailsModal';
 import { TaskItem } from './TaskItem';
+import { TaskListToolbar } from './TaskListToolbar';
 
 const TASK_ROW_HEIGHT = 56;
 type ListRow =
@@ -258,158 +236,25 @@ export function VirtualizedTaskList({
                 </div>
             )}
             {tasks.length > 0 && (
-                <div className="flex min-w-0 items-center gap-2" role="search">
-                    <div className="min-w-0 flex-1 sm:max-w-sm">
-                        <InputField
-                            type="search"
-                            placeholder={t('searchTasks')}
-                            value={search}
-                            onChange={(event) => setSearch(event.target.value)}
-                            icon={<Search />}
-                            className="h-8 w-full"
-                        />
-                    </div>
-                    <PopoverPanel
-                        trigger={
-                            <Button size="sm" variant="outline">
-                                <SlidersHorizontal />
-                                <span className="hidden sm:inline">
-                                    {t('taskFilters')}
-                                </span>
-                                {activeFilterCount > 0 && (
-                                    <span className="rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
-                                        {activeFilterCount}
-                                    </span>
-                                )}
-                            </Button>
-                        }
-                        contentProps={{
-                            align: 'end',
-                            className:
-                                'w-64 max-h-[min(65dvh,420px)] space-y-3 overflow-y-auto p-3',
-                        }}>
-                        <div className="flex items-center justify-between gap-2">
-                            <span className="text-sm font-semibold">
-                                {t('taskFilters')}
-                            </span>
-                            {activeFilterCount > 0 && (
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                        setPriority('all');
-                                        setSource('all');
-                                        setDateFilter('all');
-                                    }}>
-                                    {t('clearTaskFilters')}
-                                </Button>
-                            )}
-                        </div>
-                        <div className="space-y-1.5">
-                            <Label>{t('filterPriority')}</Label>
-                            <Select
-                                value={priority}
-                                onValueChange={setPriority}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">
-                                        {t('allPriorities')}
-                                    </SelectItem>
-                                    <SelectItem value="none">
-                                        {t('priorityNone')}
-                                    </SelectItem>
-                                    <SelectItem value="high">
-                                        {t('priorityHigh')}
-                                    </SelectItem>
-                                    <SelectItem value="medium">
-                                        {t('priorityMedium')}
-                                    </SelectItem>
-                                    <SelectItem value="low">
-                                        {t('priorityLow')}
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="space-y-1.5">
-                            <Label>{t('filterSource')}</Label>
-                            <Select value={source} onValueChange={setSource}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">
-                                        {t('allSources')}
-                                    </SelectItem>
-                                    <SelectItem value="inbox">
-                                        {t('inbox')}
-                                    </SelectItem>
-                                    <SelectItem value="document">
-                                        {t('documentTasks')}
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="space-y-1.5">
-                            <Label>{t('filterDate')}</Label>
-                            <Select
-                                value={dateFilter}
-                                onValueChange={setDateFilter}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">
-                                        {t('allDates')}
-                                    </SelectItem>
-                                    <SelectItem value="overdue">
-                                        {t('overdueTasks')}
-                                    </SelectItem>
-                                    <SelectItem value="today">
-                                        {t('today')}
-                                    </SelectItem>
-                                    <SelectItem value="upcoming">
-                                        {t('upcomingTasks')}
-                                    </SelectItem>
-                                    {view !== 'today' && (
-                                        <SelectItem value="noDate">
-                                            {t('noDate')}
-                                        </SelectItem>
-                                    )}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </PopoverPanel>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="outline">
-                                <ArrowDownUp />
-                                <span className="hidden sm:inline">
-                                    {t('sortTasks')}
-                                </span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuRadioGroup
-                                value={sort}
-                                onValueChange={setSort}>
-                                <DropdownMenuRadioItem value="created">
-                                    {t('sortNewest')}
-                                </DropdownMenuRadioItem>
-                                <DropdownMenuRadioItem value="date">
-                                    {t('sortByDate')}
-                                </DropdownMenuRadioItem>
-                                <DropdownMenuRadioItem value="schedule">
-                                    {t('scheduleDate')}
-                                </DropdownMenuRadioItem>
-                                <DropdownMenuRadioItem value="deadline">
-                                    {t('deadline')}
-                                </DropdownMenuRadioItem>
-                            </DropdownMenuRadioGroup>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
+                <TaskListToolbar
+                    search={search}
+                    priority={priority}
+                    source={source}
+                    dateFilter={dateFilter}
+                    sort={sort}
+                    view={view}
+                    activeFilterCount={activeFilterCount}
+                    onSearchChange={setSearch}
+                    onPriorityChange={setPriority}
+                    onSourceChange={setSource}
+                    onDateFilterChange={setDateFilter}
+                    onSortChange={setSort}
+                    onClearFilters={() => {
+                        setPriority('all');
+                        setSource('all');
+                        setDateFilter('all');
+                    }}
+                />
             )}
             {rows.length === 0 ? (
                 <EmptyState
