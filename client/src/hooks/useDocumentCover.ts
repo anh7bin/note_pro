@@ -27,14 +27,26 @@ export function useDocumentCover({
     const handleAddCover = useCallback(
         async (file: File) => {
             const currentRootBlock = rootBlockRef.current;
-            if (!currentRootBlock) return;
+            if (!currentRootBlock) return false;
 
             const imageUrl = await uploadImage(file);
             if (imageUrl) {
-                await onUpdateCover(imageUrl);
+                return onUpdateCover(imageUrl);
             }
+
+            return false;
         },
         [onUpdateCover, uploadImage]
+    );
+
+    const handleSelectCover = useCallback(
+        async (imageUrl: string) => {
+            const currentRootBlock = rootBlockRef.current;
+            if (!currentRootBlock) return false;
+
+            return onUpdateCover(imageUrl);
+        },
+        [onUpdateCover]
     );
 
     const handleRemoveCover = useCallback(async () => {
@@ -47,6 +59,7 @@ export function useDocumentCover({
     return {
         coverImage,
         handleAddCover,
+        handleSelectCover,
         handleRemoveCover,
         isUploading,
     };

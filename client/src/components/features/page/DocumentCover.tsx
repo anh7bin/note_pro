@@ -1,15 +1,16 @@
 'use client';
 
-import { useRef } from 'react';
-import { ImagePlus, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { useI18n } from '@/contexts/I18nContext';
+import { DocumentCoverPicker } from './DocumentCoverPicker';
 
 interface DocumentCoverProps {
     imageUrl: string;
     onRemove: () => void;
-    onChangeCover: (file: File) => void;
+    onChangeCover: (file: File) => Promise<boolean>;
+    onSelectCover: (cover: string) => Promise<boolean>;
     editable: boolean;
     isUploading?: boolean;
 }
@@ -18,25 +19,11 @@ export function DocumentCover({
     imageUrl,
     onRemove,
     onChangeCover,
+    onSelectCover,
     editable,
     isUploading,
 }: DocumentCoverProps) {
-    const fileInputRef = useRef<HTMLInputElement>(null);
     const { t } = useI18n();
-
-    const handleChangeCover = () => {
-        fileInputRef.current?.click();
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            onChangeCover(file);
-        }
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
-    };
 
     return (
         <div className="group relative h-48 w-full overflow-hidden bg-muted sm:h-[280px]">
@@ -50,14 +37,14 @@ export function DocumentCover({
             {editable && (
                 <>
                     <div className="absolute right-3 top-3 flex gap-2 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
-                        <Button
-                            variant="outline"
-                            size="xs"
-                            onClick={handleChangeCover}
-                            disabled={isUploading}>
-                            <ImagePlus />
-                            {isUploading ? t('uploading') : t('changeCover')}
-                        </Button>
+                        <DocumentCoverPicker
+                            currentCover={imageUrl}
+                            triggerLabel={t('changeCover')}
+                            triggerVariant="outline"
+                            onSelectCover={onSelectCover}
+                            onUploadCover={onChangeCover}
+                            isUploading={Boolean(isUploading)}
+                        />
                         <Button
                             variant="destructive"
                             size="xs"
@@ -67,13 +54,6 @@ export function DocumentCover({
                             {t('removeCover')}
                         </Button>
                     </div>
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        className="hidden"
-                    />
                 </>
             )}
         </div>

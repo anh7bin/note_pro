@@ -7,7 +7,7 @@ import { DocumentTitleInput } from '@/components/features/page/DocumentTitleInpu
 import { BlockList } from '@/components/features/page/BlockList';
 import { Separator } from '@/components/ui/separator';
 import { DocumentCover } from '@/components/features/page/DocumentCover';
-import { AddCoverButton } from '@/components/features/page/AddCoverButton';
+import { DocumentCoverPicker } from '@/components/features/page/DocumentCoverPicker';
 import { DocumentIcon } from '@/components/features/page/DocumentIcon';
 import { useDocumentCover } from '@/hooks/useDocumentCover';
 import { EditorProvider, useEditor } from '@/contexts/EditorContext';
@@ -38,11 +38,16 @@ function EditorContent({
         handleTitleBlur,
         handleTitleEnter,
     } = useEditor();
-    const { coverImage, handleAddCover, handleRemoveCover, isUploading } =
-        useDocumentCover({
-            rootBlock,
-            onUpdateCover: handleUpdateDocumentCover,
-        });
+    const {
+        coverImage,
+        handleAddCover,
+        handleSelectCover,
+        handleRemoveCover,
+        isUploading,
+    } = useDocumentCover({
+        rootBlock,
+        onUpdateCover: handleUpdateDocumentCover,
+    });
     const documentIcon = rootBlock?.content.icon;
     const { t } = useI18n();
 
@@ -73,6 +78,7 @@ function EditorContent({
                                 imageUrl={coverImage}
                                 onRemove={handleRemoveCover}
                                 onChangeCover={handleAddCover}
+                                onSelectCover={handleSelectCover}
                                 editable={editable}
                                 isUploading={isUploading}
                             />
@@ -110,8 +116,12 @@ function EditorContent({
                                             />
                                         )}
                                         {!coverImage && (
-                                            <AddCoverButton
-                                                onAddCover={handleAddCover}
+                                            <DocumentCoverPicker
+                                                triggerLabel={t('addCover')}
+                                                onSelectCover={
+                                                    handleSelectCover
+                                                }
+                                                onUploadCover={handleAddCover}
                                                 isUploading={isUploading}
                                             />
                                         )}
