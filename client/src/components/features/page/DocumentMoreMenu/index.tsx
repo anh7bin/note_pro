@@ -7,6 +7,7 @@ import { useDocumentActions } from './hooks/useDocumentActions';
 import { useCopyDocumentLink } from './hooks/useCopyDocumentLink';
 import { ROUTES } from '@/lib/routes';
 import { useI18n } from '@/contexts/I18nContext';
+import { LoadingOverlay } from '@/components/ui/loading-overlay';
 
 interface DocumentMoreMenuProps {
     documentId: string;
@@ -31,8 +32,13 @@ export const DocumentMoreMenu = ({
 }: DocumentMoreMenuProps) => {
     const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const { handleDelete, handleRemoveAccess, handleMove } =
-        useDocumentActions(documentId);
+    const {
+        handleDelete,
+        handleDuplicate,
+        handleRemoveAccess,
+        handleMove,
+        isDuplicating,
+    } = useDocumentActions(documentId, { workspaceId, folderId });
     const copyLink = useCopyDocumentLink(documentId, workspaceId, folderId);
     const { t } = useI18n();
 
@@ -70,6 +76,14 @@ export const DocumentMoreMenu = ({
         []
     );
 
+    const handleDuplicateDocument = useCallback(
+        (e: React.MouseEvent<HTMLDivElement>) => {
+            e.stopPropagation();
+            void handleDuplicate();
+        },
+        [handleDuplicate]
+    );
+
     const handleToggleStar = useCallback(() => {
         onToggleStar?.();
     }, [onToggleStar]);
@@ -101,6 +115,7 @@ export const DocumentMoreMenu = ({
                         onToggleStar={handleToggleStar}
                         onOpenInNewTab={handleOpenInNewTab}
                         onCopyLink={handleCopyLink}
+                        onDuplicate={handleDuplicateDocument}
                         onMove={handleOpenMoveDialog}
                         onDeleteOrRemove={handleOpenDeleteDialog}
                     />
@@ -129,6 +144,11 @@ export const DocumentMoreMenu = ({
                 cancelText={t('cancel')}
                 variant="destructive"
                 onConfirm={handleConfirmDelete}
+            />
+
+            <LoadingOverlay
+                open={isDuplicating}
+                text={t('duplicatingDocument')}
             />
         </>
     );

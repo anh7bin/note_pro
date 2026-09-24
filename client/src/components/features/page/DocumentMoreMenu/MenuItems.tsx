@@ -3,6 +3,7 @@ import { ContextMenuItem } from '@/components/ui/context-menu';
 import { Separator } from '@/components/ui/separator';
 import {
     Clipboard,
+    Copy,
     ExternalLink,
     FolderInput,
     LogOut,
@@ -18,6 +19,7 @@ interface MenuItemsProps {
     onToggleStar: () => void;
     onOpenInNewTab: (e: React.MouseEvent<HTMLDivElement>) => void;
     onCopyLink: (e: React.MouseEvent<HTMLDivElement>) => void;
+    onDuplicate: (e: React.MouseEvent<HTMLDivElement>) => void;
     onMove: (e: React.MouseEvent<HTMLDivElement>) => void;
     onDeleteOrRemove: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
@@ -29,6 +31,7 @@ export const MenuItems = ({
     onToggleStar,
     onOpenInNewTab,
     onCopyLink,
+    onDuplicate,
     onMove,
     onDeleteOrRemove,
 }: MenuItemsProps) => {
@@ -56,10 +59,16 @@ export const MenuItems = ({
                 {t('copyLink')}
             </ContextMenuItem>
             {isOwner && (
-                <ContextMenuItem onClick={onMove}>
-                    <FolderInput />
-                    {t('moveTo')}
-                </ContextMenuItem>
+                <>
+                    <ContextMenuItem onClick={onDuplicate}>
+                        <Copy />
+                        {t('duplicateDocument')}
+                    </ContextMenuItem>
+                    <ContextMenuItem onClick={onMove}>
+                        <FolderInput />
+                        {t('moveTo')}
+                    </ContextMenuItem>
+                </>
             )}
             <Separator />
             <ContextMenuItem
