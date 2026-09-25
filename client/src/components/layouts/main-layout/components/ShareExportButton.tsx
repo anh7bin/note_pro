@@ -1,12 +1,10 @@
 'use client';
 
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
-import { ExportTab } from '@/components/features/page/share/ExportTab';
 import { useDocumentSharing } from '@/components/features/page/share/hooks/useDocumentSharing';
 import { ShareTab } from '@/components/features/page/share/ShareTab';
 import { Button } from '@/components/ui/button';
 import { PopoverPanel } from '@/components/ui/popover-panel';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useI18n } from '@/contexts/I18nContext';
 import { LockKeyhole } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
@@ -25,7 +23,6 @@ export function ShareExportButton({
 }: ShareExportButtonProps) {
     const searchParams = useSearchParams();
     const [open, setOpen] = useState(false);
-    const [inviteMode, setInviteMode] = useState(false);
     const { sharedUsers, linkPermission, pendingRequests, refetch, isOwner } =
         useDocumentSharing(documentId);
     const { t } = useI18n();
@@ -60,13 +57,11 @@ export function ShareExportButton({
     return (
         <PopoverPanel
             open={open}
-            onOpenChange={(nextOpen) => {
-                setOpen(nextOpen);
-                if (!nextOpen) setInviteMode(false);
-            }}
+            onOpenChange={setOpen}
             contentProps={{
                 align: 'end',
-                className: 'w-[min(30rem,calc(100vw-1rem))] p-3',
+                className:
+                    'w-[min(30rem,calc(100vw-1rem))] overflow-hidden p-0',
             }}
             trigger={
                 <SimpleTooltip title={t('share')}>
@@ -86,23 +81,7 @@ export function ShareExportButton({
                     </Button>
                 </SimpleTooltip>
             }>
-            <Tabs defaultValue="share" className="w-full">
-                {!inviteMode && (
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="share">{t('share')}</TabsTrigger>
-                        <TabsTrigger value="export">{t('export')}</TabsTrigger>
-                    </TabsList>
-                )}
-                <TabsContent value="share">
-                    <ShareTab
-                        documentId={documentId}
-                        onInviteModeChange={setInviteMode}
-                    />
-                </TabsContent>
-                <TabsContent value="export">
-                    <ExportTab />
-                </TabsContent>
-            </Tabs>
+            <ShareTab documentId={documentId} />
         </PopoverPanel>
     );
 }

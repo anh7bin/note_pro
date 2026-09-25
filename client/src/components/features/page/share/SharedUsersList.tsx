@@ -5,7 +5,6 @@ import {
     Select,
     SelectContent,
     SelectItem,
-    SelectSeparator,
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
@@ -57,10 +56,8 @@ function UserCard({
 
     return (
         <div
-            className={`flex items-center justify-between gap-1.5 rounded-md p-1.5 ${
-                isOwner
-                    ? 'bg-accent/30'
-                    : 'hover:bg-accent/50 transition-colors'
+            className={`flex items-center justify-between rounded-lg p-1 ${
+                isOwner ? 'bg-muted/50' : 'transition-colors hover:bg-accent/50'
             }`}>
             <div className="flex items-center gap-2 flex-1 min-w-0">
                 <UserAvatar
@@ -85,7 +82,7 @@ function UserCard({
             </div>
 
             {isOwner ? (
-                <span className="text-sm font-medium text-muted-foreground px-3 py-1.5 rounded-md bg-background/50">
+                <span className="rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
                     {t('owner')}
                 </span>
             ) : (
@@ -102,7 +99,7 @@ function UserCard({
                         }
                     }}
                     disabled={!canOpenPermissionMenu}>
-                    <SelectTrigger className="w-32 shrink-0 text-sm">
+                    <SelectTrigger className="w-30 shrink-0 text-sm">
                         <SelectValue>
                             {user.role === 'editor' ? t('editor') : t('viewer')}
                         </SelectValue>
@@ -140,7 +137,6 @@ function UserCard({
                         )}
                         {canOpenPermissionMenu && (
                             <>
-                                <SelectSeparator className="my-1.5" />
                                 <SelectItem
                                     value={isCurrentUser ? 'leave' : 'remove'}
                                     textValue={
@@ -170,7 +166,7 @@ export function SharedUsersList({
     const { t } = useI18n();
     if (isLoading) {
         return (
-            <div className="mt-4 space-y-2">
+            <div className="space-y-2">
                 <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     {t('peopleWithAccess')}
                 </h3>
@@ -184,7 +180,7 @@ export function SharedUsersList({
     if (!owner && users.length === 0) return null;
 
     return (
-        <div className="mt-4 space-y-2">
+        <div className="space-y-1">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t('peopleWithAccess')}
             </h3>

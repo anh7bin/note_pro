@@ -44,19 +44,19 @@ export const SettingButton = () => {
                         </Button>
                     </DropdownMenuTrigger>
                 </SimpleTooltip>
-                <DropdownMenuContent className="w-58" align="end">
+                <DropdownMenuContent className="w-64" align="end">
                     <DropdownMenuLabel>
-                        <div className="flex flex-col items-center gap-2">
+                        <div className="flex min-w-0 flex-col items-center gap-2">
                             <UserAvatar
                                 avatarUrl={session?.user?.image}
                                 name={session?.user?.name}
                                 email={session?.user?.email || ''}
                                 size={32}
                             />
-                            <p className="text-sm font-medium leading-none">
+                            <p className="max-w-full truncate text-sm font-medium leading-none">
                                 {session?.user?.name}
                             </p>
-                            <p className="text-xs leading-none text-muted-foreground">
+                            <p className="max-w-full truncate text-xs leading-none text-muted-foreground">
                                 {session?.user?.email}
                             </p>
                         </div>
@@ -64,6 +64,7 @@ export const SettingButton = () => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         disabled={!mounted}
+                        onSelect={(event) => event.preventDefault()}
                         onClick={() =>
                             setTheme(theme === 'light' ? 'dark' : 'light')
                         }>
@@ -85,17 +86,25 @@ export const SettingButton = () => {
                             </span>
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
-                            <DropdownMenuSubContent>
+                            <DropdownMenuSubContent className="w-44">
                                 <DropdownMenuRadioGroup
                                     value={locale}
                                     onValueChange={(value) => {
                                         if (isLocale(value)) setLocale(value);
                                     }}>
-                                    <DropdownMenuRadioItem value="vi">
+                                    <DropdownMenuRadioItem
+                                        value="vi"
+                                        onSelect={(event) =>
+                                            event.preventDefault()
+                                        }>
                                         <FlagIcon locale="vi" />
                                         {t('vietnamese')}
                                     </DropdownMenuRadioItem>
-                                    <DropdownMenuRadioItem value="en">
+                                    <DropdownMenuRadioItem
+                                        value="en"
+                                        onSelect={(event) =>
+                                            event.preventDefault()
+                                        }>
                                         <FlagIcon locale="en" />
                                         {t('english')}
                                     </DropdownMenuRadioItem>

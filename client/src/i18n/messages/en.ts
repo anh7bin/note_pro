@@ -415,6 +415,7 @@ export const en = {
     approve: 'Approve',
     processing: 'Processing...',
     shareDocument: 'Share “{{title}}”',
+    linkAccess: 'Link access',
     searchingUsers: 'Searching users...',
     noUsersFound: 'No users found',
     enterCompleteEmail: 'Enter a complete email address to find someone.',

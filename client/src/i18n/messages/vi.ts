@@ -410,6 +410,7 @@ export const vi: Messages = {
     approve: 'Phê duyệt',
     processing: 'Đang xử lý...',
     shareDocument: 'Chia sẻ “{{title}}”',
+    linkAccess: 'Quyền truy cập liên kết',
     searchingUsers: 'Đang tìm người dùng...',
     noUsersFound: 'Không tìm thấy người dùng',
     enterCompleteEmail: 'Nhập đầy đủ địa chỉ email để tìm một người.',
