@@ -89,15 +89,15 @@ const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
         <div
             role={isSelectionActive ? 'button' : 'link'}
             tabIndex={0}
-            className={`group grid min-h-[76px] cursor-pointer grid-cols-[minmax(0,1fr)_64px] items-center rounded-lg border bg-card px-5 py-2.5 transition-[background-color,border-color,box-shadow] hover:border-border-strong hover:bg-accent/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 sm:grid-cols-[minmax(0,1fr)_132px_116px_64px] ${
+            className={`group grid min-h-[76px] cursor-pointer grid-cols-[minmax(0,1fr)_64px] items-center rounded-lg border px-5 py-2.5 transition-[background-color,border-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 sm:grid-cols-[minmax(0,1fr)_132px_116px_64px] ${
                 selected
-                    ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
-                    : 'border-border-subtle'
+                    ? 'border-primary/60 bg-primary/[0.08] shadow-sm ring-1 ring-primary/15 hover:border-primary/80 hover:bg-primary/[0.12]'
+                    : 'border-border bg-surface hover:border-border-strong hover:bg-surface-hover hover:shadow-sm'
             }`}
             onClick={handleClick}
             onKeyDown={handleKeyDown}>
             <div className="flex min-w-0 items-center gap-3 pr-4">
-                <span className="flex h-12 w-9 shrink-0 items-center justify-center rounded-md border border-border-subtle bg-primary/5 text-primary shadow-sm">
+                <span className="flex h-12 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-background-soft text-primary shadow-sm">
                     {folder.icon ? (
                         <span className="text-xl">{folder.icon}</span>
                     ) : (
@@ -132,7 +132,7 @@ const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
                     size="icon-xs"
                     className={`h-5 w-5 rounded-full border focus-visible:opacity-100 ${
                         selected
-                            ? 'border-primary bg-primary text-primary-foreground'
+                            ? 'border-primary-button bg-primary-button text-primary-foreground'
                             : 'border-border bg-background opacity-100 md:opacity-0 md:group-hover:opacity-100'
                     }`}
                     onClick={handleSelectToggle}>
@@ -170,7 +170,7 @@ const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
                                 size="icon"
                                 className={`h-5 w-5 rounded-full border transition-all focus-visible:opacity-100 ${
                                     selected
-                                        ? 'opacity-100 bg-primary border-primary text-primary-foreground'
+                                        ? 'opacity-100 bg-primary-button border-primary-button text-primary-foreground'
                                         : 'bg-background border-border opacity-100 hover:border-primary md:opacity-0 md:group-hover:opacity-100'
                                 }`}
                                 onClick={handleSelectToggle}>

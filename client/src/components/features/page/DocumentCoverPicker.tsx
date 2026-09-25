@@ -102,7 +102,7 @@ export function DocumentCoverPicker({
                     className="object-cover transition-transform duration-200 group-hover/cover:scale-[1.03] motion-reduce:transition-none"
                 />
                 {isSelected && (
-                    <span className="absolute right-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+                    <span className="absolute right-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-primary-button text-primary-foreground shadow-sm">
                         <Check aria-hidden="true" className="size-3.5" />
                     </span>
                 )}

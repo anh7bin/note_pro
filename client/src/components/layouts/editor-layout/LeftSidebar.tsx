@@ -158,7 +158,7 @@ export const LeftSidebar = ({ pageId }: Props) => {
         <div className="flex h-full min-h-0 flex-col overflow-hidden">
             <div className="h-full flex flex-col overflow-hidden">
                 {documentTitle && (
-                    <div className="sticky top-0 z-10 flex shrink-0 flex-row items-center gap-3 px-4 py-1">
+                    <div className="sticky top-0 z-10 flex shrink-0 flex-row items-center gap-3 px-4 py-2">
                         <div
                             className="relative shrink-0 overflow-hidden rounded-sm border border-border-subtle bg-card p-2"
                             style={{ width: 24, height: 32 }}>

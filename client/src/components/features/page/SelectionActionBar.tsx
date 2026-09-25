@@ -171,7 +171,7 @@ export function SelectionActionBar({
                     size="icon-xs"
                     role="checkbox"
                     onClick={handleSelectAllChange}>
-                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary-button text-primary-foreground">
                         {allSelected ? <Check /> : <Minus />}
                     </span>
                 </Button>

@@ -37,7 +37,7 @@ export function SearchInputField({ onResultClick, autoFocus }: Props) {
             onChange={(e) => setSearchTerm(e.target.value)}
             type="search"
             placeholder={t('searchPlaceholder')}
-            className={cn('h-8 w-full bg-background')}
+            className={cn('h-8 w-full bg-surface')}
             icon={<Search className="h-4 w-4" />}
             iconPosition="left"
             popoverHeight="auto"

@@ -23,6 +23,6 @@
 
 [data-sonner-toast] [data-close-button] {
     border-color: hsl(var(--border)) !important;
-    background: hsl(var(--background)) !important;
+    background: hsl(var(--surface)) !important;
     color: hsl(var(--foreground)) !important;
 }

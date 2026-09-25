@@ -45,7 +45,8 @@ export function SidebarButton({
 
     const variantClasses = {
         default: '',
-        primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        primary:
+            'bg-primary-button text-primary-foreground hover:bg-primary-buttonHover',
         secondary:
             'bg-secondary text-secondary-foreground hover:bg-secondary/80',
     };

@@ -3,10 +3,10 @@ import { cn } from '@/lib/utils';
 import type { SeparatorStyle } from '@/components/features/blocks';
 
 const separatorClasses: Record<SeparatorStyle, string> = {
-    strong: 'border-t-[3px] border-solid border-gray-900 dark:border-gray-100',
-    regular: 'border-t-[2px] border-solid border-gray-700 dark:border-gray-300',
-    light: 'border-t border-solid border-gray-400 dark:border-gray-500',
-    extralight: 'border-t border-dotted border-gray-400 dark:border-gray-500',
+    strong: 'border-t-[3px] border-solid border-foreground/80',
+    regular: 'border-t-[2px] border-solid border-foreground/60',
+    light: 'border-t border-solid border-border-strong',
+    extralight: 'border-t border-dotted border-border',
 };
 
 export const SeparatorPreview = ({ block }: { block: Block }) => {

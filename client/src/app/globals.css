@@ -31,49 +31,49 @@
         --space-2xl: 3rem;
 
         /* Base surfaces */
-        --background: 240 20% 99%;
-        --foreground: 240 10% 10%;
+        --background: 228 36% 98%;
+        --foreground: 228 24% 13%;
         --surface: 0 0% 100%;
-        --surface-hover: 240 20% 97%;
+        --surface-hover: 230 30% 96%;
 
-        /* Primary brand color: #494bcb */
-        --primary: 239 56% 54%;
+        /* Primary brand: refined indigo */
+        --primary: 242 62% 56%;
         --primary-foreground: 0 0% 100%;
-        --primary-hover: 239 56% 48%;
-        --primary-light: 239 56% 64%;
+        --primary-hover: 242 58% 50%;
+        --primary-light: 242 72% 68%;
 
-        --background-soft: 238 40% 97%;
+        --background-soft: 234 34% 96%;
 
         /* Card */
         --card: 0 0% 100%;
-        --card-foreground: 240 10% 10%;
-        --card-document: 238 40% 97%;
+        --card-foreground: 228 24% 13%;
+        --card-document: 234 34% 97%;
 
         /* Popover */
         --popover: 0 0% 100%;
-        --popover-foreground: 240 10% 10%;
+        --popover-foreground: 228 24% 13%;
 
         /* Modal */
-        --modal-input: 238 40% 97%;
-        --modal-foreground: 240 10% 10%;
-        --modal-muted: 240 5% 42%;
-        --modal-border: 240 10% 90%;
+        --modal-input: 232 30% 96%;
+        --modal-foreground: 228 24% 13%;
+        --modal-muted: 228 10% 42%;
+        --modal-border: 228 20% 88%;
 
         /* Button - using primary color */
-        --button-primary: 239 56% 54%;
-        --button-primary-hover: 239 56% 48%;
+        --button-primary: 242 62% 56%;
+        --button-primary-hover: 242 58% 50%;
 
         /* Secondary */
-        --secondary: 238 40% 96%;
-        --secondary-foreground: 240 10% 10%;
+        --secondary: 232 28% 94%;
+        --secondary-foreground: 228 24% 16%;
 
         /* Muted */
-        --muted: 240 20% 96%;
-        --muted-foreground: 240 5% 42%;
+        --muted: 228 24% 95%;
+        --muted-foreground: 228 10% 42%;
 
         /* Accent */
-        --accent: 238 48% 95%;
-        --accent-foreground: 239 56% 54%;
+        --accent: 240 38% 94%;
+        --accent-foreground: 242 52% 44%;
 
         /* Destructive */
         --destructive: 0 84.2% 60.2%;
@@ -91,16 +91,16 @@
         --info-subtle: 214 95% 94%;
 
         /* Border & Input */
-        --border: 240 10% 90%;
-        --border-soft: 240 10% 94%;
-        --border-subtle: 240 10% 94%;
-        --border-strong: 240 8% 75%;
-        --input: 240 10% 86%;
-        --ring: 239 56% 54%;
+        --border: 228 18% 87%;
+        --border-soft: 228 22% 92%;
+        --border-subtle: 228 22% 92%;
+        --border-strong: 228 13% 68%;
+        --input: 228 16% 80%;
+        --ring: 242 62% 56%;
 
         /* Code syntax */
-        --code-background: 220 20% 97%;
-        --code-foreground: 215 28% 17%;
+        --code-background: 228 30% 96%;
+        --code-foreground: 225 25% 18%;
         --code-comment: 215 14% 40%;
         --code-keyword: 356 72% 43%;
         --code-title: 263 52% 47%;
@@ -120,9 +120,9 @@
         --radius: 6px;
 
         /* Elevation */
-        --shadow-sm: 0 1px 2px hsl(240 10% 4% / 0.06);
-        --shadow-md: 0 8px 24px hsl(240 10% 4% / 0.1);
-        --shadow-lg: 0 20px 48px hsl(240 10% 4% / 0.16);
+        --shadow-sm: 0 1px 2px hsl(228 28% 10% / 0.06);
+        --shadow-md: 0 8px 24px hsl(228 28% 10% / 0.1);
+        --shadow-lg: 0 20px 48px hsl(228 28% 10% / 0.16);
 
         /* Motion */
         --motion-fast: 120ms;
@@ -137,84 +137,84 @@
         --chart-5: 27 87% 67%;
 
         /* Scrollbar */
-        --scrollbar-track: 240 20% 99%;
-        --scrollbar-thumb: 240 8% 82%;
-        --scrollbar-thumb-hover: 240 6% 65%;
+        --scrollbar-track: 228 36% 98%;
+        --scrollbar-thumb: 228 12% 78%;
+        --scrollbar-thumb-hover: 228 10% 60%;
     }
 
     .dark {
         /* Base colors */
-        --background: 210 36% 10%;
-        --foreground: 0 0% 98%;
-        --surface: 210 32% 13%;
-        --surface-hover: 210 28% 17%;
+        --background: 228 30% 8%;
+        --foreground: 220 25% 94%;
+        --surface: 228 25% 11%;
+        --surface-hover: 228 21% 16%;
 
         /* Primary brand color: lighter in dark mode */
-        --primary: 239 56% 64%;
-        --primary-foreground: 240 10% 3.9%;
-        --primary-hover: 239 56% 70%;
-        --primary-light: 239 56% 74%;
+        --primary: 242 72% 70%;
+        --primary-foreground: 0 0% 100%;
+        --primary-hover: 242 78% 76%;
+        --primary-light: 242 82% 82%;
 
         /* Background soft: darker variant */
-        --background-soft: 210 28% 16%;
+        --background-soft: 228 22% 14%;
 
         /* Card */
-        --card: 210 32% 13%;
-        --card-foreground: 0 0% 98%;
-        --card-document: 210 28% 16%;
+        --card: 228 25% 11%;
+        --card-foreground: 220 25% 94%;
+        --card-document: 228 22% 14%;
 
         /* Popover */
-        --popover: 210 32% 13%;
-        --popover-foreground: 0 0% 98%;
+        --popover: 228 25% 12%;
+        --popover-foreground: 220 25% 94%;
 
         /* Modal */
-        --modal-input: 210 28% 16%;
-        --modal-foreground: 0 0% 98%;
-        --modal-muted: 210 15% 68%;
-        --modal-border: 210 22% 25%;
+        --modal-input: 228 20% 16%;
+        --modal-foreground: 220 25% 94%;
+        --modal-muted: 222 13% 68%;
+        --modal-border: 226 16% 23%;
 
         /* Button - using primary color */
-        --button-primary: 239 56% 64%;
-        --button-primary-hover: 239 56% 70%;
+        --button-primary: 242 62% 56%;
+        --button-primary-hover: 242 58% 50%;
 
         /* Secondary */
-        --secondary: 210 28% 17%;
-        --secondary-foreground: 0 0% 98%;
+        --secondary: 228 20% 17%;
+        --secondary-foreground: 220 25% 94%;
 
         /* Muted */
-        --muted: 210 28% 17%;
-        --muted-foreground: 210 15% 68%;
+        --muted: 228 20% 16%;
+        --muted-foreground: 222 13% 68%;
 
         /* Accent */
-        --accent: 232 30% 20%;
-        --accent-foreground: 239 56% 64%;
+        --accent: 240 26% 20%;
+        --accent-foreground: 240 75% 78%;
 
         /* Destructive */
-        --destructive: 0 62.8% 50%;
+        --destructive: 0 68% 58%;
         --destructive-foreground: 0 0% 98%;
 
         --success: 142 60% 45%;
-        --success-foreground: 210 36% 8%;
+        --success-foreground: 228 30% 8%;
         --success-subtle: 142 38% 16%;
         --warning: 42 90% 58%;
         --warning-foreground: 30 80% 8%;
         --warning-subtle: 38 42% 17%;
         --info: 217 91% 65%;
-        --info-foreground: 210 36% 8%;
+        --info-foreground: 228 30% 8%;
         --info-subtle: 217 42% 18%;
 
         /* Border & Input */
-        --border: 210 22% 25%;
-        --border-soft: 210 22% 20%;
-        --border-subtle: 210 22% 20%;
-        --border-strong: 210 16% 40%;
-        --input: 210 20% 30%;
-        --ring: 239 56% 64%;
+        --border: 226 16% 23%;
+        --border-soft: 228 18% 18%;
+        --border-subtle: 228 18% 18%;
+        --border-strong: 225 14% 38%;
+        --input: 225 15% 30%;
+        --ring: 242 72% 70%;
 
         /* Code syntax */
-        --code-background: 215 28% 14%;
-        --code-foreground: 210 17% 82%;
-        --code-comment: 215 11% 58%;
+        --code-background: 228 22% 13%;
+        --code-foreground: 220 18% 85%;
+        --code-comment: 220 10% 60%;
         --code-keyword: 2 100% 72%;
         --code-title: 267 100% 82%;
         --code-literal: 210 100% 75%;
@@ -226,9 +226,9 @@
         --code-deleted: 8 100% 92%;
         --code-deleted-background: 0 84% 25%;
 
-        --shadow-sm: 0 1px 2px hsl(210 60% 2% / 0.35);
-        --shadow-md: 0 8px 24px hsl(210 60% 2% / 0.42);
-        --shadow-lg: 0 20px 48px hsl(210 60% 2% / 0.55);
+        --shadow-sm: 0 1px 2px hsl(228 70% 2% / 0.35);
+        --shadow-md: 0 8px 24px hsl(228 70% 2% / 0.42);
+        --shadow-lg: 0 20px 48px hsl(228 70% 2% / 0.55);
 
         /* Charts */
         --chart-1: 220 70% 50%;
@@ -238,9 +238,9 @@
         --chart-5: 340 75% 55%;
 
         /* Scrollbar */
-        --scrollbar-track: 210 48% 13%;
-        --scrollbar-thumb: 210 30% 30%;
-        --scrollbar-thumb-hover: 210 30% 45%;
+        --scrollbar-track: 228 30% 8%;
+        --scrollbar-thumb: 226 15% 24%;
+        --scrollbar-thumb-hover: 226 14% 36%;
     }
 }
 

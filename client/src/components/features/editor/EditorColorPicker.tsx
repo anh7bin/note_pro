@@ -99,7 +99,7 @@ export const EditorColorPicker = ({
                                     }}
                                     className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-transform duration-150 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 motion-reduce:transition-none">
                                     <span
-                                        className="block h-5 w-5 rounded-full border border-black/10"
+                                        className="block h-5 w-5 rounded-full border border-foreground/15"
                                         style={
                                             isTransparent
                                                 ? transparentStyle

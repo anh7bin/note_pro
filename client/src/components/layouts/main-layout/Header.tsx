@@ -56,7 +56,7 @@ export default function Header({ workspaceSlug }: Props) {
         workspaceSlug && (
             <>
                 <TopLoadingBar isLoading={isLoading} />
-                <header className="fixed inset-x-0 top-0 z-50 grid h-[var(--header-height)] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-3 backdrop-blur-sm sm:px-4">
+                <header className="fixed inset-x-0 top-0 z-50 grid h-[var(--header-height)] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 border-b border-border/70 bg-background/90 px-3 shadow-sm backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 sm:px-4">
                     <div className="flex items-center gap-0.5">
                         <Button asChild variant="ghost" size="icon-xs">
                             <Link

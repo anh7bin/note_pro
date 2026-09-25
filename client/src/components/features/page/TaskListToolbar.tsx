@@ -78,7 +78,7 @@ export function TaskListToolbar({
                             {t('taskFilters')}
                         </span>
                         {activeFilterCount > 0 && (
-                            <span className="rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
+                            <span className="rounded-full bg-primary-button px-1.5 text-xs text-primary-foreground">
                                 {activeFilterCount}
                             </span>
                         )}

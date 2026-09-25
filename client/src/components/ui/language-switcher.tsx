@@ -64,7 +64,7 @@ export function LanguageMenu({ compact = false }: LanguageMenuProps) {
 
 export function FlagIcon({ locale }: { locale: Locale }) {
     return (
-        <span className="inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-[2px] border border-black/10 shadow-sm">
+        <span className="inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-[2px] border border-border/70 shadow-sm">
             {locale === 'vi' ? (
                 <svg
                     viewBox="0 0 24 16"

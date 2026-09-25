@@ -17,8 +17,8 @@ export const TaskPreview = ({ block }: { block: Block }) => {
                 className={cn(
                     'w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0',
                     isCompleted
-                        ? 'bg-primary border-primary text-white'
-                        : 'border-gray-300'
+                        ? 'border-primary-button bg-primary-button text-primary-foreground'
+                        : 'border-input'
                 )}>
                 {isCompleted && <Check className="w-3 h-3" />}
             </div>

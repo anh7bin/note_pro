@@ -22,7 +22,7 @@ const FILE_BADGES: Record<string, FileBadge> = {
     xlsx: { label: 'XLSX', textClass: 'text-green-500' },
     ppt: { label: 'PPT', textClass: 'text-orange-500' },
     pptx: { label: 'PPT', textClass: 'text-orange-500' },
-    txt: { label: 'TXT', textClass: 'text-slate-500' },
+    txt: { label: 'TXT', textClass: 'text-muted-foreground' },
     csv: { label: 'CSV', textClass: 'text-emerald-500' },
     zip: { label: 'ZIP', textClass: 'text-amber-500' },
     rar: { label: 'RAR', textClass: 'text-amber-500' },

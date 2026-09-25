@@ -33,7 +33,7 @@ export function MainLayoutSkeleton({ sidebarOpen }: { sidebarOpen: boolean }) {
         <>
             <header
                 aria-hidden="true"
-                className="fixed inset-x-0 top-0 z-50 grid h-[var(--header-height)] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 border-b border-border-subtle bg-background/95 px-3 sm:px-4">
+                className="fixed inset-x-0 top-0 z-50 grid h-[var(--header-height)] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 border-b border-border/70 bg-background/90 shadow-sm backdrop-blur-xl px-3 sm:px-4">
                 <div className="flex items-center gap-1.5">
                     <Skeleton className="h-7 w-7" />
                     <Skeleton className="h-7 w-7" />
@@ -49,7 +49,7 @@ export function MainLayoutSkeleton({ sidebarOpen }: { sidebarOpen: boolean }) {
             <div className="flex min-h-0 flex-1 pt-[var(--header-height)]">
                 <aside
                     className={cn(
-                        'fixed bottom-0 left-0 top-[var(--header-height)] hidden w-[var(--sidebar-width)] border-r border-border-subtle bg-background md:block',
+                        'fixed bottom-0 left-0 top-[var(--header-height)] hidden w-[var(--sidebar-width)] border-r border-border/70 bg-surface/95 md:block',
                         !sidebarOpen && 'md:hidden'
                     )}>
                     <SidebarSkeleton />

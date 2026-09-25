@@ -33,8 +33,8 @@ const CheckboxButton = memo(function CheckboxButton({
             className={cn(
                 'w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-200',
                 isCompleted
-                    ? 'bg-primary border-primary text-white'
-                    : 'border-gray-300 hover:border-gray-400',
+                    ? 'border-primary-button bg-primary-button text-primary-foreground'
+                    : 'border-input hover:border-border-strong',
                 isUpdating && 'opacity-50 cursor-not-allowed'
             )}>
             {isCompleted && <Check className="w-3 h-3" />}

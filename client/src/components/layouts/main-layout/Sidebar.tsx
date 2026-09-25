@@ -84,7 +84,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
             <aside
                 id="app-sidebar"
                 className={cn(
-                    'fixed bottom-0 left-0 top-[var(--header-height)] z-40 w-[var(--sidebar-width)] text-foreground shadow-md transition-[transform,visibility] duration-300 ease-out md:shadow-none',
+                    'fixed bottom-0 left-0 top-[var(--header-height)] z-40 w-[var(--sidebar-width)] border-r border-border/70 bg-surface/95 text-foreground shadow-md transition-[transform,visibility] duration-300 ease-out md:shadow-none',
                     isOpen
                         ? 'visible translate-x-0'
                         : 'invisible -translate-x-full pointer-events-none'

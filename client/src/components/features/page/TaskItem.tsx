@@ -211,7 +211,7 @@ export const TaskItem = ({
                     className={cn(
                         'flex h-4 w-4 items-center justify-center rounded-sm border transition-colors',
                         tempCompleted
-                            ? 'border-primary bg-primary text-primary-foreground'
+                            ? 'border-primary-button bg-primary-button text-primary-foreground'
                             : 'border-border-strong bg-background'
                     )}>
                     {tempCompleted && <Check className="h-3 w-3" />}

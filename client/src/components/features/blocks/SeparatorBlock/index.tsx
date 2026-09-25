@@ -9,10 +9,10 @@ import type { SeparatorStyle } from '@/types/editor';
 export type { SeparatorStyle } from '@/types/editor';
 
 const SEPARATOR_STYLES: Record<SeparatorStyle, string> = {
-    strong: 'border-t-[3px] border-solid border-gray-900 dark:border-gray-100',
-    regular: 'border-t-[2px] border-solid border-gray-700 dark:border-gray-300',
-    light: 'border-t border-solid border-gray-400 dark:border-gray-500',
-    extralight: 'border-t border-dotted border-gray-400 dark:border-gray-500',
+    strong: 'border-t-[3px] border-solid border-foreground/80',
+    regular: 'border-t-[2px] border-solid border-foreground/60',
+    light: 'border-t border-solid border-border-strong',
+    extralight: 'border-t border-dotted border-border',
 };
 
 export const SeparatorBlock = memo(
