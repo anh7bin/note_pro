@@ -1,9 +1,10 @@
 'use client';
 
-import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { useDocumentSharing } from '@/components/features/page/share/hooks/useDocumentSharing';
 import { ShareTab } from '@/components/features/page/share/ShareTab';
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { Button } from '@/components/ui/button';
+import { Loading } from '@/components/ui/loading';
 import { PopoverPanel } from '@/components/ui/popover-panel';
 import { useI18n } from '@/contexts/I18nContext';
 import { LockKeyhole } from 'lucide-react';
@@ -17,14 +18,20 @@ interface ShareExportButtonProps {
     accessRequestNotificationCount?: number;
 }
 
-export function ShareExportButton({
+export function ShareButton({
     documentId,
     accessRequestNotificationCount = 0,
 }: ShareExportButtonProps) {
     const searchParams = useSearchParams();
     const [open, setOpen] = useState(false);
-    const { sharedUsers, linkPermission, pendingRequests, refetch, isOwner } =
-        useDocumentSharing(documentId);
+    const {
+        sharedUsers,
+        linkPermission,
+        pendingRequests,
+        refetch,
+        isOwner,
+        isLoading,
+    } = useDocumentSharing(documentId);
     const { t } = useI18n();
 
     const accessRequestCount = isOwner ? pendingRequests.length : 0;
@@ -69,9 +76,8 @@ export function ShareExportButton({
                         data-tour="editor-share"
                         variant={isShared ? 'default' : 'outline'}
                         size="xs"
-                        aria-label={t('share')}
                         className="relative max-lg:size-7 max-lg:p-0">
-                        <ShareIcon />
+                        {isLoading ? <Loading size="sm" /> : <ShareIcon />}
                         <span className="hidden lg:inline">
                             {isShared ? t('shared') : t('share')}
                         </span>

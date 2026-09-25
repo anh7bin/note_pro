@@ -13,12 +13,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DocumentPresence } from './components/DocumentPresence';
 import { MobileSearch } from './components/MobileSearch';
-import { NotificationMenu } from './components/notifications/NotificationMenu';
 import { useNotifications } from './components/notifications/hooks/useNotifications';
 import { getUnreadAccessRequestCountForDocument } from './components/notifications/notification.utils';
+import { NotificationMenu } from './components/notifications/NotificationMenu';
 import { RequestEditButton } from './components/RequestEditButton';
 import { SettingButton } from './components/SettingButton';
-import { ShareExportButton } from './components/ShareExportButton';
+import { ShareButton } from './components/ShareButton';
 import { SidebarToggleButton } from './components/SidebarToggleButton';
 import { TourHelpButton } from './components/TourHelpButton';
 
@@ -88,7 +88,7 @@ export default function Header({ workspaceSlug }: Props) {
                             <>
                                 <DocumentPresence documentId={documentId} />
                                 <RequestEditButton documentId={documentId} />
-                                <ShareExportButton
+                                <ShareButton
                                     documentId={documentId}
                                     accessRequestNotificationCount={
                                         documentAccessRequestNotificationCount
