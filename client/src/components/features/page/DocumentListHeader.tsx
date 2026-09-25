@@ -26,14 +26,14 @@ export function DocumentListHeader({ sort, onSort }: DocumentListHeaderProps) {
     ] as const;
 
     return (
-        <div className="grid grid-cols-[minmax(0,1fr)_64px] items-center overflow-y-auto border-b border-border px-4 py-1.5 text-xs font-medium text-muted-foreground [scrollbar-gutter:stable] sm:grid-cols-[minmax(0,1fr)_132px_116px_64px]">
+        <div className="grid grid-cols-[minmax(0,1fr)_64px] items-center overflow-y-auto border-b border-border-subtle px-5 py-1 text-xs font-medium text-muted-foreground [scrollbar-gutter:stable] sm:grid-cols-[minmax(0,1fr)_132px_116px_64px]">
             {columns.map(({ key, label, className }) => {
                 const active = sort?.key === key;
                 return (
                     <button
                         key={key}
                         type="button"
-                        className={`-ml-1 h-7 max-w-full items-center gap-1.5 rounded px-1 text-left transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${className || 'inline-flex'} ${active ? 'text-foreground' : ''}`}
+                        className={`h-6 max-w-full items-center gap-1 px-1 text-left hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 ${className || 'inline-flex'} ${active ? 'text-foreground' : ''}`}
                         onClick={() => onSort(key)}>
                         <span className="truncate">{label}</span>
                         {active &&

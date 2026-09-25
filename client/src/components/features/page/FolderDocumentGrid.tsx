@@ -109,7 +109,7 @@ export function FolderDocumentGrid({
                     <div
                         ref={containerRef}
                         onScroll={updateFade}
-                        className="h-full overflow-y-auto [scrollbar-gutter:stable]">
+                        className="h-full space-y-2 overflow-y-auto py-1 [scrollbar-gutter:stable]">
                         {sortedItems.map((item) =>
                             item.kind === 'folder' ? (
                                 <CardFolder

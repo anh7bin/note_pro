@@ -89,13 +89,15 @@ const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
         <div
             role={isSelectionActive ? 'button' : 'link'}
             tabIndex={0}
-            className={`group grid min-h-[76px] cursor-pointer grid-cols-[minmax(0,1fr)_64px] items-center border-b border-border/60 px-4 py-2.5 transition-colors hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:grid-cols-[minmax(0,1fr)_132px_116px_64px] ${
-                selected ? 'bg-primary/5' : ''
+            className={`group grid min-h-[76px] cursor-pointer grid-cols-[minmax(0,1fr)_64px] items-center rounded-lg border bg-card px-5 py-2.5 transition-[background-color,border-color,box-shadow] hover:border-border-strong hover:bg-accent/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 sm:grid-cols-[minmax(0,1fr)_132px_116px_64px] ${
+                selected
+                    ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
+                    : 'border-border-subtle'
             }`}
             onClick={handleClick}
             onKeyDown={handleKeyDown}>
             <div className="flex min-w-0 items-center gap-3 pr-4">
-                <span className="flex h-12 w-9 shrink-0 items-center justify-center rounded-md bg-primary/5 text-primary">
+                <span className="flex h-12 w-9 shrink-0 items-center justify-center rounded-md border border-border-subtle bg-primary/5 text-primary shadow-sm">
                     {folder.icon ? (
                         <span className="text-xl">{folder.icon}</span>
                     ) : (

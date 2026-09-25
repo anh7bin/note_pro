@@ -24,7 +24,9 @@ const MIN_CARD_WIDTH = 200;
 const GUTTER = 16;
 const CARD_HEIGHT = 304;
 const rowHeight = CARD_HEIGHT + GUTTER;
-const listRowHeight = 76;
+const LIST_ITEM_HEIGHT = 76;
+const LIST_ITEM_GAP = 8;
+const listRowHeight = LIST_ITEM_HEIGHT + LIST_ITEM_GAP;
 
 interface DocumentGridProps {
     documents: Document[];
@@ -37,7 +39,7 @@ function DocumentListRow({
     data,
 }: ListChildComponentProps<Document[]>) {
     return (
-        <div style={style}>
+        <div style={style} className="py-1">
             <CardDocument document={data[index]!} variant="list" />
         </div>
     );
