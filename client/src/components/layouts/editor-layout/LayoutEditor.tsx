@@ -25,9 +25,9 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
             <div
                 data-tour="editor-sidebar"
                 className={cn(
-                    'fixed bottom-0 left-0 top-[var(--header-height)] z-40 w-[var(--sidebar-width)] flex-shrink-0 overflow-hidden border-r border-border/70 bg-surface/95 shadow-md transition-[transform,width,visibility] duration-300 md:static md:h-full md:shadow-none',
+                    'fixed bottom-0 left-0 top-[var(--header-height)] z-40 w-[var(--sidebar-width)] flex-shrink-0 overflow-hidden bg-surface/95 shadow-md transition-[transform,width,visibility] duration-300 md:static md:h-full md:shadow-none',
                     isOpen
-                        ? 'visible translate-x-0 md:w-[var(--sidebar-width)]'
+                        ? 'visible translate-x-0 md:w-[var(--sidebar-width)] border-r border-border/70'
                         : 'invisible -translate-x-full pointer-events-none md:w-0'
                 )}>
                 {left}
