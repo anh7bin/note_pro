@@ -1,5 +1,6 @@
 'use client';
 
+import { useI18n } from '@/contexts/I18nContext';
 import {
     useMarkAllNotificationsAsReadMutation,
     useMarkNotificationAsReadMutation,
@@ -12,9 +13,8 @@ import { showToast } from '@/lib/toast';
 import { Notification } from '@/types/app';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
-import { NotificationMenuProps } from '../notification.types';
-import { getNotificationData, getUnreadCount } from '../notification.utils';
-import { useI18n } from '@/contexts/I18nContext';
+import { NotificationMenuProps } from '../types';
+import { getNotificationData, getUnreadCount } from '../utils';
 
 export function useNotifications(): NotificationMenuProps {
     const userId = useUserId();

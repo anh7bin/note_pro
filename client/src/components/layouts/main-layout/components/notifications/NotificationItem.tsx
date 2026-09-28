@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useI18n } from '@/contexts/I18nContext';
 import { Notification } from '@/types/app';
 import {
     getNotificationInitial,
@@ -6,8 +7,7 @@ import {
     getNotificationPresentation,
     getNotificationTime,
     getNotificationTitle,
-} from './notification.utils';
-import { useI18n } from '@/contexts/I18nContext';
+} from './utils';
 
 type NotificationItemProps = {
     notification: Notification;

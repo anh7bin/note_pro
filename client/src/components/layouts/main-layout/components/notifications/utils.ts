@@ -1,11 +1,11 @@
+import { Locale } from '@/i18n/config';
+import type { TranslationKey } from '@/i18n/messages';
 import { getPlainText } from '@/lib/text';
 import { Notification } from '@/types/app';
-import type { TranslationKey } from '@/i18n/messages';
 import { formatDistanceToNow } from 'date-fns';
 import { enUS, vi } from 'date-fns/locale';
 import { Bell, CheckCircle2, CircleAlert, Clock3, Pencil } from 'lucide-react';
-import { NotificationData } from './notification.types';
-import { Locale } from '@/i18n/config';
+import { NotificationData } from './types';
 
 export const NOTIFICATION_LIMIT = 20;
 

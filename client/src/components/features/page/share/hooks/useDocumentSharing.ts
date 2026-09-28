@@ -1,12 +1,13 @@
 'use client';
 
+import { useI18n } from '@/contexts/I18nContext';
 import {
     useApproveAccessRequestMutation,
     useDeclineAccessRequestMutation,
     useGetDocumentSharedUsersQuery,
     useRemoveDocumentAccessMutation,
-    useShareDocumentWithUsersMutation,
     useSetDocumentLinkAccessMutation,
+    useShareDocumentWithUsersMutation,
     useUpdateDocumentPermissionMutation,
 } from '@/graphql/mutations/__generated__/document-share.generated';
 import { useUserId } from '@/hooks/useAuth';
@@ -15,21 +16,19 @@ import {
     handleMutationError,
     handleMutationSuccess,
 } from '@/lib/error-handler';
-import { AccessRequestStatus, PermissionType } from '@/types/types';
 import { ROUTES } from '@/lib/routes';
-import { showToast } from '@/lib/toast';
 import { getPlainText } from '@/lib/text';
+import { showToast } from '@/lib/toast';
+import { AccessRequestStatus, PermissionType } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
-import { useI18n } from '@/contexts/I18nContext';
-import { UserSearchResult } from '../UserEmailAutocomplete';
 import type { LinkPermissionType } from '../PermissionSelector';
-import { PendingAccessRequest, SharedUserRole } from '../share.types';
 import {
-    getExcludedUserIds,
-    mapDocumentOwner,
-    mapSharedUsers,
-} from '../share.utils';
+    PendingAccessRequest,
+    SharedUserRole,
+    UserSearchResult,
+} from '../types';
+import { getExcludedUserIds, mapDocumentOwner, mapSharedUsers } from '../utils';
 
 export function useDocumentSharing(documentId: string) {
     const router = useRouter();

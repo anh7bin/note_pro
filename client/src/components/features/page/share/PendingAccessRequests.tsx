@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
-import { PendingAccessRequest } from './share.types';
+import { PendingAccessRequest } from './types';
 
 type PendingAccessRequestsProps = {
     requests: PendingAccessRequest[];

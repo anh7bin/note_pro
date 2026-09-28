@@ -1,3 +1,4 @@
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -6,12 +7,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useI18n } from '@/contexts/I18nContext';
 import { Bell } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
-import { NotificationMenuProps } from './notification.types';
-import { NOTIFICATION_LIMIT } from './notification.utils';
-import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
-import { useI18n } from '@/contexts/I18nContext';
+import { NotificationMenuProps } from './types';
+import { NOTIFICATION_LIMIT } from './utils';
 
 export const NotificationMenu = ({
     notifications,

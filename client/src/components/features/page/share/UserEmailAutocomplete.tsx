@@ -17,15 +17,7 @@ import { useI18n } from '@/contexts/I18nContext';
 import { PermissionType } from '@/types/types';
 import { Mail, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-
-export type UserSearchResult = {
-    id: string;
-    email: string;
-    name?: string | null;
-    avatar_url?: string | null;
-};
-
-type InvitePermission = PermissionType.READ | PermissionType.WRITE;
+import { InvitePermission, UserSearchResult } from './types';
 
 interface UserEmailAutocompleteProps {
     documentId: string;
@@ -52,7 +44,7 @@ export function UserEmailAutocomplete({
 }: UserEmailAutocompleteProps) {
     const [inputValue, setInputValue] = useState('');
     const [permission, setPermission] = useState<InvitePermission>(
-        PermissionType.WRITE
+        PermissionType.READ
     );
     const [selectedUsers, setSelectedUsers] = useState(
         () => new Map<string, UserSearchResult>()
@@ -155,11 +147,7 @@ export function UserEmailAutocomplete({
                         title: documentTitle || t('untitledPage'),
                     })}
                 </h2>
-                <Button
-                    variant="ghost"
-                    size="icon-xs"
-                    aria-label={t('close')}
-                    onClick={onClose}>
+                <Button variant="ghost" size="icon-xs" onClick={onClose}>
                     <X />
                 </Button>
             </div>
@@ -190,9 +178,7 @@ export function UserEmailAutocomplete({
                             setPermission(value);
                         }
                     }}>
-                    <SelectTrigger
-                        className="w-full"
-                        aria-label={t('permissionHelp')}>
+                    <SelectTrigger className="w-full">
                         <SelectValue>
                             {permission === PermissionType.WRITE
                                 ? t('editor')
@@ -200,11 +186,11 @@ export function UserEmailAutocomplete({
                         </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value={PermissionType.WRITE}>
-                            {t('editor')}
-                        </SelectItem>
                         <SelectItem value={PermissionType.READ}>
                             {t('viewer')}
+                        </SelectItem>
+                        <SelectItem value={PermissionType.WRITE}>
+                            {t('editor')}
                         </SelectItem>
                     </SelectContent>
                 </Select>
