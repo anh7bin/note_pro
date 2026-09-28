@@ -125,8 +125,9 @@ export const WorkspaceButton = () => {
             }
             trigger={
                 <Button
+                    size="sm"
                     variant="ghost"
-                    className="group h-9 w-full cursor-pointer justify-start gap-2 px-2 text-xs">
+                    className="group gap-2 px-1.5 text-xs rounded-lg">
                     <div className="relative flex h-5 w-5 flex-shrink-0 items-center justify-center overflow-hidden rounded">
                         <div className="absolute inset-0 flex items-center justify-center transition-all duration-200 group-hover:scale-75 group-hover:opacity-0 group-focus-visible:scale-75 group-focus-visible:opacity-0">
                             <Image
@@ -134,11 +135,10 @@ export const WorkspaceButton = () => {
                                 alt={t('workspace')}
                                 fill
                                 className="object-cover"
-                                sizes="20px"
                             />
                         </div>
                         <div className="absolute inset-0 flex scale-75 items-center justify-center opacity-0 transition-all duration-200 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100">
-                            <Settings className="h-4 w-4 text-foreground" />
+                            <Settings className="text-foreground" />
                         </div>
                     </div>
 

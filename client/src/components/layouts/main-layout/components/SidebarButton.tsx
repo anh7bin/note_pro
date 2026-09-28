@@ -52,7 +52,7 @@ export function SidebarButton({
     };
 
     const baseClasses = cn(
-        'flex min-h-8 w-full items-center gap-1 rounded-md px-2 py-1 text-sm whitespace-nowrap transition-colors',
+        'flex min-h-8 w-full items-center gap-1 rounded-lg px-2 py-1 text-sm whitespace-nowrap transition-colors',
         'hover:bg-accent hover:text-accent-foreground focus-within:bg-accent focus-within:text-accent-foreground',
         isActive && 'bg-accent text-accent-foreground',
         disabled && 'opacity-50 cursor-not-allowed',

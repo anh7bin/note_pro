@@ -33,13 +33,13 @@ export function StarredDocuments({ workspaceSlug }: { workspaceSlug: string }) {
         <section className="flex min-h-0 flex-col gap-1">
             <div
                 className={cn(
-                    'flex min-h-8 items-center justify-between rounded-md px-1 transition-colors hover:bg-accent',
+                    'flex min-h-8 items-center justify-between rounded-lg px-1 transition-colors hover:bg-accent',
                     isActive && 'bg-accent'
                 )}>
                 <Link
                     href={href}
                     className={cn(
-                        'flex min-h-7 min-w-0 flex-1 items-center rounded px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40',
+                        'flex min-h-8 min-w-0 flex-1 items-center px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40',
                         isActive && 'text-foreground'
                     )}
                     onClick={() => {
