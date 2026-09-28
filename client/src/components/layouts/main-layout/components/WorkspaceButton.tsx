@@ -6,190 +6,115 @@ import { LoadingOverlay } from '@/components/ui/loading-overlay';
 import { Modal } from '@/components/ui/modal';
 import { useI18n } from '@/contexts/I18nContext';
 import { useTheme } from '@/contexts/ThemeProvider';
-import {
-    UpdateWorkspaceDocument,
-    type UpdateWorkspaceMutation,
-    type UpdateWorkspaceMutationVariables,
-} from '@/graphql/mutations/__generated__/workspace.generated';
-import { useDebounce } from '@/hooks';
+import { useUpdateWorkspaceMutation } from '@/graphql/mutations/__generated__/workspace.generated';
 import { useImageUpload } from '@/hooks/useImageUpload';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { DEFAULT_WORKSPACE_IMAGE } from '@/lib/constants';
 import showToast from '@/lib/toast';
 import { cn } from '@/lib/utils';
-import { useApolloClient } from '@apollo/client';
 import { Camera, Settings } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AccentColorPicker } from './AccentColorPicker';
-
-type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
-
-interface WorkspaceSnapshot {
-    name: string;
-    imageUrl: string | null;
-}
 
 export const WorkspaceButton = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [tempName, setTempName] = useState('');
     const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
-    const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+    const [hasImageChanged, setHasImageChanged] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const initializedSessionRef = useRef(false);
-    const desiredWorkspaceRef = useRef<WorkspaceSnapshot>({
-        name: '',
-        imageUrl: null,
-    });
-    const persistedWorkspaceRef = useRef<WorkspaceSnapshot>({
-        name: '',
-        imageUrl: null,
-    });
-    const saveQueueRef = useRef<Promise<void>>(Promise.resolve());
     const { t } = useI18n();
     const { accentColor, setAccentColor } = useTheme();
-    const { debounced, flush, cancel } = useDebounce(300);
-    const apolloClient = useApolloClient();
 
-    const { workspace, refetch } = useWorkspace();
+    const [updateWorkspace] = useUpdateWorkspaceMutation();
+    const { workspace } = useWorkspace();
 
     const workspaceImage = workspace?.image_url || DEFAULT_WORKSPACE_IMAGE;
     const workspaceName = workspace?.name || '';
 
     const { uploadImage, isUploading } = useImageUpload({
         tags: ['workspace', workspace?.id || ''],
+        onSuccess: (imageUrl) => {
+            setTempImageUrl(imageUrl);
+            setHasImageChanged(true);
+        },
     });
 
-    const requestWorkspaceSave = useCallback(() => {
-        if (!workspace?.id) return;
-
-        const snapshot: WorkspaceSnapshot = {
-            name: desiredWorkspaceRef.current.name.trim(),
-            imageUrl: desiredWorkspaceRef.current.imageUrl,
-        };
-
-        if (!snapshot.name) return;
-
-        setSaveStatus('saving');
-        let succeeded = true;
-
-        const pendingSave = saveQueueRef.current
-            .catch(() => undefined)
-            .then(async () => {
-                const persisted = persistedWorkspaceRef.current;
-                if (
-                    snapshot.name === persisted.name &&
-                    snapshot.imageUrl === persisted.imageUrl
-                ) {
-                    return;
-                }
-
-                try {
-                    const result = await apolloClient.mutate<
-                        UpdateWorkspaceMutation,
-                        UpdateWorkspaceMutationVariables
-                    >({
-                        mutation: UpdateWorkspaceDocument,
-                        variables: {
-                            workspaceId: workspace.id,
-                            name: snapshot.name,
-                            imageUrl: snapshot.imageUrl,
-                        },
-                    });
-
-                    if (!result.data?.update_workspaces_by_pk) {
-                        throw new Error('Workspace update returned no data');
-                    }
-
-                    persistedWorkspaceRef.current = snapshot;
-                    await refetch();
-                } catch (error) {
-                    succeeded = false;
-                    console.error('Failed to update workspace:', error);
-                    showToast.error(t('workspaceUpdateError'));
-                }
-            });
-
-        saveQueueRef.current = pendingSave;
-        void pendingSave.finally(() => {
-            if (saveQueueRef.current === pendingSave) {
-                setSaveStatus(succeeded ? 'saved' : 'error');
-            }
-        });
-    }, [apolloClient, refetch, t, workspace?.id]);
-
     useEffect(() => {
-        if (!isOpen) {
-            initializedSessionRef.current = false;
-            return;
+        if (isOpen && workspace) {
+            const dbImageUrl = workspace.image_url || null;
+            setTempName(workspace.name || '');
+            setTempImageUrl(dbImageUrl);
+            setHasImageChanged(false);
+        } else if (!isOpen) {
+            setTempName('');
+            setTempImageUrl(null);
+            setHasImageChanged(false);
         }
-
-        if (!workspace || initializedSessionRef.current) return;
-
-        const snapshot = {
-            name: workspace.name || '',
-            imageUrl: workspace.image_url || null,
-        };
-        setTempName(snapshot.name);
-        setTempImageUrl(snapshot.imageUrl);
-        setSaveStatus('idle');
-        desiredWorkspaceRef.current = snapshot;
-        persistedWorkspaceRef.current = snapshot;
-        initializedSessionRef.current = true;
     }, [isOpen, workspace]);
-
-    useEffect(() => () => cancel('workspace-name'), [cancel]);
-
-    const handleOpenChange = (open: boolean) => {
-        if (!open) {
-            if (desiredWorkspaceRef.current.name.trim()) {
-                flush();
-            } else {
-                cancel('workspace-name');
-            }
-        }
-        setIsOpen(open);
-    };
 
     const handleFileSelect = async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         const file = event.target.files?.[0];
         if (file) {
-            const imageUrl = await uploadImage(file);
-            event.target.value = '';
+            await uploadImage(file);
+        }
+    };
 
-            if (imageUrl) {
-                setTempImageUrl(imageUrl);
-                desiredWorkspaceRef.current.imageUrl = imageUrl;
-                requestWorkspaceSave();
+    const handleSave = async () => {
+        try {
+            const nameChanged = tempName.trim() && tempName !== workspace?.name;
+
+            if (!nameChanged && !hasImageChanged) {
+                setIsOpen(false);
+                return;
             }
+
+            setIsSaving(true);
+            await updateWorkspace({
+                variables: {
+                    workspaceId: workspace?.id || '',
+                    name: nameChanged ? tempName.trim() : workspace?.name,
+                    imageUrl: hasImageChanged
+                        ? tempImageUrl
+                        : workspace?.image_url,
+                },
+            });
+
+            setIsOpen(false);
+        } catch (error) {
+            console.error('Failed to update workspace:', error);
+            showToast.error(t('workspaceUpdateError'));
+        } finally {
+            setIsSaving(false);
         }
     };
-
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const name = event.target.value;
-        setTempName(name);
-        desiredWorkspaceRef.current.name = name;
-
-        if (name.trim()) {
-            setSaveStatus('saving');
-            debounced(requestWorkspaceSave, 'workspace-name');
-        } else {
-            cancel('workspace-name');
-            setSaveStatus('idle');
-        }
-    };
-
-    const isNameInvalid =
-        isOpen && initializedSessionRef.current && !tempName.trim();
 
     return (
         <Modal
             open={isOpen}
-            onOpenChange={handleOpenChange}
+            onOpenChange={setIsOpen}
             title={t('workspaceSettings')}
             description={t('workspaceSettingsDescription')}
+            footer={
+                <Button
+                    size="sm"
+                    onClick={handleSave}
+                    disabled={
+                        isUploading ||
+                        isSaving ||
+                        !tempName.trim() ||
+                        (tempName === workspace?.name && !hasImageChanged)
+                    }>
+                    {isUploading
+                        ? t('uploading')
+                        : isSaving
+                          ? t('saving')
+                          : t('saveChanges')}
+                </Button>
+            }
             trigger={
                 <Button
                     size="sm"
@@ -276,30 +201,9 @@ export const WorkspaceButton = () => {
                     <InputField
                         id="workspace-name"
                         value={tempName}
-                        onChange={handleNameChange}
+                        onChange={(e) => setTempName(e.target.value)}
                         placeholder={t('workspaceNamePlaceholder')}
                     />
-                    <p
-                        id="workspace-name-feedback"
-                        role={isNameInvalid ? 'alert' : 'status'}
-                        className={cn(
-                            'min-h-4 text-xs',
-                            isNameInvalid
-                                ? 'text-destructive'
-                                : saveStatus === 'error'
-                                  ? 'text-destructive'
-                                  : 'text-muted-foreground'
-                        )}>
-                        {isNameInvalid
-                            ? t('workspaceNameRequired')
-                            : saveStatus === 'saving'
-                              ? t('saving')
-                              : saveStatus === 'saved'
-                                ? t('workspaceSaved')
-                                : saveStatus === 'error'
-                                  ? t('workspaceUpdateError')
-                                  : ''}
-                    </p>
                 </div>
 
                 <AccentColorPicker

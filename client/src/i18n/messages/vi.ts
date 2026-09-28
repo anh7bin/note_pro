@@ -194,6 +194,7 @@ export const vi: Messages = {
     workspace: 'Không gian làm việc',
     workspaceSettings: 'Cài đặt không gian làm việc',
     workspaceSettingsDescription: 'Tùy chỉnh tên, hình ảnh và màu nhấn.',
+    saveChanges: 'Lưu thay đổi',
     workspaceUpdateError: 'Không thể cập nhật không gian làm việc',
     workspaceName: 'Tên không gian làm việc',
     workspaceNamePlaceholder: 'Không gian làm việc của tôi',
