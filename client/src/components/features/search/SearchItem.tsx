@@ -5,8 +5,9 @@ import { NewFolderIcon } from 'components/shared/icons/NewFolderIcon';
 import { cn } from 'lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SearchItemType } from 'types/app';
+import type { SearchItemType } from 'types/app';
 import { useI18n } from '@/contexts/I18nContext';
+import { SEARCH_ITEM_ROW_CLASS_NAME } from './search.constants';
 
 interface SearchItemProps {
     type: SearchItemType;
@@ -29,41 +30,37 @@ export function SearchItem({
     avatarUrl,
 }: SearchItemProps) {
     const { t } = useI18n();
-    const getIcon = () => {
-        switch (type) {
-            case 'folder':
-                return <NewFolderIcon />;
-            default:
-                return <NewDocumentIcon />;
-        }
-    };
+    const icon =
+        type === 'folder' ? (
+            <NewFolderIcon size={28} />
+        ) : (
+            <NewDocumentIcon size={28} />
+        );
 
     return (
         <Link
             href={href}
-            className={cn(
-                'group flex min-h-11 items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
-                className
-            )}
+            data-search-result
+            className={cn(SEARCH_ITEM_ROW_CLASS_NAME, className)}
             onClick={onClick}>
-            <div className="flex-shrink-0 relative">
-                {getIcon()}
+            <div className="relative shrink-0">
+                {icon}
                 {avatarUrl && (
                     <Image
                         src={avatarUrl}
                         alt={t('userAvatar')}
-                        className="absolute -bottom-1 -right-0 w-4 h-4 rounded-full border-2 border-background object-cover"
-                        width={16}
-                        height={16}
+                        className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border border-background object-cover"
+                        width={14}
+                        height={14}
                     />
                 )}
             </div>
-            <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-foreground truncate">
+            <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-medium leading-4 text-foreground">
                     {title}
                 </div>
                 {subtitle && (
-                    <div className="text-xs text-muted-foreground mt-0.5 truncate">
+                    <div className="truncate text-xs leading-4 text-muted-foreground">
                         {subtitle}
                     </div>
                 )}

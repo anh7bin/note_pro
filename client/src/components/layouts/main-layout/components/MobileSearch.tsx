@@ -16,7 +16,8 @@ export const MobileSearch = () => {
             onOpenChange={setOpen}
             contentProps={{
                 align: 'end',
-                className: 'w-[calc(100vw-1rem)] p-2 lg:hidden',
+                sideOffset: 8,
+                className: 'w-[calc(100vw-1rem)] overflow-hidden p-0 lg:hidden',
             }}
             trigger={
                 <SimpleTooltip title={t('search')}>
@@ -25,7 +26,11 @@ export const MobileSearch = () => {
                     </Button>
                 </SimpleTooltip>
             }>
-            <SearchInputField onResultClick={() => setOpen(false)} />
+            <SearchInputField
+                embedded
+                autoFocus
+                onResultClick={() => setOpen(false)}
+            />
         </PopoverPanel>
     );
 };

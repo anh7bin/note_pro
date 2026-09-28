@@ -265,6 +265,9 @@ export const en = {
 
     // Search
     searchPlaceholder: 'Search documents and folders...',
+    searchStartTitle: 'Search your workspace',
+    searchStartDescription: 'Start typing to find documents and folders.',
+    recentSearches: 'Recent',
     noSearchResults: 'No results found',
     noSearchResultsDescription: 'Try a different search term.',
     documents: 'Documents',

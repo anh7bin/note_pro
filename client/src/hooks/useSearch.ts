@@ -1,7 +1,5 @@
-import {
-    SearchAllQuery,
-    useSearchAllLazyQuery,
-} from '@/graphql/queries/__generated__/search.generated';
+import { useSearchAllLazyQuery } from '@/graphql/queries/__generated__/search.generated';
+import type { SearchAllQuery } from '@/graphql/queries/__generated__/search.generated';
 import { useCallback, useEffect, useState } from 'react';
 import { useDebounce } from './useDebounce';
 import { useWorkspace } from './useWorkspace';
@@ -20,21 +18,23 @@ export function useSearch() {
     const { workspace } = useWorkspace();
     const [searchAll, { data: allData, loading: allLoading }] =
         useSearchAllLazyQuery();
-    const { debounced } = useDebounce(700);
+    const { debounced, cancel } = useDebounce(250);
+    const [isWaiting, setIsWaiting] = useState(false);
 
     const executeSearch = useCallback(
-        (term: string) => {
-            if (!workspace?.id || !term) {
+        async (term: string) => {
+            const normalizedTerm = term.trim();
+            if (!workspace?.id || !normalizedTerm || !userId) {
                 return;
             }
 
-            const searchPattern = `%${term.trim()}%`;
+            const searchPattern = `%${normalizedTerm}%`;
 
-            searchAll({
+            await searchAll({
                 variables: {
                     workspaceId: workspace.id,
                     searchTerm: searchPattern,
-                    userId: userId!,
+                    userId,
                 },
                 fetchPolicy: 'network-only',
             });
@@ -43,25 +43,42 @@ export function useSearch() {
     );
 
     useEffect(() => {
-        if (searchTerm) {
-            debounced(() => executeSearch(searchTerm));
+        const normalizedTerm = searchTerm.trim();
+
+        if (!normalizedTerm) {
+            cancel('workspace-search');
+            setIsWaiting(false);
+            return;
         }
-    }, [searchTerm, executeSearch, debounced]);
+
+        let isCurrentSearch = true;
+        setIsWaiting(true);
+        debounced(async () => {
+            try {
+                await executeSearch(normalizedTerm);
+            } finally {
+                if (isCurrentSearch) {
+                    setIsWaiting(false);
+                }
+            }
+        }, 'workspace-search');
+
+        return () => {
+            isCurrentSearch = false;
+            cancel('workspace-search');
+        };
+    }, [searchTerm, executeSearch, debounced, cancel]);
 
     const results: SearchResult = {
         folders: allData?.folders || [],
         documents: allData?.documents || [],
         sharedDocuments: allData?.sharedDocuments || [],
-        isLoading: allLoading,
+        isLoading: isWaiting || allLoading,
     };
 
     return {
         searchTerm,
         setSearchTerm,
         results,
-        hasResults:
-            results.folders.length > 0 ||
-            results.documents.length > 0 ||
-            results.sharedDocuments.length > 0,
     };
 }

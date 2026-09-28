@@ -1,8 +1,7 @@
 'use client';
 
-import { SearchResult } from 'hooks/useSearch';
+import type { SearchResult } from 'hooks/useSearch';
 import { useWorkspace } from 'hooks/useWorkspace';
-import { useMemo } from 'react';
 import { SearchEmptyState } from './SearchEmptyState';
 import { SearchSection } from './SearchSection';
 import { SearchSkeleton } from './SearchSkeleton';
@@ -18,23 +17,19 @@ export function SearchResults({ results, onResultClick }: Props) {
     const { workspace } = useWorkspace();
     const { t } = useI18n();
 
-    const counts = useMemo(
-        () => ({
-            all: folders.length + documents.length + sharedDocuments.length,
-        }),
-        [folders.length, documents.length, sharedDocuments.length]
-    );
+    const hasResults =
+        folders.length + documents.length + sharedDocuments.length > 0;
 
     if (isLoading) {
         return <SearchSkeleton />;
     }
 
-    if (counts.all === 0) {
+    if (!hasResults) {
         return <SearchEmptyState />;
     }
 
     return (
-        <div className="max-h-[calc(60vh-4rem)] overflow-y-auto p-2">
+        <div className="p-2">
             {documents.length > 0 && (
                 <SearchSection
                     title={t('documents')}

@@ -260,6 +260,9 @@ export const vi: Messages = {
     documentMoveError: 'Không thể di chuyển tài liệu. Vui lòng thử lại.',
 
     searchPlaceholder: 'Tìm tài liệu và thư mục...',
+    searchStartTitle: 'Tìm trong không gian làm việc',
+    searchStartDescription: 'Nhập từ khóa để tìm tài liệu và thư mục.',
+    recentSearches: 'Trước đó',
     noSearchResults: 'Không tìm thấy kết quả',
     noSearchResultsDescription: 'Hãy thử một từ khóa khác.',
     documents: 'Tài liệu',

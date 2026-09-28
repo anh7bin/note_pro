@@ -6,9 +6,10 @@ import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     message?: string;
+    description?: string;
 }
 
-export function SearchEmptyState({ message }: Props) {
+export function SearchEmptyState({ message, description }: Props) {
     const { t } = useI18n();
 
     return (
@@ -16,7 +17,7 @@ export function SearchEmptyState({ message }: Props) {
             compact
             icon={<Search />}
             title={message || t('noSearchResults')}
-            description={t('noSearchResultsDescription')}
+            description={description || t('noSearchResultsDescription')}
         />
     );
 }

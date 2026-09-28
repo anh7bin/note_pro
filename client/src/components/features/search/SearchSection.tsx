@@ -1,10 +1,9 @@
 'use client';
 
-import React from 'react';
 import { getPlainText } from '@/lib/text';
 import { SearchItem } from './SearchItem';
-import { SearchItemType } from 'types/app';
-import { SearchAllQuery } from 'graphql/queries/__generated__/search.generated';
+import type { SearchItemType } from 'types/app';
+import type { SearchAllQuery } from 'graphql/queries/__generated__/search.generated';
 import { useI18n } from '@/contexts/I18nContext';
 
 type SearchDocument = SearchAllQuery['documents'][number];
@@ -53,10 +52,10 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
 
     return (
         <div>
-            <div className="px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <div className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {title}
             </div>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
                 {items.map((item) => {
                     let href = '';
                     let itemTitle = '';
