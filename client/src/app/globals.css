@@ -36,11 +36,28 @@
         --surface: 0 0% 100%;
         --surface-hover: 230 30% 96%;
 
-        /* Primary brand: refined indigo */
-        --primary: 242 62% 56%;
-        --primary-foreground: 0 0% 100%;
-        --primary-hover: 242 58% 50%;
-        --primary-light: 242 72% 68%;
+        /* Workspace accent palette */
+        --accent-blue: 220 84% 56%;
+        --accent-pink: 326 83% 45%;
+        --accent-teal: 171 100% 38%;
+        --accent-purple: 265 100% 47%;
+        --accent-yellow: 46 100% 48%;
+        --accent-gray: 211 12% 39%;
+
+        /* Active workspace accent: purple by default */
+        --theme-primary: var(--accent-purple);
+        --theme-primary-foreground: 0 0% 100%;
+        --theme-primary-hover: 265 90% 41%;
+        --theme-primary-light: 265 95% 65%;
+        --theme-button-primary: var(--accent-purple);
+        --theme-button-primary-hover: 265 90% 41%;
+        --theme-accent: 265 70% 95%;
+        --theme-accent-foreground: 265 70% 40%;
+
+        --primary: var(--theme-primary);
+        --primary-foreground: var(--theme-primary-foreground);
+        --primary-hover: var(--theme-primary-hover);
+        --primary-light: var(--theme-primary-light);
 
         --background-soft: 234 34% 96%;
 
@@ -60,8 +77,8 @@
         --modal-border: 228 20% 88%;
 
         /* Button - using primary color */
-        --button-primary: 242 62% 56%;
-        --button-primary-hover: 242 58% 50%;
+        --button-primary: var(--theme-button-primary);
+        --button-primary-hover: var(--theme-button-primary-hover);
 
         /* Secondary */
         --secondary: 232 28% 94%;
@@ -72,8 +89,8 @@
         --muted-foreground: 228 10% 42%;
 
         /* Accent */
-        --accent: 240 38% 94%;
-        --accent-foreground: 242 52% 44%;
+        --accent: var(--theme-accent);
+        --accent-foreground: var(--theme-accent-foreground);
 
         /* Destructive */
         --destructive: 0 84.2% 60.2%;
@@ -96,7 +113,7 @@
         --border-subtle: 228 22% 92%;
         --border-strong: 228 13% 68%;
         --input: 228 16% 80%;
-        --ring: 242 62% 56%;
+        --ring: var(--theme-primary);
 
         /* Code syntax */
         --code-background: 228 30% 96%;
@@ -143,6 +160,15 @@
     }
 
     .dark {
+        --theme-primary: 265 90% 72%;
+        --theme-primary-foreground: 0 0% 100%;
+        --theme-primary-hover: 265 94% 78%;
+        --theme-primary-light: 265 92% 84%;
+        --theme-button-primary: 265 85% 56%;
+        --theme-button-primary-hover: 265 82% 63%;
+        --theme-accent: 265 34% 20%;
+        --theme-accent-foreground: 265 88% 82%;
+
         /* Base colors */
         --background: 228 30% 8%;
         --foreground: 220 25% 94%;
@@ -150,10 +176,10 @@
         --surface-hover: 228 21% 16%;
 
         /* Primary brand color: lighter in dark mode */
-        --primary: 242 72% 70%;
-        --primary-foreground: 0 0% 100%;
-        --primary-hover: 242 78% 76%;
-        --primary-light: 242 82% 82%;
+        --primary: var(--theme-primary);
+        --primary-foreground: var(--theme-primary-foreground);
+        --primary-hover: var(--theme-primary-hover);
+        --primary-light: var(--theme-primary-light);
 
         /* Background soft: darker variant */
         --background-soft: 228 22% 14%;
@@ -174,8 +200,8 @@
         --modal-border: 226 16% 23%;
 
         /* Button - using primary color */
-        --button-primary: 242 62% 56%;
-        --button-primary-hover: 242 58% 50%;
+        --button-primary: var(--theme-button-primary);
+        --button-primary-hover: var(--theme-button-primary-hover);
 
         /* Secondary */
         --secondary: 228 20% 17%;
@@ -186,8 +212,8 @@
         --muted-foreground: 222 13% 68%;
 
         /* Accent */
-        --accent: 240 26% 20%;
-        --accent-foreground: 240 75% 78%;
+        --accent: var(--theme-accent);
+        --accent-foreground: var(--theme-accent-foreground);
 
         /* Destructive */
         --destructive: 0 68% 58%;
@@ -209,7 +235,7 @@
         --border-subtle: 228 18% 18%;
         --border-strong: 225 14% 38%;
         --input: 225 15% 30%;
-        --ring: 242 72% 70%;
+        --ring: var(--theme-primary);
 
         /* Code syntax */
         --code-background: 228 22% 13%;
@@ -241,6 +267,134 @@
         --scrollbar-track: 228 30% 8%;
         --scrollbar-thumb: 226 15% 24%;
         --scrollbar-thumb-hover: 226 14% 36%;
+    }
+
+    :root[data-accent-color='blue'] {
+        --theme-primary: var(--accent-blue);
+        --theme-primary-foreground: 0 0% 100%;
+        --theme-primary-hover: 220 76% 49%;
+        --theme-primary-light: 220 90% 68%;
+        --theme-button-primary: var(--accent-blue);
+        --theme-button-primary-hover: 220 76% 49%;
+        --theme-accent: 220 70% 95%;
+        --theme-accent-foreground: 220 72% 42%;
+    }
+
+    :root[data-accent-color='pink'] {
+        --theme-primary: var(--accent-pink);
+        --theme-primary-foreground: 0 0% 100%;
+        --theme-primary-hover: 326 78% 39%;
+        --theme-primary-light: 326 85% 64%;
+        --theme-button-primary: var(--accent-pink);
+        --theme-button-primary-hover: 326 78% 39%;
+        --theme-accent: 326 70% 95%;
+        --theme-accent-foreground: 326 70% 40%;
+    }
+
+    :root[data-accent-color='teal'] {
+        --theme-primary: var(--accent-teal);
+        --theme-primary-foreground: 174 70% 10%;
+        --theme-primary-hover: 171 92% 32%;
+        --theme-primary-light: 171 75% 48%;
+        --theme-button-primary: var(--accent-teal);
+        --theme-button-primary-hover: 171 92% 32%;
+        --theme-accent: 171 58% 93%;
+        --theme-accent-foreground: 171 76% 28%;
+    }
+
+    :root[data-accent-color='purple'] {
+        --theme-primary: var(--accent-purple);
+        --theme-primary-foreground: 0 0% 100%;
+        --theme-primary-hover: 265 90% 41%;
+        --theme-primary-light: 265 95% 65%;
+        --theme-button-primary: var(--accent-purple);
+        --theme-button-primary-hover: 265 90% 41%;
+        --theme-accent: 265 70% 95%;
+        --theme-accent-foreground: 265 70% 40%;
+    }
+
+    :root[data-accent-color='yellow'] {
+        --theme-primary: var(--accent-yellow);
+        --theme-primary-foreground: 36 90% 12%;
+        --theme-primary-hover: 44 100% 42%;
+        --theme-primary-light: 48 100% 60%;
+        --theme-button-primary: var(--accent-yellow);
+        --theme-button-primary-hover: 44 100% 42%;
+        --theme-accent: 48 80% 93%;
+        --theme-accent-foreground: 39 82% 29%;
+    }
+
+    :root[data-accent-color='gray'] {
+        --theme-primary: var(--accent-gray);
+        --theme-primary-foreground: 0 0% 100%;
+        --theme-primary-hover: 211 14% 33%;
+        --theme-primary-light: 211 12% 55%;
+        --theme-button-primary: var(--accent-gray);
+        --theme-button-primary-hover: 211 14% 33%;
+        --theme-accent: 211 20% 94%;
+        --theme-accent-foreground: 211 18% 32%;
+    }
+
+    .dark[data-accent-color='blue'] {
+        --theme-primary: 217 91% 68%;
+        --theme-primary-hover: 217 94% 75%;
+        --theme-primary-light: 217 96% 82%;
+        --theme-button-primary: var(--accent-blue);
+        --theme-button-primary-hover: 220 80% 62%;
+        --theme-accent: 220 35% 20%;
+        --theme-accent-foreground: 217 90% 80%;
+    }
+
+    .dark[data-accent-color='pink'] {
+        --theme-primary: 326 86% 70%;
+        --theme-primary-hover: 326 90% 77%;
+        --theme-primary-light: 326 92% 84%;
+        --theme-button-primary: 326 83% 50%;
+        --theme-button-primary-hover: 326 80% 58%;
+        --theme-accent: 326 34% 20%;
+        --theme-accent-foreground: 326 88% 82%;
+    }
+
+    .dark[data-accent-color='teal'] {
+        --theme-primary: 171 75% 54%;
+        --theme-primary-foreground: 174 70% 10%;
+        --theme-primary-hover: 171 80% 62%;
+        --theme-primary-light: 171 82% 72%;
+        --theme-button-primary: 171 90% 38%;
+        --theme-button-primary-hover: 171 82% 45%;
+        --theme-accent: 171 34% 17%;
+        --theme-accent-foreground: 171 72% 76%;
+    }
+
+    .dark[data-accent-color='purple'] {
+        --theme-primary: 265 90% 72%;
+        --theme-primary-hover: 265 94% 78%;
+        --theme-primary-light: 265 92% 84%;
+        --theme-button-primary: 265 85% 56%;
+        --theme-button-primary-hover: 265 82% 63%;
+        --theme-accent: 265 34% 20%;
+        --theme-accent-foreground: 265 88% 82%;
+    }
+
+    .dark[data-accent-color='yellow'] {
+        --theme-primary: 46 95% 62%;
+        --theme-primary-foreground: 36 90% 12%;
+        --theme-primary-hover: 46 96% 69%;
+        --theme-primary-light: 48 98% 76%;
+        --theme-button-primary: var(--accent-yellow);
+        --theme-button-primary-hover: 47 92% 55%;
+        --theme-accent: 46 34% 17%;
+        --theme-accent-foreground: 48 92% 76%;
+    }
+
+    .dark[data-accent-color='gray'] {
+        --theme-primary: 211 15% 70%;
+        --theme-primary-hover: 211 16% 77%;
+        --theme-primary-light: 211 18% 84%;
+        --theme-button-primary: 211 14% 42%;
+        --theme-button-primary-hover: 211 15% 50%;
+        --theme-accent: 211 20% 18%;
+        --theme-accent-foreground: 211 22% 78%;
     }
 }
 

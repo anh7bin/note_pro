@@ -14,6 +14,8 @@ import { Camera, Settings, X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '@/contexts/I18nContext';
+import { useTheme } from '@/contexts/ThemeProvider';
+import { AccentColorPicker } from './AccentColorPicker';
 
 export const WorkspaceButton = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +28,7 @@ export const WorkspaceButton = () => {
     const [isSaving, setIsSaving] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { t } = useI18n();
+    const { accentColor, setAccentColor } = useTheme();
 
     const [updateWorkspace] = useUpdateWorkspaceMutation();
     const { workspace } = useWorkspace();
@@ -227,6 +230,11 @@ export const WorkspaceButton = () => {
                         placeholder={t('workspaceNamePlaceholder')}
                     />
                 </div>
+
+                <AccentColorPicker
+                    value={accentColor}
+                    onChange={setAccentColor}
+                />
             </div>
             <LoadingOverlay open={isUploading} text={t('uploading')} />
         </Modal>
