@@ -9,7 +9,7 @@ export const ACCENT_COLORS = [
 
 export type AccentColor = (typeof ACCENT_COLORS)[number];
 
-export const DEFAULT_ACCENT_COLOR: AccentColor = 'teal';
+export const DEFAULT_ACCENT_COLOR: AccentColor = 'blue';
 
 export function getAccentColor(value: unknown): AccentColor {
     return ACCENT_COLORS.includes(value as AccentColor)
