@@ -6,7 +6,6 @@ import { cn } from 'lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { SearchItemType } from 'types/app';
-import { useI18n } from '@/contexts/I18nContext';
 import { SEARCH_ITEM_ROW_CLASS_NAME } from './search.constants';
 
 interface SearchItemProps {
@@ -18,6 +17,7 @@ interface SearchItemProps {
     onClick?: () => void;
     className?: string;
     avatarUrl?: string;
+    avatarAlt?: string;
     icon?: string;
 }
 
@@ -29,9 +29,9 @@ export function SearchItem({
     onClick,
     className,
     avatarUrl,
+    avatarAlt = '',
     icon,
 }: SearchItemProps) {
-    const { t } = useI18n();
     const resultIcon = icon ? (
         icon
     ) : type === 'folder' ? (
@@ -51,10 +51,10 @@ export function SearchItem({
                 {avatarUrl && (
                     <Image
                         src={avatarUrl}
-                        alt={t('userAvatar')}
+                        alt={avatarAlt}
                         className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border border-background object-cover"
-                        width={10}
-                        height={10}
+                        width={14}
+                        height={14}
                     />
                 )}
             </div>

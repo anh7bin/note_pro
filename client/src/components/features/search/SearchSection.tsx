@@ -16,6 +16,7 @@ interface Props<T extends SearchItemUnion = SearchItemUnion> {
     items: T[];
     type: SearchItemType;
     workspaceId?: string;
+    workspaceImageUrl?: string;
     onResultClick: () => void;
     renderSubtitle: (item: T) => string;
     getWorkspaceId?: (item: T) => string;
@@ -26,6 +27,7 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
     items,
     type,
     workspaceId,
+    workspaceImageUrl,
     onResultClick,
     renderSubtitle,
     getWorkspaceId,
@@ -56,12 +58,15 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
                                 })}
                                 href={`/s/${wsId}/f/${folder.id}`}
                                 icon={folder.icon || undefined}
+                                avatarUrl={workspaceImageUrl}
+                                avatarAlt={t('workspace')}
                                 onClick={onResultClick}
                             />
                         );
                     }
 
                     const doc = item as SearchDocument | SearchSharedDocument;
+                    const isSharedDocument = type === 'sharedDocument';
                     return (
                         <SearchItem
                             key={doc.id}
@@ -71,7 +76,16 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
                             subtitle={renderSubtitle(item)}
                             href={`/editor/d/${wsId}/${doc.id}`}
                             icon={doc.content?.icon || undefined}
-                            avatarUrl={doc.user?.avatar_url || undefined}
+                            avatarUrl={
+                                isSharedDocument
+                                    ? doc.user?.avatar_url || undefined
+                                    : workspaceImageUrl
+                            }
+                            avatarAlt={
+                                isSharedDocument
+                                    ? t('userAvatar')
+                                    : t('workspace')
+                            }
                             onClick={onResultClick}
                         />
                     );

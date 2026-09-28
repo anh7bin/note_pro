@@ -6,6 +6,7 @@ import { SearchEmptyState } from './SearchEmptyState';
 import { SearchSection } from './SearchSection';
 import { SearchSkeleton } from './SearchSkeleton';
 import { useI18n } from '@/contexts/I18nContext';
+import { DEFAULT_WORKSPACE_IMAGE } from '@/lib/constants';
 
 interface Props {
     results: SearchResult;
@@ -16,6 +17,7 @@ export function SearchResults({ results, onResultClick }: Props) {
     const { folders, documents, sharedDocuments, isLoading } = results;
     const { workspace } = useWorkspace();
     const { t } = useI18n();
+    const workspaceImageUrl = workspace?.image_url || DEFAULT_WORKSPACE_IMAGE;
 
     const hasResults =
         folders.length + documents.length + sharedDocuments.length > 0;
@@ -36,6 +38,7 @@ export function SearchResults({ results, onResultClick }: Props) {
                     items={documents}
                     type="document"
                     workspaceId={workspace?.id ?? ''}
+                    workspaceImageUrl={workspaceImageUrl}
                     onResultClick={onResultClick}
                     renderSubtitle={(doc) =>
                         t('inWorkspace', {
@@ -51,6 +54,7 @@ export function SearchResults({ results, onResultClick }: Props) {
                     items={folders}
                     type="folder"
                     workspaceId={workspace?.id ?? ''}
+                    workspaceImageUrl={workspaceImageUrl}
                     onResultClick={onResultClick}
                     renderSubtitle={(folder) =>
                         t('inWorkspace', {
