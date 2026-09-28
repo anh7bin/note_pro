@@ -9,7 +9,6 @@ import { useI18n } from '@/contexts/I18nContext';
 type SearchDocument = SearchAllQuery['documents'][number];
 type SearchFolder = SearchAllQuery['folders'][number];
 type SearchSharedDocument = SearchAllQuery['sharedDocuments'][number];
-
 type SearchItemUnion = SearchDocument | SearchFolder | SearchSharedDocument;
 
 interface Props<T extends SearchItemUnion = SearchItemUnion> {
@@ -32,23 +31,8 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
     getWorkspaceId,
 }: Props<T>) => {
     const { t } = useI18n();
-    if (items.length === 0) {
-        return null;
-    }
 
-    const isDocument = (item: SearchItemUnion): item is SearchDocument => {
-        return type === 'document';
-    };
-
-    const isSharedDocument = (
-        item: SearchItemUnion
-    ): item is SearchSharedDocument => {
-        return type === 'sharedDocument';
-    };
-
-    const isFolder = (item: SearchItemUnion): item is SearchFolder => {
-        return type === 'folder';
-    };
+    if (items.length === 0) return null;
 
     return (
         <div>
@@ -57,42 +41,38 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
             </div>
             <div className="space-y-0.5">
                 {items.map((item) => {
-                    let href = '';
-                    let itemTitle = '';
-                    let subtitle = '';
+                    const wsId = getWorkspaceId?.(item) ?? workspaceId ?? '';
 
-                    // Get workspace ID for this specific item
-                    const itemWorkspaceId = getWorkspaceId
-                        ? getWorkspaceId(item)
-                        : (workspaceId ?? '');
-
-                    if (isDocument(item) || isSharedDocument(item)) {
-                        href = `/editor/d/${itemWorkspaceId}/${item.id}`;
-                        itemTitle = getPlainText(item.content.title);
-                        subtitle = renderSubtitle?.(item) ?? '';
-                    } else if (isFolder(item)) {
-                        href = `/s/${itemWorkspaceId}/f/${item.id}`;
-                        itemTitle = item.name;
-                        subtitle = t('inWorkspace', {
-                            workspace: item.workspace?.name ?? '',
-                        });
+                    if (type === 'folder') {
+                        const folder = item as SearchFolder;
+                        return (
+                            <SearchItem
+                                key={folder.id}
+                                type={type}
+                                id={folder.id}
+                                title={folder.name}
+                                subtitle={t('inWorkspace', {
+                                    workspace: folder.workspace?.name ?? '',
+                                })}
+                                href={`/s/${wsId}/f/${folder.id}`}
+                                icon={folder.icon || undefined}
+                                onClick={onResultClick}
+                            />
+                        );
                     }
 
-                    const avatarUrl =
-                        isDocument(item) || isSharedDocument(item)
-                            ? (item.user?.avatar_url ?? '')
-                            : '';
-
+                    const doc = item as SearchDocument | SearchSharedDocument;
                     return (
                         <SearchItem
-                            key={item.id}
+                            key={doc.id}
                             type={type}
-                            id={item.id}
-                            title={itemTitle}
-                            subtitle={subtitle}
-                            href={href}
+                            id={doc.id}
+                            title={getPlainText(doc.content.title)}
+                            subtitle={renderSubtitle(item)}
+                            href={`/editor/d/${wsId}/${doc.id}`}
+                            icon={doc.content?.icon || undefined}
+                            avatarUrl={doc.user?.avatar_url || undefined}
                             onClick={onResultClick}
-                            avatarUrl={avatarUrl}
                         />
                     );
                 })}

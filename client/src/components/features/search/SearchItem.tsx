@@ -18,6 +18,7 @@ interface SearchItemProps {
     onClick?: () => void;
     className?: string;
     avatarUrl?: string;
+    icon?: string;
 }
 
 export function SearchItem({
@@ -28,14 +29,16 @@ export function SearchItem({
     onClick,
     className,
     avatarUrl,
+    icon,
 }: SearchItemProps) {
     const { t } = useI18n();
-    const icon =
-        type === 'folder' ? (
-            <NewFolderIcon size={28} />
-        ) : (
-            <NewDocumentIcon size={28} />
-        );
+    const resultIcon = icon ? (
+        icon
+    ) : type === 'folder' ? (
+        <NewFolderIcon size={20} />
+    ) : (
+        <NewDocumentIcon size={20} />
+    );
 
     return (
         <Link
@@ -44,14 +47,14 @@ export function SearchItem({
             className={cn(SEARCH_ITEM_ROW_CLASS_NAME, className)}
             onClick={onClick}>
             <div className="relative shrink-0">
-                {icon}
+                {resultIcon}
                 {avatarUrl && (
                     <Image
                         src={avatarUrl}
                         alt={t('userAvatar')}
                         className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border border-background object-cover"
-                        width={14}
-                        height={14}
+                        width={10}
+                        height={10}
                     />
                 )}
             </div>

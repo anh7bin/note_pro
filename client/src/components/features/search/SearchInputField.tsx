@@ -135,7 +135,7 @@ export function SearchInputField({
             id={resultsId}
             ref={resultsRef}
             onKeyDown={handleKeyDown}
-            className="max-h-[min(32rem,calc(100dvh-5rem))] min-h-24 overflow-y-auto overscroll-contain">
+            className="max-h-[min(32rem,calc(100dvh-5rem))] overflow-y-auto overscroll-contain">
             {searchTerm.trim() ? (
                 <SearchResults
                     results={results}

@@ -10,7 +10,7 @@ export type SearchAllQueryVariables = Types.Exact<{
 }>;
 
 
-export type SearchAllQuery = { __typename?: 'query_root', folders: Array<{ __typename?: 'folders', id: string, name: string, workspace?: { __typename?: 'workspaces', name?: string | null } | null }>, documents: Array<{ __typename?: 'blocks', id: string, content?: any | null, user?: { __typename?: 'users', avatar_url?: string | null } | null, workspace?: { __typename?: 'workspaces', name?: string | null } | null }>, sharedDocuments: Array<{ __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, user?: { __typename?: 'users', name?: string | null, avatar_url?: string | null } | null }> };
+export type SearchAllQuery = { __typename?: 'query_root', folders: Array<{ __typename?: 'folders', id: string, icon?: string | null, name: string, workspace?: { __typename?: 'workspaces', name?: string | null } | null }>, documents: Array<{ __typename?: 'blocks', id: string, content?: any | null, user?: { __typename?: 'users', avatar_url?: string | null } | null, workspace?: { __typename?: 'workspaces', name?: string | null } | null }>, sharedDocuments: Array<{ __typename?: 'blocks', id: string, content?: any | null, workspace_id?: string | null, user?: { __typename?: 'users', name?: string | null, avatar_url?: string | null } | null }> };
 
 
 export const SearchAllDocument = gql`
@@ -21,6 +21,7 @@ export const SearchAllDocument = gql`
     order_by: {created_at: desc}
   ) {
     id
+    icon
     name
     workspace {
       name
