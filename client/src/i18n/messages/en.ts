@@ -200,11 +200,11 @@ export const en = {
     workspaceSettings: 'Workspace settings',
     workspaceSettingsDescription:
         'Customize the workspace name, image, and accent color.',
-    workspaceUpdated: 'Workspace updated successfully',
     workspaceUpdateError: 'Error updating workspace',
-    saveChanges: 'Save changes',
     workspaceName: 'Workspace Name',
     workspaceNamePlaceholder: 'My Workspace',
+    workspaceNameRequired: 'Workspace name cannot be empty.',
+    workspaceSaved: 'Saved',
     accentColor: 'Accent color',
     accentColorDescription: 'Choose your workspace accent color.',
     accentBlue: 'Blue',
