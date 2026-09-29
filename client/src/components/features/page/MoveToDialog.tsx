@@ -15,12 +15,12 @@ interface Props {
 }
 
 export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
+    const { t } = useI18n();
     const { workspaceId } = useWorkspace();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [selectedFolderId, setSelectedFolderId] = useState<string | null>(
         null
     );
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const { t } = useI18n();
 
     const { data, loading } = useGetFoldersQuery({
         variables: { workspaceId },
@@ -61,13 +61,13 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
                     </Button>
                 </>
             }>
-            <div className="flex min-h-0 flex-col gap-1.5">
+            <div className="flex min-h-0 flex-col gap-2">
                 <Label className="shrink-0">{t('folders')}</Label>
-                <div className="max-h-72 space-y-1 overflow-y-auto pr-1">
+                <div className="max-h-72 space-y-1 overflow-y-auto">
                     <button
                         type="button"
                         className={cn(
-                            'flex min-h-9 w-full items-center gap-2 rounded-md px-2.5 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                            'flex min-h-8 w-full items-center gap-2 rounded-lg px-2 py-1 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                             selectedFolderId === null
                                 ? 'bg-primary/10 text-primary'
                                 : 'hover:bg-accent'
@@ -93,7 +93,7 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
                                 type="button"
                                 key={folder.id}
                                 className={cn(
-                                    'flex min-h-9 w-full items-center gap-2 rounded-md px-2.5 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+                                    'flex min-h-8 w-full items-center gap-2 rounded-lg px-2 py-1 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                                     isSelected
                                         ? 'bg-primary/10 text-primary'
                                         : 'hover:bg-accent'
