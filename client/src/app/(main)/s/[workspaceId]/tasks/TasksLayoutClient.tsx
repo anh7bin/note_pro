@@ -78,7 +78,7 @@ export function TasksLayoutClient({ children }: TasksLayoutClientProps) {
                 </div>
             </PageHeader>
 
-            <nav className="flex w-fit max-w-full gap-1 overflow-x-auto rounded-lg bg-muted p-1">
+            <nav className="flex w-fit max-w-full gap-1 overflow-x-auto rounded-lg bg-muted/55 p-1">
                 {navItems.map(({ id, label, icon: Icon, href, active }) => (
                     <Button
                         key={id}
@@ -86,7 +86,7 @@ export function TasksLayoutClient({ children }: TasksLayoutClientProps) {
                         size="sm"
                         className={
                             active
-                                ? 'shrink-0 bg-primary-button text-primary-foreground shadow-sm hover:bg-primary-buttonHover hover:text-primary-foreground'
+                                ? 'shrink-0 bg-accent-button text-accent-foreground shadow-sm hover:bg-accent-buttonHover hover:text-accent-foreground'
                                 : 'shrink-0 text-muted-foreground hover:bg-background/80 hover:text-foreground'
                         }
                         onClick={() => navigateTo(href)}>
