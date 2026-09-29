@@ -46,25 +46,25 @@ export function SidebarTabs({
                 <TabsTrigger
                     value="contents"
                     title={t('tableOfContents')}
-                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-sm">
                     <Menu className="h-3.5 w-3.5" />
                 </TabsTrigger>
                 <TabsTrigger
                     value="tasks"
                     title={t('documentTasks')}
-                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-sm">
                     <CheckCircle className="h-3.5 w-3.5" />
                 </TabsTrigger>
                 <TabsTrigger
                     value="attachments"
                     title={t('attachments')}
-                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-sm">
                     <Paperclip className="h-3.5 w-3.5" />
                 </TabsTrigger>
                 <TabsTrigger
                     value="find"
                     title={t('searchInDocument')}
-                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-sm">
                     <Search className="h-3.5 w-3.5" />
                 </TabsTrigger>
             </TabsList>

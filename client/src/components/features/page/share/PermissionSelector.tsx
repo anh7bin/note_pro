@@ -44,8 +44,8 @@ export function PermissionSelector({
     onChange,
     disabled = false,
 }: PermissionSelectorProps) {
-    const [isOpen, setIsOpen] = useState(false);
     const { t } = useI18n();
+    const [isOpen, setIsOpen] = useState(false);
     const selectedOption = permissionOptions.find((opt) => opt.value === value);
 
     return (
@@ -61,7 +61,7 @@ export function PermissionSelector({
                     size="sm"
                     variant="outline"
                     disabled={disabled}
-                    className="w-full min-w-0 justify-between overflow-hidden px-3 text-sm">
+                    className="w-full min-w-0 justify-between overflow-hidden px-2 text-sm">
                     <div className="flex min-w-0 items-center gap-2">
                         {selectedOption && (
                             <selectedOption.icon className="h-4 w-4" />
@@ -81,8 +81,8 @@ export function PermissionSelector({
                         onChange(option.value as LinkPermissionType);
                         setIsOpen(false);
                     }}
-                    className="flex min-h-9 w-full items-start gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
-                    <option.icon className="h-5 w-5 flex-shrink-0" />
+                    className="flex min-h-8 w-full items-start gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40">
+                    <option.icon className="h-4 w-4" />
                     <div className="flex-1">
                         <div className="flex items-center justify-between">
                             <span className="text-sm font-medium">
