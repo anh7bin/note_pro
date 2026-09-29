@@ -1,7 +1,7 @@
 'use client';
 
-import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
+import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
 import { Button, type ButtonProps } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
 import { PopoverPanel } from '@/components/ui/popover-panel';
@@ -13,14 +13,14 @@ import {
 } from '@/graphql/__generated__/document-star.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
-import { getPlainText } from '@/lib/text';
-import showToast from '@/lib/toast';
-import { Plus, Search } from 'lucide-react';
-import { useMemo, useState } from 'react';
 import {
     DOCUMENT_STAR_REFETCH_QUERIES,
     updateDocumentStarCache,
 } from '@/lib/apollo/document-star-cache';
+import { getPlainText } from '@/lib/text';
+import showToast from '@/lib/toast';
+import { Plus, Search } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 interface StarDocumentPickerProps {
     onDocumentStarred?: () => void;
@@ -57,8 +57,12 @@ export function StarDocumentPicker({
         const normalizedSearch = searchTerm.trim().toLocaleLowerCase();
 
         return (data?.blocks ?? []).filter((document) => {
-            if (document.document_stars.length > 0) return false;
-            if (!normalizedSearch) return true;
+            if (document.document_stars.length > 0) {
+                return false;
+            }
+            if (!normalizedSearch) {
+                return true;
+            }
 
             const title =
                 getPlainText(document.content?.title) || t('untitledPage');
@@ -68,11 +72,15 @@ export function StarDocumentPicker({
 
     const handleOpenChange = (open: boolean) => {
         setIsOpen(open);
-        if (!open) setSearchTerm('');
+        if (!open) {
+            setSearchTerm('');
+        }
     };
 
     const handleStarDocument = async (documentId: string) => {
-        if (activeDocumentId) return;
+        if (activeDocumentId) {
+            return;
+        }
 
         setActiveDocumentId(documentId);
         try {
@@ -123,7 +131,7 @@ export function StarDocumentPicker({
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.target.value)}
                     className="h-8"
-                    icon={<Search />}
+                    icon={<Search className="h-4 w-4" />}
                 />
             </div>
             <div
