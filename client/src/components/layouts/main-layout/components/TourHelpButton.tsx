@@ -1,16 +1,16 @@
 'use client';
 
-import { CircleHelp } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
+import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
+import { useIsEditorPage } from '@/hooks/useIsEditorPage';
+import { CircleHelp } from 'lucide-react';
 
 export function TourHelpButton() {
     const { t } = useI18n();
+    const onEditorPage = useIsEditorPage();
     const { startTour, isTourRunning } = useOnboarding();
-    const pathname = usePathname();
 
     return (
         <SimpleTooltip title={t('tourStartAgain')}>
@@ -20,11 +20,7 @@ export function TourHelpButton() {
                     size="icon-xs"
                     disabled={isTourRunning}
                     onClick={() =>
-                        startTour(
-                            pathname.startsWith('/editor/d/')
-                                ? 'editor'
-                                : 'workspace'
-                        )
+                        startTour(onEditorPage ? 'editor' : 'workspace')
                     }>
                     <CircleHelp />
                 </Button>

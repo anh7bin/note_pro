@@ -56,3 +56,9 @@ export const ROUTES = {
     WORKSPACE_FOLDER: (workspaceSlug: string, folderId: string) =>
         `/s/${workspaceSlug}/f/${folderId}`,
 } as const;
+
+const EDITOR_PATH_PREFIX = '/editor/d/';
+
+export function isEditorPath(pathname: string | null | undefined): boolean {
+    return !!pathname && pathname.startsWith(EDITOR_PATH_PREFIX);
+}

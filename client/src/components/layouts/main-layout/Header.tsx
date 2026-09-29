@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
 import { useDocumentPermission } from '@/hooks/useDocumentPermission';
+import { useIsEditorPage } from '@/hooks/useIsEditorPage';
 import { SearchInputField } from 'components/features/search/SearchInputField';
 import { TopLoadingBar } from 'components/ui/TopLoadingBar';
 import { useDocumentAccess } from 'contexts/DocumentAccessContext';
@@ -27,22 +28,20 @@ interface Props {
 }
 
 export default function Header({ workspaceSlug }: Props) {
+    const { t } = useI18n();
+    const pathname = usePathname();
+    const onEditorPage = useIsEditorPage();
     const { documentId } = useDocumentAccess();
     const { isLoading, startLoading } = useLoading();
-    const pathname = usePathname();
-    const { t } = useI18n();
     const notificationMenuProps = useNotifications();
 
-    // Check if we're on a document/editor page
-    const isDocumentPage = pathname.startsWith('/editor/');
-
     const { permissionType } = useDocumentPermission(
-        isDocumentPage ? documentId || '' : ''
+        onEditorPage ? documentId || '' : ''
     );
     const documentAccessRequestNotificationCount =
         getUnreadAccessRequestCountForDocument(
             notificationMenuProps.notifications,
-            isDocumentPage ? documentId : undefined
+            onEditorPage ? documentId : undefined
         );
 
     const handleLogoClick = () => {
@@ -84,7 +83,7 @@ export default function Header({ workspaceSlug }: Props) {
                         </div>
                     </div>
                     <div className="flex min-w-0 items-center justify-end gap-1.5">
-                        {isDocumentPage && documentId && permissionType && (
+                        {onEditorPage && documentId && permissionType && (
                             <>
                                 <DocumentPresence documentId={documentId} />
                                 <RequestEditButton documentId={documentId} />

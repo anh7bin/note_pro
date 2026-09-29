@@ -1,28 +1,29 @@
 'use client';
 
 import AuthGuard from '@/components/features/auth/AuthGuard';
+import { OnboardingTour } from '@/components/features/onboarding/OnboardingTour';
 import { RouteChangeHandler } from '@/components/shared/RouteChangeHandler';
+import { useI18n } from '@/contexts/I18nContext';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
-import { useWorkspace, usePageTitle } from '@/hooks';
+import { usePageTitle, useWorkspace } from '@/hooks';
+import { useIsEditorPage } from '@/hooks/useIsEditorPage';
 import { ROUTES } from '@/lib/routes';
+import { cn } from '@/lib/utils';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Header from './Header';
-import Sidebar from './Sidebar';
-import { cn } from '@/lib/utils';
-import { useI18n } from '@/contexts/I18nContext';
-import { OnboardingTour } from '@/components/features/onboarding/OnboardingTour';
 import { MainLayoutSkeleton } from './MainLayoutSkeleton';
+import Sidebar from './Sidebar';
 
 function LayoutMain({ children }: { children: React.ReactNode }) {
-    const { workspaceSlug, loading, workspaceId } = useWorkspace();
-    const { isOpen } = useSidebar();
-    const pathname = usePathname();
-    const router = useRouter();
     const { t } = useI18n();
+    const router = useRouter();
+    const pathname = usePathname();
+    const { isOpen } = useSidebar();
+    const onEditorPage = useIsEditorPage();
+    const { workspaceSlug, loading, workspaceId } = useWorkspace();
 
-    const isGlobalRoute =
-        !pathname.startsWith('/s/') && !pathname.startsWith('/editor/');
+    const isGlobalRoute = !pathname.startsWith('/s/') && !onEditorPage;
 
     useEffect(() => {
         if (!loading && workspaceSlug && pathname.startsWith('/s/')) {
@@ -33,8 +34,6 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
             }
         }
     }, [loading, workspaceSlug, pathname, router]);
-
-    const editorPage = Boolean(pathname.startsWith('/editor/'));
 
     return pathname === ROUTES.LOGIN ? (
         <>{children}</>
@@ -47,12 +46,12 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
                     {t('skipToContent')}
                 </a>
                 {loading && !isGlobalRoute ? (
-                    <MainLayoutSkeleton sidebarOpen={!editorPage && isOpen} />
+                    <MainLayoutSkeleton sidebarOpen={!onEditorPage && isOpen} />
                 ) : (
                     <>
                         <Header workspaceSlug={workspaceSlug ?? ''} />
                         <div className="flex min-h-0 flex-1 pt-[var(--header-height)]">
-                            {!editorPage && (
+                            {!onEditorPage && (
                                 <>
                                     <Sidebar
                                         workspaceSlug={workspaceSlug || ''}
@@ -73,14 +72,16 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
                                 id="main-content"
                                 className={cn(
                                     'flex min-w-0 flex-1 justify-center overflow-hidden transition-[padding] duration-300',
-                                    editorPage
+                                    onEditorPage
                                         ? 'p-0'
                                         : 'p-[var(--page-padding)]'
                                 )}>
                                 <div
                                     className={cn(
                                         'h-full min-h-0 w-full',
-                                        editorPage ? 'max-w-full' : 'max-w-page'
+                                        onEditorPage
+                                            ? 'max-w-full'
+                                            : 'max-w-page'
                                     )}>
                                     {children}
                                 </div>

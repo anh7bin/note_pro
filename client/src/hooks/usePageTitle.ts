@@ -7,6 +7,7 @@ import { useDocumentTitle } from './useDocumentTitle';
 import { useDocumentAccess } from '@/contexts/DocumentAccessContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { TranslationKey } from '@/i18n/messages';
+import { useIsEditorPage } from './useIsEditorPage';
 
 const MANAGED_FAVICON_ID = 'document-emoji-favicon';
 const DEFAULT_FAVICON_HREF = '/favicon.ico';
@@ -42,16 +43,17 @@ function getTitleKeyFromPathname(pathname: string): TranslationKey | null {
 }
 
 export function usePageTitle() {
-    const pathname = usePathname();
     const params = useParams();
-    const { hasAccess } = useDocumentAccess();
+    const pathname = usePathname();
     const { t, locale } = useI18n();
+    const onEditorPage = useIsEditorPage();
+    const { hasAccess } = useDocumentAccess();
 
     const pageType = useMemo(() => {
-        if (pathname.startsWith('/editor/')) return 'editor';
+        if (onEditorPage) return 'editor';
         if (pathname.includes('/f/')) return 'folder';
         return 'default';
-    }, [pathname]);
+    }, [onEditorPage, pathname]);
 
     const folderId =
         pageType === 'folder' ? (params?.folderId as string) : null;

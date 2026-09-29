@@ -1,18 +1,19 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Joyride, EVENTS, STATUS, type EventData } from 'react-joyride';
-import { usePathname, useRouter } from 'next/navigation';
-import { useTheme } from 'next-themes';
-import { useCurrentUser, useDeviceOnboardingSeen, useWorkspace } from '@/hooks';
-import { useSidebar } from '@/contexts/SidebarContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { OnboardingContext, type TourName } from '@/contexts/OnboardingContext';
-import { ROUTES } from '@/lib/routes';
+import { useSidebar } from '@/contexts/SidebarContext';
+import { useCurrentUser, useDeviceOnboardingSeen, useWorkspace } from '@/hooks';
+import { useIsEditorPage } from '@/hooks/useIsEditorPage';
 import {
     ONBOARDING_EDITOR_STORAGE_KEY,
     ONBOARDING_WORKSPACE_STORAGE_KEY,
 } from '@/lib/onboarding';
+import { ROUTES } from '@/lib/routes';
+import { useTheme } from 'next-themes';
+import { usePathname, useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { EVENTS, Joyride, STATUS, type EventData } from 'react-joyride';
 import { waitForTarget } from './tour-dom';
 import { createEditorTourSteps, createWorkspaceTourSteps } from './tour-steps';
 
@@ -25,6 +26,7 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
     const { workspaceSlug } = useWorkspace();
     const { isOpen, setOpen } = useSidebar();
     const sidebarOpenRef = useRef(isOpen);
+    const onEditorPage = useIsEditorPage();
     const [workspaceSeen, markWorkspaceSeen] = useDeviceOnboardingSeen(
         ONBOARDING_WORKSPACE_STORAGE_KEY,
         userId
@@ -54,7 +56,6 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
     const onWorkspacePage = Boolean(
         workspaceSlug && pathname === ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug)
     );
-    const onEditorPage = pathname.startsWith('/editor/d/');
 
     const startTour = useCallback(
         (tour: TourName) => {
