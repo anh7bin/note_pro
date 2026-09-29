@@ -5,13 +5,13 @@ import {
     useMoveDocumentToFolderMutation,
 } from '@/graphql/mutations/__generated__/document.generated';
 import {
-    GetDocumentBlocksDocument,
     type GetDocumentBlocksQuery,
+    useGetDocumentBlocksLazyQuery,
 } from '@/graphql/queries/__generated__/document.generated';
 import { useRemoveDocumentAccessMutation } from '@/graphql/mutations/__generated__/document-share.generated';
 import { useUserId } from '@/hooks/useAuth';
 import showToast from '@/lib/toast';
-import { useApolloClient, type Reference } from '@apollo/client';
+import type { Reference } from '@apollo/client';
 import { useI18n } from '@/contexts/I18nContext';
 
 interface DocumentActionOptions {
@@ -53,7 +53,6 @@ export const useDocumentActions = (
     documentId: string,
     { workspaceId, folderId }: DocumentActionOptions = {}
 ) => {
-    const client = useApolloClient();
     const userId = useUserId();
     const { t } = useI18n();
     const [softDeleteDocument] = useSoftDeleteDocumentMutation();
@@ -62,6 +61,9 @@ export const useDocumentActions = (
     const [materializeDocument] = useMaterializeDocumentMutation();
     const [isDuplicating, setIsDuplicating] = useState(false);
     const isDuplicatingRef = useRef(false);
+    const [getDocumentBlocks] = useGetDocumentBlocksLazyQuery({
+        fetchPolicy: 'network-only',
+    });
 
     const handleDuplicate = useCallback(async () => {
         if (
@@ -77,11 +79,13 @@ export const useDocumentActions = (
         setIsDuplicating(true);
 
         try {
-            const { data } = await client.query<GetDocumentBlocksQuery>({
-                query: GetDocumentBlocksDocument,
+            const { data } = await getDocumentBlocks({
                 variables: { pageId: documentId },
-                fetchPolicy: 'network-only',
             });
+
+            if (!data) {
+                throw new Error('Document blocks query returned no data');
+            }
             const sourceDocument = data.blocks.find(
                 (block) => block.id === documentId
             );
@@ -180,7 +184,7 @@ export const useDocumentActions = (
             setIsDuplicating(false);
         }
     }, [
-        client,
+        getDocumentBlocks,
         documentId,
         folderId,
         materializeDocument,

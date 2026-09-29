@@ -5,10 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useDeleteBlockMutation } from '@/graphql/mutations/__generated__/document.generated';
 import { useUpdateTaskDetailsMutation } from '@/graphql/mutations/__generated__/task.generated';
-import {
-    GetDocumentBlocksDocument,
-    type GetDocumentBlocksQuery,
-} from '@/graphql/queries/__generated__/document.generated';
+import { useGetMaxDocumentBlockPositionLazyQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useI18n } from '@/contexts/I18nContext';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { getPlainText } from '@/lib/text';
@@ -36,6 +33,10 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
     const { t } = useI18n();
     const { workspaceSlug } = useWorkspace();
     const client = useApolloClient();
+    const [getMaxDocumentBlockPosition] =
+        useGetMaxDocumentBlockPositionLazyQuery({
+            fetchPolicy: 'network-only',
+        });
     const [updateTaskDetails] = useUpdateTaskDetailsMutation();
     const [deleteBlock] = useDeleteBlockMutation();
     const [taskData, setTaskData] = useState<TaskFormValues>(EMPTY_TASK_FORM);
@@ -70,17 +71,13 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
             const isMoving = destinationId !== (task.block.page_id || null);
             let position: number | undefined;
             if (isMoving && destinationId) {
-                const { data } = await client.query<GetDocumentBlocksQuery>({
-                    query: GetDocumentBlocksDocument,
+                const { data } = await getMaxDocumentBlockPosition({
                     variables: { pageId: destinationId },
-                    fetchPolicy: 'network-only',
                 });
                 position =
                     Math.max(
                         0,
-                        ...data.blocks
-                            .filter((block) => block.page_id === destinationId)
-                            .map((block) => block.position || 0)
+                        data?.blocks_aggregate.aggregate?.max?.position ?? 0
                     ) + 1;
             }
             const result = await updateTaskDetails({

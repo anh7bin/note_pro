@@ -10,10 +10,7 @@ import {
     type TaskFormValues,
 } from '@/components/features/page/TaskForm';
 import { useCreateTaskMutation } from '@/graphql/mutations/__generated__/task.generated';
-import {
-    GetDocumentBlocksDocument,
-    type GetDocumentBlocksQuery,
-} from '@/graphql/queries/__generated__/document.generated';
+import { useGetMaxDocumentBlockPositionLazyQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { TASK_STATUS } from '@/lib/constants';
@@ -34,6 +31,10 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
     const { workspace } = useWorkspace();
     const [createTask] = useCreateTaskMutation();
     const { t } = useI18n();
+    const [getMaxDocumentBlockPosition] =
+        useGetMaxDocumentBlockPositionLazyQuery({
+            fetchPolicy: 'network-only',
+        });
 
     const handleCreate = async () => {
         if (isCreating) return;
@@ -50,20 +51,13 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
             setIsCreating(true);
             let position = 0;
             if (taskData.destinationId) {
-                const { data } = await client.query<GetDocumentBlocksQuery>({
-                    query: GetDocumentBlocksDocument,
+                const { data } = await getMaxDocumentBlockPosition({
                     variables: { pageId: taskData.destinationId },
-                    fetchPolicy: 'network-only',
                 });
                 position =
                     Math.max(
                         0,
-                        ...data.blocks
-                            .filter(
-                                (block) =>
-                                    block.page_id === taskData.destinationId
-                            )
-                            .map((block) => block.position || 0)
+                        data?.blocks_aggregate.aggregate?.max?.position ?? 0
                     ) + 1;
             }
 

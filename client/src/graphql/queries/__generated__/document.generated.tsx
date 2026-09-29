@@ -17,6 +17,13 @@ export type GetDocumentBlocksQueryVariables = Types.Exact<{
 
 export type GetDocumentBlocksQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> };
 
+export type GetMaxDocumentBlockPositionQueryVariables = Types.Exact<{
+  pageId: Types.Scalars['uuid']['input'];
+}>;
+
+
+export type GetMaxDocumentBlockPositionQuery = { __typename?: 'query_root', blocks_aggregate: { __typename?: 'blocks_aggregate', aggregate?: { __typename?: 'blocks_aggregate_fields', max?: { __typename?: 'blocks_max_fields', position?: number | null } | null } | null } };
+
 export type SubscribeToDocumentBlocksSubscriptionVariables = Types.Exact<{
   pageId: Types.Scalars['uuid']['input'];
 }>;
@@ -170,6 +177,50 @@ export type GetDocumentBlocksQueryHookResult = ReturnType<typeof useGetDocumentB
 export type GetDocumentBlocksLazyQueryHookResult = ReturnType<typeof useGetDocumentBlocksLazyQuery>;
 export type GetDocumentBlocksSuspenseQueryHookResult = ReturnType<typeof useGetDocumentBlocksSuspenseQuery>;
 export type GetDocumentBlocksQueryResult = Apollo.QueryResult<GetDocumentBlocksQuery, GetDocumentBlocksQueryVariables>;
+export const GetMaxDocumentBlockPositionDocument = gql`
+    query GetMaxDocumentBlockPosition($pageId: uuid!) {
+  blocks_aggregate(where: {page_id: {_eq: $pageId}, deleted_at: {_is_null: true}}) {
+    aggregate {
+      max {
+        position
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMaxDocumentBlockPositionQuery__
+ *
+ * To run a query within a React component, call `useGetMaxDocumentBlockPositionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMaxDocumentBlockPositionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMaxDocumentBlockPositionQuery({
+ *   variables: {
+ *      pageId: // value for 'pageId'
+ *   },
+ * });
+ */
+export function useGetMaxDocumentBlockPositionQuery(baseOptions: Apollo.QueryHookOptions<GetMaxDocumentBlockPositionQuery, GetMaxDocumentBlockPositionQueryVariables> & ({ variables: GetMaxDocumentBlockPositionQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMaxDocumentBlockPositionQuery, GetMaxDocumentBlockPositionQueryVariables>(GetMaxDocumentBlockPositionDocument, options);
+      }
+export function useGetMaxDocumentBlockPositionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMaxDocumentBlockPositionQuery, GetMaxDocumentBlockPositionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMaxDocumentBlockPositionQuery, GetMaxDocumentBlockPositionQueryVariables>(GetMaxDocumentBlockPositionDocument, options);
+        }
+export function useGetMaxDocumentBlockPositionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMaxDocumentBlockPositionQuery, GetMaxDocumentBlockPositionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMaxDocumentBlockPositionQuery, GetMaxDocumentBlockPositionQueryVariables>(GetMaxDocumentBlockPositionDocument, options);
+        }
+export type GetMaxDocumentBlockPositionQueryHookResult = ReturnType<typeof useGetMaxDocumentBlockPositionQuery>;
+export type GetMaxDocumentBlockPositionLazyQueryHookResult = ReturnType<typeof useGetMaxDocumentBlockPositionLazyQuery>;
+export type GetMaxDocumentBlockPositionSuspenseQueryHookResult = ReturnType<typeof useGetMaxDocumentBlockPositionSuspenseQuery>;
+export type GetMaxDocumentBlockPositionQueryResult = Apollo.QueryResult<GetMaxDocumentBlockPositionQuery, GetMaxDocumentBlockPositionQueryVariables>;
 export const SubscribeToDocumentBlocksDocument = gql`
     subscription SubscribeToDocumentBlocks($pageId: uuid!) {
   blocks(

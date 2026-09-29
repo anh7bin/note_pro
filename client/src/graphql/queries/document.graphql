@@ -68,6 +68,18 @@ query GetDocumentBlocks($pageId: uuid!) {
     }
 }
 
+query GetMaxDocumentBlockPosition($pageId: uuid!) {
+    blocks_aggregate(
+        where: { page_id: { _eq: $pageId }, deleted_at: { _is_null: true } }
+    ) {
+        aggregate {
+            max {
+                position
+            }
+        }
+    }
+}
+
 subscription SubscribeToDocumentBlocks($pageId: uuid!) {
     blocks(
         where: {
