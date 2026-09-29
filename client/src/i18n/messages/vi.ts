@@ -145,7 +145,6 @@ export const vi: Messages = {
     newFolder: 'Thư mục mới',
     folderName: 'Tên thư mục',
     moveItems: 'Di chuyển mục',
-    moveItemsDescription: 'Chọn thư mục đích cho các mục đã chọn.',
     moving: 'Đang di chuyển...',
     folderNotFound: 'Không tìm thấy thư mục',
     folderNotFoundDescription:
@@ -155,8 +154,6 @@ export const vi: Messages = {
         'Thêm tài liệu hoặc thư mục con để sắp xếp công việc.',
     createFolderTitle: 'Tạo thư mục mới',
     edit: 'Chỉnh sửa',
-    createFolderDescription: 'Tạo thư mục để nhóm các công việc có liên quan.',
-    editFolderDescription: 'Cập nhật tên, mô tả hoặc biểu tượng thư mục.',
     saving: 'Đang lưu...',
     update: 'Cập nhật',
     name: 'Tên',
@@ -193,7 +190,6 @@ export const vi: Messages = {
         'Bạn có chắc muốn xóa "{{name}}"? Không thể hoàn tác hành động này.',
     workspace: 'Không gian làm việc',
     workspaceSettings: 'Cài đặt không gian làm việc',
-    workspaceSettingsDescription: 'Tùy chỉnh tên, hình ảnh và màu nhấn.',
     saveChanges: 'Lưu thay đổi',
     workspaceUpdateError: 'Không thể cập nhật không gian làm việc',
     workspaceName: 'Tên không gian làm việc',
@@ -336,8 +332,6 @@ export const vi: Messages = {
         'Công việc có lịch hoặc hạn chót sẽ xuất hiện ở đây theo ngày.',
     allTasksEmptyDescription: 'Tạo một công việc để bắt đầu lập kế hoạch.',
     createTaskTitle: 'Tạo công việc',
-    createTaskDescription:
-        'Thêm công việc vào hộp thư đến hoặc liên kết với một tài liệu.',
     destination: 'Nơi lưu',
     searchDocuments: 'Tìm tài liệu',
     loadingDocuments: 'Đang tải tài liệu...',

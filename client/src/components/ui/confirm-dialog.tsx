@@ -62,7 +62,6 @@ export const ConfirmDialog = ({
             description={description}
             size="sm"
             bordered={false}
-            descriptionClassName="leading-relaxed"
             footer={
                 <>
                     <Button

@@ -149,8 +149,6 @@ export const en = {
     newFolder: 'New folder',
     folderName: 'Folder name',
     moveItems: 'Move items',
-    moveItemsDescription:
-        'Choose the destination folder for the selected items.',
     moving: 'Moving...',
     folderNotFound: 'Folder not found',
     folderNotFoundDescription:
@@ -160,8 +158,6 @@ export const en = {
         'Add a document or subfolder to organize your work.',
     createFolderTitle: 'Create New Folder',
     edit: 'Edit',
-    createFolderDescription: 'Create a folder to keep related work together.',
-    editFolderDescription: 'Update the folder name, description, or icon.',
     saving: 'Saving...',
     update: 'Update',
     name: 'Name',
@@ -198,8 +194,6 @@ export const en = {
         'Are you sure you want to delete "{{name}}"? This action cannot be undone.',
     workspace: 'Workspace',
     workspaceSettings: 'Workspace settings',
-    workspaceSettingsDescription:
-        'Customize the workspace name, image, and accent color.',
     saveChanges: 'Save changes',
     workspaceUpdateError: 'Error updating workspace',
     workspaceName: 'Workspace Name',
@@ -343,8 +337,6 @@ export const en = {
         'Tasks with a schedule or deadline will appear here by date.',
     allTasksEmptyDescription: 'Create a task to start planning your work.',
     createTaskTitle: 'Create Task',
-    createTaskDescription:
-        'Add a task to your inbox or connect it to a document.',
     destination: 'Destination',
     searchDocuments: 'Search documents',
     loadingDocuments: 'Loading documents...',

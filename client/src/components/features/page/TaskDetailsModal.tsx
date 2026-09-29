@@ -156,9 +156,6 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
                 if (!open && !saving) onClose();
             }}
             title={t('taskDetails')}
-            contentProps={{
-                className: 'overflow-visible',
-            }}
             footerClassName="justify-between"
             footer={
                 <>

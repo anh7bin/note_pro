@@ -128,10 +128,6 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
             onOpenChange={handleOpenChange}
             trigger={children}
             title={t('createTaskTitle')}
-            description={t('createTaskDescription')}
-            contentProps={{
-                className: 'min-w-0 overflow-visible',
-            }}
             footer={
                 <Button
                     size="sm"

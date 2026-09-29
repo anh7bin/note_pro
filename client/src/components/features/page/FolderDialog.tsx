@@ -86,11 +86,6 @@ export const FolderDialog = ({
             title={
                 mode === FolderMode.CREATE ? t('createFolderTitle') : t('edit')
             }
-            description={
-                mode === FolderMode.CREATE
-                    ? t('createFolderDescription')
-                    : t('editFolderDescription')
-            }
             footer={
                 <>
                     <Button

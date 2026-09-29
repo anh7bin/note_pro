@@ -44,7 +44,6 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
             open={open}
             onOpenChange={onOpenChange}
             title={t('moveItems')}
-            description={t('moveItemsDescription')}
             footer={
                 <>
                     <Button

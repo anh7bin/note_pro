@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { Modal } from '@/components/ui/modal';
-import { TaskItem } from '@/components/features/page/TaskItem';
 import { TaskDetailsModal } from '@/components/features/page/TaskDetailsModal';
-import { Task } from '@/types/app';
-import { getPlainText } from '@/lib/text';
+import { TaskItem } from '@/components/features/page/TaskItem';
 import { Button } from '@/components/ui/button';
-import { CheckCircle } from 'lucide-react';
 import { Loading } from '@/components/ui/loading';
+import { Modal } from '@/components/ui/modal';
 import { useI18n } from '@/contexts/I18nContext';
+import { getPlainText } from '@/lib/text';
+import { Task } from '@/types/app';
+import { CheckCircle } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 interface CompletedTasksModalProps {
     children: React.ReactElement;
@@ -62,9 +62,6 @@ export const CompletedTasksModal = ({
                     </span>
                 </span>
             }
-            contentProps={{
-                className: 'max-h-[min(75dvh,600px)] max-w-2xl overflow-hidden',
-            }}
             footer={
                 <Button
                     variant="outline"
@@ -73,62 +70,53 @@ export const CompletedTasksModal = ({
                     {t('close')}
                 </Button>
             }>
-            <div className="min-h-0 max-h-[min(60dvh,480px)] overflow-y-auto overflow-x-hidden pr-1">
-                {loading ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-center">
-                        <Loading size="lg" text={t('loadingCompletedTasks')} />
-                    </div>
-                ) : error ? (
-                    <div
-                        role="alert"
-                        className="flex flex-col items-center gap-3 py-12 text-center">
-                        <p className="text-sm text-destructive">
-                            {t('tasksLoadError')}
-                        </p>
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={onModalOpen}>
-                            {t('retry')}
-                        </Button>
-                    </div>
-                ) : completedTasks.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-center">
-                        <CheckCircle className="w-12 h-12 text-muted-foreground mb-3" />
-                        <h3 className="text-lg font-medium text-muted-foreground mb-1">
-                            {t('noCompletedTasks')}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                            {t('completedTasksDescription')}
-                        </p>
-                    </div>
-                ) : (
-                    <div className="space-y-1 min-w-0">
-                        {completedTasks.map((task) => (
-                            <TaskItem
-                                key={task.id}
-                                id={task.id}
-                                title={
-                                    task.block?.content?.text ||
-                                    t('untitledTask')
-                                }
-                                completed
-                                scheduleDate={task.schedule_date || undefined}
-                                deadlineDate={task.deadline_date || undefined}
-                                sourceTitle={getPlainText(
-                                    task.block?.page?.content?.title
-                                )}
-                                priority={task.priority}
-                                onToggleComplete={handleTaskToggle}
-                                onItemClick={setSelectedTaskId}
-                                variant="compact"
-                                className="hover:bg-accent/50 break-words"
-                            />
-                        ))}
-                    </div>
-                )}
-            </div>
-
+            {loading ? (
+                <Loading size="lg" text={t('loadingCompletedTasks')} />
+            ) : error ? (
+                <div
+                    role="alert"
+                    className="flex flex-col items-center gap-3 py-12 text-center">
+                    <p className="text-sm text-destructive">
+                        {t('tasksLoadError')}
+                    </p>
+                    <Button size="sm" variant="outline" onClick={onModalOpen}>
+                        {t('retry')}
+                    </Button>
+                </div>
+            ) : completedTasks.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <CheckCircle className="w-12 h-12 text-muted-foreground mb-3" />
+                    <h3 className="text-lg font-medium text-muted-foreground mb-1">
+                        {t('noCompletedTasks')}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                        {t('completedTasksDescription')}
+                    </p>
+                </div>
+            ) : (
+                <div className="space-y-1 min-w-0">
+                    {completedTasks.map((task) => (
+                        <TaskItem
+                            key={task.id}
+                            id={task.id}
+                            title={
+                                task.block?.content?.text || t('untitledTask')
+                            }
+                            completed
+                            scheduleDate={task.schedule_date || undefined}
+                            deadlineDate={task.deadline_date || undefined}
+                            sourceTitle={getPlainText(
+                                task.block?.page?.content?.title
+                            )}
+                            priority={task.priority}
+                            onToggleComplete={handleTaskToggle}
+                            onItemClick={setSelectedTaskId}
+                            variant="compact"
+                            className="hover:bg-accent/50 break-words"
+                        />
+                    ))}
+                </div>
+            )}
             <TaskDetailsModal
                 task={
                     completedTasks.find((task) => task.id === selectedTaskId) ||

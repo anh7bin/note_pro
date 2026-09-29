@@ -97,7 +97,6 @@ export const WorkspaceButton = () => {
             open={isOpen}
             onOpenChange={setIsOpen}
             title={t('workspaceSettings')}
-            description={t('workspaceSettingsDescription')}
             footer={
                 <Button
                     size="sm"
