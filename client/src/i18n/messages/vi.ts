@@ -274,7 +274,6 @@ export const vi: Messages = {
     inWorkspace: 'Trong {{workspace}}',
     byUser: 'Bởi {{user}}',
     userAvatar: 'Ảnh đại diện người dùng',
-
     createTask: 'Tạo công việc',
     inbox: 'Hộp thư đến',
     today: 'Hôm nay',

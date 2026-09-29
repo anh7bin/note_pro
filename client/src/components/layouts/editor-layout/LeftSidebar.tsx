@@ -1,31 +1,33 @@
+import { CardDocumentPreview } from '@/components/features/page/CardDocumentPreview';
+import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
+import { useI18n } from '@/contexts/I18nContext';
 import { GetDocumentBlocksDocument } from '@/graphql/queries/__generated__/document.generated';
 import { useDocumentBlocksData, useTaskCompletion } from '@/hooks';
 import { highlightBlock } from '@/lib/blockHighlight';
 import { formatFileSize } from '@/lib/fileUtils';
+import { getPlainText } from '@/lib/text';
 import { formatDate } from '@/lib/utils';
 import { BlockType } from '@/types/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { getPlainText } from '@/lib/text';
-import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
-import { CardDocumentPreview } from '@/components/features/page/CardDocumentPreview';
 import {
     SectionItem,
     SidebarAttachment,
     SidebarTabs,
     SidebarTask,
 } from './SidebarTabs';
-import { useI18n } from '@/contexts/I18nContext';
 
 interface Props {
     pageId: string;
 }
 
 export const LeftSidebar = ({ pageId }: Props) => {
-    const { processedRootBlock: rootBlock, processedBlocks: blocks } =
-        useDocumentBlocksData(pageId);
+    const { locale, t } = useI18n();
+    const cleanupHighlightRef = useRef<(() => void) | null>(null);
     const [pendingTaskIds, setPendingTaskIds] = useState<Set<string>>(
         () => new Set()
     );
+    const { processedRootBlock: rootBlock, processedBlocks: blocks } =
+        useDocumentBlocksData(pageId);
     const { setTaskCompleted } = useTaskCompletion({
         refetchQueries: [
             {
@@ -33,10 +35,7 @@ export const LeftSidebar = ({ pageId }: Props) => {
                 variables: { pageId },
             },
         ],
-        awaitRefetchQueries: true,
     });
-    const cleanupHighlightRef = useRef<(() => void) | null>(null);
-    const { locale, t } = useI18n();
 
     const sectionItems = useMemo<SectionItem[]>(() => {
         const headingBlocks = (blocks || []).filter((block) => {
@@ -199,7 +198,7 @@ export const LeftSidebar = ({ pageId }: Props) => {
                         sections={sectionItems}
                         tasks={tasks}
                         attachments={attachments}
-                        blocks={blocks || []}
+                        blocks={blocks}
                         pendingTaskIds={pendingTaskIds}
                         onScrollToBlock={handleScrollToBlock}
                         onToggleTask={handleToggleTask}

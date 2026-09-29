@@ -82,12 +82,12 @@ export function TasksLayoutClient({ children }: TasksLayoutClientProps) {
                 {navItems.map(({ id, label, icon: Icon, href, active }) => (
                     <Button
                         key={id}
-                        variant={active ? 'secondary' : 'ghost'}
+                        variant="ghost"
                         size="sm"
                         className={
                             active
-                                ? 'shrink-0 bg-background shadow-sm hover:bg-background'
-                                : 'shrink-0'
+                                ? 'shrink-0 bg-primary-button text-primary-foreground shadow-sm hover:bg-primary-buttonHover hover:text-primary-foreground'
+                                : 'shrink-0 text-muted-foreground hover:bg-background/80 hover:text-foreground'
                         }
                         onClick={() => navigateTo(href)}>
                         <Icon />

@@ -8,7 +8,7 @@ import { Modal } from '@/components/ui/modal';
 import { useI18n } from '@/contexts/I18nContext';
 import { getPlainText } from '@/lib/text';
 import { Task } from '@/types/app';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle2, CircleAlert, ClipboardCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 interface CompletedTasksModalProps {
@@ -53,15 +53,23 @@ export const CompletedTasksModal = ({
             open={isOpen}
             onOpenChange={setIsOpen}
             trigger={children}
+            size="lg"
             title={
-                <span className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-primary" />
-                    {t('completedTasks')}
-                    <span className="text-sm font-normal text-muted-foreground">
-                        ({completedTasks.length})
+                <span className="flex min-w-0 items-center gap-2.5">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
+                        <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    <span className="min-w-0 truncate text-base font-semibold">
+                        {t('completedTasks')}
+                    </span>
+                    <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 px-2 text-xs font-semibold tabular-nums text-primary">
+                        {completedTasks.length}
                     </span>
                 </span>
             }
+            headerClassName="border-border-subtle bg-muted/20 py-4"
+            bodyClassName="max-h-[min(68vh,36rem)] bg-muted/10 p-0"
+            footerClassName="border-t border-border-subtle bg-background"
             footer={
                 <Button
                     variant="outline"
@@ -71,30 +79,43 @@ export const CompletedTasksModal = ({
                 </Button>
             }>
             {loading ? (
-                <Loading size="lg" text={t('loadingCompletedTasks')} />
+                <Loading
+                    size="lg"
+                    text={t('loadingCompletedTasks')}
+                    className="min-h-72 px-6"
+                />
             ) : error ? (
                 <div
                     role="alert"
-                    className="flex flex-col items-center gap-3 py-12 text-center">
-                    <p className="text-sm text-destructive">
+                    className="flex min-h-72 flex-col items-center justify-center px-6 py-12 text-center">
+                    <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-destructive/10 text-destructive ring-1 ring-destructive/15">
+                        <CircleAlert className="h-6 w-6" aria-hidden="true" />
+                    </span>
+                    <h3 className="text-sm font-semibold text-foreground">
                         {t('tasksLoadError')}
-                    </p>
-                    <Button size="sm" variant="outline" onClick={onModalOpen}>
+                    </h3>
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        className="mt-5 min-w-24"
+                        onClick={onModalOpen}>
                         {t('retry')}
                     </Button>
                 </div>
             ) : completedTasks.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <CheckCircle className="w-12 h-12 text-muted-foreground mb-3" />
-                    <h3 className="text-lg font-medium text-muted-foreground mb-1">
+                <div className="flex min-h-72 flex-col items-center justify-center px-6 py-12 text-center">
+                    <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/15">
+                        <ClipboardCheck
+                            className="h-7 w-7"
+                            aria-hidden="true"
+                        />
+                    </span>
+                    <h3 className="text-base font-semibold text-foreground">
                         {t('noCompletedTasks')}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
-                        {t('completedTasksDescription')}
-                    </p>
                 </div>
             ) : (
-                <div className="space-y-1 min-w-0">
+                <div className="min-w-0 space-y-1 p-3 sm:p-4">
                     {completedTasks.map((task) => (
                         <TaskItem
                             key={task.id}
@@ -112,7 +133,7 @@ export const CompletedTasksModal = ({
                             onToggleComplete={handleTaskToggle}
                             onItemClick={setSelectedTaskId}
                             variant="compact"
-                            className="hover:bg-accent/50 break-words"
+                            className="border border-transparent bg-background/70 px-3 py-1.5 hover:border-border-subtle hover:bg-accent/60"
                         />
                     ))}
                 </div>

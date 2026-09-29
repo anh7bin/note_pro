@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useI18n } from '@/contexts/I18nContext';
 import { Block } from '@/hooks';
 import { CheckCircle, Menu, Paperclip, Search } from 'lucide-react';
 import { useState } from 'react';
@@ -27,6 +28,7 @@ export function SidebarTabs({
     onScrollToBlock,
     onToggleTask,
 }: SidebarTabsProps) {
+    const { t } = useI18n();
     const [activeBlockId, setActiveBlockId] = useState<string>();
 
     const handleScrollToBlock = (blockId: string) => {
@@ -40,18 +42,30 @@ export function SidebarTabs({
             className="flex h-full flex-1 flex-col overflow-hidden">
             <TabsList
                 data-tour="editor-sidebar-tabs"
-                className="grid shrink-0 grid-cols-4">
-                <TabsTrigger value="contents">
-                    <Menu className="h-4 w-4" />
+                className="grid h-9 w-full shrink-0 grid-cols-4 gap-0.5 rounded-lg border border-border-subtle bg-muted/40 p-1 shadow-none">
+                <TabsTrigger
+                    value="contents"
+                    title={t('tableOfContents')}
+                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+                    <Menu className="h-3.5 w-3.5" />
                 </TabsTrigger>
-                <TabsTrigger value="tasks">
-                    <CheckCircle className="h-4 w-4" />
+                <TabsTrigger
+                    value="tasks"
+                    title={t('documentTasks')}
+                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+                    <CheckCircle className="h-3.5 w-3.5" />
                 </TabsTrigger>
-                <TabsTrigger value="attachments">
-                    <Paperclip className="h-4 w-4" />
+                <TabsTrigger
+                    value="attachments"
+                    title={t('attachments')}
+                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+                    <Paperclip className="h-3.5 w-3.5" />
                 </TabsTrigger>
-                <TabsTrigger value="find">
-                    <Search className="h-4 w-4" />
+                <TabsTrigger
+                    value="find"
+                    title={t('searchInDocument')}
+                    className="h-7 min-h-7 w-full rounded-md p-0 text-muted-foreground shadow-none hover:bg-surface/70 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+                    <Search className="h-3.5 w-3.5" />
                 </TabsTrigger>
             </TabsList>
             <div className="mt-1 min-h-0 flex-1 overflow-y-auto pb-4">
