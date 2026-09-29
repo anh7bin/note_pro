@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
+import { useI18n } from '@/contexts/I18nContext';
+import { useState } from 'react';
 
 interface ConfirmDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    title: string;
-    description: string;
+    title: React.ReactNode;
+    description: React.ReactNode;
     confirmText?: string;
     cancelText?: string;
     onConfirm: () => void | Promise<void>;
@@ -21,20 +22,33 @@ export const ConfirmDialog = ({
     onOpenChange,
     title,
     description,
-    confirmText = 'Confirm',
-    cancelText = 'Cancel',
+    confirmText,
+    cancelText,
     onConfirm,
     variant = 'default',
     loading = false,
 }: ConfirmDialogProps) => {
+    const { t } = useI18n();
     const [isPending, setIsPending] = useState(false);
     const isBusy = loading || isPending;
 
+    const handleOpenChange = (next: boolean) => {
+        if (isBusy && !next) {
+            return;
+        }
+        onOpenChange(next);
+    };
+
     const handleConfirm = async () => {
+        if (isBusy) {
+            return;
+        }
         setIsPending(true);
         try {
             await onConfirm();
             onOpenChange(false);
+        } catch (error) {
+            console.error('ConfirmDialog: onConfirm failed', error);
         } finally {
             setIsPending(false);
         }
@@ -43,19 +57,20 @@ export const ConfirmDialog = ({
     return (
         <Modal
             open={open}
-            onOpenChange={onOpenChange}
+            onOpenChange={handleOpenChange}
             title={title}
             description={description}
+            size="sm"
+            bordered={false}
             descriptionClassName="leading-relaxed"
-            contentProps={{ className: 'sm:max-w-sm' }}
             footer={
                 <>
                     <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => onOpenChange(false)}
+                        onClick={() => handleOpenChange(false)}
                         disabled={isBusy}>
-                        {cancelText}
+                        {cancelText ?? t('cancel')}
                     </Button>
                     <Button
                         size="sm"
