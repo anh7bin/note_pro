@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
-import type { Editor } from '@tiptap/react';
-import { SlashCommand } from '../SlashCommand';
-import { TableSizePicker } from '../TableSizePicker';
-import { SeparatorStylePicker } from '../SeparatorStylePicker';
 import { EmojiPickerPopover } from '@/components/shared/EmojiPickerPopover';
+import { useI18n } from '@/contexts/I18nContext';
+import type { Editor } from '@tiptap/react';
+import { useEffect, useMemo } from 'react';
+import { SeparatorStylePicker } from '../SeparatorStylePicker';
 import {
     createSlashCommands,
     filterSlashCommands,
@@ -13,9 +12,10 @@ import {
 } from '../slash/constants';
 import { getPopoverPosition, shouldShowSlash } from '../slash/helpers';
 import type { SlashCommandOptions } from '../slash/types';
-import { useMenuState, useSlashKeyHandler } from './useMenuState';
+import { SlashCommand } from '../SlashCommand';
+import { TableSizePicker } from '../TableSizePicker';
 import { useCommandHandlers } from './useCommandHandlers';
-import { useI18n } from '@/contexts/I18nContext';
+import { useMenuState, useSlashKeyHandler } from './useMenuState';
 
 export function useSlashCommand(
     editor: Editor | null,
@@ -30,8 +30,8 @@ export function useSlashCommand(
         isTitle = false,
     }: SlashCommandOptions = {}
 ) {
-    const { state, updateState } = useMenuState();
     const { t } = useI18n();
+    const { state, updateState } = useMenuState();
 
     const allCommands = useMemo(
         () => createSlashCommands(isTitle, t),
@@ -75,16 +75,22 @@ export function useSlashCommand(
     });
 
     useEffect(() => {
-        if (!state.showSlash) return;
+        if (!state.showSlash) {
+            return;
+        }
         updateState({ selectedIndex: 0 });
     }, [state.slashQuery, state.showSlash, updateState]);
 
     useEffect(() => {
-        if (!editor || !state.showSlash || state.slashFrom === null) return;
+        if (!editor || !state.showSlash || state.slashFrom === null) {
+            return;
+        }
         const slashFrom = state.slashFrom;
 
         const syncSlashQuery = () => {
-            if (editor.isDestroyed) return;
+            if (editor.isDestroyed) {
+                return;
+            }
 
             const { doc, selection } = editor.state;
             if (!selection.empty || selection.from <= slashFrom) {
@@ -134,10 +140,14 @@ export function useSlashCommand(
     ]);
 
     useEffect(() => {
-        if (!editor || allCommands.length === 0) return;
+        if (!editor || allCommands.length === 0) {
+            return;
+        }
 
         const handleEditorClick = () => {
-            if (editor.isDestroyed) return;
+            if (editor.isDestroyed) {
+                return;
+            }
 
             const { selection } = editor.state;
             if (!selection.empty) {

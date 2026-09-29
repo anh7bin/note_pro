@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { cn } from '@/lib/utils';
 import { useI18n } from '@/contexts/I18nContext';
+import { cn } from '@/lib/utils';
+import { useEffect, useRef, useState } from 'react';
 import { MAX_TABLE_COLS, MAX_TABLE_ROWS } from './slash/constants';
 
 interface TableSizePickerProps {
@@ -18,16 +18,18 @@ export const TableSizePicker = ({
     close,
     position,
 }: TableSizePickerProps) => {
+    const { t } = useI18n();
     const ref = useRef<HTMLDivElement>(null);
     const cellRefs = useRef<Array<HTMLButtonElement | null>>([]);
     const [activeCell, setActiveCell] = useState<{
         row: number;
         col: number;
     }>({ row: 0, col: 0 });
-    const { t } = useI18n();
 
     useEffect(() => {
-        if (!show) return;
+        if (!show) {
+            return;
+        }
 
         setActiveCell({ row: 0, col: 0 });
         const focusFrame = requestAnimationFrame(() =>
@@ -50,7 +52,9 @@ export const TableSizePicker = ({
     }, [show, close]);
 
     useEffect(() => {
-        if (!show) return;
+        if (!show) {
+            return;
+        }
         const onKey = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
                 e.preventDefault();
@@ -61,7 +65,9 @@ export const TableSizePicker = ({
         return () => document.removeEventListener('keydown', onKey);
     }, [show, close]);
 
-    if (!show) return null;
+    if (!show) {
+        return null;
+    }
 
     const rows = activeCell.row + 1;
     const cols = activeCell.col + 1;

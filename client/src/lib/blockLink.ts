@@ -15,7 +15,9 @@ export const createBlockLink = (
 
 export const getBlockIdFromHash = (hash: string): string | null => {
     const normalizedHash = hash.startsWith('#') ? hash.slice(1) : hash;
-    if (!normalizedHash.startsWith(BLOCK_HASH_PREFIX)) return null;
+    if (!normalizedHash.startsWith(BLOCK_HASH_PREFIX)) {
+        return null;
+    }
 
     try {
         const blockId = decodeURIComponent(

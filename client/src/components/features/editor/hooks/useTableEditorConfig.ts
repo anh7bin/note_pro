@@ -68,7 +68,9 @@ export function useTableEditorConfig({
     const onUpdate = useMemo(
         () =>
             ({ editor }: { editor: { getHTML: () => string } }) => {
-                if (isComposingRef.current) return;
+                if (isComposingRef.current) {
+                    return;
+                }
 
                 const html = editor.getHTML();
                 if (html !== prevValueRef.current) {

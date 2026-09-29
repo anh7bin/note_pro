@@ -1,5 +1,6 @@
 'use client';
 
+import { useI18n } from '@/contexts/I18nContext';
 import { useCreateAccessRequestMutation } from '@/graphql/mutations/__generated__/access-request.generated';
 import { useGetAccessRequestByDocumentQuery } from '@/graphql/queries/__generated__/access-request.generated';
 import { useLogout } from '@/hooks';
@@ -8,18 +9,17 @@ import { showToast } from '@/lib/toast';
 import { AccessRequestStatus, PermissionType } from '@/types/types';
 import { useSession } from 'next-auth/react';
 import { useCallback, useState } from 'react';
-import { useI18n } from '@/contexts/I18nContext';
 
 export function useRequestAccess(documentId: string) {
-    const { logout, isLoggingOut } = useLogout();
-    const { data: session } = useSession();
-    const userId = useUserId();
-    const [isRequesting, setIsRequesting] = useState(false);
     const { t } = useI18n();
+    const userId = useUserId();
+    const { data: session } = useSession();
+    const { logout, isLoggingOut } = useLogout();
+    const [isRequesting, setIsRequesting] = useState(false);
 
     const { data, loading, refetch } = useGetAccessRequestByDocumentQuery({
         variables: {
-            documentId: documentId || '',
+            documentId,
             requesterId: userId,
         },
         skip: !documentId || !userId,
@@ -27,7 +27,9 @@ export function useRequestAccess(documentId: string) {
     const [createAccessRequest] = useCreateAccessRequestMutation();
 
     const requestReadAccess = useCallback(async () => {
-        if (!userId || isRequesting) return;
+        if (!userId || isRequesting) {
+            return;
+        }
 
         try {
             setIsRequesting(true);

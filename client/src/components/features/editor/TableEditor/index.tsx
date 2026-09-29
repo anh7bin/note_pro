@@ -98,11 +98,7 @@ export const TableEditor = memo(function TableEditor({
         }
     }, [editor]);
 
-    if (!editor) {
-        return null;
-    }
-
-    return (
+    return !editor ? null : (
         <div className="group relative my-1" data-block-id={blockId}>
             <div className="relative">
                 {editable && dragHandle && (

@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import { SchedulerAppointment } from '@/types/app';
 import { useI18n } from '@/contexts/I18nContext';
+import { SchedulerAppointment } from '@/types/app';
 import viLocale from '@fullcalendar/core/locales/vi';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import FullCalendar from '@fullcalendar/react';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { useMemo } from 'react';
 
 interface Props {
     appointments: SchedulerAppointment[];

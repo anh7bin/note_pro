@@ -1,5 +1,7 @@
 export function formatFileSize(bytes?: number | null) {
-    if (!bytes || bytes <= 0) return null;
+    if (!bytes || bytes <= 0) {
+        return null;
+    }
     const units = ['B', 'KB', 'MB', 'GB'];
     const i = Math.min(
         Math.floor(Math.log(bytes) / Math.log(1024)),
@@ -68,7 +70,9 @@ export function canPreviewInBrowser(
     fileType?: string | null,
     fileExtension?: string | null
 ): boolean {
-    if (!fileType && !fileExtension) return false;
+    if (!fileType && !fileExtension) {
+        return false;
+    }
 
     const normalizedType = fileType?.toLowerCase() || '';
     const normalizedExt = fileExtension?.toLowerCase() || '';

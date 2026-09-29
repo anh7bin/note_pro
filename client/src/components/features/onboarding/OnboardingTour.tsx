@@ -17,14 +17,14 @@ import { waitForTarget } from './tour-dom';
 import { createEditorTourSteps, createWorkspaceTourSteps } from './tour-steps';
 
 export function OnboardingTour({ children }: { children: React.ReactNode }) {
+    const { t } = useI18n();
+    const router = useRouter();
+    const pathname = usePathname();
+    const { resolvedTheme } = useTheme();
     const { id: userId } = useCurrentUser();
     const { workspaceSlug } = useWorkspace();
     const { isOpen, setOpen } = useSidebar();
     const sidebarOpenRef = useRef(isOpen);
-    const { t } = useI18n();
-    const { resolvedTheme } = useTheme();
-    const pathname = usePathname();
-    const router = useRouter();
     const [workspaceSeen, markWorkspaceSeen] = useDeviceOnboardingSeen(
         ONBOARDING_WORKSPACE_STORAGE_KEY,
         userId
@@ -117,7 +117,9 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
     ]);
 
     useEffect(() => {
-        if (!activeTour || run || isOpen === undefined) return;
+        if (!activeTour || run || isOpen === undefined) {
+            return;
+        }
         if (
             (activeTour === 'workspace' && !isOpen) ||
             (activeTour === 'editor' && mobile && isOpen)
@@ -155,7 +157,9 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
 
     const setSidebarOpen = useCallback(
         async (open: boolean) => {
-            if (sidebarOpenRef.current === open) return;
+            if (sidebarOpenRef.current === open) {
+                return;
+            }
             sidebarOpenRef.current = open;
             setOpen(open);
             await new Promise<void>((resolve) =>

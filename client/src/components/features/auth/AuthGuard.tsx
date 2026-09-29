@@ -1,19 +1,20 @@
 'use client';
 
+import { PageLoading } from '@/components/ui/loading';
+import { AUTHENTICATED } from '@/lib/constants';
+import { ROUTES } from '@/lib/routes';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { ROUTES } from '@/lib/routes';
-import { AUTHENTICATED } from '@/lib/constants';
-import { PageLoading } from '@/components/ui/loading';
 
 interface AuthGuardProps {
     children: React.ReactNode;
 }
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-    const { data: session, status } = useSession();
     const router = useRouter();
+    const { data: session, status } = useSession();
+
     const hasValidSession =
         status === AUTHENTICATED && !!session?.token && !session.error;
 

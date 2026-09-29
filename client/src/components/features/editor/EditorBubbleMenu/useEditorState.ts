@@ -14,7 +14,9 @@ const TRACKED_MARKS = [
 
 function getToolbarSnapshot(editor: Editor): string {
     const { from, to, empty } = editor.state.selection;
-    if (empty) return 'hidden';
+    if (empty) {
+        return 'hidden';
+    }
 
     const activeMarks = TRACKED_MARKS.map((mark) =>
         editor.isActive(mark) ? '1' : '0'
@@ -31,12 +33,16 @@ export function useEditorState(editor: Editor | null) {
     );
 
     useEffect(() => {
-        if (!editor) return;
+        if (!editor) {
+            return;
+        }
 
         let previousSnapshot = getToolbarSnapshot(editor);
         const handleTransaction = () => {
             const nextSnapshot = getToolbarSnapshot(editor);
-            if (nextSnapshot === previousSnapshot) return;
+            if (nextSnapshot === previousSnapshot) {
+                return;
+            }
 
             previousSnapshot = nextSnapshot;
             setToolbarSnapshot(nextSnapshot);
@@ -51,20 +57,26 @@ export function useEditorState(editor: Editor | null) {
 
     const isMarkActive = useCallback(
         (type: string) => {
-            if (!editor) return false;
+            if (!editor) {
+                return false;
+            }
             return editor.isActive(type);
         },
         [editor]
     );
 
     const getCurrentHighlightColor = useCallback(() => {
-        if (!editor) return null;
+        if (!editor) {
+            return null;
+        }
         const attributes = editor.getAttributes('highlight');
         return attributes.color || null;
     }, [editor]);
 
     const getCurrentTextColor = useCallback(() => {
-        if (!editor) return null;
+        if (!editor) {
+            return null;
+        }
         const attributes = editor.getAttributes('textStyle');
         return attributes.color || null;
     }, [editor]);

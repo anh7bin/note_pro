@@ -72,7 +72,9 @@ function useEditorContentSync(
     latestValueRef.current = value;
 
     useEffect(() => {
-        if (!editor) return;
+        if (!editor) {
+            return;
+        }
 
         const applyExternalValue = (allowWhileBlurring = false) => {
             const latestValue = latestValueRef.current;
@@ -102,7 +104,9 @@ function useEditorFocus(
     focusPosition: EditorFocusPosition | 'all'
 ) {
     useLayoutEffect(() => {
-        if (!editor || !isFocused || editor.isFocused) return;
+        if (!editor || !isFocused || editor.isFocused) {
+            return;
+        }
 
         if (!editor.isDestroyed) {
             editor.commands.focus(focusPosition, { scrollIntoView: false });

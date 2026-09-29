@@ -27,7 +27,9 @@ export const handleTableInsert = async ({
     onConvertToTable,
     position,
 }: TableInsertOptions): Promise<void> => {
-    if (!editor) return;
+    if (!editor) {
+        return;
+    }
 
     const currentText = (editor?.getText() || '').trim();
     const normalizedRows = Math.max(

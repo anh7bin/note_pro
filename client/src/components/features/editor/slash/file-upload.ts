@@ -87,7 +87,9 @@ export const handleFileUpload = async ({
                 resourceType: 'auto',
                 signal,
                 onProgress: (progress) => {
-                    if (progress === lastProgress) return;
+                    if (progress === lastProgress) {
+                        return;
+                    }
                     lastProgress = progress;
                     onUploadStateChange?.({
                         ...pendingFile,

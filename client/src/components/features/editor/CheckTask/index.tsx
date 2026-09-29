@@ -1,10 +1,10 @@
 'use client';
 
-import { memo, useCallback } from 'react';
+import { useTaskCompletion } from '@/hooks/useTaskCompletion';
 import { cn } from '@/lib/utils';
 import { Task } from '@/types/app';
 import { Check } from 'lucide-react';
-import { useTaskCompletion } from '@/hooks/useTaskCompletion';
+import { memo, useCallback } from 'react';
 
 interface CheckTaskProps {
     task: Task;
@@ -53,7 +53,9 @@ export const CheckTask = memo(function CheckTask({
     const { setTaskCompleted } = useTaskCompletion();
 
     const handleToggleComplete = useCallback(async () => {
-        if (!task || isUpdating || !editable) return;
+        if (!task || isUpdating || !editable) {
+            return;
+        }
 
         try {
             setIsUpdating(true);
@@ -72,9 +74,7 @@ export const CheckTask = memo(function CheckTask({
         setIsUpdating,
     ]);
 
-    if (!isTask) return null;
-
-    return (
+    return !isTask ? null : (
         <div className="flex items-center pt-0.5">
             <CheckboxButton
                 isCompleted={isCompleted}

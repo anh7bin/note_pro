@@ -1,9 +1,9 @@
 'use client';
 
-import { memo, useEffect, useRef, useCallback } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
+import { memo, useCallback, useEffect, useRef } from 'react';
 import { SlashCommandItem } from './SlashCommandItem';
 import type { Command } from './types';
-import { useI18n } from '@/contexts/I18nContext';
 
 interface SlashCommandProps {
     show: boolean;
@@ -26,8 +26,8 @@ export const SlashCommand = memo(function SlashCommand({
     onActiveIndexChange,
     editorElement,
 }: SlashCommandProps) {
-    const ref = useRef<HTMLDivElement>(null);
     const { t } = useI18n();
+    const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!show) return;
@@ -55,14 +55,18 @@ export const SlashCommand = memo(function SlashCommand({
     );
 
     useEffect(() => {
-        if (!show) return;
+        if (!show) {
+            return;
+        }
 
         ref.current
             ?.querySelector<HTMLElement>('[data-active="true"]')
             ?.scrollIntoView({ block: 'nearest' });
     }, [selectedIndex, show]);
 
-    if (!show) return null;
+    if (!show) {
+        return;
+    }
 
     const groups = [
         {

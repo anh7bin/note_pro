@@ -1,21 +1,21 @@
 'use client';
 
-import { useCallback } from 'react';
-import { TiptapWrapper } from './TiptapWrapper';
-import { PageLoading } from '@/components/ui/loading';
-import { DocumentTitleInput } from '@/components/features/page/DocumentTitleInput';
 import { BlockList } from '@/components/features/page/BlockList';
-import { Separator } from '@/components/ui/separator';
 import { DocumentCover } from '@/components/features/page/DocumentCover';
 import { DocumentCoverPicker } from '@/components/features/page/DocumentCoverPicker';
 import { DocumentIcon } from '@/components/features/page/DocumentIcon';
-import { useDocumentCover } from '@/hooks/useDocumentCover';
-import { EditorProvider, useEditor } from '@/contexts/EditorContext';
+import { DocumentTitleInput } from '@/components/features/page/DocumentTitleInput';
+import { PageLoading } from '@/components/ui/loading';
+import { Separator } from '@/components/ui/separator';
 import { BlockInteractionsProvider } from '@/contexts/BlockInteractionsContext';
-import { BlockInteractions } from './BlockInteractions';
-import { cn } from '@/lib/utils';
+import { EditorProvider, useEditor } from '@/contexts/EditorContext';
 import { useI18n } from '@/contexts/I18nContext';
 import type { DraftDocumentConfig } from '@/contexts/editor/types';
+import { useDocumentCover } from '@/hooks/useDocumentCover';
+import { cn } from '@/lib/utils';
+import { useCallback } from 'react';
+import { BlockInteractions } from './BlockInteractions';
+import { TiptapWrapper } from './TiptapWrapper';
 
 interface Props {
     pageId: string;
@@ -27,6 +27,7 @@ function EditorContent({
 }: {
     autoFocusTitle?: boolean;
 }) {
+    const { t } = useI18n();
     const {
         loading,
         persisted,
@@ -49,11 +50,12 @@ function EditorContent({
         onUpdateCover: handleUpdateDocumentCover,
     });
     const documentIcon = rootBlock?.content.icon;
-    const { t } = useI18n();
 
     const handleTitleKeyDown = useCallback(
         (event: KeyboardEvent) => {
-            if (event.key !== 'Enter') return false;
+            if (event.key !== 'Enter') {
+                return false;
+            }
 
             event.preventDefault();
             handleTitleEnter();
@@ -62,11 +64,9 @@ function EditorContent({
         [handleTitleEnter]
     );
 
-    if (loading || !rootBlock) {
-        return <PageLoading />;
-    }
-
-    return (
+    return loading || !rootBlock ? (
+        <PageLoading />
+    ) : (
         <div className="relative h-full">
             <div className="mx-auto h-full w-full max-w-full">
                 <div className="mx-auto h-full max-w-full overflow-hidden bg-card">

@@ -1,11 +1,11 @@
-import type { ReactNode } from 'react';
 import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
-import { FileTypeIcon } from '@/components/ui/file-type-icon';
 import { Button } from '@/components/ui/button';
+import { FileTypeIcon } from '@/components/ui/file-type-icon';
 import { Spinner } from '@/components/ui/spinner';
 import { formatFileSize, getFileExtension } from '@/lib/fileUtils';
 import { cn } from '@/lib/utils';
 import { RotateCcw, X } from 'lucide-react';
+import type { ReactNode } from 'react';
 import type { FileUploadState } from '../../editor/slash/types';
 
 interface FileUploadPreviewProps extends FileUploadState {

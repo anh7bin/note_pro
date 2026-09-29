@@ -21,10 +21,10 @@ export function DocumentAccessGuard({
     children,
     draft = false,
 }: DocumentAccessGuardProps) {
-    const { isAuthenticated } = useAuth();
-    const userId = useUserId();
-    const { setHasAccess, setDocumentId } = useDocumentAccess();
     const { t } = useI18n();
+    const userId = useUserId();
+    const { isAuthenticated } = useAuth();
+    const { setHasAccess, setDocumentId } = useDocumentAccess();
 
     const { data, loading, error } = useGetDocumentBlocksQuery({
         variables: { pageId: documentId },
@@ -51,7 +51,7 @@ export function DocumentAccessGuard({
     const { data: accessRequestData, loading: accessRequestLoading } =
         useGetAccessRequestByDocumentQuery({
             variables: {
-                documentId: documentId || '',
+                documentId,
                 requesterId: userId,
             },
             skip: draft || !documentId || !userId || !shouldFetchAccessRequests,

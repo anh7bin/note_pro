@@ -67,7 +67,9 @@ export function useCommandHandlers({
     });
 
     const getPopoverPositionFromEditor = useCallback(() => {
-        if (!editor) return { top: 0, left: 0 };
+        if (!editor) {
+            return { top: 0, left: 0 };
+        }
         const { state } = editor.view;
         const coords = editor.view.coordsAtPos(state.selection.from);
         return getPopoverPosition(coords);
@@ -145,7 +147,9 @@ export function useCommandHandlers({
 
     const onCommandSelect = useCallback(
         (cmd: string) => {
-            if (!editor) return;
+            if (!editor) {
+                return;
+            }
 
             const selectionTo = editor.state.selection.from;
             const commandFrom = slashFrom ?? selectionTo - 1;
@@ -177,7 +181,9 @@ export function useCommandHandlers({
 
     const onTableSelect = useCallback(
         async (rows: number, cols: number) => {
-            if (!editor) return;
+            if (!editor) {
+                return;
+            }
 
             await handleTableInsert({
                 rows,
@@ -197,7 +203,9 @@ export function useCommandHandlers({
     const onSeparatorSelect = useCallback(
         async (style: SeparatorStyle) => {
             const currentOnAddBlock = onAddBlockRef.current;
-            if (!currentOnAddBlock) return;
+            if (!currentOnAddBlock) {
+                return;
+            }
 
             currentOnAddBlock(
                 positionRef.current,

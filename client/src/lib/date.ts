@@ -6,7 +6,9 @@ export function formatDate(
     date: string | Date = 'Unknown',
     options: { relative?: boolean; locale?: Locale } = {}
 ) {
-    if (!date || date === 'Unknown') return 'Unknown';
+    if (!date || date === 'Unknown') {
+        return 'Unknown';
+    }
 
     const parsed = typeof date === 'string' ? new Date(date) : date;
 

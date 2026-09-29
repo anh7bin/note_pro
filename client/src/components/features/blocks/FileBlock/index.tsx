@@ -1,19 +1,19 @@
 'use client';
 
-import { memo, useCallback, useMemo, useState } from 'react';
-import Image from 'next/image';
-import { IMAGE_EXTENSIONS } from '@/lib/constants';
-import { cn } from '@/lib/utils';
-import {
-    formatFileSize,
-    getFileBadge,
-    getFileExtension,
-    canPreviewInBrowser,
-} from '@/lib/fileUtils';
 import { BlockActionMenu } from '@/components/features/page/BlockActionMenu';
 import { ImageModal } from '@/components/features/page/ImageModal';
 import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
 import { FileTypeIcon } from '@/components/ui/file-type-icon';
+import { IMAGE_EXTENSIONS } from '@/lib/constants';
+import {
+    canPreviewInBrowser,
+    formatFileSize,
+    getFileBadge,
+    getFileExtension,
+} from '@/lib/fileUtils';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import { memo, useCallback, useMemo, useState } from 'react';
 import type { FileBlockProps } from '../types';
 
 export const FileBlock = memo(
@@ -46,8 +46,12 @@ export const FileBlock = memo(
         const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
         const isImageFile = useMemo(() => {
-            if (!fileUrl) return false;
-            if (fileType?.toLowerCase().startsWith('image/')) return true;
+            if (!fileUrl) {
+                return false;
+            }
+            if (fileType?.toLowerCase().startsWith('image/')) {
+                return true;
+            }
             const extension = fileUrl
                 .split('?')[0]
                 ?.split('.')
@@ -62,7 +66,9 @@ export const FileBlock = memo(
         );
 
         const handleDoubleClick = useCallback(() => {
-            if (!fileUrl) return;
+            if (!fileUrl) {
+                return;
+            }
 
             if (isImageFile) {
                 setIsImageModalOpen(true);

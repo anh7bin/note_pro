@@ -84,7 +84,9 @@ export const EditorBubbleMenu = memo(function EditorBubbleMenu({
     }, [editor]);
 
     const dismissBubbleMenu = useCallback(() => {
-        if (editor.isDestroyed) return;
+        if (editor.isDestroyed) {
+            return;
+        }
 
         editor.view.dispatch(
             editor.state.tr.setMeta(BUBBLE_MENU_PLUGIN_KEY, 'hide')
@@ -103,7 +105,9 @@ export const EditorBubbleMenu = memo(function EditorBubbleMenu({
     }, []);
 
     useEffect(() => {
-        if (!isVisible) return;
+        if (!isVisible) {
+            return;
+        }
 
         const handlePointerDown = (event: PointerEvent) => {
             const target = event.target;
@@ -136,9 +140,7 @@ export const EditorBubbleMenu = memo(function EditorBubbleMenu({
         };
     }, [dismissBubbleMenu, isVisible]);
 
-    if (!editor) return null;
-
-    return (
+    return !editor ? null : (
         <BubbleMenu
             ref={bubbleMenuRef}
             pluginKey={BUBBLE_MENU_PLUGIN_KEY}

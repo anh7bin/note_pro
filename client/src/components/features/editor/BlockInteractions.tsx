@@ -55,6 +55,7 @@ export const BlockInteractions = memo(function BlockInteractions({
     blockId,
     variant = 'block',
 }: BlockInteractionsProps) {
+    const { locale, t } = useI18n();
     const {
         commentsByBlock,
         reactionsByBlock,
@@ -81,7 +82,6 @@ export const BlockInteractions = memo(function BlockInteractions({
         content: string;
     } | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const { locale, t } = useI18n();
 
     useLayoutEffect(() => {
         const pendingComment = pendingOwnCommentRef.current;
@@ -135,7 +135,9 @@ export const BlockInteractions = memo(function BlockInteractions({
     const handleSubmitComment = async (event?: FormEvent) => {
         event?.preventDefault();
         const submittedComment = commentText.trim();
-        if (!submittedComment || isSubmitting) return;
+        if (!submittedComment || isSubmitting) {
+            return;
+        }
 
         const pendingComment = {
             existingIds: new Set(comments.map((comment) => comment.id)),

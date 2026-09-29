@@ -1,11 +1,11 @@
 'use client';
 
-import { Clock3, LockKeyhole, LogOut, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { AccessRequestStatus } from '@/types/types';
 import { Loading } from '@/components/ui/loading';
-import { useRequestAccess } from './hooks/useRequestAccess';
 import { useI18n } from '@/contexts/I18nContext';
+import { AccessRequestStatus } from '@/types/types';
+import { Clock3, LockKeyhole, LogOut, XCircle } from 'lucide-react';
+import { useRequestAccess } from './hooks/useRequestAccess';
 
 interface RequestAccessViewProps {
     documentId: string;
