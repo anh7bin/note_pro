@@ -162,12 +162,29 @@ function EditorContent({
     );
 }
 
+function PersistedDocumentInteractions({
+    pageId,
+    autoFocusTitle,
+}: {
+    pageId: string;
+    autoFocusTitle: boolean;
+}) {
+    const { persisted } = useEditor();
+
+    return (
+        <BlockInteractionsProvider pageId={pageId} enabled={persisted}>
+            <EditorContent autoFocusTitle={autoFocusTitle} />
+        </BlockInteractionsProvider>
+    );
+}
+
 export default function TiptapBlockEditor({ pageId, draft }: Props) {
     return (
         <EditorProvider pageId={pageId} draft={draft}>
-            <BlockInteractionsProvider pageId={pageId} enabled={!draft}>
-                <EditorContent autoFocusTitle={Boolean(draft)} />
-            </BlockInteractionsProvider>
+            <PersistedDocumentInteractions
+                pageId={pageId}
+                autoFocusTitle={Boolean(draft)}
+            />
         </EditorProvider>
     );
 }
