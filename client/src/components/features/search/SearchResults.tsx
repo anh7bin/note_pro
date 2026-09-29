@@ -1,7 +1,6 @@
 'use client';
 
 import type { SearchResult } from 'hooks/useSearch';
-import { useWorkspace } from 'hooks/useWorkspace';
 import { SearchEmptyState } from './SearchEmptyState';
 import { SearchSection } from './SearchSection';
 import { SearchSkeleton } from './SearchSkeleton';
@@ -10,12 +9,15 @@ import { DEFAULT_WORKSPACE_IMAGE } from '@/lib/constants';
 
 interface Props {
     results: SearchResult;
+    workspace?: {
+        id: string;
+        image_url?: string | null;
+    };
     onResultClick: () => void;
 }
 
-export function SearchResults({ results, onResultClick }: Props) {
+export function SearchResults({ results, workspace, onResultClick }: Props) {
     const { folders, documents, sharedDocuments, isLoading } = results;
-    const { workspace } = useWorkspace();
     const { t } = useI18n();
     const workspaceImageUrl = workspace?.image_url || DEFAULT_WORKSPACE_IMAGE;
 

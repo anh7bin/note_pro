@@ -10,7 +10,6 @@ import { SEARCH_ITEM_ROW_CLASS_NAME } from './search.constants';
 
 interface SearchItemProps {
     type: SearchItemType;
-    id: string;
     title: string;
     subtitle?: string;
     href: string;
@@ -32,12 +31,13 @@ export function SearchItem({
     avatarAlt = '',
     icon,
 }: SearchItemProps) {
-    const resultIcon = icon ? (
-        icon
+    const hasCustomIcon = Boolean(icon?.trim());
+    const resultIcon = hasCustomIcon ? (
+        <span className="text-lg leading-none">{icon}</span>
     ) : type === 'folder' ? (
-        <NewFolderIcon size={20} />
+        <NewFolderIcon size={28} />
     ) : (
-        <NewDocumentIcon size={20} />
+        <NewDocumentIcon size={28} />
     );
 
     return (
@@ -46,8 +46,8 @@ export function SearchItem({
             data-search-result
             className={cn(SEARCH_ITEM_ROW_CLASS_NAME, className)}
             onClick={onClick}>
-            <div className="relative shrink-0">
-                {resultIcon}
+            <div className="relative flex size-7 shrink-0 items-center justify-center">
+                <span aria-hidden="true">{resultIcon}</span>
                 {avatarUrl && (
                     <Image
                         src={avatarUrl}

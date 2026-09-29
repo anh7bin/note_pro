@@ -26,7 +26,7 @@ export function SearchInputField({
     embedded = false,
     onResultClick,
 }: Props) {
-    const { searchTerm, setSearchTerm, results } = useSearch();
+    const { searchTerm, setSearchTerm, results, workspace } = useSearch();
     const { t } = useI18n();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLDivElement>(null);
@@ -139,6 +139,7 @@ export function SearchInputField({
             {searchTerm.trim() ? (
                 <SearchResults
                     results={results}
+                    workspace={workspace}
                     onResultClick={handleResultClick}
                 />
             ) : recentSearches.length ? (

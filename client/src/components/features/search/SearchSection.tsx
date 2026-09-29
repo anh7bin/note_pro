@@ -51,11 +51,8 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
                             <SearchItem
                                 key={folder.id}
                                 type={type}
-                                id={folder.id}
                                 title={folder.name}
-                                subtitle={t('inWorkspace', {
-                                    workspace: folder.workspace?.name ?? '',
-                                })}
+                                subtitle={renderSubtitle(item)}
                                 href={`/s/${wsId}/f/${folder.id}`}
                                 icon={folder.icon || undefined}
                                 avatarUrl={workspaceImageUrl}
@@ -71,7 +68,6 @@ export const SearchSection = <T extends SearchItemUnion = SearchItemUnion>({
                         <SearchItem
                             key={doc.id}
                             type={type}
-                            id={doc.id}
                             title={getPlainText(doc.content.title)}
                             subtitle={renderSubtitle(item)}
                             href={`/editor/d/${wsId}/${doc.id}`}

@@ -1,6 +1,8 @@
-import { useSearchAllLazyQuery } from '@/graphql/queries/__generated__/search.generated';
-import type { SearchAllQuery } from '@/graphql/queries/__generated__/search.generated';
-import { useCallback, useEffect, useState } from 'react';
+import {
+    useSearchAllLazyQuery,
+    type SearchAllQuery,
+} from '@/graphql/queries/__generated__/search.generated';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDebounce } from './useDebounce';
 import { useWorkspace } from './useWorkspace';
 import { useAuth } from './useAuth';
@@ -12,73 +14,91 @@ export interface SearchResult {
     isLoading: boolean;
 }
 
+type SearchData = Omit<SearchResult, 'isLoading'>;
+
+const EMPTY_SEARCH_DATA: SearchData = {
+    folders: [],
+    documents: [],
+    sharedDocuments: [],
+};
+
 export function useSearch() {
     const { userId } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const { workspace } = useWorkspace();
-    const [searchAll, { data: allData, loading: allLoading }] =
-        useSearchAllLazyQuery();
+    const [searchAll] = useSearchAllLazyQuery({
+        fetchPolicy: 'network-only',
+    });
     const { debounced, cancel } = useDebounce(250);
     const [isWaiting, setIsWaiting] = useState(false);
+    const [searchData, setSearchData] = useState<SearchData>(EMPTY_SEARCH_DATA);
+    const requestIdRef = useRef(0);
 
     const executeSearch = useCallback(
-        async (term: string) => {
-            const normalizedTerm = term.trim();
-            if (!workspace?.id || !normalizedTerm || !userId) {
-                return;
-            }
+        async (term: string, requestId: number) => {
+            if (!workspace?.id || !userId) return;
 
-            const searchPattern = `%${normalizedTerm}%`;
-
-            await searchAll({
+            const response = await searchAll({
                 variables: {
                     workspaceId: workspace.id,
-                    searchTerm: searchPattern,
+                    searchTerm: `%${term}%`,
                     userId,
                 },
-                fetchPolicy: 'network-only',
+            });
+
+            if (requestId !== requestIdRef.current) return;
+            if (response.error) throw response.error;
+
+            setSearchData({
+                folders: response.data?.folders ?? [],
+                documents: response.data?.documents ?? [],
+                sharedDocuments: response.data?.sharedDocuments ?? [],
             });
         },
-        [workspace?.id, searchAll, userId]
+        [searchAll, workspace?.id, userId]
     );
 
     useEffect(() => {
         const normalizedTerm = searchTerm.trim();
+        const requestId = ++requestIdRef.current;
 
-        if (!normalizedTerm) {
+        if (!normalizedTerm || !workspace?.id || !userId) {
             cancel('workspace-search');
             setIsWaiting(false);
+            setSearchData(EMPTY_SEARCH_DATA);
             return;
         }
 
-        let isCurrentSearch = true;
         setIsWaiting(true);
+        setSearchData(EMPTY_SEARCH_DATA);
         debounced(async () => {
             try {
-                await executeSearch(normalizedTerm);
+                await executeSearch(normalizedTerm, requestId);
+            } catch {
+                if (requestId === requestIdRef.current) {
+                    setSearchData(EMPTY_SEARCH_DATA);
+                }
             } finally {
-                if (isCurrentSearch) {
+                if (requestId === requestIdRef.current) {
                     setIsWaiting(false);
                 }
             }
         }, 'workspace-search');
 
         return () => {
-            isCurrentSearch = false;
             cancel('workspace-search');
         };
-    }, [searchTerm, executeSearch, debounced, cancel]);
+    }, [searchTerm, workspace?.id, userId, executeSearch, debounced, cancel]);
 
     const results: SearchResult = {
-        folders: allData?.folders || [],
-        documents: allData?.documents || [],
-        sharedDocuments: allData?.sharedDocuments || [],
-        isLoading: isWaiting || allLoading,
+        ...searchData,
+        isLoading: isWaiting,
     };
 
     return {
         searchTerm,
         setSearchTerm,
         results,
+        workspace,
     };
 }
