@@ -1,7 +1,7 @@
-import { Reference } from '@apollo/client';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { ContextMenuItem } from '@/components/ui/context-menu';
 import { Separator } from '@/components/ui/separator';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { useI18n } from '@/contexts/I18nContext';
 import {
     useDeleteFolderMutation,
     useInsertFolderMutation,
@@ -12,11 +12,11 @@ import { useCreateDocument } from '@/hooks/useCreateDocument';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { FolderNode } from '@/lib/folder';
 import showToast from '@/lib/toast';
+import { Reference } from '@apollo/client';
 import { FilePlus2, FolderPlus, Pencil, Trash2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { FolderDialog, FolderMode } from './FolderDialog';
 import { ContextDropdownMenu } from './ContextDropdownMenu';
-import { useI18n } from '@/contexts/I18nContext';
+import { FolderDialog, FolderMode } from './FolderDialog';
 
 interface Props {
     folder: FolderNode;
@@ -41,7 +41,7 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
     const [deleteFolder] = useDeleteFolderMutation();
     const { createNewDocument } = useCreateDocument({ folderId: id });
     const userId = useUserId();
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const { t } = useI18n();
 
     const handleMenuItemClick = useCallback(
@@ -85,7 +85,7 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
                             color: null,
                             icon: folderData.icon,
                             user_id: userId,
-                            workspace_id: workspace?.id,
+                            workspace_id: workspaceId,
                             parent_id: id,
                         },
                     },
@@ -122,7 +122,7 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
                 showToast.error(t('folderCreateError'));
             }
         },
-        [id, userId, workspace?.id, insertFolder, t]
+        [id, userId, workspaceId, insertFolder, t]
     );
 
     const handleConfirmDelete = useCallback(async () => {

@@ -1,8 +1,8 @@
+import { DEFAULT_LOCALE, isLocale, LOCALE_COOKIE } from '@/i18n/config';
 import { Inter } from 'next/font/google';
+import { cookies } from 'next/headers';
 import './globals.css';
 import Providers from './providers';
-import { cookies } from 'next/headers';
-import { DEFAULT_LOCALE, isLocale } from '@/i18n/config';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -20,7 +20,7 @@ export default async function RootLayout({
     children: React.ReactNode;
 }) {
     const cookieStore = await cookies();
-    const localeCookie = cookieStore.get('bin-craft-locale')?.value;
+    const localeCookie = cookieStore.get(LOCALE_COOKIE)?.value;
     const locale = isLocale(localeCookie) ? localeCookie : DEFAULT_LOCALE;
 
     return (

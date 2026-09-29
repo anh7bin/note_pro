@@ -28,7 +28,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
     const [taskData, setTaskData] = useState<TaskFormValues>(EMPTY_TASK_FORM);
     const userId = useUserId();
     const client = useApolloClient();
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const [createTask] = useCreateTaskMutation();
     const { t } = useI18n();
     const [getMaxDocumentBlockPosition] =
@@ -42,7 +42,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
             showToast.error(t('enterTaskTitle'));
             return;
         }
-        if (!userId || !workspace?.id) {
+        if (!userId || !workspaceId) {
             showToast.error(t('authenticationRequired'));
             return;
         }
@@ -67,7 +67,7 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                         block: {
                             data: {
                                 type: 'task',
-                                workspace_id: workspace.id,
+                                workspace_id: workspaceId,
                                 user_id: userId,
                                 folder_id: null,
                                 content: { text: taskData.title.trim() },

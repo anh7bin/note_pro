@@ -59,15 +59,16 @@ function UserCard({
             className={`flex items-center justify-between rounded-lg p-1 ${
                 isOwner ? 'bg-muted/50' : 'transition-colors hover:bg-accent/50'
             }`}>
-            <div className="flex items-center gap-2 flex-1 min-w-0">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
                 <UserAvatar
+                    size={24}
                     avatarUrl={user.avatar_url}
                     name={user.name}
                     email={user.email}
                     variant={isOwner ? 'owner' : 'default'}
                 />
                 <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">
+                    <p className="text-xs font-medium truncate">
                         {displayName}
                         {isCurrentUser && (
                             <span className="text-muted-foreground ml-1">
@@ -82,7 +83,7 @@ function UserCard({
             </div>
 
             {isOwner ? (
-                <span className="rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
+                <span className="px-2 py-1 text-xs font-medium text-muted-foreground">
                     {t('owner')}
                 </span>
             ) : (
@@ -104,7 +105,7 @@ function UserCard({
                             {user.role === 'editor' ? t('editor') : t('viewer')}
                         </SelectValue>
                     </SelectTrigger>
-                    <SelectContent className="w-56">
+                    <SelectContent className="w-50">
                         {(!isCurrentUser || user.role === 'viewer') && (
                             <SelectItem
                                 value="viewer"

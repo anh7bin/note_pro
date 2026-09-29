@@ -24,15 +24,15 @@ import { FilePlus2, Files, Plus } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 
 export default function AllDocsPage() {
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const { createNewDocument, isCreating, canCreate } = useCreateDocument();
     const { clearSelection, setMode } = useDocumentSelection();
     const { t } = useI18n();
     const { view, changeView } = useDocumentView();
 
     const { loading, data } = useGetAllDocsQuery({
-        variables: { workspaceId: workspace?.id || '' },
-        skip: !workspace?.id,
+        variables: { workspaceId },
+        skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
     });
 

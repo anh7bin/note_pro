@@ -28,13 +28,13 @@ export const WorkspaceButton = () => {
     const { accentColor, setAccentColor } = useTheme();
 
     const [updateWorkspace] = useUpdateWorkspaceMutation();
-    const { workspace } = useWorkspace();
+    const { workspace, workspaceId } = useWorkspace();
 
     const workspaceImage = workspace?.image_url || DEFAULT_WORKSPACE_IMAGE;
     const workspaceName = workspace?.name || '';
 
     const { uploadImage, isUploading } = useImageUpload({
-        tags: ['workspace', workspace?.id || ''],
+        tags: ['workspace', workspaceId],
         onSuccess: (imageUrl) => {
             setTempImageUrl(imageUrl);
             setHasImageChanged(true);
@@ -75,7 +75,7 @@ export const WorkspaceButton = () => {
             setIsSaving(true);
             await updateWorkspace({
                 variables: {
-                    workspaceId: workspace?.id || '',
+                    workspaceId,
                     name: nameChanged ? tempName.trim() : workspace?.name,
                     imageUrl: hasImageChanged
                         ? tempImageUrl

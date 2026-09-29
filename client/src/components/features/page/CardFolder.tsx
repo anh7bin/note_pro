@@ -30,13 +30,12 @@ interface CardFolderProps {
 
 const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
     const router = useRouter();
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const { startLoading } = useLoading();
     const { t, locale } = useI18n();
     const { toggleFolder, isSelected, selectedDocuments, selectedFolders } =
         useDocumentSelection();
 
-    const workspaceId = workspace?.id;
     const docCount = folder.blocks_aggregate?.aggregate?.count || 0;
     const selected = isSelected(folder.id);
     const isSelectionActive = selectedDocuments.size + selectedFolders.size > 0;

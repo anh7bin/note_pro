@@ -37,7 +37,7 @@ export function StarDocumentPicker({
 }: StarDocumentPickerProps) {
     const { t } = useI18n();
     const userId = useUserId();
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeDocumentId, setActiveDocumentId] = useState<string | null>(
@@ -45,10 +45,10 @@ export function StarDocumentPicker({
     );
     const { data, loading } = useGetDocumentsToStarQuery({
         variables: {
-            workspaceId: workspace?.id || '',
+            workspaceId,
             userId: userId || '',
         },
-        skip: !isOpen || !workspace?.id || !userId,
+        skip: !isOpen || !workspaceId || !userId,
         fetchPolicy: 'cache-and-network',
     });
     const [starDocument] = useStarDocumentMutation();

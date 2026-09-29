@@ -13,7 +13,7 @@ import { useI18n } from '@/contexts/I18nContext';
 import { useTaskCompletion } from '@/hooks/useTaskCompletion';
 
 export const Setting = () => {
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const { t } = useI18n();
 
     const [
@@ -29,15 +29,15 @@ export const Setting = () => {
         refetchQueries: [
             {
                 query: GetCompletedTasksDocument,
-                variables: { workspaceId: workspace?.id || '' },
+                variables: { workspaceId },
             },
             {
                 query: GetAllTasksDocument,
-                variables: { workspaceId: workspace?.id || '' },
+                variables: { workspaceId },
             },
             {
                 query: GetTodoTasksDocument,
-                variables: { workspaceId: workspace?.id || '' },
+                variables: { workspaceId },
             },
         ],
         awaitRefetchQueries: true,
@@ -46,12 +46,12 @@ export const Setting = () => {
     const completedTasksForDisplay = completedTasksData?.tasks || [];
 
     const handleModalOpen = useCallback(() => {
-        if (workspace?.id) {
+        if (workspaceId) {
             getCompletedTasks({
-                variables: { workspaceId: workspace.id },
+                variables: { workspaceId },
             });
         }
-    }, [workspace?.id, getCompletedTasks]);
+    }, [workspaceId, getCompletedTasks]);
 
     return (
         <CompletedTasksModal

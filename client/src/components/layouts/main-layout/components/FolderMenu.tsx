@@ -6,11 +6,11 @@ import { useI18n } from '@/contexts/I18nContext';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const FolderMenu = () => {
-    const { workspace, workspaceSlug } = useWorkspace();
+    const { workspaceId, workspaceSlug } = useWorkspace();
     const { t } = useI18n();
     const { data, loading } = useGetFoldersQuery({
-        variables: { workspaceId: workspace?.id ?? '' },
-        skip: !workspace?.id,
+        variables: { workspaceId },
+        skip: !workspaceId,
     });
 
     const folders = data?.folders ?? [];

@@ -14,7 +14,7 @@ interface CreateDocumentOptions {
 
 export function useCreateDocument(options: CreateDocumentOptions = {}) {
     const { folderId } = options;
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const router = useRouter();
     const userId = useUserId();
     const { startLoading, stopLoading } = useLoading();
@@ -22,7 +22,7 @@ export function useCreateDocument(options: CreateDocumentOptions = {}) {
     const isCreatingRef = useRef(false);
 
     const createNewDocument = useCallback(() => {
-        if (isCreatingRef.current || isCreating || !workspace?.id || !userId) {
+        if (isCreatingRef.current || isCreating || !workspaceId || !userId) {
             return;
         }
 
@@ -35,17 +35,17 @@ export function useCreateDocument(options: CreateDocumentOptions = {}) {
         const documentId = crypto.randomUUID();
         const route = folderId
             ? ROUTES.WORKSPACE_DOCUMENT_FOLDER_DRAFT(
-                  workspace.id,
+                  workspaceId,
                   folderId,
                   documentId
               )
-            : ROUTES.WORKSPACE_DOCUMENT_DRAFT(workspace.id, documentId);
+            : ROUTES.WORKSPACE_DOCUMENT_DRAFT(workspaceId, documentId);
 
         router.push(route);
         stopLoading();
     }, [
         isCreating,
-        workspace?.id,
+        workspaceId,
         userId,
         folderId,
         router,
@@ -56,6 +56,6 @@ export function useCreateDocument(options: CreateDocumentOptions = {}) {
     return {
         createNewDocument,
         isCreating,
-        canCreate: Boolean(workspace?.id && userId),
+        canCreate: Boolean(workspaceId && userId),
     };
 }

@@ -22,13 +22,13 @@ import { useEffect, useMemo } from 'react';
 import { NewFolderButton } from '@/components/layouts/main-layout/components/NewFolderButton';
 
 export default function FoldersPage() {
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const { t } = useI18n();
     const { view, changeView } = useDocumentView();
     const { clearSelection, setMode } = useDocumentSelection();
     const { data, loading } = useGetFoldersQuery({
-        variables: { workspaceId: workspace?.id || '' },
-        skip: !workspace?.id,
+        variables: { workspaceId },
+        skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
     });
     const folders = useMemo(

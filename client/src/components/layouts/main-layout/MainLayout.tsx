@@ -15,7 +15,7 @@ import { OnboardingTour } from '@/components/features/onboarding/OnboardingTour'
 import { MainLayoutSkeleton } from './MainLayoutSkeleton';
 
 function LayoutMain({ children }: { children: React.ReactNode }) {
-    const { workspaceSlug, loading, workspace } = useWorkspace();
+    const { workspaceSlug, loading, workspaceId } = useWorkspace();
     const { isOpen } = useSidebar();
     const pathname = usePathname();
     const router = useRouter();
@@ -56,7 +56,7 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
                                 <>
                                     <Sidebar
                                         workspaceSlug={workspaceSlug || ''}
-                                        workspaceId={workspace?.id || ''}
+                                        workspaceId={workspaceId}
                                     />
                                     <div
                                         className={cn(

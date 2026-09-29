@@ -1,5 +1,7 @@
 'use client';
 
+import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
+import { NewFolderIcon } from '@/components/shared/icons/NewFolderIcon';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -7,16 +9,14 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { PlusIcon } from 'lucide-react';
-import React, { useState } from 'react';
-import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
-import { FolderDialog, FolderMode } from './FolderDialog';
-import { useCreateDocument } from '@/hooks';
+import { useI18n } from '@/contexts/I18nContext';
 import { useInsertFolderMutation } from '@/graphql/mutations/__generated__/folder.generated';
+import { useCreateDocument } from '@/hooks';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import showToast from '@/lib/toast';
-import { NewFolderIcon } from '@/components/shared/icons/NewFolderIcon';
-import { useI18n } from '@/contexts/I18nContext';
+import { PlusIcon } from 'lucide-react';
+import React, { useState } from 'react';
+import { FolderDialog, FolderMode } from './FolderDialog';
 import { SimpleTooltip } from './SimpleTooltip';
 
 interface NewItemMenuProps {
@@ -26,7 +26,7 @@ interface NewItemMenuProps {
 export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const { createNewDocument, isCreating, canCreate } = useCreateDocument({
         folderId,
     });
@@ -38,7 +38,7 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
         description: string;
         icon: string;
     }) => {
-        if (!workspace?.id) return;
+        if (!workspaceId) return;
 
         try {
             await insertFolder({
@@ -47,7 +47,7 @@ export const NewItemMenu = ({ folderId }: NewItemMenuProps) => {
                         name: data.name,
                         description: data.description || null,
                         icon: data.icon,
-                        workspace_id: workspace.id,
+                        workspace_id: workspaceId,
                         parent_id: folderId || null,
                     },
                 },

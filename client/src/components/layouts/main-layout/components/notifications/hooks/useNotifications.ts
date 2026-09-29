@@ -19,7 +19,7 @@ import { getNotificationData, getUnreadCount } from '../utils';
 export function useNotifications(): NotificationMenuProps {
     const userId = useUserId();
     const router = useRouter();
-    const { workspace } = useWorkspace();
+    const { workspaceId: wsId } = useWorkspace();
     const { t } = useI18n();
 
     const { data: notificationsData, loading } =
@@ -71,7 +71,7 @@ export function useNotifications(): NotificationMenuProps {
             markNotificationAsRead(notification);
 
             const data = getNotificationData(notification.data);
-            const workspaceId = data.workspace_id || workspace?.id;
+            const workspaceId = data.workspace_id || wsId;
 
             if (!data.document_id || !workspaceId) return;
 
@@ -86,7 +86,7 @@ export function useNotifications(): NotificationMenuProps {
                     : documentUrl
             );
         },
-        [markNotificationAsRead, router, workspace?.id]
+        [markNotificationAsRead, router, wsId]
     );
 
     const onMarkAllAsRead = useCallback(async () => {

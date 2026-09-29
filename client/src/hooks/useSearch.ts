@@ -3,9 +3,9 @@ import {
     type SearchAllQuery,
 } from '@/graphql/queries/__generated__/search.generated';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useAuth } from './useAuth';
 import { useDebounce } from './useDebounce';
 import { useWorkspace } from './useWorkspace';
-import { useAuth } from './useAuth';
 
 export interface SearchResult {
     folders: SearchAllQuery['folders'];
@@ -25,7 +25,7 @@ const EMPTY_SEARCH_DATA: SearchData = {
 export function useSearch() {
     const { userId } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
-    const { workspace } = useWorkspace();
+    const { workspaceId, workspace } = useWorkspace();
     const [searchAll] = useSearchAllLazyQuery({
         fetchPolicy: 'network-only',
     });
@@ -36,11 +36,11 @@ export function useSearch() {
 
     const executeSearch = useCallback(
         async (term: string, requestId: number) => {
-            if (!workspace?.id || !userId) return;
+            if (!workspaceId || !userId) return;
 
             const response = await searchAll({
                 variables: {
-                    workspaceId: workspace.id,
+                    workspaceId,
                     searchTerm: `%${term}%`,
                     userId,
                 },
@@ -55,14 +55,14 @@ export function useSearch() {
                 sharedDocuments: response.data?.sharedDocuments ?? [],
             });
         },
-        [searchAll, workspace?.id, userId]
+        [searchAll, workspaceId, userId]
     );
 
     useEffect(() => {
         const normalizedTerm = searchTerm.trim();
         const requestId = ++requestIdRef.current;
 
-        if (!normalizedTerm || !workspace?.id || !userId) {
+        if (!normalizedTerm || !workspaceId || !userId) {
             cancel('workspace-search');
             setIsWaiting(false);
             setSearchData(EMPTY_SEARCH_DATA);
@@ -88,7 +88,7 @@ export function useSearch() {
         return () => {
             cancel('workspace-search');
         };
-    }, [searchTerm, workspace?.id, userId, executeSearch, debounced, cancel]);
+    }, [searchTerm, workspaceId, userId, executeSearch, debounced, cancel]);
 
     const results: SearchResult = {
         ...searchData,

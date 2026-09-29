@@ -24,7 +24,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
     const [mounted, setMounted] = useState(false);
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const [storedTheme, setStoredTheme] =
         useCurrentUserLocalStorage<ThemePreference>(
             'theme_preference',
@@ -33,7 +33,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     const theme = storedTheme ?? 'light';
     const accentStorageKey = `workspace_${
-        workspace?.id ?? 'default'
+        workspaceId ?? 'default'
     }_accent_color`;
     const [storedAccentColor, setStoredAccentColor] =
         useCurrentUserLocalStorage<AccentColor>(

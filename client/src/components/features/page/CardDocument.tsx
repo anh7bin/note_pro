@@ -37,7 +37,7 @@ const CardDocumentComponent = ({
     variant?: 'card' | 'list';
 }) => {
     const router = useRouter();
-    const { workspace } = useWorkspace();
+    const { workspaceId: wsId } = useWorkspace();
     const currentUserId = useUserId();
     const { startLoading } = useLoading();
     const { locale, t } = useI18n();
@@ -85,7 +85,7 @@ const CardDocumentComponent = ({
         initialIsStarred: document.document_stars.length > 0,
     });
 
-    const workspaceId = document.workspace_id || workspace?.id;
+    const workspaceId = document.workspace_id || wsId;
 
     const isOwner = useMemo(() => {
         return document.user_id === currentUserId;

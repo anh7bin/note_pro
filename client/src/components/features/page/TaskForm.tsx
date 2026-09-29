@@ -63,7 +63,7 @@ export function TaskForm({
     destinationFooter,
 }: TaskFormProps) {
     const { t } = useI18n();
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const formId = useId();
     const [searchTerm, setSearchTerm] = useState('');
     const [destinationOpen, setDestinationOpen] = useState(false);
@@ -90,8 +90,8 @@ export function TaskForm({
     const handleDestinationOpenChange = (open: boolean) => {
         setDestinationOpen(open);
         if (!open) setSearchTerm('');
-        if (open && workspace?.id) {
-            void fetchDocs({ variables: { workspaceId: workspace.id } });
+        if (open && workspaceId) {
+            void fetchDocs({ variables: { workspaceId } });
         }
     };
 
@@ -225,10 +225,10 @@ export function TaskForm({
                                     size="sm"
                                     variant="outline"
                                     onClick={() => {
-                                        if (workspace?.id) {
+                                        if (workspaceId) {
                                             void fetchDocs({
                                                 variables: {
-                                                    workspaceId: workspace.id,
+                                                    workspaceId,
                                                 },
                                             });
                                         }

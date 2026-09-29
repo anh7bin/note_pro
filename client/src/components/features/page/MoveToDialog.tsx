@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Modal } from '@/components/ui/modal';
+import { useI18n } from '@/contexts/I18nContext';
 import { useGetFoldersQuery } from '@/graphql/queries/__generated__/folder.generated';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { cn } from '@/lib/utils';
-import React, { useState } from 'react';
 import { Folder, FolderOpen } from 'lucide-react';
-import { useI18n } from '@/contexts/I18nContext';
-import { Label } from '@/components/ui/label';
+import { useState } from 'react';
 
 interface Props {
     open: boolean;
@@ -15,8 +15,7 @@ interface Props {
 }
 
 export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
-    const { workspace } = useWorkspace();
-    const workspaceId = workspace?.id;
+    const { workspaceId } = useWorkspace();
     const [selectedFolderId, setSelectedFolderId] = useState<string | null>(
         null
     );
@@ -24,7 +23,7 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
     const { t } = useI18n();
 
     const { data, loading } = useGetFoldersQuery({
-        variables: { workspaceId: workspaceId || '' },
+        variables: { workspaceId },
         skip: !workspaceId || !open,
     });
 

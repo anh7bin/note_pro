@@ -24,7 +24,7 @@ export const NewFolderButton = ({
     size,
 }: NewFolderButtonProps) => {
     const userId = useUserId();
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const [isOpen, setIsOpen] = useState(false);
     const [insertFolder] = useInsertFolderMutation();
     const { t } = useI18n();
@@ -43,7 +43,7 @@ export const NewFolderButton = ({
                         color: null,
                         icon: folderData.icon,
                         user_id: userId,
-                        workspace_id: workspace?.id,
+                        workspace_id: workspaceId,
                         parent_id: null,
                     },
                 },

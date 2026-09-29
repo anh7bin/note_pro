@@ -17,14 +17,14 @@ import {
 import { useI18n } from '@/contexts/I18nContext';
 
 export default function CalendarPage() {
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const { t } = useI18n();
 
     const { loading, data } = useGetAllScheduledTasksQuery({
         variables: {
-            workspaceId: workspace?.id || '',
+            workspaceId,
         },
-        skip: !workspace?.id,
+        skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
     });
 

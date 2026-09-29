@@ -14,12 +14,14 @@ export function useWorkspace() {
     });
 
     const workspace = data?.workspaces?.[0];
+    const workspaceId = workspace?.id || '';
     const workspaceSlug = workspace
         ? `${slugify(workspace.name ?? '', { strict: true })}--${workspace.id}`
         : null;
 
     return {
         workspace,
+        workspaceId,
         workspaceSlug,
         loading: authLoading || (!!userId && loading),
         error,

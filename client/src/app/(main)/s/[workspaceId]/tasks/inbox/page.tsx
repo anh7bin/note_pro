@@ -12,12 +12,12 @@ import { TaskListPageState } from '@/components/features/page/TaskListPageState'
 import { useTaskCompletion } from '@/hooks/useTaskCompletion';
 
 export default function InboxPage() {
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const { t } = useI18n();
 
     const { loading, data, error, refetch } = useGetTodoTasksQuery({
-        variables: { workspaceId: workspace?.id || '' },
-        skip: !workspace?.id,
+        variables: { workspaceId },
+        skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
     });
 

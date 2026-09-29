@@ -12,12 +12,12 @@ import { TaskListPageState } from '@/components/features/page/TaskListPageState'
 import { useTaskCompletion } from '@/hooks/useTaskCompletion';
 
 export default function AllTasksPage() {
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const { t } = useI18n();
 
     const { loading, data, error, refetch } = useGetAllTasksQuery({
-        variables: { workspaceId: workspace?.id || '' },
-        skip: !workspace?.id,
+        variables: { workspaceId },
+        skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
     });
 
@@ -25,7 +25,7 @@ export default function AllTasksPage() {
         refetchQueries: [
             {
                 query: GetAllTasksDocument,
-                variables: { workspaceId: workspace?.id || '' },
+                variables: { workspaceId },
             },
         ],
         awaitRefetchQueries: true,

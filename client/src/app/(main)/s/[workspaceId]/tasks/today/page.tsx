@@ -1,25 +1,25 @@
 'use client';
 
+import { TaskListPageState } from '@/components/features/page/TaskListPageState';
+import { useI18n } from '@/contexts/I18nContext';
 import {
     GetAllTasksDocument,
     useGetAllTasksQuery,
 } from '@/graphql/queries/__generated__/task.generated';
-import { useWorkspace } from '@/hooks/useWorkspace';
-import { Task } from '@/types/app';
-import { TASK_STATUS } from '@/lib/constants';
-import { useI18n } from '@/contexts/I18nContext';
-import { TaskListPageState } from '@/components/features/page/TaskListPageState';
 import { useTaskCompletion } from '@/hooks/useTaskCompletion';
+import { useWorkspace } from '@/hooks/useWorkspace';
+import { TASK_STATUS } from '@/lib/constants';
+import { Task } from '@/types/app';
 
 export default function TodayPage() {
-    const { workspace } = useWorkspace();
+    const { workspaceId } = useWorkspace();
     const { t } = useI18n();
 
     const { loading, data, error, refetch } = useGetAllTasksQuery({
         variables: {
-            workspaceId: workspace?.id || '',
+            workspaceId,
         },
-        skip: !workspace?.id,
+        skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
     });
 
@@ -27,7 +27,7 @@ export default function TodayPage() {
         refetchQueries: [
             {
                 query: GetAllTasksDocument,
-                variables: { workspaceId: workspace?.id || '' },
+                variables: { workspaceId },
             },
         ],
         awaitRefetchQueries: true,
