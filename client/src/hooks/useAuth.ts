@@ -15,6 +15,11 @@ export const useAuth = () => {
 
 export const useUserId = () => {
     const { userId } = useAuthContext();
+    if (!userId) {
+        throw new Error(
+            'useRequiredUserId must be used inside an authenticated route'
+        );
+    }
     return userId;
 };
 

@@ -35,7 +35,9 @@ export function useBulkDocumentStar(documentIds: readonly string[]) {
     const isLoading = (isLoadingStars && !data) || isStarring || isUnstarring;
 
     const toggleDocumentsStar = useCallback(async () => {
-        if (documentIds.length === 0 || isStarring || isUnstarring) return;
+        if (documentIds.length === 0 || isStarring || isUnstarring) {
+            return;
+        }
 
         const ids = [...documentIds];
         const shouldStar = !allAreStarred;

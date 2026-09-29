@@ -1,19 +1,19 @@
 'use client';
 
-import type { ApolloCache } from '@apollo/client';
-import { useCallback, useEffect, useState } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 import {
     useGetDocumentStarQuery,
     useStarDocumentMutation,
     useUnstarDocumentMutation,
 } from '@/graphql/__generated__/document-star.generated';
-import { useI18n } from '@/contexts/I18nContext';
 import { useUserId } from '@/hooks/useAuth';
-import showToast from '@/lib/toast';
 import {
     DOCUMENT_STAR_REFETCH_QUERIES,
     updateDocumentStarCache,
 } from '@/lib/apollo/document-star-cache';
+import showToast from '@/lib/toast';
+import type { ApolloCache } from '@apollo/client';
+import { useCallback, useEffect, useState } from 'react';
 
 interface UseDocumentStarOptions {
     initialIsStarred?: boolean;
@@ -29,7 +29,7 @@ export function useDocumentStar(
     const shouldLoadStar = initialIsStarred === undefined;
 
     const { data, loading: isLoadingStar } = useGetDocumentStarQuery({
-        variables: { documentId, userId: userId || '' },
+        variables: { documentId, userId },
         skip: !documentId || !userId || !shouldLoadStar,
         fetchPolicy: 'cache-and-network',
     });

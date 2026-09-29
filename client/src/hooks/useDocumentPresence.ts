@@ -43,7 +43,9 @@ export function useDocumentPresence(documentId: string) {
     const [leave] = useLeaveDocumentPresenceMutation();
 
     useEffect(() => {
-        if (!canConnect || !currentUser.id || !sessionId) return;
+        if (!canConnect || !currentUser.id || !sessionId) {
+            return;
+        }
 
         let stopped = false;
         let pendingHeartbeat: Promise<unknown> | null = null;
@@ -53,7 +55,9 @@ export function useDocumentPresence(documentId: string) {
         };
 
         const sendHeartbeat = () => {
-            if (stopped || pendingHeartbeat) return;
+            if (stopped || pendingHeartbeat) {
+                return;
+            }
 
             pendingHeartbeat = heartbeat({ variables })
                 .catch(() => {
@@ -109,13 +113,17 @@ export function useDocumentPresence(documentId: string) {
             >((nearest, row) => {
                 const expiresAt =
                     new Date(row.last_seen).getTime() + PRESENCE_TIMEOUT_MS;
-                if (expiresAt <= currentTime) return nearest;
+                if (expiresAt <= currentTime) {
+                    return nearest;
+                }
                 return nearest === null || expiresAt < nearest
                     ? expiresAt
                     : nearest;
             }, null);
 
-            if (nextExpiration === null) return;
+            if (nextExpiration === null) {
+                return;
+            }
 
             expirationTimer = window.setTimeout(
                 () => {
@@ -164,8 +172,12 @@ export function useDocumentPresence(documentId: string) {
     }
 
     return Array.from(users.values()).sort((a, b) => {
-        if (a.isCurrentUser) return -1;
-        if (b.isCurrentUser) return 1;
+        if (a.isCurrentUser) {
+            return -1;
+        }
+        if (b.isCurrentUser) {
+            return 1;
+        }
         return b.lastSeen.localeCompare(a.lastSeen);
     });
 }

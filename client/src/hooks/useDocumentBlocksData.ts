@@ -40,7 +40,9 @@ function mergeWithNewerQueryBlocks(
     queryBlocks: DocumentBlock[],
     subscribedBlocks?: DocumentBlock[]
 ) {
-    if (!subscribedBlocks) return queryBlocks;
+    if (!subscribedBlocks) {
+        return queryBlocks;
+    }
 
     const queryBlocksById = new Map(
         queryBlocks.map((block) => [block.id, block])
@@ -74,7 +76,9 @@ export function useDocumentBlocksData(
         ignoreResults: false,
         onData: ({ client, data: subscriptionResult }) => {
             const blocks = subscriptionResult.data?.blocks;
-            if (!blocks) return;
+            if (!blocks) {
+                return;
+            }
 
             // Keep the regular query cache in sync so the title and document
             // sidebar can reuse this single subscription connection.
@@ -125,15 +129,21 @@ export function useDocumentBlocksData(
                 const isTaskA = a.type === BlockType.TASK;
                 const isTaskB = b.type === BlockType.TASK;
 
-                if (isTaskA && !isTaskB) return -1;
-                if (!isTaskA && isTaskB) return 1;
+                if (isTaskA && !isTaskB) {
+                    return -1;
+                }
+                if (!isTaskA && isTaskB) {
+                    return 1;
+                }
 
                 return 0;
             });
 
         const seen = new Set<string>();
         const childBlocks = childBlocksRaw.filter((b) => {
-            if (seen.has(b.id)) return false;
+            if (seen.has(b.id)) {
+                return false;
+            }
             seen.add(b.id);
             return true;
         });

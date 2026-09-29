@@ -50,17 +50,23 @@ export function useEditorConversions({
 
     const handleConvertToTask = useCallback(
         async (blockId: string) => {
-            if (!userId) return;
+            if (!userId) {
+                return;
+            }
             flushPendingChanges();
 
             try {
-                if (!(await waitForPendingBlockWrites(blockId))) return;
+                if (!(await waitForPendingBlockWrites(blockId))) {
+                    return;
+                }
 
                 const updatedBlock = await updateBlockType(
                     blockId,
                     BlockType.TASK
                 );
-                if (!updatedBlock) return;
+                if (!updatedBlock) {
+                    return;
+                }
 
                 const taskResult = await createTask({
                     variables: {
@@ -72,7 +78,9 @@ export function useEditorConversions({
                     },
                     update: (cache, { data }) => {
                         const newTask = data?.insert_tasks_one;
-                        if (!newTask) return;
+                        if (!newTask) {
+                            return;
+                        }
 
                         cache.modify({
                             id: cache.identify({
@@ -106,7 +114,9 @@ export function useEditorConversions({
                 });
 
                 const newTask = taskResult.data?.insert_tasks_one;
-                if (!newTask) return;
+                if (!newTask) {
+                    return;
+                }
 
                 setBlocks((blocks) =>
                     blocks.map((block) =>
@@ -138,7 +148,9 @@ export function useEditorConversions({
             flushPendingChanges();
 
             try {
-                if (!(await waitForPendingBlockWrites(blockId))) return false;
+                if (!(await waitForPendingBlockWrites(blockId))) {
+                    return false;
+                }
                 if (!(await convertBlockToFile(blockId, fileData))) {
                     return false;
                 }
@@ -173,9 +185,13 @@ export function useEditorConversions({
             flushPendingChanges();
 
             try {
-                if (!(await waitForPendingBlockWrites(blockId))) return;
+                if (!(await waitForPendingBlockWrites(blockId))) {
+                    return;
+                }
                 const content: BlockContent = { text: tableHTML };
-                if (!(await convertBlockToTable(blockId, content))) return;
+                if (!(await convertBlockToTable(blockId, content))) {
+                    return;
+                }
 
                 setBlocks((blocks) =>
                     blocks.map((block) =>
@@ -205,8 +221,12 @@ export function useEditorConversions({
             flushPendingChanges();
 
             try {
-                if (!(await waitForPendingBlockWrites(blockId))) return false;
-                if (!(await convertBlockToParagraph(blockId))) return false;
+                if (!(await waitForPendingBlockWrites(blockId))) {
+                    return false;
+                }
+                if (!(await convertBlockToParagraph(blockId))) {
+                    return false;
+                }
 
                 setBlocks((blocks) =>
                     blocks.map((block) =>

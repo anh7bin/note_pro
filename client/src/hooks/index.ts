@@ -9,7 +9,6 @@ export { useToast, toast } from './useToast';
 export { useDocumentTitle } from './useDocumentTitle';
 export { usePageTitle } from './usePageTitle';
 export { useDebounce } from './useDebounce';
-export { useThrottle } from './useThrottle';
 export { useSearch } from './useSearch';
 export { useFilteredTasks, taskToDisplayFormat } from './useFilteredTasks';
 export type { Block, BlockRepository, CreateBlockInput } from './useBlocks';

@@ -21,13 +21,13 @@ import {
 import { useI18n } from '@/contexts/I18nContext';
 
 export default function SharedWithMePage() {
-    const userId = useUserId();
-    const { setMode, clearSelection } = useDocumentSelection();
     const { t } = useI18n();
+    const userId = useUserId();
     const { view, changeView } = useDocumentView();
+    const { setMode, clearSelection } = useDocumentSelection();
 
     const { loading, data } = useGetSharedWithMeDocsQuery({
-        variables: { userId: userId || '' },
+        variables: { userId },
         skip: !userId,
         fetchPolicy: 'cache-and-network',
         pollInterval: 5000,

@@ -14,12 +14,12 @@ interface CreateDocumentOptions {
 
 export function useCreateDocument(options: CreateDocumentOptions = {}) {
     const { folderId } = options;
-    const { workspaceId } = useWorkspace();
     const router = useRouter();
     const userId = useUserId();
+    const { workspaceId } = useWorkspace();
+    const isCreatingRef = useRef(false);
     const { startLoading, stopLoading } = useLoading();
     const [isCreating, setIsCreating] = useState(false);
-    const isCreatingRef = useRef(false);
 
     const createNewDocument = useCallback(() => {
         if (isCreatingRef.current || isCreating || !workspaceId || !userId) {

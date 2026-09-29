@@ -69,7 +69,9 @@ export function useEditorDocumentState({
                     locallyCreatedIdsRef.current.has(block.id) &&
                     !remoteIds.has(block.id) &&
                     !deletedBlockIdsRef.current.has(block.id);
-                if (!isLocalOnly) return;
+                if (!isLocalOnly) {
+                    return;
+                }
 
                 const localText = dirtyContentRef.current.get(block.id);
                 mergedBlocks.push(

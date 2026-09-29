@@ -17,14 +17,14 @@ import { NotificationMenuProps } from '../types';
 import { getNotificationData, getUnreadCount } from '../utils';
 
 export function useNotifications(): NotificationMenuProps {
+    const { t } = useI18n();
     const userId = useUserId();
     const router = useRouter();
     const { workspaceId: wsId } = useWorkspace();
-    const { t } = useI18n();
 
     const { data: notificationsData, loading } =
         useNotificationSubscriptionSubscription({
-            variables: { userId: userId || '' },
+            variables: { userId },
             skip: !userId,
             fetchPolicy: 'network-only',
             ignoreResults: false,

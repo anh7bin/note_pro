@@ -36,7 +36,7 @@ export function useDocumentPermission(documentId: string) {
     const { data: accessRequestData } = useGetAccessRequestByDocumentQuery({
         variables: {
             documentId: documentId || '',
-            requesterId: userId || '',
+            requesterId: userId,
         },
         skip: !documentId || !userId || !shouldFetchAccessRequests,
         fetchPolicy: 'cache-first',

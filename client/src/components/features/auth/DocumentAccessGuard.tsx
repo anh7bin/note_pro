@@ -1,14 +1,14 @@
 'use client';
 
-import { useGetDocumentBlocksQuery } from '@/graphql/queries/__generated__/document.generated';
-import { useGetAccessRequestByDocumentQuery } from '@/graphql/queries/__generated__/access-request.generated';
-import { useAuth, useUserId } from '@/hooks/useAuth';
-import { useMemo, useEffect } from 'react';
 import { Loading } from '@/components/ui/loading';
-import { RequestAccessView } from './RequestAccessView';
-import { AccessRequestStatus, BlockType, PermissionType } from '@/types/types';
 import { useDocumentAccess } from '@/contexts/DocumentAccessContext';
 import { useI18n } from '@/contexts/I18nContext';
+import { useGetAccessRequestByDocumentQuery } from '@/graphql/queries/__generated__/access-request.generated';
+import { useGetDocumentBlocksQuery } from '@/graphql/queries/__generated__/document.generated';
+import { useAuth, useUserId } from '@/hooks/useAuth';
+import { AccessRequestStatus, BlockType, PermissionType } from '@/types/types';
+import { useEffect, useMemo } from 'react';
+import { RequestAccessView } from './RequestAccessView';
 
 interface DocumentAccessGuardProps {
     documentId: string;
@@ -52,7 +52,7 @@ export function DocumentAccessGuard({
         useGetAccessRequestByDocumentQuery({
             variables: {
                 documentId: documentId || '',
-                requesterId: userId || '',
+                requesterId: userId,
             },
             skip: draft || !documentId || !userId || !shouldFetchAccessRequests,
             fetchPolicy: 'cache-and-network',

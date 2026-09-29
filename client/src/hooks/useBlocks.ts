@@ -99,7 +99,9 @@ export function useBlocks(): BlockRepository {
                     },
                     update: (cache, { data }) => {
                         const updatedBlock = data?.update_blocks_by_pk;
-                        if (!updatedBlock) return;
+                        if (!updatedBlock) {
+                            return;
+                        }
 
                         cache.modify({
                             id: cache.identify({ __typename: 'blocks', id }),
@@ -112,7 +114,9 @@ export function useBlocks(): BlockRepository {
                 });
 
                 const result = res.data?.update_blocks_by_pk;
-                if (!result || !isBlockType(result.type)) return null;
+                if (!result || !isBlockType(result.type)) {
+                    return null;
+                }
 
                 return {
                     id: result.id,
@@ -171,12 +175,16 @@ export function useBlocks(): BlockRepository {
             blocks: CreateBlockBatchInput[],
             positionUpdates: BlockPositionUpdate[]
         ): Promise<EditorBlock[]> => {
-            if (!blocks.length || !userId) return [];
+            if (!blocks.length || !userId) {
+                return [];
+            }
 
             const now = new Date().toISOString();
             const pageId = blocks[0]?.pageId;
             const documentWorkspaceId = blocks[0]?.workspaceId;
-            if (!pageId || !documentWorkspaceId) return [];
+            if (!pageId || !documentWorkspaceId) {
+                return [];
+            }
 
             try {
                 const res = await insertBlocksAndUpdatePositions({
@@ -201,14 +209,18 @@ export function useBlocks(): BlockRepository {
                     update: (cache, { data }) => {
                         const insertedBlocks =
                             data?.insert_blocks?.returning ?? [];
-                        if (!insertedBlocks.length) return;
+                        if (!insertedBlocks.length) {
+                            return;
+                        }
 
                         const existingData =
                             cache.readQuery<GetDocumentBlocksQuery>({
                                 query: GetDocumentBlocksDocument,
                                 variables: { pageId },
                             });
-                        if (!existingData?.blocks) return;
+                        if (!existingData?.blocks) {
+                            return;
+                        }
 
                         const positions = new Map(
                             positionUpdates.map(({ id, position }) => [
@@ -276,7 +288,9 @@ export function useBlocks(): BlockRepository {
 
     const updateBlocksPositionsBatch = useCallback(
         async (updates: BlockPositionUpdate[]) => {
-            if (!updates.length) return;
+            if (!updates.length) {
+                return;
+            }
             try {
                 await updateBlocksPositions({
                     variables: {
@@ -309,7 +323,9 @@ export function useBlocks(): BlockRepository {
                     },
                     update: (cache, { data }) => {
                         const updatedBlock = data?.update_blocks_by_pk;
-                        if (!updatedBlock) return;
+                        if (!updatedBlock) {
+                            return;
+                        }
 
                         cache.modify({
                             id: cache.identify({ __typename: 'blocks', id }),
@@ -322,7 +338,9 @@ export function useBlocks(): BlockRepository {
                 });
 
                 const result = res.data?.update_blocks_by_pk;
-                if (!result || !isBlockType(result.type)) return null;
+                if (!result || !isBlockType(result.type)) {
+                    return null;
+                }
 
                 return {
                     id: result.id,
@@ -360,7 +378,9 @@ export function useBlocks(): BlockRepository {
                     },
                     update: (cache, { data }) => {
                         const updatedBlock = data?.update_blocks_by_pk;
-                        if (!updatedBlock) return;
+                        if (!updatedBlock) {
+                            return;
+                        }
 
                         cache.modify({
                             id: cache.identify({ __typename: 'blocks', id }),
@@ -374,7 +394,9 @@ export function useBlocks(): BlockRepository {
                 });
 
                 const result = res.data?.update_blocks_by_pk;
-                if (!result || !isBlockType(result.type)) return null;
+                if (!result || !isBlockType(result.type)) {
+                    return null;
+                }
 
                 return {
                     id: result.id,
@@ -425,7 +447,9 @@ export function useBlocks(): BlockRepository {
                     },
                     update: (cache, { data }) => {
                         const updatedBlock = data?.update_blocks_by_pk;
-                        if (!updatedBlock) return;
+                        if (!updatedBlock) {
+                            return;
+                        }
 
                         cache.modify({
                             id: cache.identify({ __typename: 'blocks', id }),

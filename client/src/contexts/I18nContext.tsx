@@ -28,7 +28,9 @@ interface I18nContextValue {
 const I18nContext = createContext<I18nContextValue | null>(null);
 
 function interpolate(message: string, values?: TranslationValues) {
-    if (!values) return message;
+    if (!values) {
+        return message;
+    }
 
     return message.replace(/{{(\w+)}}/g, (placeholder, key: string) =>
         values[key] === undefined ? placeholder : String(values[key])

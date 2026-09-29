@@ -12,8 +12,8 @@ export interface CurrentUser {
 }
 
 export function useCurrentUser(): CurrentUser {
-    const { data: session } = useSession();
     const { userId } = useAuth();
+    const { data: session } = useSession();
 
     return useMemo(
         () => ({

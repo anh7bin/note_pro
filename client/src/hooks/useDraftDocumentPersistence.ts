@@ -1,7 +1,10 @@
 'use client';
 
-import { useApolloClient } from '@apollo/client';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import type {
+    DraftDocumentConfig,
+    EditorDocumentState,
+} from '@/contexts/editor/types';
+import { useI18n } from '@/contexts/I18nContext';
 import {
     useMaterializeDocumentMutation,
     type MaterializeDocumentMutation,
@@ -12,7 +15,7 @@ import {
     type GetAllDocsQuery,
     type GetDocumentBlocksQuery,
 } from '@/graphql/queries/__generated__/document.generated';
-import { useI18n } from '@/contexts/I18nContext';
+import type { BlockRepository, CreateBlockBatchInput } from '@/hooks/useBlocks';
 import {
     isBlockType,
     normalizeBlockContent,
@@ -24,11 +27,8 @@ import {
     type BlockPositionUpdate,
     type FileBlockContent,
 } from '@/types/editor';
-import type { BlockRepository, CreateBlockBatchInput } from '@/hooks/useBlocks';
-import type {
-    DraftDocumentConfig,
-    EditorDocumentState,
-} from '@/contexts/editor/types';
+import { useApolloClient } from '@apollo/client';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 type DraftState = Pick<
     EditorDocumentState,
@@ -54,7 +54,9 @@ type MaterializedChild = NonNullable<
 function normalizeMaterializedBlock(
     block: MaterializedRoot | MaterializedChild | null | undefined
 ): Block | null {
-    if (!block || !isBlockType(block.type)) return null;
+    if (!block || !isBlockType(block.type)) {
+        return null;
+    }
 
     return {
         ...block,
@@ -100,7 +102,9 @@ export function useDraftDocumentPersistence({
                     variables: { workspaceId: draftRef.current?.workspaceId },
                 },
                 (existing) => {
-                    if (!existing) return existing;
+                    if (!existing) {
+                        return existing;
+                    }
 
                     const document: GetAllDocsQuery['blocks'][number] = {
                         __typename: 'blocks',
@@ -148,11 +152,15 @@ export function useDraftDocumentPersistence({
         if (!draftConfig || isMaterializedRef.current) {
             return Promise.resolve(true);
         }
-        if (materializationRef.current) return materializationRef.current;
+        if (materializationRef.current) {
+            return materializationRef.current;
+        }
 
         const materialization = (async () => {
             const currentRootBlock = rootBlockRef.current;
-            if (!currentRootBlock || !userId) return false;
+            if (!currentRootBlock || !userId) {
+                return false;
+            }
 
             const currentBlocks = state.blocksRef.current.length
                 ? state.blocksRef.current
@@ -269,7 +277,9 @@ export function useDraftDocumentPersistence({
                 blocks: CreateBlockBatchInput[],
                 positionUpdates: BlockPositionUpdate[]
             ) => {
-                if (!(await ensureMaterialized())) return [];
+                if (!(await ensureMaterialized())) {
+                    return [];
+                }
 
                 const existingBlocks = blocks
                     .map((block) => materializedBlocksRef.current.get(block.id))

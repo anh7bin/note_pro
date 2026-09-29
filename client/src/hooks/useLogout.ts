@@ -1,14 +1,14 @@
+import { useI18n } from '@/contexts/I18nContext';
+import { LOCALE_STORAGE_KEY } from '@/i18n/config';
+import { isDeviceOnboardingStorageKey } from '@/lib/onboarding';
 import { ROUTES } from '@/lib/routes';
 import showToast from '@/lib/toast';
 import { signOut } from 'next-auth/react';
 import { useCallback, useState } from 'react';
-import { useI18n } from '@/contexts/I18nContext';
-import { LOCALE_STORAGE_KEY } from '@/i18n/config';
-import { isDeviceOnboardingStorageKey } from '@/lib/onboarding';
 
 export function useLogout() {
-    const [isLoggingOut, setIsLoggingOut] = useState(false);
     const { t } = useI18n();
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const logout = useCallback(async () => {
         try {

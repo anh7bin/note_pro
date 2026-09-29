@@ -36,7 +36,9 @@ export function useSearch() {
 
     const executeSearch = useCallback(
         async (term: string, requestId: number) => {
-            if (!workspaceId || !userId) return;
+            if (!workspaceId || !userId) {
+                return;
+            }
 
             const response = await searchAll({
                 variables: {
@@ -46,7 +48,9 @@ export function useSearch() {
                 },
             });
 
-            if (requestId !== requestIdRef.current) return;
+            if (requestId !== requestIdRef.current) {
+                return;
+            }
             if (response.error) throw response.error;
 
             setSearchData({

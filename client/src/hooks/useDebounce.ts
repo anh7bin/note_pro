@@ -37,7 +37,9 @@ export const useDebounce = (delay: number): DebounceController => {
             timersRef.current.delete(key);
 
             const callback = pendingChangesRef.current.get(key);
-            if (!callback) return undefined;
+            if (!callback) {
+                return undefined;
+            }
 
             pendingChangesRef.current.delete(key);
             return runCallback(callback);

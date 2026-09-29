@@ -1,7 +1,5 @@
 'use client';
 
-import { FileText } from 'lucide-react';
-import { usePathname } from 'next/navigation';
 import { DocumentMoreMenu } from '@/components/features/page/DocumentMoreMenu';
 import { SidebarButton } from '@/components/layouts/main-layout/components/SidebarButton';
 import { useI18n } from '@/contexts/I18nContext';
@@ -10,6 +8,8 @@ import { useUserId } from '@/hooks/useAuth';
 import { useDocumentStar } from '@/hooks/useDocumentStar';
 import { ROUTES } from '@/lib/routes';
 import { getPlainText } from '@/lib/text';
+import { FileText } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 type StarredDocument =
     GetStarredDocumentsQuery['document_stars'][number]['document'];
@@ -21,7 +21,7 @@ interface StarredDocumentItemProps {
 export function StarredDocumentItem({ document }: StarredDocumentItemProps) {
     const { t } = useI18n();
     const pathname = usePathname();
-    const currentUserId = useUserId();
+    const userId = useUserId();
     const {
         isStarred,
         isLoading: isUpdatingStar,
@@ -45,7 +45,7 @@ export function StarredDocumentItem({ document }: StarredDocumentItemProps) {
             documentId={document.id}
             workspaceId={document.workspace_id}
             folderId={document.folder?.id}
-            isOwner={document.user_id === currentUserId}
+            isOwner={document.user_id === userId}
             isStarred={isStarred}
             isUpdatingStar={isUpdatingStar}
             onToggleStar={() => void toggleStar()}>

@@ -1,31 +1,31 @@
 'use client';
 
 import { NewTaskModal } from '@/components/layouts/main-layout/components/NewTaskModal';
-import { Button } from '@/components/ui/button';
-import { useWorkspace } from '@/hooks/useWorkspace';
-import { ROUTES } from '@/lib/routes';
-import { CalendarDays, Inbox, ListTodo, Plus } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
-import { Setting } from './Setting';
-import { useLoading } from '@/contexts/LoadingContext';
 import {
     PageContent,
     PageHeader,
     PageShell,
     PageTitle,
 } from '@/components/shared';
+import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
+import { useLoading } from '@/contexts/LoadingContext';
+import { useWorkspace } from '@/hooks/useWorkspace';
+import { ROUTES } from '@/lib/routes';
+import { CalendarDays, Inbox, ListTodo, Plus } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Setting } from './Setting';
 
 interface TasksLayoutClientProps {
     children: React.ReactNode;
 }
 
 export function TasksLayoutClient({ children }: TasksLayoutClientProps) {
-    const { workspaceSlug } = useWorkspace();
+    const { t } = useI18n();
     const router = useRouter();
     const pathname = usePathname();
     const { startLoading } = useLoading();
-    const { t } = useI18n();
+    const { workspaceSlug } = useWorkspace();
 
     const navItems = [
         {

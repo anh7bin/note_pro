@@ -104,12 +104,16 @@ export function useEditorBlockActions({
     const deleteBlockAndFocusNeighbor = useCallback(
         (blockId: string) => {
             const currentBlocks = blocksRef.current;
-            if (currentBlocks.length <= 1) return false;
+            if (currentBlocks.length <= 1) {
+                return false;
+            }
 
             const currentIndex = currentBlocks.findIndex(
                 (block) => block.id === blockId
             );
-            if (currentIndex < 0) return false;
+            if (currentIndex < 0) {
+                return false;
+            }
 
             const previousBlock =
                 currentIndex > 0 ? currentBlocks[currentIndex - 1] : null;
@@ -160,19 +164,25 @@ export function useEditorBlockActions({
             const currentIndex = currentBlocks.findIndex(
                 (block) => block.id === blockId
             );
-            if (currentIndex < 0) return false;
+            if (currentIndex < 0) {
+                return false;
+            }
 
             if (isBlockHtmlEmpty(currentContent)) {
                 return deleteBlockAndFocusNeighbor(blockId);
             }
 
             const previousBlock = currentBlocks[currentIndex - 1];
-            if (!previousBlock) return false;
+            if (!previousBlock) {
+                return false;
+            }
 
             const isPreviousBlockText =
                 previousBlock?.type === BlockType.PARAGRAPH ||
                 previousBlock?.type === BlockType.TASK;
-            if (!isPreviousBlockText) return false;
+            if (!isPreviousBlockText) {
+                return false;
+            }
 
             const previousContent =
                 dirtyContentRef.current.get(previousBlock.id) ??
@@ -238,7 +248,9 @@ export function useEditorBlockActions({
             const currentIndex = blocksRef.current.findIndex(
                 (block) => block.id === blockId
             );
-            if (currentIndex < 0) return false;
+            if (currentIndex < 0) {
+                return false;
+            }
 
             const step = direction === 'previous' ? -1 : 1;
             let targetIndex = currentIndex + step;
@@ -256,7 +268,9 @@ export function useEditorBlockActions({
                 targetIndex += step;
             }
 
-            if (!targetBlock) return false;
+            if (!targetBlock) {
+                return false;
+            }
 
             setFocusPosition(direction === 'previous' ? 'end' : 'start');
             setFocusedBlock(targetBlock.id);

@@ -1,24 +1,26 @@
 'use client';
 
+import { TaskListPageState } from '@/components/features/page/TaskListPageState';
+import { useI18n } from '@/contexts/I18nContext';
 import {
     GetAllTasksDocument,
     useGetAllTasksQuery,
 } from '@/graphql/queries/__generated__/task.generated';
-import { useWorkspace } from '@/hooks/useWorkspace';
-import { Task } from '@/types/app';
-import { TASK_STATUS } from '@/lib/constants';
-import { useI18n } from '@/contexts/I18nContext';
-import { TaskListPageState } from '@/components/features/page/TaskListPageState';
 import { useTaskCompletion } from '@/hooks/useTaskCompletion';
+import { useWorkspace } from '@/hooks/useWorkspace';
+import { TASK_STATUS } from '@/lib/constants';
+import { Task } from '@/types/app';
+import { useCallback, useMemo } from 'react';
 
 export default function AllTasksPage() {
-    const { workspaceId } = useWorkspace();
     const { t } = useI18n();
+    const { workspaceId } = useWorkspace();
 
     const { loading, data, error, refetch } = useGetAllTasksQuery({
         variables: { workspaceId },
         skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
 
     const { setTaskCompleted } = useTaskCompletion({
@@ -28,19 +30,26 @@ export default function AllTasksPage() {
                 variables: { workspaceId },
             },
         ],
-        awaitRefetchQueries: true,
     });
 
-    const tasks: Task[] = (data?.tasks || []).filter(
-        (task) => task.status !== TASK_STATUS.COMPLETED
+    const tasks = useMemo(
+        () =>
+            ((data?.tasks || []) as Task[]).filter(
+                (task) => task.status !== TASK_STATUS.COMPLETED
+            ),
+        [data?.tasks]
     );
+
+    const handleRetry = useCallback(() => {
+        void refetch();
+    }, [refetch]);
 
     return (
         <TaskListPageState
             tasks={tasks}
-            loading={loading}
-            hasError={Boolean(error)}
-            retry={() => void refetch()}
+            loading={!workspaceId || (loading && !data)}
+            hasError={Boolean(error) && !data}
+            retry={handleRetry}
             emptyTitle={t('noTasks')}
             emptyDescription={t('allTasksEmptyDescription')}
             onToggleComplete={setTaskCompleted}

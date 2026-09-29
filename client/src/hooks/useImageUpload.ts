@@ -1,10 +1,10 @@
+import { useI18n } from '@/contexts/I18nContext';
 import {
     CloudinaryUploadResponse,
     uploadImageToCloudinary,
 } from '@/lib/cloudinary/index';
-import { useState } from 'react';
-import { useI18n } from '@/contexts/I18nContext';
 import { showToast } from '@/lib/toast';
+import { useState } from 'react';
 
 interface UseImageUploadOptions {
     tags?: string[];
@@ -27,9 +27,9 @@ export function useImageUpload({
         'image/gif',
     ],
 }: UseImageUploadOptions = {}) {
+    const { t } = useI18n();
     const [isUploading, setIsUploading] = useState(false);
     const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
-    const { t } = useI18n();
 
     const uploadImage = async (file: File): Promise<string | null> => {
         if (!allowedTypes.includes(file.type)) {

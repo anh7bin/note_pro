@@ -38,8 +38,12 @@ export function mergeBlockHtml(
     const previousElement = previousContainer.lastElementChild;
     const currentElement = currentContainer.firstElementChild;
 
-    if (!previousElement) return currentHtml;
-    if (!currentElement) return previousHtml;
+    if (!previousElement) {
+        return currentHtml;
+    }
+    if (!currentElement) {
+        return previousHtml;
+    }
 
     if (
         canMergeTextElements(previousElement, currentElement) ||

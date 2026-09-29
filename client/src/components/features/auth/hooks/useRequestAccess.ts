@@ -20,7 +20,7 @@ export function useRequestAccess(documentId: string) {
     const { data, loading, refetch } = useGetAccessRequestByDocumentQuery({
         variables: {
             documentId: documentId || '',
-            requesterId: userId || '',
+            requesterId: userId,
         },
         skip: !documentId || !userId,
     });

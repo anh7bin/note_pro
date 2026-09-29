@@ -38,7 +38,7 @@ const CardDocumentComponent = ({
 }) => {
     const router = useRouter();
     const { workspaceId: wsId } = useWorkspace();
-    const currentUserId = useUserId();
+    const userId = useUserId();
     const { startLoading } = useLoading();
     const { locale, t } = useI18n();
     const {
@@ -88,8 +88,8 @@ const CardDocumentComponent = ({
     const workspaceId = document.workspace_id || wsId;
 
     const isOwner = useMemo(() => {
-        return document.user_id === currentUserId;
-    }, [document.user_id, currentUserId]);
+        return document.user_id === userId;
+    }, [document.user_id, userId]);
 
     useEffect(() => {
         if (!workspaceId) return;

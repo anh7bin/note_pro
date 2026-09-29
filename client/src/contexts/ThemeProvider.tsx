@@ -47,7 +47,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }, []);
 
     useEffect(() => {
-        if (!mounted) return;
+        if (!mounted) {
+            return;
+        }
 
         const root = document.documentElement;
         root.classList.remove('light', 'dark');
@@ -57,7 +59,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }, [mounted, theme]);
 
     useEffect(() => {
-        if (!mounted) return;
+        if (!mounted) {
+            return;
+        }
         document.documentElement.setAttribute('data-accent-color', accentColor);
     }, [accentColor, mounted]);
 

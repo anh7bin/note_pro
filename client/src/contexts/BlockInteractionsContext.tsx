@@ -1,5 +1,6 @@
 'use client';
 
+import { useI18n } from '@/contexts/I18nContext';
 import {
     GetBlockInteractionsDocument,
     type GetBlockInteractionsQuery,
@@ -15,7 +16,6 @@ import {
 } from '@/graphql/__generated__/block-interactions.generated';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { showToast } from '@/lib/toast';
-import { useI18n } from '@/contexts/I18nContext';
 import {
     createContext,
     useCallback,
@@ -52,9 +52,10 @@ export function BlockInteractionsProvider({
     pageId,
     enabled = true,
 }: BlockInteractionsProviderProps) {
-    const currentUser = useCurrentUser();
     const { t } = useI18n();
+    const currentUser = useCurrentUser();
     const pendingReactionKeysRef = useRef(new Set<string>());
+
     const { data, loading, subscribeToMore } = useGetBlockInteractionsQuery({
         variables: { pageId },
         skip: !enabled || !pageId,
@@ -67,14 +68,18 @@ export function BlockInteractionsProvider({
     const [deleteReactionMutation] = useDeleteBlockReactionMutation();
 
     useEffect(() => {
-        if (!enabled || !pageId) return;
+        if (!enabled || !pageId) {
+            return;
+        }
 
         const unsubscribeComments =
             subscribeToMore<SubscribeToBlockCommentsSubscription>({
                 document: SubscribeToBlockCommentsDocument,
                 variables: { pageId },
                 updateQuery: (previous, { complete, subscriptionData }) => {
-                    if (!complete || !subscriptionData.data) return;
+                    if (!complete || !subscriptionData.data) {
+                        return;
+                    }
 
                     return {
                         ...previous,
@@ -87,7 +92,9 @@ export function BlockInteractionsProvider({
                 document: SubscribeToBlockReactionsDocument,
                 variables: { pageId },
                 updateQuery: (previous, { complete, subscriptionData }) => {
-                    if (!complete || !subscriptionData.data) return;
+                    if (!complete || !subscriptionData.data) {
+                        return;
+                    }
 
                     return {
                         ...previous,
@@ -125,7 +132,9 @@ export function BlockInteractionsProvider({
     const addComment = useCallback(
         async (blockId: string, rawContent: string) => {
             const content = rawContent.trim();
-            if (!currentUser.id || !content) return false;
+            if (!currentUser.id || !content) {
+                return false;
+            }
 
             const optimisticId = `optimistic-comment-${crypto.randomUUID()}`;
             const createdAt = new Date().toISOString();
@@ -156,7 +165,9 @@ export function BlockInteractionsProvider({
                     },
                     update(cache, { data: mutationData }) {
                         const comment = mutationData?.insert_block_comments_one;
-                        if (!comment) return;
+                        if (!comment) {
+                            return;
+                        }
 
                         cache.updateQuery<GetBlockInteractionsQuery>(
                             {
@@ -164,7 +175,9 @@ export function BlockInteractionsProvider({
                                 variables: { pageId },
                             },
                             (existing) => {
-                                if (!existing) return existing;
+                                if (!existing) {
+                                    return existing;
+                                }
 
                                 return {
                                     ...existing,
@@ -233,10 +246,14 @@ export function BlockInteractionsProvider({
 
     const toggleReaction = useCallback(
         async (blockId: string, emoji: string) => {
-            if (!currentUser.id) return;
+            if (!currentUser.id) {
+                return;
+            }
 
             const pendingKey = `${blockId}:${emoji}`;
-            if (pendingReactionKeysRef.current.has(pendingKey)) return;
+            if (pendingReactionKeysRef.current.has(pendingKey)) {
+                return;
+            }
             pendingReactionKeysRef.current.add(pendingKey);
 
             const existingReaction = data?.block_reactions.find(
@@ -309,7 +326,9 @@ export function BlockInteractionsProvider({
                     update(cache, { data: mutationData }) {
                         const reaction =
                             mutationData?.insert_block_reactions_one;
-                        if (!reaction) return;
+                        if (!reaction) {
+                            return;
+                        }
 
                         cache.updateQuery<GetBlockInteractionsQuery>(
                             {
@@ -317,7 +336,9 @@ export function BlockInteractionsProvider({
                                 variables: { pageId },
                             },
                             (existing) => {
-                                if (!existing) return existing;
+                                if (!existing) {
+                                    return existing;
+                                }
 
                                 return {
                                     ...existing,

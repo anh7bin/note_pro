@@ -1,6 +1,5 @@
 'use client';
 
-import { useCallback } from 'react';
 import { useI18n } from '@/contexts/I18nContext';
 import {
     type UpdateTaskMutationOptions,
@@ -8,6 +7,7 @@ import {
 } from '@/graphql/mutations/__generated__/task.generated';
 import { TASK_STATUS } from '@/lib/constants';
 import { showToast } from '@/lib/toast';
+import { useCallback } from 'react';
 
 type TaskCompletionOptions = Pick<
     UpdateTaskMutationOptions,

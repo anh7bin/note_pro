@@ -12,12 +12,15 @@ export default function EditorPage() {
         workspaceId: string;
         params: string[];
     }>();
+
     const documentId = params?.[params.length - 1];
     const isDraft = params?.[params.length - 2] === 'new';
     const folderId = isDraft && params.length >= 3 ? params[0] : null;
 
     const handlePersisted = useCallback(() => {
-        if (!workspaceId || !documentId) return;
+        if (!workspaceId || !documentId) {
+            return;
+        }
 
         const persistedUrl = folderId
             ? ROUTES.WORKSPACE_DOCUMENT_FOLDER(

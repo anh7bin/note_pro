@@ -35,7 +35,9 @@ export function EditorProvider({
 
     const draftRootBlock = useMemo<Block | null>(() => {
         const draftConfig = draftRef.current;
-        if (!draftConfig || !userId) return null;
+        if (!draftConfig || !userId) {
+            return null;
+        }
 
         const timestamp = draftCreatedAtRef.current ?? new Date().toISOString();
         return {
@@ -57,7 +59,9 @@ export function EditorProvider({
     const draftInitialBlock = useMemo<Block | null>(() => {
         const draftConfig = draftRef.current;
         const blockId = draftBlockIdRef.current;
-        if (!draftConfig || !blockId || !userId) return null;
+        if (!draftConfig || !blockId || !userId) {
+            return null;
+        }
 
         const timestamp = draftCreatedAtRef.current ?? new Date().toISOString();
         return {
@@ -96,7 +100,9 @@ export function EditorProvider({
     });
 
     useEffect(() => {
-        if (!draftInitialBlock || processedRootBlock) return;
+        if (!draftInitialBlock || processedRootBlock) {
+            return;
+        }
         editorState.locallyCreatedIdsRef.current.add(draftInitialBlock.id);
     }, [
         draftInitialBlock,

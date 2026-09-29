@@ -2,8 +2,8 @@
 
 import { DocumentGrid } from '@/components/features/page/DocumentGrid';
 import { DocumentPageSkeleton } from '@/components/features/page/DocumentPageSkeleton';
-import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
+import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import {
     EmptyState,
@@ -23,27 +23,34 @@ import { Document } from '@/types/app';
 import { FilePlus2, Files, Plus } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 
+const EMPTY_DOCS: Document[] = [];
+
 export default function AllDocsPage() {
-    const { workspaceId } = useWorkspace();
-    const { createNewDocument, isCreating, canCreate } = useCreateDocument();
-    const { clearSelection, setMode } = useDocumentSelection();
     const { t } = useI18n();
+    const { workspaceId } = useWorkspace();
     const { view, changeView } = useDocumentView();
+    const { clearSelection, setMode } = useDocumentSelection();
+    const { createNewDocument, isCreating, canCreate } = useCreateDocument();
 
     const { loading, data } = useGetAllDocsQuery({
         variables: { workspaceId },
         skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
 
-    const allDocs: Document[] = useMemo(() => data?.blocks || [], [data]);
+    const allDocs = (data?.blocks ?? EMPTY_DOCS) as Document[];
+    const documentIds = useMemo(() => allDocs.map((doc) => doc.id), [allDocs]);
 
     useEffect(() => {
         clearSelection();
         setMode('default');
     }, [clearSelection, setMode]);
 
-    return loading && allDocs.length === 0 ? (
+    const createDisabled = !canCreate || isCreating;
+    const isInitialLoading = loading && allDocs.length === 0;
+
+    return isInitialLoading ? (
         <DocumentPageSkeleton />
     ) : (
         <PageShell data-tour="documents-page">
@@ -54,7 +61,7 @@ export default function AllDocsPage() {
                             variant="outline"
                             size="icon-sm"
                             onClick={createNewDocument}
-                            disabled={!canCreate || isCreating}>
+                            disabled={createDisabled}>
                             <Plus />
                         </Button>
                     </SimpleTooltip>
@@ -64,9 +71,7 @@ export default function AllDocsPage() {
                     </PageTitle>
                 </div>
                 <div className="flex items-center gap-2">
-                    <SelectionActionBar
-                        documentIds={allDocs.map((document) => document.id)}
-                    />
+                    <SelectionActionBar documentIds={documentIds} />
                     <DocumentViewToggle view={view} onChange={changeView} />
                 </div>
             </PageHeader>
@@ -83,7 +88,7 @@ export default function AllDocsPage() {
                             <Button
                                 size="sm"
                                 onClick={createNewDocument}
-                                disabled={!canCreate || isCreating}>
+                                disabled={createDisabled}>
                                 <FilePlus2 />
                                 {t('createDocument')}
                             </Button>

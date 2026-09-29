@@ -1,8 +1,9 @@
 'use client';
 
+import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
 import { FolderDocumentGrid } from '@/components/features/page/FolderDocumentGrid';
 import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
-import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
+import { NewFolderButton } from '@/components/layouts/main-layout/components/NewFolderButton';
 import {
     EmptyState,
     PageContent,
@@ -19,31 +20,39 @@ import { useWorkspace } from '@/hooks';
 import { useDocumentView } from '@/hooks/useDocumentView';
 import { FolderOpen } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
-import { NewFolderButton } from '@/components/layouts/main-layout/components/NewFolderButton';
 
 export default function FoldersPage() {
-    const { workspaceId } = useWorkspace();
     const { t } = useI18n();
+    const { workspaceId } = useWorkspace();
     const { view, changeView } = useDocumentView();
     const { clearSelection, setMode } = useDocumentSelection();
+
     const { data, loading } = useGetFoldersQuery({
         variables: { workspaceId },
         skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
-    const folders = useMemo(
-        () => (data?.folders ?? []).filter((folder) => !folder.parent_id),
-        [data?.folders]
-    );
+
+    const { folders, folderIds } = useMemo(() => {
+        const rootFolders = (data?.folders ?? []).filter(
+            (folder) => !folder.parent_id
+        );
+
+        return {
+            folders: rootFolders,
+            folderIds: rootFolders.map((folder) => folder.id),
+        };
+    }, [data?.folders]);
 
     useEffect(() => {
         clearSelection();
         setMode('default');
     }, [clearSelection, setMode]);
 
-    if (loading && folders.length === 0) return <PageLoading />;
-
-    return (
+    return loading && folders.length === 0 ? (
+        <PageLoading />
+    ) : (
         <PageShell>
             <PageHeader>
                 <div className="flex items-center gap-2">
@@ -55,7 +64,7 @@ export default function FoldersPage() {
                     <div className="flex items-center gap-2">
                         <SelectionActionBar
                             documentIds={[]}
-                            folderIds={folders.map((folder) => folder.id)}
+                            folderIds={folderIds}
                         />
                         <DocumentViewToggle view={view} onChange={changeView} />
                     </div>
@@ -64,9 +73,9 @@ export default function FoldersPage() {
             <PageContent>
                 {folders.length > 0 ? (
                     <FolderDocumentGrid
+                        view={view}
                         folders={folders}
                         documents={[]}
-                        view={view}
                     />
                 ) : (
                     <EmptyState

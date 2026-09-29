@@ -22,7 +22,7 @@ export function useRequestEdit(documentId: string) {
     } = useGetAccessRequestByDocumentQuery({
         variables: {
             documentId: documentId || '',
-            requesterId: userId || '',
+            requesterId: userId,
         },
         skip: !documentId || !userId,
         fetchPolicy: 'network-only',

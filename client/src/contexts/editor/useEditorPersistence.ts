@@ -120,9 +120,12 @@ export function useEditorPersistence({
                 .then(async () => {
                     const pendingCreation =
                         pendingCreationsRef.current.get(blockId);
-                    if (pendingCreation && !(await pendingCreation)) return;
-                    if (dirtyContentRef.current.get(blockId) !== content)
+                    if (pendingCreation && !(await pendingCreation)) {
                         return;
+                    }
+                    if (dirtyContentRef.current.get(blockId) !== content) {
+                        return;
+                    }
 
                     const savedBlock = await updateBlockContent(blockId, {
                         text: content,
@@ -166,7 +169,9 @@ export function useEditorPersistence({
         }
 
         const queuedCreations = Array.from(creationBatchRef.current.values());
-        if (!queuedCreations.length) return;
+        if (!queuedCreations.length) {
+            return;
+        }
 
         creationBatchRef.current.clear();
         creationBatchStartedAtRef.current = null;
@@ -402,7 +407,9 @@ export function useEditorPersistence({
     const handleUpdateTitle = useCallback(
         (title: string) => {
             const currentRootBlock = rootBlockRef.current;
-            if (!currentRootBlock) return;
+            if (!currentRootBlock) {
+                return;
+            }
 
             dirtyTitleRef.current = title;
             void ensureDocumentPersisted?.();
@@ -411,10 +418,14 @@ export function useEditorPersistence({
                 const nextSave = previousSave
                     .catch(() => undefined)
                     .then(async () => {
-                        if (dirtyTitleRef.current !== title) return;
+                        if (dirtyTitleRef.current !== title) {
+                            return;
+                        }
 
                         const latestRootBlock = rootBlockRef.current;
-                        if (!latestRootBlock) return;
+                        if (!latestRootBlock) {
+                            return;
+                        }
 
                         const savedBlock = await updateBlockContent(
                             latestRootBlock.id,
@@ -435,7 +446,9 @@ export function useEditorPersistence({
     const handleUpdateDocumentIcon = useCallback(
         async (icon: string | null) => {
             const currentRootBlock = rootBlockRef.current;
-            if (!currentRootBlock) return false;
+            if (!currentRootBlock) {
+                return false;
+            }
 
             const previousIcon = currentRootBlock.content.icon;
             const nextContent: BlockContent = {
@@ -462,7 +475,9 @@ export function useEditorPersistence({
                 );
             titleSaveQueueRef.current = iconSave.then(() => undefined);
             const savedBlock = await iconSave;
-            if (savedBlock) return true;
+            if (savedBlock) {
+                return true;
+            }
 
             setRootBlock((latestRootBlock) => {
                 if (
@@ -494,16 +509,22 @@ export function useEditorPersistence({
     const handleUpdateDocumentCover = useCallback(
         async (coverImage: string | null) => {
             const currentRootBlock = rootBlockRef.current;
-            if (!currentRootBlock) return false;
+            if (!currentRootBlock) {
+                return false;
+            }
 
             const updated = await updateBlockCoverImage(
                 currentRootBlock.id,
                 coverImage
             );
-            if (!updated) return false;
+            if (!updated) {
+                return false;
+            }
 
             setRootBlock((latestRootBlock) => {
-                if (!latestRootBlock) return latestRootBlock;
+                if (!latestRootBlock) {
+                    return latestRootBlock;
+                }
 
                 const nextRootBlock = {
                     ...latestRootBlock,
@@ -560,7 +581,9 @@ export function useEditorPersistence({
         await Promise.resolve();
 
         const pendingCreation = pendingCreationsRef.current.get(blockId);
-        if (pendingCreation && !(await pendingCreation)) return false;
+        if (pendingCreation && !(await pendingCreation)) {
+            return false;
+        }
 
         const pendingSave = saveQueuesRef.current.get(blockId);
         if (pendingSave) await pendingSave;

@@ -1,12 +1,5 @@
 'use client';
 
-import { ROUTES } from '@/lib/routes';
-import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
-import { AUTHENTICATED } from '@/lib/constants';
-import { useWorkspace } from '@/hooks/useWorkspace';
-import { ButtonLoading, PageLoading } from '@/components/ui/loading';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -15,13 +8,21 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { ButtonLoading, PageLoading } from '@/components/ui/loading';
+import { useWorkspace } from '@/hooks/useWorkspace';
+import { AUTHENTICATED } from '@/lib/constants';
+import { ROUTES } from '@/lib/routes';
 import { CircleAlert } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function Home() {
-    const { data: session, status } = useSession();
-    const { workspaceSlug, loading, error, refetch } = useWorkspace();
     const router = useRouter();
+    const { data: session, status } = useSession();
     const [isRetrying, setIsRetrying] = useState(false);
+    const { workspaceSlug, loading, error, refetch } = useWorkspace();
+
     const hasValidSession =
         status === AUTHENTICATED && !!session?.token && !session.error;
 
@@ -53,11 +54,12 @@ export default function Home() {
         void signOut({ callbackUrl: ROUTES.LOGIN });
     }, []);
 
-    if (status === 'loading' || loading || !hasValidSession || workspaceSlug) {
-        return <PageLoading />;
-    }
+    const isInitialLoading =
+        status === 'loading' || loading || !hasValidSession || workspaceSlug;
 
-    return (
+    return isInitialLoading ? (
+        <PageLoading />
+    ) : (
         <main className="flex min-h-dvh items-center justify-center bg-background px-4 py-10">
             <Card role="alert" className="w-full max-w-md text-center">
                 <CardHeader className="items-center space-y-3">

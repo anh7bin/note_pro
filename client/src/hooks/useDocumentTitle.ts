@@ -15,7 +15,9 @@ export function useDocumentTitle(options: UseDocumentTitleOptions = {}) {
     const lastTitleRef = useRef<string | null>(null);
 
     const documentId = useMemo(() => {
-        if (!params || !enabled) return null;
+        if (!params || !enabled) {
+            return null;
+        }
 
         if (Array.isArray(params.params)) {
             return params.params[params.params.length - 1];

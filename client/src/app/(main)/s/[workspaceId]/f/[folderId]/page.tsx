@@ -1,18 +1,9 @@
 'use client';
 
-import { FolderDocumentGrid } from '@/components/features/page/FolderDocumentGrid';
-import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
-import { PageLoading } from '@/components/ui/loading';
-import { Separator } from '@/components/ui/separator';
-import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
-import { useGetFolderByIdQuery } from '@/graphql/queries/__generated__/folder.generated';
-import { Document } from '@/types/app';
-import { useDocumentView } from '@/hooks/useDocumentView';
-import { useMemo, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { FolderDocumentGrid } from '@/components/features/page/FolderDocumentGrid';
 import { NewItemMenu } from '@/components/features/page/NewItemMenu';
-import { FolderOpen } from 'lucide-react';
+import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import {
     EmptyState,
     PageContent,
@@ -20,14 +11,23 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
+import { PageLoading } from '@/components/ui/loading';
+import { Separator } from '@/components/ui/separator';
+import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useI18n } from '@/contexts/I18nContext';
+import { useGetFolderByIdQuery } from '@/graphql/queries/__generated__/folder.generated';
+import { useDocumentView } from '@/hooks/useDocumentView';
+import { Document } from '@/types/app';
+import { FolderOpen } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { useEffect, useMemo } from 'react';
 
 export default function FolderPage() {
+    const { t } = useI18n();
     const params = useParams();
     const folderId = params.folderId as string;
-    const { clearSelection, setMode } = useDocumentSelection();
-    const { t } = useI18n();
     const { view, changeView } = useDocumentView();
+    const { clearSelection, setMode } = useDocumentSelection();
 
     const { loading, data } = useGetFolderByIdQuery({
         variables: { folderId },
@@ -40,26 +40,26 @@ export default function FolderPage() {
     const subFolders = useMemo(() => folder?.children || [], [folder]);
     const documents: Document[] = useMemo(() => folder?.blocks || [], [folder]);
 
+    const documentIds = useMemo(
+        () => documents.map((doc) => doc.id),
+        [documents]
+    );
+    const folderIds = useMemo(() => subFolders.map((f) => f.id), [subFolders]);
+
     useEffect(() => {
         clearSelection();
         setMode('default');
     }, [folderId, clearSelection, setMode]);
 
-    if (loading && !folder) {
-        return <PageLoading />;
-    }
-
-    if (!folder) {
-        return (
-            <EmptyState
-                icon={<FolderOpen />}
-                title={t('folderNotFound')}
-                description={t('folderNotFoundDescription')}
-            />
-        );
-    }
-
-    return (
+    return loading && !folder ? (
+        <PageLoading />
+    ) : !folder ? (
+        <EmptyState
+            icon={<FolderOpen />}
+            title={t('folderNotFound')}
+            description={t('folderNotFoundDescription')}
+        />
+    ) : (
         <PageShell>
             <PageHeader>
                 <div className="flex min-w-0 items-center gap-2">
@@ -69,8 +69,8 @@ export default function FolderPage() {
                 </div>
                 <div className="flex items-center gap-2">
                     <SelectionActionBar
-                        documentIds={documents.map((document) => document.id)}
-                        folderIds={subFolders.map((subFolder) => subFolder.id)}
+                        documentIds={documentIds}
+                        folderIds={folderIds}
                     />
                     <DocumentViewToggle view={view} onChange={changeView} />
                 </div>

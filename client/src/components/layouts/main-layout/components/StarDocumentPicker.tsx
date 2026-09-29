@@ -46,7 +46,7 @@ export function StarDocumentPicker({
     const { data, loading } = useGetDocumentsToStarQuery({
         variables: {
             workspaceId,
-            userId: userId || '',
+            userId,
         },
         skip: !isOpen || !workspaceId || !userId,
         fetchPolicy: 'cache-and-network',

@@ -27,7 +27,9 @@ export function useDocumentCover({
     const handleAddCover = useCallback(
         async (file: File) => {
             const currentRootBlock = rootBlockRef.current;
-            if (!currentRootBlock) return false;
+            if (!currentRootBlock) {
+                return false;
+            }
 
             const imageUrl = await uploadImage(file);
             if (imageUrl) {
@@ -42,7 +44,9 @@ export function useDocumentCover({
     const handleSelectCover = useCallback(
         async (imageUrl: string) => {
             const currentRootBlock = rootBlockRef.current;
-            if (!currentRootBlock) return false;
+            if (!currentRootBlock) {
+                return false;
+            }
 
             return onUpdateCover(imageUrl);
         },
@@ -51,7 +55,9 @@ export function useDocumentCover({
 
     const handleRemoveCover = useCallback(async () => {
         const currentRootBlock = rootBlockRef.current;
-        if (!currentRootBlock) return;
+        if (!currentRootBlock) {
+            return;
+        }
 
         await onUpdateCover(null);
     }, [onUpdateCover]);

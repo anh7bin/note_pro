@@ -25,23 +25,28 @@ export default function StarredPage() {
     const { t } = useI18n();
     const { view, changeView } = useDocumentView();
     const { clearSelection, setMode } = useDocumentSelection();
+
     const { data, loading } = useGetStarredDocumentsPageQuery({
         fetchPolicy: 'cache-and-network',
         nextFetchPolicy: 'cache-first',
     });
-    const documents: Document[] = useMemo(
-        () => data?.document_stars.map(({ document }) => document) ?? [],
-        [data?.document_stars]
-    );
+
+    const { documents, documentIds } = useMemo(() => {
+        const docs = (data?.document_stars ?? [])
+            .map((star) => star.document)
+            .filter(Boolean) as Document[];
+
+        return { documents: docs, documentIds: docs.map((doc) => doc.id) };
+    }, [data?.document_stars]);
 
     useEffect(() => {
         clearSelection();
         setMode('default');
     }, [clearSelection, setMode]);
 
-    if (loading && documents.length === 0) return <PageLoading />;
-
-    return (
+    return loading && documents.length === 0 ? (
+        <PageLoading />
+    ) : (
         <PageShell>
             <PageHeader>
                 <div className="flex items-center gap-2">
@@ -55,11 +60,7 @@ export default function StarredPage() {
                 </div>
                 {documents.length > 0 && (
                     <div className="flex items-center gap-2">
-                        <SelectionActionBar
-                            documentIds={documents.map(
-                                (document) => document.id
-                            )}
-                        />
+                        <SelectionActionBar documentIds={documentIds} />
                         <DocumentViewToggle view={view} onChange={changeView} />
                     </div>
                 )}

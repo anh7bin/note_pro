@@ -1,41 +1,51 @@
 'use client';
 
+import { TaskListPageState } from '@/components/features/page/TaskListPageState';
+import { useI18n } from '@/contexts/I18nContext';
 import {
     GetTodoTasksDocument,
     useGetTodoTasksQuery,
 } from '@/graphql/queries/__generated__/task.generated';
-import { useWorkspace } from '@/hooks/useWorkspace';
-import { Task } from '@/types/app';
-import { TASK_STATUS } from '@/lib/constants';
-import { useI18n } from '@/contexts/I18nContext';
-import { TaskListPageState } from '@/components/features/page/TaskListPageState';
 import { useTaskCompletion } from '@/hooks/useTaskCompletion';
+import { useWorkspace } from '@/hooks/useWorkspace';
+import { TASK_STATUS } from '@/lib/constants';
+import { Task } from '@/types/app';
+import { useCallback, useMemo } from 'react';
 
 export default function InboxPage() {
-    const { workspaceId } = useWorkspace();
     const { t } = useI18n();
+    const { workspaceId } = useWorkspace();
 
     const { loading, data, error, refetch } = useGetTodoTasksQuery({
         variables: { workspaceId },
         skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
 
     const { setTaskCompleted } = useTaskCompletion({
         refetchQueries: [GetTodoTasksDocument],
-        awaitRefetchQueries: true,
     });
 
-    const tasks: Task[] = (data?.tasks || []).filter(
-        (task) => task.status === TASK_STATUS.TODO && !task.schedule_date
+    const tasks = useMemo(
+        () =>
+            ((data?.tasks || []) as Task[]).filter(
+                (task) =>
+                    task.status === TASK_STATUS.TODO && !task.schedule_date
+            ),
+        [data?.tasks]
     );
+
+    const handleRetry = useCallback(() => {
+        void refetch();
+    }, [refetch]);
 
     return (
         <TaskListPageState
             tasks={tasks}
-            loading={loading}
-            hasError={Boolean(error)}
-            retry={() => void refetch()}
+            loading={!workspaceId || (loading && !data)}
+            hasError={Boolean(error) && !data}
+            retry={handleRetry}
             emptyTitle={t('noInboxTasks')}
             emptyDescription={t('inboxEmptyDescription')}
             onToggleComplete={setTaskCompleted}
