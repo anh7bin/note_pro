@@ -276,9 +276,9 @@ const CardDocumentComponent = ({
                             </CardTitle>
                         </TruncatedTooltip>
                         <CardDescription className="flex items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-xs">
-                            {document.folder?.name && (
+                            {document.folder && (
                                 <span className="flex items-center gap-1 shrink-0">
-                                    <Folder className="w-3 h-3" />
+                                    {document.folder.icon}
                                     <span className="truncate">
                                         {document.folder?.name} •
                                     </span>
