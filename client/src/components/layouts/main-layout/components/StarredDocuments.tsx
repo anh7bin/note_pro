@@ -21,13 +21,13 @@ export function StarredDocuments({ workspaceSlug }: { workspaceSlug: string }) {
     const { startLoading } = useLoading();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const listId = useId();
+    const href = ROUTES.WORKSPACE_STARRED(workspaceSlug);
+    const isActive = pathname === href;
     const { data, loading } = useGetStarredDocumentsQuery({
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: isActive ? 'cache-only' : 'cache-and-network',
         nextFetchPolicy: 'cache-first',
     });
     const stars = data?.document_stars ?? [];
-    const href = ROUTES.WORKSPACE_STARRED(workspaceSlug);
-    const isActive = pathname === href;
 
     return (
         <section className="flex min-h-0 flex-col gap-1">
