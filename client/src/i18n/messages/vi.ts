@@ -168,8 +168,6 @@ export const vi: Messages = {
     unstarDocument: 'Bỏ sao',
     starDocumentError: 'Không thể gắn sao tài liệu',
     unstarDocumentError: 'Không thể bỏ sao tài liệu',
-    starSelectedDocuments: 'Gắn sao các tài liệu đã chọn',
-    unstarSelectedDocuments: 'Bỏ sao các tài liệu đã chọn',
     starredSelectedDocuments: 'Đã gắn sao các tài liệu được chọn',
     unstarredSelectedDocuments: 'Đã bỏ sao các tài liệu được chọn',
     starSelectedDocumentsError: 'Không thể gắn sao các tài liệu được chọn',

@@ -44,7 +44,7 @@ export const MenuItems = ({
         <div className="flex flex-col gap-1">
             <ContextMenuItem disabled={isUpdatingStar} onSelect={onToggleStar}>
                 <Star
-                    className={isStarred ? 'fill-current text-amber-500' : ''}
+                    className={isStarred ? 'fill-current text-primary' : ''}
                 />
                 {t(isStarred ? 'unstarDocument' : 'starDocument')}
             </ContextMenuItem>

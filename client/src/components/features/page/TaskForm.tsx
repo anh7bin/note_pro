@@ -1,13 +1,5 @@
 'use client';
 
-import {
-    useId,
-    useMemo,
-    useState,
-    type ReactNode,
-    type RefObject,
-} from 'react';
-import { ChevronDown, Flag, Inbox, Search } from 'lucide-react';
 import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
@@ -22,9 +14,11 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useI18n } from '@/contexts/I18nContext';
-import { useGetAllDocsLazyQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
+import { useGetAllDocsLazyQuery } from '@/graphql/queries/__generated__/document.generated';
 import { getPlainText } from '@/lib/text';
+import { Check, ChevronDown, Flag, Inbox, Search } from 'lucide-react';
+import { useId, useMemo, useState, type ReactNode } from 'react';
 
 export interface TaskFormValues {
     title: string;
@@ -49,7 +43,6 @@ interface TaskFormProps {
         value: TaskFormValues[K]
     ) => void;
     onSubmit: () => void;
-    dialogContentRef: RefObject<HTMLDivElement | null>;
     destinationFallbackTitle?: string;
     destinationFooter?: ReactNode;
 }
@@ -58,7 +51,6 @@ export function TaskForm({
     values,
     onChange,
     onSubmit,
-    dialogContentRef,
     destinationFallbackTitle,
     destinationFooter,
 }: TaskFormProps) {
@@ -87,18 +79,24 @@ export function TaskForm({
             : destinationFallbackTitle || t('untitledPage')
         : t('inbox');
 
+    const loadDocuments = () => {
+        if (workspaceId) {
+            void fetchDocs({ variables: { workspaceId } });
+        }
+    };
+
     const handleDestinationOpenChange = (open: boolean) => {
         setDestinationOpen(open);
         if (!open) setSearchTerm('');
-        if (open && workspaceId) {
-            void fetchDocs({ variables: { workspaceId } });
-        }
+        if (open) loadDocuments();
     };
 
     const selectDestination = (id: string | null) => {
         onChange('destinationId', id);
         handleDestinationOpenChange(false);
     };
+
+    const isInboxSelected = !values.destinationId;
 
     return (
         <div className="min-h-0 space-y-3 overflow-y-auto pr-1">
@@ -175,25 +173,35 @@ export function TaskForm({
                     open={destinationOpen}
                     onOpenChange={handleDestinationOpenChange}
                     contentProps={{
-                        container: dialogContentRef.current ?? undefined,
                         align: 'start',
+                        sideOffset: 6,
+                        collisionPadding: 12,
                         className:
-                            'w-[var(--radix-popover-trigger-width)] max-w-[calc(100vw-3rem)] overflow-hidden p-0',
+                            'z-[100] w-[var(--radix-popover-trigger-width)] max-w-[calc(100vw-3rem)] overflow-hidden rounded-lg p-0 shadow-lg',
                     }}
                     trigger={
                         <Button
                             id={`${formId}-destination`}
                             variant="outline"
                             size="sm"
-                            className="w-full min-w-0 justify-start overflow-hidden text-left font-normal">
-                            <Inbox className="shrink-0" />
-                            <span className="min-w-0 flex-1 truncate">
+                            aria-haspopup="listbox"
+                            className="w-full min-w-0 justify-start gap-2 overflow-hidden text-left font-normal">
+                            {isInboxSelected ? (
+                                <span className={ICON_SLOT}>
+                                    <Inbox className="size-4" />
+                                </span>
+                            ) : (
+                                <DocIcon
+                                    icon={selectedDocument?.content?.icon}
+                                />
+                            )}
+                            <span className="min-w-0 flex-1 text-sm truncate">
                                 {destinationTitle}
                             </span>
-                            <ChevronDown className="shrink-0" />
+                            <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
                         </Button>
                     }>
-                    <div className="p-3">
+                    <div className="border-b p-2">
                         <InputField
                             type="search"
                             placeholder={t('searchDocuments')}
@@ -201,16 +209,33 @@ export function TaskForm({
                             onChange={(event) =>
                                 setSearchTerm(event.target.value)
                             }
-                            icon={<Search />}
+                            icon={
+                                <Search className="size-4 text-muted-foreground" />
+                            }
+                            autoComplete="off"
                         />
                     </div>
-                    <div className="max-h-48 overflow-y-auto overscroll-contain">
+                    <div
+                        role="listbox"
+                        aria-label={t('destination')}
+                        className="max-h-56 overflow-y-auto overscroll-contain p-1 [scrollbar-width:thin]"
+                        onWheel={(event) => event.stopPropagation()}
+                        onTouchMove={(event) => event.stopPropagation()}>
                         <button
                             type="button"
-                            className="flex min-h-8 w-full items-center gap-2 px-2.5 py-1.5 text-left text-sm hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                            role="option"
+                            aria-selected={isInboxSelected}
+                            className={OPTION_CLASS}
                             onClick={() => selectDestination(null)}>
-                            <Inbox className="h-4 w-4" />
-                            {t('inbox')}
+                            <span className={ICON_SLOT}>
+                                <Inbox />
+                            </span>
+                            <span className="min-w-0 flex-1 truncate">
+                                {t('inbox')}
+                            </span>
+                            {isInboxSelected && (
+                                <Check className="size-4 shrink-0 text-primary" />
+                            )}
                         </button>
                         {loading ? (
                             <p className="px-3 py-6 text-center text-sm text-muted-foreground">
@@ -224,50 +249,37 @@ export function TaskForm({
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    onClick={() => {
-                                        if (workspaceId) {
-                                            void fetchDocs({
-                                                variables: {
-                                                    workspaceId,
-                                                },
-                                            });
-                                        }
-                                    }}>
+                                    onClick={loadDocuments}>
                                     {t('retry')}
                                 </Button>
                             </div>
                         ) : filteredDocuments.length ? (
-                            filteredDocuments.map((doc) => (
-                                <button
-                                    type="button"
-                                    key={doc.id}
-                                    className="flex min-h-8 w-full min-w-0 items-center gap-2 overflow-hidden px-2.5 py-1.5 text-left hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
-                                    onClick={() => selectDestination(doc.id)}>
-                                    {typeof doc.content?.icon === 'string' &&
-                                    doc.content?.icon.trim() ? (
-                                        <span className="flex h-5 w-5 shrink-0 items-center justify-center text-sm">
-                                            {doc.content?.icon}
-                                        </span>
-                                    ) : (
-                                        <NewDocumentIcon size={20} />
-                                    )}
-                                    <span className="min-w-0 flex-1 text-left">
-                                        <span className="block truncate text-sm font-medium">
+                            filteredDocuments.map((doc) => {
+                                const selected =
+                                    doc.id === values.destinationId;
+                                return (
+                                    <button
+                                        key={doc.id}
+                                        type="button"
+                                        role="option"
+                                        aria-selected={selected}
+                                        className={OPTION_CLASS}
+                                        onClick={() =>
+                                            selectDestination(doc.id)
+                                        }>
+                                        <DocIcon icon={doc.content?.icon} />
+                                        <span className="block truncate">
                                             {getPlainText(doc.content?.title) ||
                                                 t('untitledPage')}
                                         </span>
-                                        {doc.folder && (
-                                            <span className="block truncate text-xs text-muted-foreground">
-                                                {t('inFolder', {
-                                                    folder: doc.folder.name,
-                                                })}
-                                            </span>
+                                        {selected && (
+                                            <Check className="size-4 shrink-0 text-primary" />
                                         )}
-                                    </span>
-                                </button>
-                            ))
+                                    </button>
+                                );
+                            })
                         ) : (
-                            <p className="px-3 py-3 text-sm text-muted-foreground">
+                            <p className="px-3 py-6 text-center text-sm text-muted-foreground">
                                 {t('noDocumentsFound')}
                             </p>
                         )}
@@ -276,5 +288,23 @@ export function TaskForm({
                 {destinationFooter}
             </div>
         </div>
+    );
+}
+
+const ICON_SLOT = 'flex size-5 shrink-0 items-center justify-center';
+
+const OPTION_CLASS =
+    'flex w-full min-w-0 items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm outline-none transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring';
+
+function DocIcon({ icon }: { icon: unknown }) {
+    const emoji = typeof icon === 'string' ? icon.trim() : '';
+    return (
+        <span className={ICON_SLOT}>
+            {emoji ? (
+                <span className="text-sm leading-none">{emoji}</span>
+            ) : (
+                <NewDocumentIcon size={18} />
+            )}
+        </span>
     );
 }

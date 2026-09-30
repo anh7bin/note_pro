@@ -1,12 +1,12 @@
 'use client';
 
-import React from 'react';
-import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { PopoverPanel } from '@/components/ui/popover-panel';
 import { useI18n } from '@/contexts/I18nContext';
 import { useSearch } from '@/hooks/useSearch';
 import { cn } from '@/lib/utils';
+import { Search } from 'lucide-react';
+import React, { useEffect } from 'react';
 import {
     SEARCH_ITEM_ROW_CLASS_NAME,
     SEARCH_RESULT_SELECTOR,
@@ -26,17 +26,19 @@ export function SearchInputField({
     embedded = false,
     onResultClick,
 }: Props) {
-    const { searchTerm, setSearchTerm, results, workspace } = useSearch();
     const { t } = useI18n();
+    const resultsId = React.useId();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLDivElement>(null);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const resultsRef = React.useRef<HTMLDivElement>(null);
-    const resultsId = React.useId();
     const { recentSearches, addRecentSearch } = useRecentSearches();
+    const { searchTerm, setSearchTerm, results, workspace } = useSearch();
 
-    React.useEffect(() => {
-        if (embedded) return;
+    useEffect(() => {
+        if (embedded) {
+            return;
+        }
 
         const handleShortcut = (event: KeyboardEvent) => {
             if (
@@ -83,7 +85,9 @@ export function SearchInputField({
             ) ?? []
         );
 
-        if (items.length === 0) return;
+        if (items.length === 0) {
+            return;
+        }
 
         if (event.key === 'Enter' && event.target === inputRef.current) {
             event.preventDefault();
@@ -91,7 +95,9 @@ export function SearchInputField({
             return;
         }
 
-        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+            return;
+        }
 
         event.preventDefault();
         const currentIndex = items.indexOf(
@@ -108,10 +114,7 @@ export function SearchInputField({
 
     const input = (
         <div ref={anchorRef} className="relative">
-            <Search
-                className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                aria-hidden="true"
-            />
+            <Search className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
                 ref={inputRef}
                 autoFocus={autoFocus}
@@ -162,10 +165,7 @@ export function SearchInputField({
                                     'min-h-8 w-full gap-2 py-0.5 text-left'
                                 )}>
                                 <span className="flex size-6 shrink-0 items-center justify-center">
-                                    <Search
-                                        className="size-3.5 text-muted-foreground"
-                                        aria-hidden="true"
-                                    />
+                                    <Search className="size-3.5 text-muted-foreground" />
                                 </span>
                                 <span className="truncate text-sm leading-4 text-foreground">
                                     {term}

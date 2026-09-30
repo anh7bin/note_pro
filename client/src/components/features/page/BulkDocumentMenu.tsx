@@ -144,15 +144,9 @@ export const BulkDocumentMenu = ({
                 disabled={isUpdatingStars}
                 onSelect={() => void toggleDocumentsStar()}>
                 <Star
-                    className={
-                        allAreStarred ? 'fill-current text-amber-500' : ''
-                    }
+                    className={allAreStarred ? 'fill-current text-primary' : ''}
                 />
-                {t(
-                    allAreStarred
-                        ? 'unstarSelectedDocuments'
-                        : 'starSelectedDocuments'
-                )}
+                {t(allAreStarred ? 'unstarDocument' : 'starDocument')}
             </ContextMenuItem>
             <Separator />
             {mode !== 'shared' && (

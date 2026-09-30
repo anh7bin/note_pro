@@ -2,13 +2,13 @@
 
 import { DocumentMoreMenu } from '@/components/features/page/DocumentMoreMenu';
 import { SidebarButton } from '@/components/layouts/main-layout/components/SidebarButton';
+import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
 import { useI18n } from '@/contexts/I18nContext';
 import type { GetStarredDocumentsQuery } from '@/graphql/__generated__/document-star.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { useDocumentStar } from '@/hooks/useDocumentStar';
 import { ROUTES } from '@/lib/routes';
 import { getPlainText } from '@/lib/text';
-import { FileText } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 type StarredDocument =
@@ -55,7 +55,7 @@ export function StarredDocumentItem({ document }: StarredDocumentItemProps) {
                         typeof icon === 'string' && icon.trim() ? (
                             <span className="text-sm">{icon}</span>
                         ) : (
-                            <FileText />
+                            <NewDocumentIcon />
                         )
                     }
                     label={title}

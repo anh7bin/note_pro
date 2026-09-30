@@ -173,8 +173,6 @@ export const en = {
     unstarDocument: 'Unstar',
     starDocumentError: 'Could not star the document',
     unstarDocumentError: 'Could not unstar the document',
-    starSelectedDocuments: 'Star selected documents',
-    unstarSelectedDocuments: 'Unstar selected documents',
     starredSelectedDocuments: 'Selected documents starred',
     unstarredSelectedDocuments: 'Selected documents unstarred',
     starSelectedDocumentsError: 'Could not star the selected documents',

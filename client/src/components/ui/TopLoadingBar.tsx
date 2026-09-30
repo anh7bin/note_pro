@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
+import '@/styles/nprogress-custom.css';
 import nprogress from 'nprogress';
 import 'nprogress/nprogress.css';
-import '@/styles/nprogress-custom.css';
+import { useEffect } from 'react';
 
 interface TopLoadingBarProps {
     isLoading: boolean;

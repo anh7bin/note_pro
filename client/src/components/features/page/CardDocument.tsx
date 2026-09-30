@@ -1,8 +1,9 @@
 'use client';
 
-import { DocumentMoreMenu } from '@/components/features/page/DocumentMoreMenu';
 import { BulkDocumentMenu } from '@/components/features/page/BulkDocumentMenu';
+import { DocumentMoreMenu } from '@/components/features/page/DocumentMoreMenu';
 import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -11,22 +12,21 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
+import { useI18n } from '@/contexts/I18nContext';
+import { useLoading } from '@/contexts/LoadingContext';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { useUserId } from '@/hooks/useAuth';
-import { useLoading } from '@/contexts/LoadingContext';
-import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
+import { useDocumentStar } from '@/hooks/useDocumentStar';
 import { ROUTES } from '@/lib/routes';
 import { getPlainText } from '@/lib/text';
 import { formatDate } from '@/lib/utils';
 import { Document } from '@/types/app';
 import { BlockType } from '@/types/types';
-import { Folder, Check } from 'lucide-react';
+import { Check, Folder } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo } from 'react';
 import { CardDocumentPreview } from './CardDocumentPreview';
-import { Button } from '@/components/ui/button';
-import { useI18n } from '@/contexts/I18nContext';
-import { useDocumentStar } from '@/hooks/useDocumentStar';
 import { DocumentStarButton } from './DocumentStarButton';
 
 const CardDocumentComponent = ({
@@ -37,10 +37,10 @@ const CardDocumentComponent = ({
     variant?: 'card' | 'list';
 }) => {
     const router = useRouter();
-    const { workspaceId: wsId } = useWorkspace();
     const userId = useUserId();
-    const { startLoading } = useLoading();
     const { locale, t } = useI18n();
+    const { startLoading } = useLoading();
+    const { workspaceId: wsId } = useWorkspace();
     const {
         toggleDocument,
         isSelected,
@@ -92,7 +92,9 @@ const CardDocumentComponent = ({
     }, [document.user_id, userId]);
 
     useEffect(() => {
-        if (!workspaceId) return;
+        if (!workspaceId) {
+            return;
+        }
         const href = document.folder?.id
             ? ROUTES.WORKSPACE_DOCUMENT_FOLDER(
                   workspaceId,
@@ -104,7 +106,9 @@ const CardDocumentComponent = ({
     }, [workspaceId, document.folder?.id, document.id, router]);
 
     const openDocument = () => {
-        if (!workspaceId) return;
+        if (!workspaceId) {
+            return;
+        }
 
         startLoading();
 
@@ -207,25 +211,27 @@ const CardDocumentComponent = ({
                       })
                     : '—'}
             </span>
-            <div className="flex items-center justify-end gap-1">
-                {!isSelectionActive && (
+            <div className="flex items-center relative">
+                {!isSelectionActive && isStarred && (
                     <DocumentStarButton
-                        isStarred={isStarred}
                         isLoading={isUpdatingStar}
                         onToggle={() => void toggleStar()}
+                        className={`absolute right-0 z-10 transition-all`}
                     />
                 )}
-                <Button
-                    variant="ghost"
-                    size="icon-xs"
-                    className={`w-5 h-5 rounded-full border focus-visible:opacity-100 ${
-                        selected
-                            ? 'border-primary-button bg-primary-button text-primary-foreground'
-                            : 'border-border bg-background opacity-100 md:opacity-0 md:group-hover:opacity-100'
-                    }`}
-                    onClick={handleSelectToggle}>
-                    {selected && <Check />}
-                </Button>
+                <div className="absolute right-0 z-10">
+                    <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        className={`w-5 h-5 rounded-full border focus-visible:opacity-100 ${
+                            selected
+                                ? 'border-primary-button bg-primary-button text-primary-foreground'
+                                : 'border-border bg-background opacity-100 md:opacity-0 md:group-hover:opacity-100'
+                        }`}
+                        onClick={handleSelectToggle}>
+                        {selected && <Check />}
+                    </Button>
+                </div>
             </div>
         </div>
     );
@@ -241,16 +247,11 @@ const CardDocumentComponent = ({
             }`}
             onClick={handleClick}
             onKeyDown={handleKeyDown}>
-            {!isSelectionActive && (
+            {!isSelectionActive && isStarred && (
                 <DocumentStarButton
-                    isStarred={isStarred}
                     isLoading={isUpdatingStar}
                     onToggle={() => void toggleStar()}
-                    className={`absolute right-10 top-3 z-10 h-5 w-5 rounded-full border transition-all focus-visible:opacity-100 ${
-                        isStarred
-                            ? 'bg-amber-500 text-primary-foreground opacity-100 hover:bg-amber-500 hover:text-primary-foreground'
-                            : 'border-border bg-background text-muted-foreground opacity-100 hover:border-amber-500 hover:bg-background hover:text-amber-500 md:opacity-0 md:group-hover:opacity-100'
-                    }`}
+                    className={`absolute right-3 top-3 z-10 transition-all`}
                 />
             )}
             <div className="absolute top-3 right-3 z-10">

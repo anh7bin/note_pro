@@ -1,28 +1,27 @@
 'use client';
 
-import { useRef, useState, type ReactElement } from 'react';
-import { useApolloClient } from '@apollo/client';
-import { Button } from '@/components/ui/button';
-import { Modal } from '@/components/ui/modal';
 import {
     EMPTY_TASK_FORM,
     TaskForm,
     type TaskFormValues,
 } from '@/components/features/page/TaskForm';
+import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
+import { useI18n } from '@/contexts/I18nContext';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { useCreateTaskMutation } from '@/graphql/mutations/__generated__/task.generated';
 import { useGetMaxDocumentBlockPositionLazyQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useUserId } from '@/hooks/useAuth';
-import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { TASK_STATUS } from '@/lib/constants';
 import { showToast } from '@/lib/toast';
-import { useI18n } from '@/contexts/I18nContext';
+import { useApolloClient } from '@apollo/client';
+import { useState, type ReactElement } from 'react';
 
 interface NewTaskModalProps {
     children: ReactElement;
 }
 
 export const NewTaskModal = ({ children }: NewTaskModalProps) => {
-    const dialogContentRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
     const [taskData, setTaskData] = useState<TaskFormValues>(EMPTY_TASK_FORM);
@@ -123,7 +122,6 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
 
     return (
         <Modal
-            ref={dialogContentRef}
             open={isOpen}
             onOpenChange={handleOpenChange}
             trigger={children}
@@ -142,7 +140,6 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                     setTaskData((current) => ({ ...current, [field]: value }))
                 }
                 onSubmit={() => void handleCreate()}
-                dialogContentRef={dialogContentRef}
             />
         </Modal>
     );

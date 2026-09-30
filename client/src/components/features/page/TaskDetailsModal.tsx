@@ -1,19 +1,19 @@
 'use client';
 
-import { useApolloClient } from '@apollo/client';
-import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
+import { useI18n } from '@/contexts/I18nContext';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { useDeleteBlockMutation } from '@/graphql/mutations/__generated__/document.generated';
 import { useUpdateTaskDetailsMutation } from '@/graphql/mutations/__generated__/task.generated';
 import { useGetMaxDocumentBlockPositionLazyQuery } from '@/graphql/queries/__generated__/document.generated';
-import { useI18n } from '@/contexts/I18nContext';
-import { useWorkspace } from '@/contexts/WorkspaceContext';
-import { getPlainText } from '@/lib/text';
 import { ROUTES } from '@/lib/routes';
+import { getPlainText } from '@/lib/text';
 import { showToast } from '@/lib/toast';
 import { Task } from '@/types/app';
-import { Button } from '@/components/ui/button';
-import { Modal } from '@/components/ui/modal';
+import { useApolloClient } from '@apollo/client';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import { EMPTY_TASK_FORM, TaskForm, type TaskFormValues } from './TaskForm';
 
 interface TaskDetailsModalProps {
@@ -43,7 +43,6 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
     const [saving, setSaving] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
     const lastTaskIdRef = useRef<string | null>(null);
-    const dialogContentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const nextTaskId = task?.id || null;
@@ -150,7 +149,6 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
 
     return (
         <Modal
-            ref={dialogContentRef}
             open={Boolean(task)}
             onOpenChange={(open) => {
                 if (!open && !saving) onClose();
@@ -193,7 +191,6 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
                     setTaskData((current) => ({ ...current, [field]: value }))
                 }
                 onSubmit={() => void handleSave()}
-                dialogContentRef={dialogContentRef}
                 destinationFallbackTitle={getPlainText(
                     task?.block?.page?.content?.title
                 )}

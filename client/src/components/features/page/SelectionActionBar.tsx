@@ -178,9 +178,7 @@ export function SelectionActionBar({
                 {selectedDocuments.size > 0 && (
                     <SimpleTooltip
                         title={t(
-                            allAreStarred
-                                ? 'unstarSelectedDocuments'
-                                : 'starSelectedDocuments'
+                            allAreStarred ? 'unstarDocument' : 'starDocument'
                         )}>
                         <Button
                             variant="ghost"
@@ -189,7 +187,9 @@ export function SelectionActionBar({
                             onClick={() => void toggleDocumentsStar()}>
                             <Star
                                 className={
-                                    allAreStarred ? 'fill-current' : undefined
+                                    allAreStarred
+                                        ? 'fill-current text-primary'
+                                        : undefined
                                 }
                             />
                         </Button>

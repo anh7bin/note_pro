@@ -1,11 +1,10 @@
 'use client';
 
+import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
+import { useLoading } from '@/contexts/LoadingContext';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { useLoading } from '@/contexts/LoadingContext';
 import { usePathname } from 'next/navigation';
-import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export type SidebarButtonVariant = 'default' | 'primary' | 'secondary';
 
