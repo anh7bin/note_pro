@@ -20,8 +20,6 @@ interface SidebarButtonProps {
     className?: string;
     variant?: SidebarButtonVariant;
     isActive?: boolean;
-    count?: number;
-    countLoading?: boolean;
     action?: React.ReactNode;
 }
 
@@ -36,8 +34,6 @@ export function SidebarButton({
     className,
     variant = 'default',
     isActive = false,
-    count,
-    countLoading = false,
     action,
 }: SidebarButtonProps) {
     const { startLoading } = useLoading();
@@ -85,13 +81,6 @@ export function SidebarButton({
 
     const rightContent = (
         <>
-            {countLoading ? (
-                <Skeleton className="mr-1 h-3 w-5 shrink-0" />
-            ) : typeof count === 'number' ? (
-                <span className="pr-1 text-xs tabular-nums text-muted-foreground">
-                    {count}
-                </span>
-            ) : null}
             {action && (
                 <div
                     className="text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"

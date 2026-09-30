@@ -1,12 +1,16 @@
 'use client';
 
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
+import { Button } from '@/components/ui/button';
+import { useI18n } from '@/contexts/I18nContext';
+import { useLoading } from '@/contexts/LoadingContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { useGetDocsCountQuery } from '@/graphql/queries/__generated__/document.generated';
 import { MENU_ITEMS, ModalType } from '@/lib/constants';
 import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
-import { usePathname } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { RiUserVoiceLine } from 'react-icons/ri';
 import { FolderMenu } from './components/FolderMenu';
@@ -14,20 +18,14 @@ import NewDocumentButton from './components/NewDocumentButton';
 import { NewFolderButton } from './components/NewFolderButton';
 import { NewTaskModal } from './components/NewTaskModal';
 import { SidebarButton } from './components/SidebarButton';
-import { WorkspaceButton } from './components/WorkspaceButton';
-import { Button } from '@/components/ui/button';
-import { useI18n } from '@/contexts/I18nContext';
-import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { StarredDocuments } from './components/StarredDocuments';
-import Link from 'next/link';
-import { useLoading } from '@/contexts/LoadingContext';
+import { WorkspaceButton } from './components/WorkspaceButton';
 
 interface Props {
     workspaceSlug: string;
-    workspaceId: string;
 }
 
-export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
+export default function Sidebar({ workspaceSlug }: Props) {
     const { isOpen, toggle, setOpen } = useSidebar();
     const pathname = usePathname();
     const previousPathname = useRef(pathname);
@@ -51,13 +49,6 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
         Tasks: t('tasks'),
         Calendar: t('calendar'),
     };
-
-    const { data: docsCount, loading: docsCountLoading } = useGetDocsCountQuery(
-        {
-            variables: { workspaceId },
-            skip: !workspaceId,
-        }
-    );
 
     const renderModalWrapper = (
         modalType: ModalType,
@@ -99,12 +90,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                     />
                     <WorkspaceButton />
                     <div className="flex flex-col gap-1">
-                        {MENU_ITEMS(workspaceSlug, {
-                            allDocs: docsCountLoading
-                                ? undefined
-                                : docsCount?.blocks_aggregate?.aggregate
-                                      ?.count || 0,
-                        }).map((item) => {
+                        {MENU_ITEMS(workspaceSlug).map((item) => {
                             const isActive =
                                 pathname === item.href ||
                                 pathname.startsWith(item.href + '/');
@@ -125,11 +111,6 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                                         }
                                         href={item.href}
                                         isActive={isActive}
-                                        count={item.count}
-                                        countLoading={
-                                            item.label === 'All Docs' &&
-                                            docsCountLoading
-                                        }
                                         action={
                                             item.modalType && item.action
                                                 ? renderModalWrapper(
@@ -147,7 +128,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                     <div
                         data-tour="folders-nav"
                         className={cn(
-                            'flex min-h-8 items-center justify-between rounded-lg px-1 transition-colors hover:bg-accent',
+                            'group flex min-h-8 items-center justify-between rounded-lg px-1 transition-colors hover:bg-accent',
                             isFoldersPageActive && 'bg-accent'
                         )}>
                         <Link
@@ -161,7 +142,7 @@ export default function Sidebar({ workspaceSlug, workspaceId }: Props) {
                             }}>
                             {t('folders')}
                         </Link>
-                        <div className="flex items-center gap-1">
+                        <div className="pointer-events-none flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
                             <NewFolderButton />
                             <SimpleTooltip
                                 title={

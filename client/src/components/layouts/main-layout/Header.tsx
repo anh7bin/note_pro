@@ -30,18 +30,18 @@ interface Props {
 export default function Header({ workspaceSlug }: Props) {
     const { t } = useI18n();
     const pathname = usePathname();
-    const onEditorPage = useIsEditorPage();
+    const isEditorPage = useIsEditorPage();
     const { documentId } = useDocumentAccess();
     const { isLoading, startLoading } = useLoading();
     const notificationMenuProps = useNotifications();
 
     const { permissionType } = useDocumentPermission(
-        onEditorPage ? documentId || '' : ''
+        isEditorPage ? documentId || '' : ''
     );
     const documentAccessRequestNotificationCount =
         getUnreadAccessRequestCountForDocument(
             notificationMenuProps.notifications,
-            onEditorPage ? documentId : undefined
+            isEditorPage ? documentId : undefined
         );
 
     const handleLogoClick = () => {
@@ -83,7 +83,7 @@ export default function Header({ workspaceSlug }: Props) {
                         </div>
                     </div>
                     <div className="flex min-w-0 items-center justify-end gap-1.5">
-                        {onEditorPage && documentId && permissionType && (
+                        {isEditorPage && documentId && permissionType && (
                             <>
                                 <DocumentPresence documentId={documentId} />
                                 <RequestEditButton documentId={documentId} />

@@ -5,7 +5,7 @@ import {
 } from '@/components/features/page/FolderDialog';
 import { useInsertFolderMutation } from '@/graphql/mutations/__generated__/folder.generated';
 import { useUserId } from '@/hooks/useAuth';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import showToast from '@/lib/toast';
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
@@ -34,6 +34,8 @@ export const NewFolderButton = ({
         description: string;
         icon: string;
     }) => {
+        if (!workspaceId) return;
+
         try {
             await insertFolder({
                 variables: {
@@ -72,6 +74,7 @@ export const NewFolderButton = ({
                 <Button
                     variant={variant ?? (showLabel ? 'default' : 'ghost')}
                     size={size ?? (showLabel ? 'sm' : 'icon-xs')}
+                    disabled={!workspaceId}
                     onClick={() => setIsOpen(true)}>
                     <Plus />
                     {showLabel && t('newFolder')}

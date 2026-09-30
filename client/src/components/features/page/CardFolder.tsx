@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useLoading } from '@/contexts/LoadingContext';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { GetFolderByIdQuery } from '@/graphql/queries/__generated__/folder.generated';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { ROUTES } from '@/lib/routes';
 import { formatDate } from '@/lib/utils';
 import { Folder, Check } from 'lucide-react';

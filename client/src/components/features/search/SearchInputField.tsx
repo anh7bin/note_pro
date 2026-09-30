@@ -139,7 +139,7 @@ export function SearchInputField({
             {searchTerm.trim() ? (
                 <SearchResults
                     results={results}
-                    workspace={workspace}
+                    workspace={workspace ?? undefined}
                     onResultClick={handleResultClick}
                 />
             ) : recentSearches.length ? (

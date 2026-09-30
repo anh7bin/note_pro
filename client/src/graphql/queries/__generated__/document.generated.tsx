@@ -31,13 +31,6 @@ export type SubscribeToDocumentBlocksSubscriptionVariables = Types.Exact<{
 
 export type SubscribeToDocumentBlocksSubscription = { __typename?: 'subscription_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> };
 
-export type GetDocsCountQueryVariables = Types.Exact<{
-  workspaceId: Types.Scalars['uuid']['input'];
-}>;
-
-
-export type GetDocsCountQuery = { __typename?: 'query_root', blocks_aggregate: { __typename?: 'blocks_aggregate', aggregate?: { __typename?: 'blocks_aggregate_fields', count: number } | null } };
-
 export type GetSharedWithMeDocsQueryVariables = Types.Exact<{
   userId: Types.Scalars['uuid']['input'];
 }>;
@@ -275,50 +268,6 @@ export function useSubscribeToDocumentBlocksSubscription(baseOptions: Apollo.Sub
       }
 export type SubscribeToDocumentBlocksSubscriptionHookResult = ReturnType<typeof useSubscribeToDocumentBlocksSubscription>;
 export type SubscribeToDocumentBlocksSubscriptionResult = Apollo.SubscriptionResult<SubscribeToDocumentBlocksSubscription>;
-export const GetDocsCountDocument = gql`
-    query GetDocsCount($workspaceId: uuid!) {
-  blocks_aggregate(
-    where: {workspace_id: {_eq: $workspaceId}, type: {_eq: "page"}, deleted_at: {_is_null: true}}
-  ) {
-    aggregate {
-      count
-    }
-  }
-}
-    `;
-
-/**
- * __useGetDocsCountQuery__
- *
- * To run a query within a React component, call `useGetDocsCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetDocsCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetDocsCountQuery({
- *   variables: {
- *      workspaceId: // value for 'workspaceId'
- *   },
- * });
- */
-export function useGetDocsCountQuery(baseOptions: Apollo.QueryHookOptions<GetDocsCountQuery, GetDocsCountQueryVariables> & ({ variables: GetDocsCountQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetDocsCountQuery, GetDocsCountQueryVariables>(GetDocsCountDocument, options);
-      }
-export function useGetDocsCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDocsCountQuery, GetDocsCountQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetDocsCountQuery, GetDocsCountQueryVariables>(GetDocsCountDocument, options);
-        }
-export function useGetDocsCountSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDocsCountQuery, GetDocsCountQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetDocsCountQuery, GetDocsCountQueryVariables>(GetDocsCountDocument, options);
-        }
-export type GetDocsCountQueryHookResult = ReturnType<typeof useGetDocsCountQuery>;
-export type GetDocsCountLazyQueryHookResult = ReturnType<typeof useGetDocsCountLazyQuery>;
-export type GetDocsCountSuspenseQueryHookResult = ReturnType<typeof useGetDocsCountSuspenseQuery>;
-export type GetDocsCountQueryResult = Apollo.QueryResult<GetDocsCountQuery, GetDocsCountQueryVariables>;
 export const GetSharedWithMeDocsDocument = gql`
     query GetSharedWithMeDocs($userId: uuid!) {
   blocks(

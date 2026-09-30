@@ -3,7 +3,8 @@
 import { useI18n } from '@/contexts/I18nContext';
 import { OnboardingContext, type TourName } from '@/contexts/OnboardingContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { useCurrentUser, useDeviceOnboardingSeen, useWorkspace } from '@/hooks';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
+import { useCurrentUser, useDeviceOnboardingSeen } from '@/hooks';
 import { useIsEditorPage } from '@/hooks/useIsEditorPage';
 import {
     ONBOARDING_EDITOR_STORAGE_KEY,
@@ -26,7 +27,7 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
     const { workspaceSlug } = useWorkspace();
     const { isOpen, setOpen } = useSidebar();
     const sidebarOpenRef = useRef(isOpen);
-    const onEditorPage = useIsEditorPage();
+    const isEditorPage = useIsEditorPage();
     const [workspaceSeen, markWorkspaceSeen] = useDeviceOnboardingSeen(
         ONBOARDING_WORKSPACE_STORAGE_KEY,
         userId
@@ -84,14 +85,14 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
             ? requestedTour
             : onWorkspacePage && !workspaceSeen
               ? 'workspace'
-              : onEditorPage && !editorSeen
+              : isEditorPage && !editorSeen
                 ? 'editor'
                 : null;
 
         if (
             !tour ||
             (tour === 'workspace' && !onWorkspacePage) ||
-            (tour === 'editor' && !onEditorPage)
+            (tour === 'editor' && !isEditorPage)
         ) {
             return;
         }
@@ -110,7 +111,7 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
         workspaceSlug,
         pathname,
         onWorkspacePage,
-        onEditorPage,
+        isEditorPage,
         workspaceSeen,
         editorSeen,
         requestedTour,
@@ -149,12 +150,12 @@ export function OnboardingTour({ children }: { children: React.ReactNode }) {
         if (
             run &&
             ((activeTour === 'workspace' && !onWorkspacePage) ||
-                (activeTour === 'editor' && !onEditorPage))
+                (activeTour === 'editor' && !isEditorPage))
         ) {
             setRun(false);
             setActiveTour(null);
         }
-    }, [run, activeTour, onWorkspacePage, onEditorPage]);
+    }, [run, activeTour, onWorkspacePage, isEditorPage]);
 
     const setSidebarOpen = useCallback(
         async (open: boolean) => {

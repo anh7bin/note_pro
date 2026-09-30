@@ -9,7 +9,7 @@ import { CircleHelp } from 'lucide-react';
 
 export function TourHelpButton() {
     const { t } = useI18n();
-    const onEditorPage = useIsEditorPage();
+    const isEditorPage = useIsEditorPage();
     const { startTour, isTourRunning } = useOnboarding();
 
     return (
@@ -20,7 +20,7 @@ export function TourHelpButton() {
                     size="icon-xs"
                     disabled={isTourRunning}
                     onClick={() =>
-                        startTour(onEditorPage ? 'editor' : 'workspace')
+                        startTour(isEditorPage ? 'editor' : 'workspace')
                     }>
                     <CircleHelp />
                 </Button>

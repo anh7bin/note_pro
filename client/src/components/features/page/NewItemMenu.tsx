@@ -12,7 +12,7 @@ import {
 import { useI18n } from '@/contexts/I18nContext';
 import { useInsertFolderMutation } from '@/graphql/mutations/__generated__/folder.generated';
 import { useCreateDocument } from '@/hooks';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import showToast from '@/lib/toast';
 import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';

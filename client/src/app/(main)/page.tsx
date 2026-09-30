@@ -9,7 +9,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { ButtonLoading, PageLoading } from '@/components/ui/loading';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { AUTHENTICATED } from '@/lib/constants';
 import { ROUTES } from '@/lib/routes';
 import { CircleAlert } from 'lucide-react';

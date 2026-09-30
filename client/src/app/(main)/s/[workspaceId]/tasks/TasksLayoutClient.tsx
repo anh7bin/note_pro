@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/contexts/I18nContext';
 import { useLoading } from '@/contexts/LoadingContext';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { ROUTES } from '@/lib/routes';
 import { CalendarDays, Inbox, ListTodo, Plus } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';

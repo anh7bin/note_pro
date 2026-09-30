@@ -1,3 +1,4 @@
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import {
     useSearchAllLazyQuery,
     type SearchAllQuery,
@@ -5,7 +6,6 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from './useAuth';
 import { useDebounce } from './useDebounce';
-import { useWorkspace } from './useWorkspace';
 
 export interface SearchResult {
     folders: SearchAllQuery['folders'];

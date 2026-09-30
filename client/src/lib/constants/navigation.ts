@@ -13,15 +13,11 @@ export enum ModalType {
     FOLDER = 'folder',
 }
 
-export const MENU_ITEMS = (
-    workspaceSlug: string,
-    counts: { allDocs: number | undefined }
-) => [
+export const MENU_ITEMS = (workspaceSlug: string) => [
     {
         icon: FileText,
         label: 'All Docs',
         href: ROUTES.WORKSPACE_ALL_DOCS(workspaceSlug),
-        count: counts.allDocs,
     },
     {
         icon: CircleCheckBig,

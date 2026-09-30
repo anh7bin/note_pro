@@ -11,7 +11,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { useUserId } from '@/hooks/useAuth';
 import { useLoading } from '@/contexts/LoadingContext';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
@@ -312,7 +312,7 @@ const CardDocumentComponent = ({
     ) : (
         <DocumentMoreMenu
             documentId={document.id}
-            workspaceId={workspaceId}
+            workspaceId={workspaceId ?? undefined}
             folderId={document.folder?.id}
             isOwner={isOwner}
             isStarred={isStarred}

@@ -3,7 +3,7 @@ import { Label } from '@/components/ui/label';
 import { Modal } from '@/components/ui/modal';
 import { useI18n } from '@/contexts/I18nContext';
 import { useGetFoldersQuery } from '@/graphql/queries/__generated__/folder.generated';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { cn } from '@/lib/utils';
 import { Folder, FolderOpen } from 'lucide-react';
 import { useState } from 'react';
@@ -23,7 +23,7 @@ export const MoveToDialog = ({ open, onOpenChange, onSelect }: Props) => {
     );
 
     const { data, loading } = useGetFoldersQuery({
-        variables: { workspaceId },
+        variables: { workspaceId: workspaceId ?? '' },
         skip: !workspaceId || !open,
     });
 

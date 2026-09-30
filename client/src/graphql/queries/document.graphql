@@ -113,20 +113,6 @@ subscription SubscribeToDocumentBlocks($pageId: uuid!) {
     }
 }
 
-query GetDocsCount($workspaceId: uuid!) {
-    blocks_aggregate(
-        where: {
-            workspace_id: { _eq: $workspaceId }
-            type: { _eq: "page" }
-            deleted_at: { _is_null: true }
-        }
-    ) {
-        aggregate {
-            count
-        }
-    }
-}
-
 query GetSharedWithMeDocs($userId: uuid!) {
     blocks(
         where: {

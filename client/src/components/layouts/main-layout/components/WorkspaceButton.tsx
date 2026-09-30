@@ -8,7 +8,7 @@ import { useI18n } from '@/contexts/I18nContext';
 import { useTheme } from '@/contexts/ThemeProvider';
 import { useUpdateWorkspaceMutation } from '@/graphql/mutations/__generated__/workspace.generated';
 import { useImageUpload } from '@/hooks/useImageUpload';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { DEFAULT_WORKSPACE_IMAGE } from '@/lib/constants';
 import showToast from '@/lib/toast';
 import { cn } from '@/lib/utils';
@@ -34,7 +34,7 @@ export const WorkspaceButton = () => {
     const workspaceName = workspace?.name || '';
 
     const { uploadImage, isUploading } = useImageUpload({
-        tags: ['workspace', workspaceId],
+        tags: workspaceId ? ['workspace', workspaceId] : ['workspace'],
         onSuccess: (imageUrl) => {
             setTempImageUrl(imageUrl);
             setHasImageChanged(true);
@@ -64,6 +64,8 @@ export const WorkspaceButton = () => {
     };
 
     const handleSave = async () => {
+        if (!workspaceId) return;
+
         try {
             const nameChanged = tempName.trim() && tempName !== workspace?.name;
 

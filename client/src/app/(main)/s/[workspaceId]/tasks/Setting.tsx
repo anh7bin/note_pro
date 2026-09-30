@@ -8,7 +8,7 @@ import {
     useGetCompletedTasksLazyQuery,
 } from '@/graphql/queries/__generated__/task.generated';
 import { useTaskCompletion } from '@/hooks/useTaskCompletion';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { CheckCircle2 } from 'lucide-react';
 import { useCallback } from 'react';
 
@@ -29,15 +29,15 @@ export const Setting = () => {
         refetchQueries: [
             {
                 query: GetCompletedTasksDocument,
-                variables: { workspaceId },
+                variables: { workspaceId: workspaceId ?? '' },
             },
             {
                 query: GetAllTasksDocument,
-                variables: { workspaceId },
+                variables: { workspaceId: workspaceId ?? '' },
             },
             {
                 query: GetTodoTasksDocument,
-                variables: { workspaceId },
+                variables: { workspaceId: workspaceId ?? '' },
             },
         ],
         awaitRefetchQueries: true,

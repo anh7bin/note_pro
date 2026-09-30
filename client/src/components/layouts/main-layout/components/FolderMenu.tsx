@@ -1,6 +1,6 @@
 import { FolderItem } from '@/components/features/page/FolderItem';
 import { useGetFoldersQuery } from '@/graphql/queries/__generated__/folder.generated';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { buildTree, FolderNode } from '@/lib/folder';
 import { useI18n } from '@/contexts/I18nContext';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -9,7 +9,7 @@ export const FolderMenu = () => {
     const { workspaceId, workspaceSlug } = useWorkspace();
     const { t } = useI18n();
     const { data, loading } = useGetFoldersQuery({
-        variables: { workspaceId },
+        variables: { workspaceId: workspaceId ?? '' },
         skip: !workspaceId,
     });
 

@@ -66,7 +66,6 @@ export const vi: Messages = {
     accessRequestSent: 'Đã gửi yêu cầu truy cập',
     accessRequestError: 'Không thể gửi yêu cầu truy cập',
     accessAlreadyRequested: 'Bạn đã yêu cầu quyền truy cập tài liệu này',
-
     homePage: 'Trang chủ',
     toggleSidebar: 'Bật/tắt hiển thị thanh bên • Ctrl-\\',
     skipToContent: 'Đi đến nội dung chính',

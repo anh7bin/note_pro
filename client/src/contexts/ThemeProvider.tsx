@@ -1,14 +1,14 @@
 'use client';
 
 import { useCurrentUserLocalStorage } from '@/hooks';
-import { useWorkspace } from '@/hooks/useWorkspace';
 import {
     DEFAULT_ACCENT_COLOR,
     getAccentColor,
     type AccentColor,
 } from '@/lib/accent-colors';
-import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useWorkspace } from './WorkspaceContext';
 
 type ThemePreference = 'light' | 'dark';
 
@@ -32,9 +32,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         );
 
     const theme = storedTheme ?? 'light';
-    const accentStorageKey = `workspace_${
-        workspaceId ?? 'default'
-    }_accent_color`;
+    const accentStorageKey = `workspace_${workspaceId || 'default'}_accent_color`;
     const [storedAccentColor, setStoredAccentColor] =
         useCurrentUserLocalStorage<AccentColor>(
             accentStorageKey,

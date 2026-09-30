@@ -12,7 +12,7 @@ import {
     useStarDocumentMutation,
 } from '@/graphql/__generated__/document-star.generated';
 import { useUserId } from '@/hooks/useAuth';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import {
     DOCUMENT_STAR_REFETCH_QUERIES,
     updateDocumentStarCache,
@@ -45,7 +45,7 @@ export function StarDocumentPicker({
     );
     const { data, loading } = useGetDocumentsToStarQuery({
         variables: {
-            workspaceId,
+            workspaceId: workspaceId ?? '',
             userId,
         },
         skip: !isOpen || !workspaceId || !userId,

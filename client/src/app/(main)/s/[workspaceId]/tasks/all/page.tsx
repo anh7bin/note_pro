@@ -7,7 +7,7 @@ import {
     useGetAllTasksQuery,
 } from '@/graphql/queries/__generated__/task.generated';
 import { useTaskCompletion } from '@/hooks/useTaskCompletion';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { TASK_STATUS } from '@/lib/constants';
 import { Task } from '@/types/app';
 import { useCallback, useMemo } from 'react';
@@ -17,7 +17,7 @@ export default function AllTasksPage() {
     const { workspaceId } = useWorkspace();
 
     const { loading, data, error, refetch } = useGetAllTasksQuery({
-        variables: { workspaceId },
+        variables: { workspaceId: workspaceId ?? '' },
         skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
         nextFetchPolicy: 'cache-first',

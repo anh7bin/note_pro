@@ -9,7 +9,7 @@ import {
 } from '@/graphql/mutations/__generated__/folder.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { useCreateDocument } from '@/hooks/useCreateDocument';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { FolderNode } from '@/lib/folder';
 import showToast from '@/lib/toast';
 import { Reference } from '@apollo/client';
@@ -76,6 +76,8 @@ export const FolderMoreMenu = ({ folder, children }: Props) => {
 
     const handleCreateFolder = useCallback(
         async (folderData: FolderFormData) => {
+            if (!workspaceId) return;
+
             try {
                 await insertFolder({
                     variables: {

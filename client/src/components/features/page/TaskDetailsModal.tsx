@@ -7,7 +7,7 @@ import { useDeleteBlockMutation } from '@/graphql/mutations/__generated__/docume
 import { useUpdateTaskDetailsMutation } from '@/graphql/mutations/__generated__/task.generated';
 import { useGetMaxDocumentBlockPositionLazyQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useI18n } from '@/contexts/I18nContext';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { getPlainText } from '@/lib/text';
 import { ROUTES } from '@/lib/routes';
 import { showToast } from '@/lib/toast';

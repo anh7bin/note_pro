@@ -46,14 +46,14 @@ export function usePageTitle() {
     const params = useParams();
     const pathname = usePathname();
     const { t, locale } = useI18n();
-    const onEditorPage = useIsEditorPage();
+    const isEditorPage = useIsEditorPage();
     const { hasAccess } = useDocumentAccess();
 
     const pageType = useMemo(() => {
-        if (onEditorPage) return 'editor';
+        if (isEditorPage) return 'editor';
         if (pathname.includes('/f/')) return 'folder';
         return 'default';
-    }, [onEditorPage, pathname]);
+    }, [isEditorPage, pathname]);
 
     const folderId =
         pageType === 'folder' ? (params?.folderId as string) : null;

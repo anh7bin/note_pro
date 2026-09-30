@@ -1,24 +1,23 @@
 'use client';
 
-import type { ApolloCache } from '@apollo/client';
-import { useCallback, useMemo } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 import {
     useGetStarredDocumentsQuery,
     useStarDocumentsMutation,
     useUnstarDocumentsMutation,
 } from '@/graphql/__generated__/document-star.generated';
-import { useI18n } from '@/contexts/I18nContext';
-import showToast from '@/lib/toast';
 import {
     DOCUMENT_STAR_REFETCH_QUERIES,
     updateDocumentStarCache,
 } from '@/lib/apollo/document-star-cache';
+import showToast from '@/lib/toast';
+import type { ApolloCache } from '@apollo/client';
+import { useCallback, useMemo } from 'react';
 
 export function useBulkDocumentStar(documentIds: readonly string[]) {
     const { t } = useI18n();
     const { data, loading: isLoadingStars } = useGetStarredDocumentsQuery({
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
+        fetchPolicy: 'cache-first',
     });
     const [starDocuments, { loading: isStarring }] = useStarDocumentsMutation();
     const [unstarDocuments, { loading: isUnstarring }] =

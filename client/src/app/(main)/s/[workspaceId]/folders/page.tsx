@@ -15,8 +15,8 @@ import { PageLoading } from '@/components/ui/loading';
 import { Separator } from '@/components/ui/separator';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useI18n } from '@/contexts/I18nContext';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { useGetFoldersQuery } from '@/graphql/queries/__generated__/folder.generated';
-import { useWorkspace } from '@/hooks';
 import { useDocumentView } from '@/hooks/useDocumentView';
 import { FolderOpen } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
@@ -28,7 +28,7 @@ export default function FoldersPage() {
     const { clearSelection, setMode } = useDocumentSelection();
 
     const { data, loading } = useGetFoldersQuery({
-        variables: { workspaceId },
+        variables: { workspaceId: workspaceId ?? '' },
         skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
         nextFetchPolicy: 'cache-first',

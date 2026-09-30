@@ -4,7 +4,6 @@ export { useCurrentUserLocalStorage } from './useCurrentUserLocalStorage';
 export { useDeviceOnboardingSeen } from './useDeviceOnboardingSeen';
 export { useLogout } from './useLogout';
 export { useBlocks } from './useBlocks';
-export { useWorkspace } from './useWorkspace';
 export { useToast, toast } from './useToast';
 export { useDocumentTitle } from './useDocumentTitle';
 export { usePageTitle } from './usePageTitle';

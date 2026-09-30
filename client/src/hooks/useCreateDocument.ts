@@ -1,7 +1,7 @@
 'use client';
 
 import { useUserId } from '@/hooks/useAuth';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { useLoading } from '@/contexts/LoadingContext';
 import { ROUTES } from '@/lib/routes';
 import { useRouter } from 'next/navigation';

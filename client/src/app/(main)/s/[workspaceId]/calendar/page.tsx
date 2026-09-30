@@ -10,7 +10,7 @@ import {
 import { PageLoading } from '@/components/ui/loading';
 import { useI18n } from '@/contexts/I18nContext';
 import { useGetAllScheduledTasksQuery } from '@/graphql/queries/__generated__/task.generated';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { TASK_STATUS } from '@/lib/constants';
 import { getPlainText } from '@/lib/text';
 import { SchedulerAppointment } from '@/types/app';
@@ -22,7 +22,7 @@ export default function CalendarPage() {
 
     const { loading, data } = useGetAllScheduledTasksQuery({
         variables: {
-            workspaceId,
+            workspaceId: workspaceId ?? '',
         },
         skip: !workspaceId,
         fetchPolicy: 'cache-and-network',

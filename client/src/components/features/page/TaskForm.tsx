@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/select';
 import { useI18n } from '@/contexts/I18nContext';
 import { useGetAllDocsLazyQuery } from '@/graphql/queries/__generated__/document.generated';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { getPlainText } from '@/lib/text';
 
 export interface TaskFormValues {

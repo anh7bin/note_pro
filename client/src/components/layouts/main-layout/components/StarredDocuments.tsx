@@ -33,7 +33,7 @@ export function StarredDocuments({ workspaceSlug }: { workspaceSlug: string }) {
         <section className="flex min-h-0 flex-col gap-1">
             <div
                 className={cn(
-                    'flex min-h-8 items-center justify-between rounded-lg px-1 transition-colors hover:bg-accent',
+                    'group flex min-h-8 items-center justify-between rounded-lg px-1 transition-colors hover:bg-accent',
                     isActive && 'bg-accent'
                 )}>
                 <Link
@@ -47,7 +47,7 @@ export function StarredDocuments({ workspaceSlug }: { workspaceSlug: string }) {
                     }}>
                     {t('starred')}
                 </Link>
-                <div className="flex items-center gap-1">
+                <div className="pointer-events-none flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
                     <StarDocumentPicker
                         onDocumentStarred={() => setIsCollapsed(false)}
                     />

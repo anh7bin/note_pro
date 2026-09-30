@@ -16,8 +16,9 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useI18n } from '@/contexts/I18nContext';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { useGetAllDocsQuery } from '@/graphql/queries/__generated__/document.generated';
-import { useCreateDocument, useWorkspace } from '@/hooks';
+import { useCreateDocument } from '@/hooks';
 import { useDocumentView } from '@/hooks/useDocumentView';
 import { Document } from '@/types/app';
 import { FilePlus2, Files, Plus } from 'lucide-react';
@@ -33,7 +34,7 @@ export default function AllDocsPage() {
     const { createNewDocument, isCreating, canCreate } = useCreateDocument();
 
     const { loading, data } = useGetAllDocsQuery({
-        variables: { workspaceId },
+        variables: { workspaceId: workspaceId ?? '' },
         skip: !workspaceId,
         fetchPolicy: 'cache-and-network',
         nextFetchPolicy: 'cache-first',

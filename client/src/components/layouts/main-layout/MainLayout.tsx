@@ -5,7 +5,8 @@ import { OnboardingTour } from '@/components/features/onboarding/OnboardingTour'
 import { RouteChangeHandler } from '@/components/shared/RouteChangeHandler';
 import { useI18n } from '@/contexts/I18nContext';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
-import { usePageTitle, useWorkspace } from '@/hooks';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
+import { usePageTitle } from '@/hooks';
 import { useIsEditorPage } from '@/hooks/useIsEditorPage';
 import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
@@ -20,13 +21,14 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
     const { isOpen } = useSidebar();
-    const onEditorPage = useIsEditorPage();
-    const { workspaceSlug, loading, workspaceId } = useWorkspace();
+    const isEditorPage = useIsEditorPage();
+    const isHomePage = pathname.startsWith('/s/');
+    const { workspaceSlug, loading } = useWorkspace();
 
-    const isGlobalRoute = !pathname.startsWith('/s/') && !onEditorPage;
+    const isGlobalRoute = !isHomePage && !isEditorPage;
 
     useEffect(() => {
-        if (!loading && workspaceSlug && pathname.startsWith('/s/')) {
+        if (!loading && workspaceSlug && isHomePage) {
             const currentSlug = pathname.split('/')[2];
             if (currentSlug && currentSlug !== workspaceSlug) {
                 const newPath = pathname.replace(currentSlug, workspaceSlug);
@@ -46,16 +48,15 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
                     {t('skipToContent')}
                 </a>
                 {loading && !isGlobalRoute ? (
-                    <MainLayoutSkeleton sidebarOpen={!onEditorPage && isOpen} />
+                    <MainLayoutSkeleton sidebarOpen={!isEditorPage && isOpen} />
                 ) : (
                     <>
                         <Header workspaceSlug={workspaceSlug ?? ''} />
                         <div className="flex min-h-0 flex-1 pt-[var(--header-height)]">
-                            {!onEditorPage && (
+                            {!isEditorPage && (
                                 <>
                                     <Sidebar
                                         workspaceSlug={workspaceSlug || ''}
-                                        workspaceId={workspaceId}
                                     />
                                     <div
                                         className={cn(
@@ -72,14 +73,14 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
                                 id="main-content"
                                 className={cn(
                                     'flex min-w-0 flex-1 justify-center overflow-hidden transition-[padding] duration-300',
-                                    onEditorPage
+                                    isEditorPage
                                         ? 'p-0'
                                         : 'p-[var(--page-padding)]'
                                 )}>
                                 <div
                                     className={cn(
                                         'h-full min-h-0 w-full',
-                                        onEditorPage
+                                        isEditorPage
                                             ? 'max-w-full'
                                             : 'max-w-page'
                                     )}>

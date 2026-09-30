@@ -8,7 +8,10 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { LanguageMenu } from '@/components/ui/language-switcher';
 import { ButtonLoading, PageLoading } from '@/components/ui/loading';
+import { useI18n } from '@/contexts/I18nContext';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { AUTHENTICATED } from '@/lib/constants';
 import { ROUTES } from '@/lib/routes';
 import { signIn, signOut, useSession } from 'next-auth/react';
@@ -16,9 +19,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { useWorkspace } from '@/hooks/useWorkspace';
-import { useI18n } from '@/contexts/I18nContext';
-import { LanguageMenu } from '@/components/ui/language-switcher';
 
 export default function LoginPage() {
     const { data: session, status } = useSession();

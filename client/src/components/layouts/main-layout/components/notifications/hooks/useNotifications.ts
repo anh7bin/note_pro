@@ -7,7 +7,7 @@ import {
 } from '@/graphql/mutations/__generated__/notification.generated';
 import { useNotificationSubscriptionSubscription } from '@/graphql/queries/__generated__/notification.generated';
 import { useUserId } from '@/hooks/useAuth';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { ROUTES } from '@/lib/routes';
 import { showToast } from '@/lib/toast';
 import { Notification } from '@/types/app';
