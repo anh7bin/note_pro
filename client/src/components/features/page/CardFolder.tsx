@@ -96,12 +96,8 @@ const CardFolderComponent = ({ folder, variant = 'card' }: CardFolderProps) => {
             onClick={handleClick}
             onKeyDown={handleKeyDown}>
             <div className="flex min-w-0 items-center gap-3 pr-4">
-                <span className="flex h-12 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-background-soft text-primary shadow-sm">
-                    {folder.icon ? (
-                        <span className="text-xl">{folder.icon}</span>
-                    ) : (
-                        <Folder className="h-5 w-5" />
-                    )}
+                <span className="flex h-12 w-9 shrink-0 items-center justify-center">
+                    {folder.icon}
                 </span>
                 <div className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold leading-5 text-foreground">
