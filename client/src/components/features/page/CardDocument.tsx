@@ -2,6 +2,7 @@
 
 import { BulkDocumentMenu } from '@/components/features/page/BulkDocumentMenu';
 import { DocumentMoreMenu } from '@/components/features/page/DocumentMoreMenu';
+import { TrashDocumentMenu } from '@/components/features/page/TrashDocumentMenu';
 import { TruncatedTooltip } from '@/components/features/page/TruncatedTooltip';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,7 +24,7 @@ import { getPlainText } from '@/lib/text';
 import { formatDate } from '@/lib/utils';
 import { Document } from '@/types/app';
 import { BlockType } from '@/types/types';
-import { Check, Folder } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo } from 'react';
 import { CardDocumentPreview } from './CardDocumentPreview';
@@ -32,9 +33,19 @@ import { DocumentStarButton } from './DocumentStarButton';
 const CardDocumentComponent = ({
     document,
     variant = 'card',
+    mode: cardMode = 'default',
+    deletedAtLabel,
+    isPending = false,
+    onRestore,
+    onPermanentlyDelete,
 }: {
     document: Document;
     variant?: 'card' | 'list';
+    mode?: 'default' | 'trash';
+    deletedAtLabel?: string;
+    isPending?: boolean;
+    onRestore?: (documentIds: string[]) => void;
+    onPermanentlyDelete?: (documentIds: string[]) => void;
 }) => {
     const router = useRouter();
     const userId = useUserId();
@@ -51,6 +62,7 @@ const CardDocumentComponent = ({
 
     const plainTitle =
         getPlainText(document.content?.title) || t('untitledPage');
+    const isTrash = cardMode === 'trash';
     const listDescription =
         variant === 'list'
             ? document.sub_blocks
@@ -92,7 +104,7 @@ const CardDocumentComponent = ({
     }, [document.user_id, userId]);
 
     useEffect(() => {
-        if (!workspaceId) {
+        if (isTrash || !workspaceId) {
             return;
         }
         const href = document.folder?.id
@@ -103,10 +115,10 @@ const CardDocumentComponent = ({
               )
             : ROUTES.WORKSPACE_DOCUMENT(workspaceId, document.id);
         router.prefetch(href);
-    }, [workspaceId, document.folder?.id, document.id, router]);
+    }, [isTrash, workspaceId, document.folder?.id, document.id, router]);
 
     const openDocument = () => {
-        if (!workspaceId) {
+        if (isTrash || !workspaceId) {
             return;
         }
 
@@ -128,6 +140,11 @@ const CardDocumentComponent = ({
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
 
+        if (isTrash) {
+            toggleDocument(document.id);
+            return;
+        }
+
         if (isSelectionActive) {
             toggleDocument(document.id);
             return;
@@ -146,6 +163,11 @@ const CardDocumentComponent = ({
         if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
 
+            if (isTrash) {
+                toggleDocument(document.id);
+                return;
+            }
+
             if (isSelectionActive) {
                 toggleDocument(document.id);
                 return;
@@ -157,7 +179,7 @@ const CardDocumentComponent = ({
 
     const listContent = (
         <div
-            role={isSelectionActive ? 'button' : 'link'}
+            role={isTrash || isSelectionActive ? 'button' : 'link'}
             tabIndex={0}
             className={`group grid min-h-[76px] cursor-pointer grid-cols-[minmax(0,1fr)_64px] items-center rounded-lg border px-5 py-2.5 transition-[background-color,border-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 sm:grid-cols-[minmax(0,1fr)_132px_116px_64px] ${
                 selected
@@ -212,7 +234,7 @@ const CardDocumentComponent = ({
                     : '—'}
             </span>
             <div className="flex items-center relative">
-                {!isSelectionActive && isStarred && (
+                {!isTrash && !isSelectionActive && isStarred && (
                     <DocumentStarButton
                         isLoading={isUpdatingStar}
                         onToggle={() => void toggleStar()}
@@ -223,6 +245,12 @@ const CardDocumentComponent = ({
                     <Button
                         variant="ghost"
                         size="icon-xs"
+                        aria-label={
+                            selected
+                                ? t('deselectDocument')
+                                : t('selectDocument')
+                        }
+                        disabled={isPending}
                         className={`w-5 h-5 rounded-full border focus-visible:opacity-100 ${
                             selected
                                 ? 'border-primary-button bg-primary-button text-primary-foreground'
@@ -238,7 +266,7 @@ const CardDocumentComponent = ({
 
     const cardContent = (
         <Card
-            role={isSelectionActive ? 'button' : 'link'}
+            role={isTrash || isSelectionActive ? 'button' : 'link'}
             tabIndex={0}
             className={`group relative flex h-[304px] w-full cursor-pointer flex-col overflow-hidden transition-[border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 ${
                 selected
@@ -247,7 +275,7 @@ const CardDocumentComponent = ({
             }`}
             onClick={handleClick}
             onKeyDown={handleKeyDown}>
-            {!isSelectionActive && isStarred && (
+            {!isTrash && !isSelectionActive && isStarred && (
                 <DocumentStarButton
                     isLoading={isUpdatingStar}
                     onToggle={() => void toggleStar()}
@@ -258,6 +286,10 @@ const CardDocumentComponent = ({
                 <Button
                     variant="ghost"
                     size="icon-xs"
+                    aria-label={
+                        selected ? t('deselectDocument') : t('selectDocument')
+                    }
+                    disabled={isPending}
                     className={`h-5 w-5 rounded-full border transition-all focus-visible:opacity-100 ${
                         selected
                             ? 'opacity-100 bg-primary-button border-primary-button text-primary-foreground'
@@ -284,6 +316,14 @@ const CardDocumentComponent = ({
                                     </span>
                                 </span>
                             )}
+                            {isTrash && deletedAtLabel && (
+                                <>
+                                    <span className="truncate">
+                                        {deletedAtLabel}
+                                    </span>
+                                    <span aria-hidden="true">•</span>
+                                </>
+                            )}
                             <span className="truncate">
                                 {t('updated', {
                                     time: formatDate(
@@ -307,6 +347,23 @@ const CardDocumentComponent = ({
     );
 
     const content = variant === 'list' ? listContent : cardContent;
+
+    if (isTrash) {
+        const targetIds =
+            hasMultipleSelected && selected
+                ? Array.from(selectedDocuments)
+                : [document.id];
+
+        return (
+            <TrashDocumentMenu
+                document={document}
+                documentIds={targetIds}
+                onRestore={(ids) => onRestore?.(ids)}
+                onPermanentlyDelete={(ids) => onPermanentlyDelete?.(ids)}>
+                {content}
+            </TrashDocumentMenu>
+        );
+    }
 
     return hasMultipleSelected && selected ? (
         <BulkDocumentMenu mode={mode}>{content}</BulkDocumentMenu>

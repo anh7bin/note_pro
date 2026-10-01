@@ -12,6 +12,29 @@ const CARD_SKELETONS = [
     'flex',
 ];
 
+export function DocumentGridSkeleton() {
+    return (
+        <div className="grid h-full auto-rows-[304px] grid-cols-1 gap-4 overflow-hidden sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            {CARD_SKELETONS.map((visibility, index) => (
+                <div
+                    key={index}
+                    className={`${visibility} h-[304px] flex-col overflow-hidden rounded-lg border border-border-subtle bg-card`}>
+                    <Skeleton className="h-44 w-full shrink-0 rounded-none" />
+                    <div className="flex flex-1 flex-col gap-3 p-4">
+                        <Skeleton className="h-5 w-3/4" />
+                        <Skeleton className="h-3 w-full" />
+                        <Skeleton className="h-3 w-2/3" />
+                        <div className="mt-auto flex items-center justify-between">
+                            <Skeleton className="h-3 w-20" />
+                            <Skeleton className="h-7 w-7 rounded-full" />
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
 export function DocumentPageSkeleton() {
     const { t } = useI18n();
 
@@ -30,23 +53,8 @@ export function DocumentPageSkeleton() {
                 </div>
             </PageHeader>
 
-            <PageContent className="grid auto-rows-[304px] grid-cols-1 gap-4 overflow-hidden sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                {CARD_SKELETONS.map((visibility, index) => (
-                    <div
-                        key={index}
-                        className={`${visibility} h-[304px] flex-col overflow-hidden rounded-lg border border-border-subtle bg-card`}>
-                        <Skeleton className="h-44 w-full shrink-0 rounded-none" />
-                        <div className="flex flex-1 flex-col gap-3 p-4">
-                            <Skeleton className="h-5 w-3/4" />
-                            <Skeleton className="h-3 w-full" />
-                            <Skeleton className="h-3 w-2/3" />
-                            <div className="mt-auto flex items-center justify-between">
-                                <Skeleton className="h-3 w-20" />
-                                <Skeleton className="h-7 w-7 rounded-full" />
-                            </div>
-                        </div>
-                    </div>
-                ))}
+            <PageContent>
+                <DocumentGridSkeleton />
             </PageContent>
         </PageShell>
     );

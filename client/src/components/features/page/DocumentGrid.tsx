@@ -31,21 +31,53 @@ const listRowHeight = LIST_ITEM_HEIGHT + LIST_ITEM_GAP;
 interface DocumentGridProps {
     documents: Document[];
     view?: DocumentView;
+    mode?: 'default' | 'trash';
+    pendingDocumentIds?: ReadonlySet<string>;
+    getDeletedAtLabel?: (document: Document) => string | undefined;
+    onRestore?: (documentIds: string[]) => void;
+    onPermanentlyDelete?: (documentIds: string[]) => void;
+}
+
+interface DocumentListRowData {
+    documents: Document[];
+    mode: 'default' | 'trash';
+    pendingDocumentIds?: ReadonlySet<string>;
+    getDeletedAtLabel?: (document: Document) => string | undefined;
+    onRestore?: (documentIds: string[]) => void;
+    onPermanentlyDelete?: (documentIds: string[]) => void;
 }
 
 function DocumentListRow({
     index,
     style,
     data,
-}: ListChildComponentProps<Document[]>) {
+}: ListChildComponentProps<DocumentListRowData>) {
+    const document = data.documents[index]!;
+
     return (
         <div style={style} className="py-1">
-            <CardDocument document={data[index]!} variant="list" />
+            <CardDocument
+                document={document}
+                variant="list"
+                mode={data.mode}
+                deletedAtLabel={data.getDeletedAtLabel?.(document)}
+                isPending={data.pendingDocumentIds?.has(document.id)}
+                onRestore={data.onRestore}
+                onPermanentlyDelete={data.onPermanentlyDelete}
+            />
         </div>
     );
 }
 
-export function DocumentGrid({ documents, view = 'card' }: DocumentGridProps) {
+export function DocumentGrid({
+    documents,
+    view = 'card',
+    mode = 'default',
+    pendingDocumentIds,
+    getDeletedAtLabel,
+    onRestore,
+    onPermanentlyDelete,
+}: DocumentGridProps) {
     const { locale, t } = useI18n();
     const [sort, setSort] = useState<DocumentListSort | null>(null);
     const [showTopFade, setShowTopFade] = useState(false);
@@ -127,9 +159,16 @@ export function DocumentGrid({ documents, view = 'card' }: DocumentGridProps) {
                                         width={width}
                                         itemCount={sortedDocuments.length}
                                         itemSize={listRowHeight}
-                                        itemData={sortedDocuments}
+                                        itemData={{
+                                            documents: sortedDocuments,
+                                            mode,
+                                            pendingDocumentIds,
+                                            getDeletedAtLabel,
+                                            onRestore,
+                                            onPermanentlyDelete,
+                                        }}
                                         itemKey={(index, data) =>
-                                            data[index]!.id
+                                            data.documents[index]!.id
                                         }
                                         style={{ scrollbarGutter: 'stable' }}
                                         onScroll={(props: ListOnScrollProps) =>
@@ -208,6 +247,11 @@ export function DocumentGrid({ documents, view = 'card' }: DocumentGridProps) {
                                 itemData={{
                                     documents,
                                     columnCount,
+                                    mode,
+                                    pendingDocumentIds,
+                                    getDeletedAtLabel,
+                                    onRestore,
+                                    onPermanentlyDelete,
                                 }}
                                 onScroll={handleListScroll}
                                 onItemsRendered={() => {

@@ -39,6 +39,7 @@ function getTitleKeyFromPathname(pathname: string): TranslationKey | null {
     if (pathname.includes('/all') || pathname.includes('/documents'))
         return 'allDocs';
     if (pathname.includes('/shared-with-me')) return 'sharedWithMe';
+    if (pathname.includes('/trash')) return 'recentlyDeleted';
     return null;
 }
 

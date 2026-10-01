@@ -30,6 +30,10 @@ export const vi: Messages = {
     itemCount: '{{count}} mục',
     itemCountPlural: '{{count}} mục',
     selectedCount: 'Đã chọn {{count}}',
+    selectAll: 'Chọn tất cả',
+    clearSelection: 'Bỏ chọn tất cả',
+    selectDocument: 'Chọn tài liệu',
+    deselectDocument: 'Bỏ chọn tài liệu',
 
     welcome: 'Chào mừng đến với Bin Craft',
     signInDescription:
@@ -81,6 +85,7 @@ export const vi: Messages = {
     expand: 'Mở rộng',
     collapse: 'Thu gọn',
     folders: 'Thư mục',
+    recentlyDeleted: 'Đã xóa gần đây',
     foldersEmptyDescription: 'Tạo thư mục để sắp xếp mọi thứ gọn gàng',
     tourStartAgain: 'Xem hướng dẫn',
     tourBack: 'Quay lại',
@@ -138,6 +143,37 @@ export const vi: Messages = {
     noDocuments: 'Chưa có tài liệu',
     noDocumentsDescription:
         'Tạo tài liệu đầu tiên để bắt đầu lưu ghi chú và ý tưởng.',
+    trashDescription:
+        'Khôi phục tài liệu bạn vẫn cần hoặc xóa vĩnh viễn khỏi không gian làm việc này.',
+    trashEmpty: 'Đã xóa gần đây đang trống',
+    trashEmptyDescription:
+        'Tài liệu bạn chuyển vào đây vẫn có thể khôi phục cho đến khi bị xóa vĩnh viễn.',
+    trashLoadError: 'Không thể tải các tài liệu đã xóa gần đây.',
+    deletedAt: 'Đã xóa {{time}}',
+    restore: 'Khôi phục',
+    restoreDocument: 'Khôi phục “{{name}}”',
+    documentRestored: 'Đã khôi phục tài liệu',
+    documentsRestored: 'Đã khôi phục {{count}} tài liệu',
+    documentRestoreError: 'Không thể khôi phục tài liệu. Vui lòng thử lại.',
+    deletePermanently: 'Xóa vĩnh viễn',
+    deletePermanentlyTitle: 'Xóa vĩnh viễn “{{name}}”?',
+    deletePermanentlyDescription:
+        'Tài liệu này và toàn bộ nội dung bên trong sẽ bị xóa vĩnh viễn. Không thể hoàn tác hành động này.',
+    documentPermanentlyDeleted: 'Đã xóa vĩnh viễn tài liệu',
+    documentsPermanentlyDeleted: 'Đã xóa vĩnh viễn {{count}} tài liệu',
+    documentPermanentDeleteError:
+        'Không thể xóa vĩnh viễn tài liệu. Vui lòng thử lại.',
+    emptyTrash: 'Dọn sạch mục đã xóa',
+    emptyTrashTitle: 'Dọn sạch mục đã xóa?',
+    emptyTrashDescription:
+        'Toàn bộ {{count}} tài liệu và nội dung bên trong sẽ bị xóa vĩnh viễn. Không thể hoàn tác hành động này.',
+    trashEmptied: 'Đã dọn sạch mục đã xóa',
+    emptyTrashError: 'Không thể dọn sạch mục đã xóa. Vui lòng thử lại.',
+    restoreSelected: 'Khôi phục các tài liệu đã chọn',
+    deleteSelectedPermanently: 'Xóa vĩnh viễn các tài liệu đã chọn',
+    deleteSelectedPermanentlyTitle: 'Xóa vĩnh viễn {{count}} tài liệu đã chọn?',
+    deleteSelectedPermanentlyDescription:
+        'Các tài liệu đã chọn và toàn bộ nội dung bên trong sẽ bị xóa vĩnh viễn. Không thể hoàn tác hành động này.',
     noSharedDocuments: 'Chưa có tài liệu được chia sẻ',
     noSharedDocumentsDescription:
         'Tài liệu người khác chia sẻ với bạn sẽ xuất hiện ở đây.',

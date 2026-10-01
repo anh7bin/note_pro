@@ -8,7 +8,7 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { MENU_ITEMS, ModalType } from '@/lib/constants';
 import { ROUTES } from '@/lib/routes';
 import { cn } from '@/lib/utils';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -42,7 +42,9 @@ export default function Sidebar({ workspaceSlug }: Props) {
         }
     }, [pathname, setOpen]);
     const foldersHref = ROUTES.WORKSPACE_FOLDERS(workspaceSlug);
+    const trashHref = ROUTES.WORKSPACE_TRASH(workspaceSlug);
     const isFoldersPageActive = pathname === foldersHref;
+    const isTrashPageActive = pathname === trashHref;
 
     const menuLabels: Record<string, string> = {
         'All Docs': t('allDocs'),
@@ -175,6 +177,31 @@ export default function Sidebar({ workspaceSlug }: Props) {
                             <FolderMenu />
                         </div>
                     )}
+                    <div
+                        className={cn(
+                            'mt-auto flex shrink-0 items-center border-t border-border/70 pt-2',
+                            !isFoldersCollapsed && 'mt-0'
+                        )}>
+                        <SimpleTooltip title={t('recentlyDeleted')} side="top">
+                            <Button
+                                asChild
+                                variant="ghost"
+                                size="icon-sm"
+                                className={cn(
+                                    'text-muted-foreground hover:text-foreground',
+                                    isTrashPageActive &&
+                                        'bg-accent text-accent-foreground'
+                                )}>
+                                <Link
+                                    href={trashHref}
+                                    onClick={() => {
+                                        if (!isTrashPageActive) startLoading();
+                                    }}>
+                                    <Trash2 />
+                                </Link>
+                            </Button>
+                        </SimpleTooltip>
+                    </div>
                 </div>
             </aside>
         </>

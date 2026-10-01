@@ -10,6 +10,13 @@ export type GetAllDocsQueryVariables = Types.Exact<{
 
 export type GetAllDocsQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, created_at?: string | null, updated_at?: string | null, workspace_id?: string | null, user_id?: string | null, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string, icon?: string | null } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }> }> };
 
+export type GetDeletedDocumentsQueryVariables = Types.Exact<{
+  workspaceId: Types.Scalars['uuid']['input'];
+}>;
+
+
+export type GetDeletedDocumentsQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, deleted_at?: string | null, created_at?: string | null, updated_at?: string | null, workspace_id?: string | null, user_id?: string | null, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string, icon?: string | null } | null, sub_blocks: Array<{ __typename?: 'blocks', id: string, type: string, content?: any | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, schedule_date?: string | null, deadline_date?: string | null }> }> }> };
+
 export type GetDocumentBlocksQueryVariables = Types.Exact<{
   pageId: Types.Scalars['uuid']['input'];
 }>;
@@ -107,6 +114,75 @@ export type GetAllDocsQueryHookResult = ReturnType<typeof useGetAllDocsQuery>;
 export type GetAllDocsLazyQueryHookResult = ReturnType<typeof useGetAllDocsLazyQuery>;
 export type GetAllDocsSuspenseQueryHookResult = ReturnType<typeof useGetAllDocsSuspenseQuery>;
 export type GetAllDocsQueryResult = Apollo.QueryResult<GetAllDocsQuery, GetAllDocsQueryVariables>;
+export const GetDeletedDocumentsDocument = gql`
+    query GetDeletedDocuments($workspaceId: uuid!) {
+  blocks(
+    where: {workspace_id: {_eq: $workspaceId}, type: {_eq: "page"}, deleted_at: {_is_null: false}}
+    order_by: {deleted_at: desc}
+  ) {
+    id
+    content
+    cover_image
+    deleted_at
+    created_at
+    updated_at
+    workspace_id
+    user_id
+    document_stars {
+      document_id
+    }
+    folder {
+      id
+      name
+      icon
+    }
+    sub_blocks(order_by: {position: asc}, limit: 10) {
+      id
+      type
+      content
+      tasks {
+        id
+        status
+        schedule_date
+        deadline_date
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetDeletedDocumentsQuery__
+ *
+ * To run a query within a React component, call `useGetDeletedDocumentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDeletedDocumentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDeletedDocumentsQuery({
+ *   variables: {
+ *      workspaceId: // value for 'workspaceId'
+ *   },
+ * });
+ */
+export function useGetDeletedDocumentsQuery(baseOptions: Apollo.QueryHookOptions<GetDeletedDocumentsQuery, GetDeletedDocumentsQueryVariables> & ({ variables: GetDeletedDocumentsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDeletedDocumentsQuery, GetDeletedDocumentsQueryVariables>(GetDeletedDocumentsDocument, options);
+      }
+export function useGetDeletedDocumentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDeletedDocumentsQuery, GetDeletedDocumentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDeletedDocumentsQuery, GetDeletedDocumentsQueryVariables>(GetDeletedDocumentsDocument, options);
+        }
+export function useGetDeletedDocumentsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDeletedDocumentsQuery, GetDeletedDocumentsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetDeletedDocumentsQuery, GetDeletedDocumentsQueryVariables>(GetDeletedDocumentsDocument, options);
+        }
+export type GetDeletedDocumentsQueryHookResult = ReturnType<typeof useGetDeletedDocumentsQuery>;
+export type GetDeletedDocumentsLazyQueryHookResult = ReturnType<typeof useGetDeletedDocumentsLazyQuery>;
+export type GetDeletedDocumentsSuspenseQueryHookResult = ReturnType<typeof useGetDeletedDocumentsSuspenseQuery>;
+export type GetDeletedDocumentsQueryResult = Apollo.QueryResult<GetDeletedDocumentsQuery, GetDeletedDocumentsQueryVariables>;
 export const GetDocumentBlocksDocument = gql`
     query GetDocumentBlocks($pageId: uuid!) {
   blocks(

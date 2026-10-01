@@ -76,7 +76,7 @@ export const ConfirmDialog = ({
                         variant={variant}
                         onClick={handleConfirm}
                         disabled={isBusy}>
-                        {isBusy ? 'Processing...' : confirmText}
+                        {isBusy ? t('processing') : confirmText}
                     </Button>
                 </>
             }

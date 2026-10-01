@@ -8,6 +8,11 @@ import type { Document } from '@/types/app';
 interface DocumentRowData {
     documents: Document[];
     columnCount: number;
+    mode: 'default' | 'trash';
+    pendingDocumentIds?: ReadonlySet<string>;
+    getDeletedAtLabel?: (document: Document) => string | undefined;
+    onRestore?: (documentIds: string[]) => void;
+    onPermanentlyDelete?: (documentIds: string[]) => void;
 }
 
 export const DocumentRow = memo(function DocumentRow({
@@ -26,7 +31,15 @@ export const DocumentRow = memo(function DocumentRow({
                 gridTemplateColumns: `repeat(${data.columnCount}, minmax(0, 1fr))`,
             }}>
             {rowDocuments.map((document) => (
-                <CardDocument key={document.id} document={document} />
+                <CardDocument
+                    key={document.id}
+                    document={document}
+                    mode={data.mode}
+                    deletedAtLabel={data.getDeletedAtLabel?.(document)}
+                    isPending={data.pendingDocumentIds?.has(document.id)}
+                    onRestore={data.onRestore}
+                    onPermanentlyDelete={data.onPermanentlyDelete}
+                />
             ))}
         </div>
     );

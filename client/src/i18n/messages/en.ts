@@ -29,6 +29,10 @@ export const en = {
     itemCount: '{{count}} item',
     itemCountPlural: '{{count}} items',
     selectedCount: '{{count}} selected',
+    selectAll: 'Select all',
+    clearSelection: 'Clear selection',
+    selectDocument: 'Select document',
+    deselectDocument: 'Deselect document',
 
     // Authentication
     welcome: 'Welcome to Bin Craft',
@@ -84,6 +88,7 @@ export const en = {
     expand: 'Expand',
     collapse: 'Collapse',
     folders: 'Folders',
+    recentlyDeleted: 'Recently Deleted',
     foldersEmptyDescription: 'Create folders to keep things organized',
     tourStartAgain: 'Show guide',
     tourBack: 'Back',
@@ -143,6 +148,38 @@ export const en = {
     noDocuments: 'No documents yet',
     noDocumentsDescription:
         'Create your first document to start capturing notes and ideas.',
+    trashDescription:
+        'Restore documents you still need or permanently remove them from this workspace.',
+    trashEmpty: 'Recently Deleted is empty',
+    trashEmptyDescription:
+        'Documents you move here will remain available until you permanently delete them.',
+    trashLoadError: 'Could not load recently deleted documents.',
+    deletedAt: 'Deleted {{time}}',
+    restore: 'Restore',
+    restoreDocument: 'Restore “{{name}}”',
+    documentRestored: 'Document restored',
+    documentsRestored: '{{count}} documents restored',
+    documentRestoreError: 'Could not restore the document. Try again.',
+    deletePermanently: 'Delete permanently',
+    deletePermanentlyTitle: 'Permanently delete “{{name}}”?',
+    deletePermanentlyDescription:
+        'This document and all of its content will be permanently deleted. This action cannot be undone.',
+    documentPermanentlyDeleted: 'Document permanently deleted',
+    documentsPermanentlyDeleted: '{{count}} documents permanently deleted',
+    documentPermanentDeleteError:
+        'Could not permanently delete the document. Try again.',
+    emptyTrash: 'Empty Recently Deleted',
+    emptyTrashTitle: 'Empty Recently Deleted?',
+    emptyTrashDescription:
+        'All {{count}} documents and their content will be permanently deleted. This action cannot be undone.',
+    trashEmptied: 'Recently Deleted emptied',
+    emptyTrashError: 'Could not empty Recently Deleted. Try again.',
+    restoreSelected: 'Restore selected documents',
+    deleteSelectedPermanently: 'Permanently delete selected documents',
+    deleteSelectedPermanentlyTitle:
+        'Permanently delete {{count}} selected documents?',
+    deleteSelectedPermanentlyDescription:
+        'The selected documents and all of their content will be permanently deleted. This action cannot be undone.',
     noSharedDocuments: 'No shared documents',
     noSharedDocumentsDescription:
         'Documents other people share with you will appear here.',
