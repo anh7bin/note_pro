@@ -39,6 +39,8 @@ export function SelectionActionBar({
     documentIds,
     folderIds = [],
 }: SelectionActionBarProps) {
+    const { t } = useI18n();
+    const userId = useUserId();
     const {
         selectedDocuments,
         selectedFolders,
@@ -46,10 +48,8 @@ export function SelectionActionBar({
         selectAll,
         mode,
     } = useDocumentSelection();
-    const userId = useUserId();
     const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const { t } = useI18n();
     const selectedDocumentIds = useMemo(
         () => Array.from(selectedDocuments),
         [selectedDocuments]
@@ -66,6 +66,10 @@ export function SelectionActionBar({
         totalItems > 0 &&
         documentIds.every((id) => selectedDocuments.has(id)) &&
         folderIds.every((id) => selectedFolders.has(id));
+    const selectionLabel = t(allSelected ? 'clearSelection' : 'selectAll');
+    const starLabel = t(allAreStarred ? 'unstarDocument' : 'starDocument');
+    const moveLabel = t('moveTo');
+    const deleteLabel = t(mode === 'shared' ? 'remove' : 'delete');
 
     const handleSelectAllChange = useCallback(() => {
         if (allSelected) {
@@ -163,22 +167,24 @@ export function SelectionActionBar({
                 <span className="px-1 text-sm font-medium tabular-nums text-foreground">
                     {t('selectedCount', { count: totalSelected })}
                 </span>
-                <Button
-                    variant="ghost"
-                    size="icon-xs"
-                    role="checkbox"
-                    onClick={handleSelectAllChange}>
-                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary-button text-primary-foreground">
-                        {allSelected ? <Check /> : <Minus />}
-                    </span>
-                </Button>
-                <SimpleTooltip
-                    title={t(
-                        allAreStarred ? 'unstarDocument' : 'starDocument'
-                    )}>
+                <SimpleTooltip title={selectionLabel}>
                     <Button
                         variant="ghost"
                         size="icon-xs"
+                        role="checkbox"
+                        aria-label={selectionLabel}
+                        aria-checked={allSelected}
+                        onClick={handleSelectAllChange}>
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary-button text-primary-foreground">
+                            {allSelected ? <Check /> : <Minus />}
+                        </span>
+                    </Button>
+                </SimpleTooltip>
+                <SimpleTooltip title={starLabel}>
+                    <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        aria-label={starLabel}
                         disabled={isUpdatingStars}
                         onClick={() => void toggleDocumentsStar()}>
                         <Star
@@ -191,20 +197,26 @@ export function SelectionActionBar({
                     </Button>
                 </SimpleTooltip>
                 {mode === 'default' && (
+                    <SimpleTooltip title={moveLabel}>
+                        <Button
+                            variant="ghost"
+                            size="icon-xs"
+                            aria-label={moveLabel}
+                            onClick={() => setIsMoveDialogOpen(true)}>
+                            <FolderInput />
+                        </Button>
+                    </SimpleTooltip>
+                )}
+                <SimpleTooltip title={deleteLabel}>
                     <Button
                         variant="ghost"
                         size="icon-xs"
-                        onClick={() => setIsMoveDialogOpen(true)}>
-                        <FolderInput />
+                        aria-label={deleteLabel}
+                        className="hover:bg-accent-foreground/10 hover:text-destructive"
+                        onClick={handleDeleteClick}>
+                        <Trash2 />
                     </Button>
-                )}
-                <Button
-                    variant="ghost"
-                    size="icon-xs"
-                    className="hover:bg-accent-foreground/10 hover:text-destructive"
-                    onClick={handleDeleteClick}>
-                    <Trash2 />
-                </Button>
+                </SimpleTooltip>
             </div>
             <MoveToDialog
                 open={isMoveDialogOpen}
