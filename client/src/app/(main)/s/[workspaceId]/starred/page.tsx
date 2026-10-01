@@ -1,6 +1,7 @@
 'use client';
 
 import { DocumentGrid } from '@/components/features/page/DocumentGrid';
+import { DocumentPageSkeleton } from '@/components/features/page/DocumentPageSkeleton';
 import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
 import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import { StarDocumentPicker } from '@/components/layouts/main-layout/components/StarDocumentPicker';
@@ -11,7 +12,6 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
-import { PageLoading } from '@/components/ui/loading';
 import { Separator } from '@/components/ui/separator';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useI18n } from '@/contexts/I18nContext';
@@ -45,7 +45,7 @@ export default function StarredPage() {
     }, [clearSelection, setMode]);
 
     return loading && documents.length === 0 ? (
-        <PageLoading />
+        <DocumentPageSkeleton view={view} />
     ) : (
         <PageShell>
             <PageHeader>

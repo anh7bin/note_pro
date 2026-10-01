@@ -1,6 +1,7 @@
 'use client';
 
 import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
+import { DocumentPageSkeleton } from '@/components/features/page/DocumentPageSkeleton';
 import { FolderDocumentGrid } from '@/components/features/page/FolderDocumentGrid';
 import { NewItemMenu } from '@/components/features/page/NewItemMenu';
 import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
@@ -11,7 +12,6 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
-import { PageLoading } from '@/components/ui/loading';
 import { Separator } from '@/components/ui/separator';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useI18n } from '@/contexts/I18nContext';
@@ -52,7 +52,7 @@ export default function FolderPage() {
     }, [folderId, clearSelection, setMode]);
 
     return loading && !folder ? (
-        <PageLoading />
+        <DocumentPageSkeleton view={view} />
     ) : !folder ? (
         <EmptyState
             icon={<FolderOpen />}

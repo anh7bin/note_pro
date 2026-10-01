@@ -15,7 +15,6 @@ export type Scalars = {
   date: { input: string; output: string; }
   jsonb: { input: any; output: any; }
   timestamptz: { input: string; output: string; }
-  timetz: { input: string; output: string; }
   uuid: { input: string; output: string; }
 };
 
@@ -1206,7 +1205,7 @@ export type Blocks = {
   content?: Maybe<Scalars['jsonb']['output']>;
   cover_image?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
-  deleted_at?: Maybe<Scalars['timetz']['output']>;
+  deleted_at?: Maybe<Scalars['timestamptz']['output']>;
   /** An array relationship */
   document_stars: Array<DocumentStars>;
   /** An aggregate relationship */
@@ -1552,7 +1551,7 @@ export type BlocksBoolExp = {
   content?: InputMaybe<JsonbComparisonExp>;
   cover_image?: InputMaybe<StringComparisonExp>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
-  deleted_at?: InputMaybe<TimetzComparisonExp>;
+  deleted_at?: InputMaybe<TimestamptzComparisonExp>;
   document_stars?: InputMaybe<DocumentStarsBoolExp>;
   document_stars_aggregate?: InputMaybe<DocumentStarsAggregateBoolExp>;
   folder?: InputMaybe<FoldersBoolExp>;
@@ -1616,7 +1615,7 @@ export type BlocksInsertInput = {
   content?: InputMaybe<Scalars['jsonb']['input']>;
   cover_image?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  deleted_at?: InputMaybe<Scalars['timetz']['input']>;
+  deleted_at?: InputMaybe<Scalars['timestamptz']['input']>;
   document_stars?: InputMaybe<DocumentStarsArrRelInsertInput>;
   folder?: InputMaybe<FoldersObjRelInsertInput>;
   folder_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -1643,7 +1642,7 @@ export type BlocksMaxFields = {
   __typename?: 'blocks_max_fields';
   cover_image?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
-  deleted_at?: Maybe<Scalars['timetz']['output']>;
+  deleted_at?: Maybe<Scalars['timestamptz']['output']>;
   folder_id?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   page_id?: Maybe<Scalars['uuid']['output']>;
@@ -1678,7 +1677,7 @@ export type BlocksMinFields = {
   __typename?: 'blocks_min_fields';
   cover_image?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
-  deleted_at?: Maybe<Scalars['timetz']['output']>;
+  deleted_at?: Maybe<Scalars['timestamptz']['output']>;
   folder_id?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   page_id?: Maybe<Scalars['uuid']['output']>;
@@ -1812,7 +1811,7 @@ export type BlocksSetInput = {
   content?: InputMaybe<Scalars['jsonb']['input']>;
   cover_image?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  deleted_at?: InputMaybe<Scalars['timetz']['input']>;
+  deleted_at?: InputMaybe<Scalars['timestamptz']['input']>;
   folder_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   page_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -1870,7 +1869,7 @@ export type BlocksStreamCursorValueInput = {
   content?: InputMaybe<Scalars['jsonb']['input']>;
   cover_image?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  deleted_at?: InputMaybe<Scalars['timetz']['input']>;
+  deleted_at?: InputMaybe<Scalars['timestamptz']['input']>;
   folder_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   page_id?: InputMaybe<Scalars['uuid']['input']>;
@@ -6024,19 +6023,6 @@ export type TimestamptzComparisonExp = {
   _lte?: InputMaybe<Scalars['timestamptz']['input']>;
   _neq?: InputMaybe<Scalars['timestamptz']['input']>;
   _nin?: InputMaybe<Array<Scalars['timestamptz']['input']>>;
-};
-
-/** Boolean expression to compare columns of type "timetz". All fields are combined with logical 'AND'. */
-export type TimetzComparisonExp = {
-  _eq?: InputMaybe<Scalars['timetz']['input']>;
-  _gt?: InputMaybe<Scalars['timetz']['input']>;
-  _gte?: InputMaybe<Scalars['timetz']['input']>;
-  _in?: InputMaybe<Array<Scalars['timetz']['input']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
-  _lt?: InputMaybe<Scalars['timetz']['input']>;
-  _lte?: InputMaybe<Scalars['timetz']['input']>;
-  _neq?: InputMaybe<Scalars['timetz']['input']>;
-  _nin?: InputMaybe<Array<Scalars['timetz']['input']>>;
 };
 
 /** columns and relationships of "users" */

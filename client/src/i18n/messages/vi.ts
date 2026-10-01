@@ -72,7 +72,6 @@ export const vi: Messages = {
     accessAlreadyRequested: 'Bạn đã yêu cầu quyền truy cập tài liệu này',
     homePage: 'Trang chủ',
     toggleSidebar: 'Bật/tắt hiển thị thanh bên • Ctrl-\\',
-    skipToContent: 'Đi đến nội dung chính',
     allDocs: 'Tất cả tài liệu',
     tasks: 'Công việc',
     calendar: 'Lịch',

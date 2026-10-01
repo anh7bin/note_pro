@@ -3,7 +3,6 @@
 import AuthGuard from '@/components/features/auth/AuthGuard';
 import { OnboardingTour } from '@/components/features/onboarding/OnboardingTour';
 import { RouteChangeHandler } from '@/components/shared/RouteChangeHandler';
-import { useI18n } from '@/contexts/I18nContext';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { usePageTitle } from '@/hooks';
@@ -17,7 +16,6 @@ import { MainLayoutSkeleton } from './MainLayoutSkeleton';
 import Sidebar from './Sidebar';
 
 function LayoutMain({ children }: { children: React.ReactNode }) {
-    const { t } = useI18n();
     const router = useRouter();
     const pathname = usePathname();
     const { isOpen } = useSidebar();
@@ -35,18 +33,13 @@ function LayoutMain({ children }: { children: React.ReactNode }) {
                 router.replace(newPath);
             }
         }
-    }, [loading, workspaceSlug, pathname, router]);
+    }, [loading, workspaceSlug, pathname, router, isHomePage]);
 
     return pathname === ROUTES.LOGIN ? (
         <>{children}</>
     ) : (
         <AuthGuard>
             <div className="flex h-dvh min-h-0 flex-col overflow-hidden">
-                <a
-                    href="#main-content"
-                    className="sr-only fixed left-3 top-3 z-[100] rounded-md bg-background px-3 py-2 text-sm font-medium text-foreground shadow-md focus:not-sr-only focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                    {t('skipToContent')}
-                </a>
                 {loading && !isGlobalRoute ? (
                     <MainLayoutSkeleton sidebarOpen={!isEditorPage && isOpen} />
                 ) : (

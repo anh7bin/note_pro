@@ -1,6 +1,7 @@
 'use client';
 
 import { DocumentGrid } from '@/components/features/page/DocumentGrid';
+import { DocumentPageSkeleton } from '@/components/features/page/DocumentPageSkeleton';
 import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
 import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import {
@@ -10,7 +11,6 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
-import { PageLoading } from '@/components/ui/loading';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { useGetSharedWithMeDocsQuery } from '@/graphql/queries/__generated__/document.generated';
@@ -46,7 +46,7 @@ export default function SharedWithMePage() {
     }, [clearSelection, setMode]);
 
     return loading && sharedDocs.length === 0 ? (
-        <PageLoading />
+        <DocumentPageSkeleton view={view} />
     ) : (
         <PageShell>
             <PageHeader>
