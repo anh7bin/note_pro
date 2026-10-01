@@ -24,18 +24,6 @@ mutation BulkPermanentlyDeleteDocuments($ids: [uuid!]!) {
     }
 }
 
-mutation EmptyTrash($workspaceId: uuid!) {
-    delete_blocks(
-        where: {
-            workspace_id: { _eq: $workspaceId }
-            type: { _eq: "page" }
-            deleted_at: { _is_null: false }
-        }
-    ) {
-        affected_rows
-    }
-}
-
 mutation MaterializeDocument(
     $document: blocks_insert_input!
     $blocks: [blocks_insert_input!]!

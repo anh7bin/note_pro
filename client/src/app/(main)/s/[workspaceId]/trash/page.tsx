@@ -18,7 +18,6 @@ import { useWorkspace } from '@/contexts/WorkspaceContext';
 import {
     useBulkPermanentlyDeleteDocumentsMutation,
     useBulkRestoreDocumentsMutation,
-    useEmptyTrashMutation,
 } from '@/graphql/mutations/__generated__/document.generated';
 import { useGetDeletedDocumentsQuery } from '@/graphql/queries/__generated__/document.generated';
 import { useDocumentView } from '@/hooks/useDocumentView';
@@ -36,14 +35,12 @@ export default function TrashPage() {
     const { locale, t } = useI18n();
     const { workspaceId } = useWorkspace();
     const { view, changeView } = useDocumentView();
-    const { clearSelection, setMode } = useDocumentSelection();
+    const { clearSelection } = useDocumentSelection();
 
     const [pendingDocumentIds, setPendingDocumentIds] = useState<Set<string>>(
         () => new Set()
     );
     const [deleteTargetIds, setDeleteTargetIds] = useState<string[]>(EMPTY_IDS);
-    const [isEmptyDialogOpen, setIsEmptyDialogOpen] = useState(false);
-    const [isEmptying, setIsEmptying] = useState(false);
 
     const { data, loading, refetch } = useGetDeletedDocumentsQuery({
         variables: { workspaceId: workspaceId ?? '' },
@@ -54,7 +51,6 @@ export default function TrashPage() {
     const [bulkRestoreDocuments] = useBulkRestoreDocumentsMutation();
     const [bulkPermanentlyDeleteDocuments] =
         useBulkPermanentlyDeleteDocumentsMutation();
-    const [emptyTrash] = useEmptyTrashMutation();
 
     const blocks = data?.blocks;
     const documents: Document[] = blocks ?? EMPTY_DOCUMENTS;
@@ -81,9 +77,7 @@ export default function TrashPage() {
 
     useEffect(() => {
         clearSelection();
-        setMode('default');
-        return () => clearSelection();
-    }, [clearSelection, setMode]);
+    }, [clearSelection]);
 
     const getDeletedAtLabel = useCallback(
         (doc: Document) => {
@@ -130,7 +124,9 @@ export default function TrashPage() {
 
     const handlePermanentlyDelete = useCallback(async () => {
         const ids = deleteTargetIds;
-        if (ids.length === 0) return;
+        if (ids.length === 0) {
+            return;
+        }
 
         setPendingDocumentIds(new Set(ids));
         try {
@@ -157,25 +153,6 @@ export default function TrashPage() {
         clearSelection,
         t,
     ]);
-
-    const handleEmptyTrash = useCallback(async () => {
-        if (!workspaceId) return;
-
-        setIsEmptying(true);
-        try {
-            await emptyTrash({ variables: { workspaceId } });
-            await refetch();
-            clearSelection();
-            showToast.success(t('trashEmptied'));
-            setIsEmptyDialogOpen(false);
-        } catch (error) {
-            console.error('Failed to empty trash:', error);
-            showToast.error(t('emptyTrashError'));
-            throw error;
-        } finally {
-            setIsEmptying(false);
-        }
-    }, [workspaceId, emptyTrash, refetch, clearSelection, t]);
 
     const handleDeleteDialogChange = useCallback((open: boolean) => {
         if (!open) setDeleteTargetIds(EMPTY_IDS);
@@ -246,20 +223,6 @@ export default function TrashPage() {
                 variant="destructive"
                 loading={isMutating}
                 onConfirm={handlePermanentlyDelete}
-            />
-
-            <ConfirmDialog
-                open={isEmptyDialogOpen}
-                onOpenChange={setIsEmptyDialogOpen}
-                title={t('emptyTrashTitle')}
-                description={t('emptyTrashDescription', {
-                    count: documents.length,
-                })}
-                confirmText={t('emptyTrash')}
-                cancelText={t('cancel')}
-                variant="destructive"
-                loading={isEmptying}
-                onConfirm={handleEmptyTrash}
             />
         </>
     );

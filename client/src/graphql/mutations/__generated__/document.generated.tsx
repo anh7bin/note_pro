@@ -10,13 +10,6 @@ export type SoftDeleteDocumentMutationVariables = Types.Exact<{
 
 export type SoftDeleteDocumentMutation = { __typename?: 'mutation_root', update_blocks_by_pk?: { __typename?: 'blocks', id: string } | null };
 
-export type RestoreDocumentMutationVariables = Types.Exact<{
-  id: Types.Scalars['uuid']['input'];
-}>;
-
-
-export type RestoreDocumentMutation = { __typename?: 'mutation_root', update_blocks_by_pk?: { __typename?: 'blocks', id: string, deleted_at?: string | null } | null };
-
 export type BulkRestoreDocumentsMutationVariables = Types.Exact<{
   ids: Array<Types.Scalars['uuid']['input']> | Types.Scalars['uuid']['input'];
 }>;
@@ -24,26 +17,12 @@ export type BulkRestoreDocumentsMutationVariables = Types.Exact<{
 
 export type BulkRestoreDocumentsMutation = { __typename?: 'mutation_root', update_blocks?: { __typename?: 'blocks_mutation_response', affected_rows: number } | null };
 
-export type PermanentlyDeleteDocumentMutationVariables = Types.Exact<{
-  id: Types.Scalars['uuid']['input'];
-}>;
-
-
-export type PermanentlyDeleteDocumentMutation = { __typename?: 'mutation_root', delete_blocks_by_pk?: { __typename?: 'blocks', id: string } | null };
-
 export type BulkPermanentlyDeleteDocumentsMutationVariables = Types.Exact<{
   ids: Array<Types.Scalars['uuid']['input']> | Types.Scalars['uuid']['input'];
 }>;
 
 
 export type BulkPermanentlyDeleteDocumentsMutation = { __typename?: 'mutation_root', delete_blocks?: { __typename?: 'blocks_mutation_response', affected_rows: number } | null };
-
-export type EmptyTrashMutationVariables = Types.Exact<{
-  workspaceId: Types.Scalars['uuid']['input'];
-}>;
-
-
-export type EmptyTrashMutation = { __typename?: 'mutation_root', delete_blocks?: { __typename?: 'blocks_mutation_response', affected_rows: number } | null };
 
 export type MaterializeDocumentMutationVariables = Types.Exact<{
   document: Types.BlocksInsertInput;
@@ -148,40 +127,6 @@ export function useSoftDeleteDocumentMutation(baseOptions?: Apollo.MutationHookO
 export type SoftDeleteDocumentMutationHookResult = ReturnType<typeof useSoftDeleteDocumentMutation>;
 export type SoftDeleteDocumentMutationResult = Apollo.MutationResult<SoftDeleteDocumentMutation>;
 export type SoftDeleteDocumentMutationOptions = Apollo.BaseMutationOptions<SoftDeleteDocumentMutation, SoftDeleteDocumentMutationVariables>;
-export const RestoreDocumentDocument = gql`
-    mutation RestoreDocument($id: uuid!) {
-  update_blocks_by_pk(pk_columns: {id: $id}, _set: {deleted_at: null}) {
-    id
-    deleted_at
-  }
-}
-    `;
-export type RestoreDocumentMutationFn = Apollo.MutationFunction<RestoreDocumentMutation, RestoreDocumentMutationVariables>;
-
-/**
- * __useRestoreDocumentMutation__
- *
- * To run a mutation, you first call `useRestoreDocumentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRestoreDocumentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [restoreDocumentMutation, { data, loading, error }] = useRestoreDocumentMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useRestoreDocumentMutation(baseOptions?: Apollo.MutationHookOptions<RestoreDocumentMutation, RestoreDocumentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RestoreDocumentMutation, RestoreDocumentMutationVariables>(RestoreDocumentDocument, options);
-      }
-export type RestoreDocumentMutationHookResult = ReturnType<typeof useRestoreDocumentMutation>;
-export type RestoreDocumentMutationResult = Apollo.MutationResult<RestoreDocumentMutation>;
-export type RestoreDocumentMutationOptions = Apollo.BaseMutationOptions<RestoreDocumentMutation, RestoreDocumentMutationVariables>;
 export const BulkRestoreDocumentsDocument = gql`
     mutation BulkRestoreDocuments($ids: [uuid!]!) {
   update_blocks(
@@ -218,39 +163,6 @@ export function useBulkRestoreDocumentsMutation(baseOptions?: Apollo.MutationHoo
 export type BulkRestoreDocumentsMutationHookResult = ReturnType<typeof useBulkRestoreDocumentsMutation>;
 export type BulkRestoreDocumentsMutationResult = Apollo.MutationResult<BulkRestoreDocumentsMutation>;
 export type BulkRestoreDocumentsMutationOptions = Apollo.BaseMutationOptions<BulkRestoreDocumentsMutation, BulkRestoreDocumentsMutationVariables>;
-export const PermanentlyDeleteDocumentDocument = gql`
-    mutation PermanentlyDeleteDocument($id: uuid!) {
-  delete_blocks_by_pk(id: $id) {
-    id
-  }
-}
-    `;
-export type PermanentlyDeleteDocumentMutationFn = Apollo.MutationFunction<PermanentlyDeleteDocumentMutation, PermanentlyDeleteDocumentMutationVariables>;
-
-/**
- * __usePermanentlyDeleteDocumentMutation__
- *
- * To run a mutation, you first call `usePermanentlyDeleteDocumentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePermanentlyDeleteDocumentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [permanentlyDeleteDocumentMutation, { data, loading, error }] = usePermanentlyDeleteDocumentMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function usePermanentlyDeleteDocumentMutation(baseOptions?: Apollo.MutationHookOptions<PermanentlyDeleteDocumentMutation, PermanentlyDeleteDocumentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<PermanentlyDeleteDocumentMutation, PermanentlyDeleteDocumentMutationVariables>(PermanentlyDeleteDocumentDocument, options);
-      }
-export type PermanentlyDeleteDocumentMutationHookResult = ReturnType<typeof usePermanentlyDeleteDocumentMutation>;
-export type PermanentlyDeleteDocumentMutationResult = Apollo.MutationResult<PermanentlyDeleteDocumentMutation>;
-export type PermanentlyDeleteDocumentMutationOptions = Apollo.BaseMutationOptions<PermanentlyDeleteDocumentMutation, PermanentlyDeleteDocumentMutationVariables>;
 export const BulkPermanentlyDeleteDocumentsDocument = gql`
     mutation BulkPermanentlyDeleteDocuments($ids: [uuid!]!) {
   delete_blocks(where: {id: {_in: $ids}, deleted_at: {_is_null: false}}) {
@@ -284,41 +196,6 @@ export function useBulkPermanentlyDeleteDocumentsMutation(baseOptions?: Apollo.M
 export type BulkPermanentlyDeleteDocumentsMutationHookResult = ReturnType<typeof useBulkPermanentlyDeleteDocumentsMutation>;
 export type BulkPermanentlyDeleteDocumentsMutationResult = Apollo.MutationResult<BulkPermanentlyDeleteDocumentsMutation>;
 export type BulkPermanentlyDeleteDocumentsMutationOptions = Apollo.BaseMutationOptions<BulkPermanentlyDeleteDocumentsMutation, BulkPermanentlyDeleteDocumentsMutationVariables>;
-export const EmptyTrashDocument = gql`
-    mutation EmptyTrash($workspaceId: uuid!) {
-  delete_blocks(
-    where: {workspace_id: {_eq: $workspaceId}, type: {_eq: "page"}, deleted_at: {_is_null: false}}
-  ) {
-    affected_rows
-  }
-}
-    `;
-export type EmptyTrashMutationFn = Apollo.MutationFunction<EmptyTrashMutation, EmptyTrashMutationVariables>;
-
-/**
- * __useEmptyTrashMutation__
- *
- * To run a mutation, you first call `useEmptyTrashMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useEmptyTrashMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [emptyTrashMutation, { data, loading, error }] = useEmptyTrashMutation({
- *   variables: {
- *      workspaceId: // value for 'workspaceId'
- *   },
- * });
- */
-export function useEmptyTrashMutation(baseOptions?: Apollo.MutationHookOptions<EmptyTrashMutation, EmptyTrashMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<EmptyTrashMutation, EmptyTrashMutationVariables>(EmptyTrashDocument, options);
-      }
-export type EmptyTrashMutationHookResult = ReturnType<typeof useEmptyTrashMutation>;
-export type EmptyTrashMutationResult = Apollo.MutationResult<EmptyTrashMutation>;
-export type EmptyTrashMutationOptions = Apollo.BaseMutationOptions<EmptyTrashMutation, EmptyTrashMutationVariables>;
 export const MaterializeDocumentDocument = gql`
     mutation MaterializeDocument($document: blocks_insert_input!, $blocks: [blocks_insert_input!]!) {
   insert_blocks_one(object: $document) {

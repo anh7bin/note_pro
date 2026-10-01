@@ -1,28 +1,27 @@
 'use client';
 
+import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
 import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
+import { useI18n } from '@/contexts/I18nContext';
+import { useBulkDeleteAccessRequestsMutation } from '@/graphql/mutations/__generated__/access-request.generated';
 import {
     useBulkDeleteDocumentsAndFoldersMutation,
     useBulkMoveDocumentsToFolderMutation,
 } from '@/graphql/mutations/__generated__/document.generated';
-import { useBulkDeleteAccessRequestsMutation } from '@/graphql/mutations/__generated__/access-request.generated';
 import { useUserId } from '@/hooks/useAuth';
 import { useBulkDocumentStar } from '@/hooks/useBulkDocumentStar';
 import {
     handleBulkDeleteDocumentsAndFolders,
     handleBulkRemoveShared,
 } from '@/lib/bulk-actions';
-import { Check, FolderInput, Minus, Star, Trash2 } from 'lucide-react';
 import showToast from '@/lib/toast';
+import { Check, FolderInput, Minus, Star, Trash2 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { MoveToDialog } from './MoveToDialog';
-import { useI18n } from '@/contexts/I18nContext';
 
 interface SelectionActionBarProps {
-    mode?: 'default' | 'shared';
     documentIds: string[];
     folderIds?: string[];
 }
@@ -37,7 +36,6 @@ const REFETCH_QUERIES = [
 ];
 
 export function SelectionActionBar({
-    mode: propMode,
     documentIds,
     folderIds = [],
 }: SelectionActionBarProps) {
@@ -46,9 +44,8 @@ export function SelectionActionBar({
         selectedFolders,
         clearSelection,
         selectAll,
-        mode: contextMode,
+        mode,
     } = useDocumentSelection();
-    const mode = propMode || contextMode;
     const userId = useUserId();
     const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -175,7 +172,7 @@ export function SelectionActionBar({
                         {allSelected ? <Check /> : <Minus />}
                     </span>
                 </Button>
-                {selectedDocuments.size > 0 && (
+                {mode === 'default' && (
                     <SimpleTooltip
                         title={t(
                             allAreStarred ? 'unstarDocument' : 'starDocument'
@@ -196,7 +193,7 @@ export function SelectionActionBar({
                     </SimpleTooltip>
                 )}
 
-                {mode !== 'shared' && (
+                {mode === 'default' && (
                     <Button
                         variant="ghost"
                         size="icon-xs"
@@ -213,15 +210,11 @@ export function SelectionActionBar({
                     <Trash2 />
                 </Button>
             </div>
-
-            {mode !== 'shared' && (
-                <MoveToDialog
-                    open={isMoveDialogOpen}
-                    onOpenChange={setIsMoveDialogOpen}
-                    onSelect={handleMove}
-                />
-            )}
-
+            <MoveToDialog
+                open={isMoveDialogOpen}
+                onOpenChange={setIsMoveDialogOpen}
+                onSelect={handleMove}
+            />
             <ConfirmDialog
                 open={isDeleteDialogOpen}
                 onOpenChange={setIsDeleteDialogOpen}

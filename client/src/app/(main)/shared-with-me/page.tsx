@@ -1,16 +1,8 @@
 'use client';
 
 import { DocumentGrid } from '@/components/features/page/DocumentGrid';
-import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import { DocumentViewToggle } from '@/components/features/page/DocumentViewToggle';
-import { PageLoading } from '@/components/ui/loading';
-import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
-import { useGetSharedWithMeDocsQuery } from '@/graphql/queries/__generated__/document.generated';
-import { useUserId } from '@/hooks/useAuth';
-import { useDocumentView } from '@/hooks/useDocumentView';
-import { Document } from '@/types/app';
-import { useMemo, useEffect } from 'react';
-import { Users } from 'lucide-react';
+import { SelectionActionBar } from '@/components/features/page/SelectionActionBar';
 import {
     EmptyState,
     PageContent,
@@ -18,7 +10,15 @@ import {
     PageShell,
     PageTitle,
 } from '@/components/shared';
+import { PageLoading } from '@/components/ui/loading';
+import { useDocumentSelection } from '@/contexts/DocumentSelectionContext';
 import { useI18n } from '@/contexts/I18nContext';
+import { useGetSharedWithMeDocsQuery } from '@/graphql/queries/__generated__/document.generated';
+import { useUserId } from '@/hooks/useAuth';
+import { useDocumentView } from '@/hooks/useDocumentView';
+import { Document } from '@/types/app';
+import { Users } from 'lucide-react';
+import { useEffect, useMemo } from 'react';
 
 export default function SharedWithMePage() {
     const { t } = useI18n();
@@ -35,6 +35,11 @@ export default function SharedWithMePage() {
 
     const sharedDocs: Document[] = useMemo(() => data?.blocks || [], [data]);
 
+    const documentIds = useMemo(
+        () => sharedDocs.map((document) => document.id),
+        [sharedDocs]
+    );
+
     useEffect(() => {
         clearSelection();
         setMode('shared');
@@ -47,10 +52,7 @@ export default function SharedWithMePage() {
             <PageHeader>
                 <PageTitle>{t('sharedWithMe')}</PageTitle>
                 <div className="flex flex-wrap items-center justify-end gap-3">
-                    <SelectionActionBar
-                        mode="shared"
-                        documentIds={sharedDocs.map((document) => document.id)}
-                    />
+                    <SelectionActionBar documentIds={documentIds} />
                     <DocumentViewToggle view={view} onChange={changeView} />
                 </div>
             </PageHeader>
