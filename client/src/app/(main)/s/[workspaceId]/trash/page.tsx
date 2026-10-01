@@ -172,7 +172,7 @@ export default function TrashPage() {
               });
 
     return loading && !data ? (
-        <DocumentPageSkeleton />
+        <DocumentPageSkeleton view={view} />
     ) : (
         <>
             <PageShell>

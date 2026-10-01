@@ -1,15 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 export type DocumentView = 'card' | 'list';
 
 const STORAGE_KEY = 'document-view';
+const useClientLayoutEffect =
+    typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 export function useDocumentView() {
     const [view, setView] = useState<DocumentView>('card');
 
-    useEffect(() => {
+    useClientLayoutEffect(() => {
         if (window.localStorage.getItem(STORAGE_KEY) === 'list') {
             setView('list');
         }

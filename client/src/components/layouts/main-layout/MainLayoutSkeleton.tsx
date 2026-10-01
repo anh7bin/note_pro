@@ -1,5 +1,8 @@
+'use client';
+
 import { DocumentPageSkeleton } from '@/components/features/page/DocumentPageSkeleton';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useDocumentView } from '@/hooks/useDocumentView';
 import { cn } from '@/lib/utils';
 
 function SidebarSkeleton() {
@@ -29,6 +32,8 @@ function SidebarSkeleton() {
 }
 
 export function MainLayoutSkeleton({ sidebarOpen }: { sidebarOpen: boolean }) {
+    const { view } = useDocumentView();
+
     return (
         <>
             <header
@@ -64,7 +69,7 @@ export function MainLayoutSkeleton({ sidebarOpen }: { sidebarOpen: boolean }) {
                     id="main-content"
                     className="flex min-w-0 flex-1 justify-center overflow-hidden p-[var(--page-padding)]">
                     <div className="h-full min-h-0 w-full max-w-page">
-                        <DocumentPageSkeleton />
+                        <DocumentPageSkeleton view={view} />
                     </div>
                 </main>
             </div>

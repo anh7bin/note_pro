@@ -52,7 +52,7 @@ export default function AllDocsPage() {
     const isInitialLoading = loading && allDocs.length === 0;
 
     return isInitialLoading ? (
-        <DocumentPageSkeleton />
+        <DocumentPageSkeleton view={view} />
     ) : (
         <PageShell data-tour="documents-page">
             <PageHeader>

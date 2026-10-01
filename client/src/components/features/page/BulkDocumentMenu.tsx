@@ -149,7 +149,7 @@ export const BulkDocumentMenu = ({
                 {t(allAreStarred ? 'unstarDocument' : 'starDocument')}
             </ContextMenuItem>
             <Separator />
-            {mode !== 'shared' && (
+            {mode === 'default' && (
                 <>
                     <ContextMenuItem
                         className="cursor-pointer"
@@ -187,7 +187,7 @@ export const BulkDocumentMenu = ({
                 {children}
             </ContextDropdownMenu>
 
-            {mode !== 'shared' && (
+            {mode === 'default' && (
                 <MoveToDialog
                     open={isMoveDialogOpen}
                     onOpenChange={setIsMoveDialogOpen}

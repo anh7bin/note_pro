@@ -36,9 +36,6 @@ export const MenuItems = ({
     onDeleteOrRemove,
 }: MenuItemsProps) => {
     const { t } = useI18n();
-    const deleteMenuClassName = isOwner
-        ? 'text-destructive focus:bg-destructive/10 focus:text-destructive'
-        : 'text-warning-foreground focus:bg-warning-subtle focus:text-warning-foreground';
 
     return (
         <div className="flex flex-col gap-1">
@@ -72,7 +69,7 @@ export const MenuItems = ({
             )}
             <Separator />
             <ContextMenuItem
-                className={deleteMenuClassName}
+                className="text-destructive focus:bg-destructive/10 focus:text-destructive"
                 onClick={onDeleteOrRemove}>
                 {isOwner ? (
                     <>
