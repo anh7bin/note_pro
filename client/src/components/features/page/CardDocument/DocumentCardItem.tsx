@@ -48,7 +48,7 @@ export const DocumentCardItem = React.memo(
             <Card
                 {...rest}
                 ref={ref}
-                role={isTrash || selectionActive ? 'button' : 'link'}
+                role={selectionActive ? 'button' : 'link'}
                 tabIndex={0}
                 className={cn(
                     'group relative flex h-[304px] w-full cursor-pointer flex-col overflow-hidden',

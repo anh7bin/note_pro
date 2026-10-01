@@ -43,7 +43,7 @@ export const DocumentListItem = React.memo(
                 <div
                     {...rest}
                     ref={ref}
-                    role={isTrash || selectionActive ? 'button' : 'link'}
+                    role={selectionActive ? 'button' : 'link'}
                     tabIndex={0}
                     className={cn(
                         'group grid min-h-[76px] cursor-pointer grid-cols-[minmax(0,1fr)_64px] items-center rounded-lg border px-5 py-2.5',

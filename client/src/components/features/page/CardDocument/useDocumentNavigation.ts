@@ -7,12 +7,10 @@ export function useDocumentNavigation({
     workspaceId,
     docId,
     folderId,
-    disabled,
 }: {
     workspaceId: string | null | undefined;
     docId: string;
     folderId?: string;
-    disabled: boolean;
 }) {
     const router = useRouter();
     const { startLoading } = useLoading();
@@ -24,16 +22,16 @@ export function useDocumentNavigation({
     );
 
     const prefetch = useCallback(() => {
-        if (!disabled && href) router.prefetch(href);
-    }, [disabled, href, router]);
+        if (href) router.prefetch(href);
+    }, [href, router]);
 
     const open = useCallback(() => {
-        if (disabled || !href) {
+        if (!href) {
             return;
         }
         startLoading();
         router.push(href);
-    }, [disabled, href, router, startLoading]);
+    }, [href, router, startLoading]);
 
     return { prefetch, open };
 }

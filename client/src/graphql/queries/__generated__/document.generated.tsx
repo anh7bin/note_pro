@@ -22,7 +22,7 @@ export type GetDocumentBlocksQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetDocumentBlocksQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> };
+export type GetDocumentBlocksQuery = { __typename?: 'query_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, deleted_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> };
 
 export type GetMaxDocumentBlockPositionQueryVariables = Types.Exact<{
   pageId: Types.Scalars['uuid']['input'];
@@ -36,7 +36,7 @@ export type SubscribeToDocumentBlocksSubscriptionVariables = Types.Exact<{
 }>;
 
 
-export type SubscribeToDocumentBlocksSubscription = { __typename?: 'subscription_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> };
+export type SubscribeToDocumentBlocksSubscription = { __typename?: 'subscription_root', blocks: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, deleted_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> };
 
 export type GetSharedWithMeDocsQueryVariables = Types.Exact<{
   userId: Types.Scalars['uuid']['input'];
@@ -186,7 +186,7 @@ export type GetDeletedDocumentsQueryResult = Apollo.QueryResult<GetDeletedDocume
 export const GetDocumentBlocksDocument = gql`
     query GetDocumentBlocks($pageId: uuid!) {
   blocks(
-    where: {_or: [{id: {_eq: $pageId}}, {page_id: {_eq: $pageId}}], deleted_at: {_is_null: true}}
+    where: {_or: [{id: {_eq: $pageId}, type: {_eq: "page"}}, {page_id: {_eq: $pageId}, deleted_at: {_is_null: true}}]}
     order_by: {position: asc}
   ) {
     id
@@ -200,6 +200,7 @@ export const GetDocumentBlocksDocument = gql`
     user_id
     created_at
     updated_at
+    deleted_at
     link_access {
       permission_type
     }
@@ -294,7 +295,7 @@ export type GetMaxDocumentBlockPositionQueryResult = Apollo.QueryResult<GetMaxDo
 export const SubscribeToDocumentBlocksDocument = gql`
     subscription SubscribeToDocumentBlocks($pageId: uuid!) {
   blocks(
-    where: {_or: [{id: {_eq: $pageId}}, {page_id: {_eq: $pageId}}], deleted_at: {_is_null: true}}
+    where: {_or: [{id: {_eq: $pageId}, type: {_eq: "page"}}, {page_id: {_eq: $pageId}, deleted_at: {_is_null: true}}]}
     order_by: {position: asc}
   ) {
     id
@@ -308,6 +309,7 @@ export const SubscribeToDocumentBlocksDocument = gql`
     user_id
     created_at
     updated_at
+    deleted_at
     link_access {
       permission_type
     }

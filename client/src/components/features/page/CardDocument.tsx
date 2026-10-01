@@ -63,16 +63,15 @@ const CardDocumentComponent = ({
         workspaceId,
         docId,
         folderId,
-        disabled: isTrash,
     });
 
     const activate = useCallback(() => {
-        if (isTrash || selectionActive) {
+        if (selectionActive) {
             toggleDocument(docId);
             return;
         }
         open();
-    }, [isTrash, selectionActive, toggleDocument, docId, open]);
+    }, [selectionActive, toggleDocument, docId, open]);
 
     const handleClick = useCallback(
         (e: React.MouseEvent<HTMLDivElement>) => {

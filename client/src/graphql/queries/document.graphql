@@ -78,8 +78,10 @@ query GetDeletedDocuments($workspaceId: uuid!) {
 query GetDocumentBlocks($pageId: uuid!) {
     blocks(
         where: {
-            _or: [{ id: { _eq: $pageId } }, { page_id: { _eq: $pageId } }]
-            deleted_at: { _is_null: true }
+            _or: [
+                { id: { _eq: $pageId }, type: { _eq: "page" } }
+                { page_id: { _eq: $pageId }, deleted_at: { _is_null: true } }
+            ]
         }
         order_by: { position: asc }
     ) {
@@ -94,6 +96,7 @@ query GetDocumentBlocks($pageId: uuid!) {
         user_id
         created_at
         updated_at
+        deleted_at
         link_access {
             permission_type
         }
@@ -123,8 +126,10 @@ query GetMaxDocumentBlockPosition($pageId: uuid!) {
 subscription SubscribeToDocumentBlocks($pageId: uuid!) {
     blocks(
         where: {
-            _or: [{ id: { _eq: $pageId } }, { page_id: { _eq: $pageId } }]
-            deleted_at: { _is_null: true }
+            _or: [
+                { id: { _eq: $pageId }, type: { _eq: "page" } }
+                { page_id: { _eq: $pageId }, deleted_at: { _is_null: true } }
+            ]
         }
         order_by: { position: asc }
     ) {
@@ -139,6 +144,7 @@ subscription SubscribeToDocumentBlocks($pageId: uuid!) {
         user_id
         created_at
         updated_at
+        deleted_at
         link_access {
             permission_type
         }

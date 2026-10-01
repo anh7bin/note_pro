@@ -172,27 +172,24 @@ export function SelectionActionBar({
                         {allSelected ? <Check /> : <Minus />}
                     </span>
                 </Button>
-                {mode === 'default' && (
-                    <SimpleTooltip
-                        title={t(
-                            allAreStarred ? 'unstarDocument' : 'starDocument'
-                        )}>
-                        <Button
-                            variant="ghost"
-                            size="icon-xs"
-                            disabled={isUpdatingStars}
-                            onClick={() => void toggleDocumentsStar()}>
-                            <Star
-                                className={
-                                    allAreStarred
-                                        ? 'fill-current text-primary'
-                                        : undefined
-                                }
-                            />
-                        </Button>
-                    </SimpleTooltip>
-                )}
-
+                <SimpleTooltip
+                    title={t(
+                        allAreStarred ? 'unstarDocument' : 'starDocument'
+                    )}>
+                    <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        disabled={isUpdatingStars}
+                        onClick={() => void toggleDocumentsStar()}>
+                        <Star
+                            className={
+                                allAreStarred
+                                    ? 'fill-current text-primary'
+                                    : undefined
+                            }
+                        />
+                    </Button>
+                </SimpleTooltip>
                 {mode === 'default' && (
                     <Button
                         variant="ghost"
@@ -201,7 +198,6 @@ export function SelectionActionBar({
                         <FolderInput />
                     </Button>
                 )}
-
                 <Button
                     variant="ghost"
                     size="icon-xs"
