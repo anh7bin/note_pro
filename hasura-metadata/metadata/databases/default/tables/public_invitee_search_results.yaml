@@ -1,0 +1,13 @@
+table:
+  name: invitee_search_results
+  schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - avatar_url
+        - email
+        - id
+        - name
+      filter: {}
+    comment: Search results are returned only by the owner-checked function.

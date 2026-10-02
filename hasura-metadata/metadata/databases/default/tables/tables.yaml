@@ -6,6 +6,7 @@
 - "!include public_document_presence.yaml"
 - "!include public_document_stars.yaml"
 - "!include public_block_tags.yaml"
+- "!include public_invitee_search_results.yaml"
 - "!include public_blocks.yaml"
 - "!include public_files.yaml"
 - "!include public_folders.yaml"

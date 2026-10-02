@@ -1,8 +1,0 @@
-query SearchUsersByEmail($searchTerm: String!) {
-    users(where: { email: { _ilike: $searchTerm } }, limit: 10) {
-        id
-        email
-        name
-        avatar_url
-    }
-}

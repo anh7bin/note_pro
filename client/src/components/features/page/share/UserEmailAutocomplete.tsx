@@ -14,9 +14,11 @@ import {
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { useI18n } from '@/contexts/I18nContext';
+import { useSearchInviteeMutation } from '@/graphql/mutations/__generated__/document-share.generated';
+import { useDebounce } from '@/hooks/useDebounce';
 import { PermissionType } from '@/types/types';
 import { Mail, X } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { InvitePermission, UserSearchResult } from './types';
 
 interface UserEmailAutocompleteProps {
@@ -56,6 +58,9 @@ export function UserEmailAutocomplete({
     const [isSearching, setIsSearching] = useState(false);
     const [searchFailed, setSearchFailed] = useState(false);
     const [isInviting, setIsInviting] = useState(false);
+    const [searchInvitee] = useSearchInviteeMutation();
+    const { debounced, cancel } = useDebounce(300);
+    const requestIdRef = useRef(0);
     const { t } = useI18n();
 
     const normalizedEmail = inputValue.trim().toLowerCase();
@@ -63,51 +68,52 @@ export function UserEmailAutocomplete({
         normalizedEmail.length <= 254 && EMAIL_PATTERN.test(normalizedEmail);
 
     useEffect(() => {
+        const requestId = ++requestIdRef.current;
+
         setSearchResult(null);
         setHasSearched(false);
         setSearchFailed(false);
 
         if (!hasCompleteEmail) {
+            cancel('invitee-search');
             setIsSearching(false);
             return;
         }
 
-        const controller = new AbortController();
         setIsSearching(true);
 
-        const timeoutId = window.setTimeout(async () => {
+        debounced(async () => {
             try {
-                const response = await fetch('/api/share/invitee', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
+                const response = await searchInvitee({
+                    variables: {
                         documentId,
                         email: normalizedEmail,
-                    }),
-                    signal: controller.signal,
+                    },
                 });
 
-                if (!response.ok) throw new Error('Invite search failed');
+                if (requestId !== requestIdRef.current) return;
+                if (response.errors?.length) throw response.errors[0];
 
-                const result = (await response.json()) as {
-                    user: UserSearchResult | null;
-                };
-                setSearchResult(result.user);
+                setSearchResult(response.data?.search_invitee[0] ?? null);
                 setHasSearched(true);
-            } catch (error) {
-                if ((error as Error).name !== 'AbortError') {
-                    setSearchFailed(true);
-                }
+            } catch {
+                if (requestId === requestIdRef.current) setSearchFailed(true);
             } finally {
-                if (!controller.signal.aborted) setIsSearching(false);
+                if (requestId === requestIdRef.current) setIsSearching(false);
             }
-        }, 300);
+        }, 'invitee-search');
 
         return () => {
-            window.clearTimeout(timeoutId);
-            controller.abort();
+            cancel('invitee-search');
         };
-    }, [documentId, hasCompleteEmail, normalizedEmail]);
+    }, [
+        cancel,
+        debounced,
+        documentId,
+        hasCompleteEmail,
+        normalizedEmail,
+        searchInvitee,
+    ]);
 
     const resultAlreadyHasAccess = Boolean(
         searchResult && excludeUserIds.includes(searchResult.id)

@@ -12,3 +12,11 @@
         retries: 1
       use_prepared_statements: true
   tables: "!include default/tables/tables.yaml"
+  functions:
+    - function:
+        name: search_invitee
+        schema: public
+      configuration:
+        session_argument: hasura_session
+      permissions:
+        - role: user

@@ -3156,6 +3156,164 @@ export type FoldersUpdates = {
   where: FoldersBoolExp;
 };
 
+/** Empty return type for the search_invitee GraphQL function. */
+export type InviteeSearchResults = {
+  __typename?: 'invitee_search_results';
+  avatar_url?: Maybe<Scalars['String']['output']>;
+  email: Scalars['String']['output'];
+  id: Scalars['uuid']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "invitee_search_results" */
+export type InviteeSearchResultsAggregate = {
+  __typename?: 'invitee_search_results_aggregate';
+  aggregate?: Maybe<InviteeSearchResultsAggregateFields>;
+  nodes: Array<InviteeSearchResults>;
+};
+
+/** aggregate fields of "invitee_search_results" */
+export type InviteeSearchResultsAggregateFields = {
+  __typename?: 'invitee_search_results_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<InviteeSearchResultsMaxFields>;
+  min?: Maybe<InviteeSearchResultsMinFields>;
+};
+
+
+/** aggregate fields of "invitee_search_results" */
+export type InviteeSearchResultsAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "invitee_search_results". All fields are combined with a logical 'AND'. */
+export type InviteeSearchResultsBoolExp = {
+  _and?: InputMaybe<Array<InviteeSearchResultsBoolExp>>;
+  _not?: InputMaybe<InviteeSearchResultsBoolExp>;
+  _or?: InputMaybe<Array<InviteeSearchResultsBoolExp>>;
+  avatar_url?: InputMaybe<StringComparisonExp>;
+  email?: InputMaybe<StringComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  name?: InputMaybe<StringComparisonExp>;
+};
+
+/** unique or primary key constraints on table "invitee_search_results" */
+export enum InviteeSearchResultsConstraint {
+  /** unique or primary key constraint on columns "id" */
+  InviteeSearchResultsPkey = 'invitee_search_results_pkey'
+}
+
+/** input type for inserting data into table "invitee_search_results" */
+export type InviteeSearchResultsInsertInput = {
+  avatar_url?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type InviteeSearchResultsMaxFields = {
+  __typename?: 'invitee_search_results_max_fields';
+  avatar_url?: Maybe<Scalars['String']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type InviteeSearchResultsMinFields = {
+  __typename?: 'invitee_search_results_min_fields';
+  avatar_url?: Maybe<Scalars['String']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "invitee_search_results" */
+export type InviteeSearchResultsMutationResponse = {
+  __typename?: 'invitee_search_results_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<InviteeSearchResults>;
+};
+
+/** on_conflict condition type for table "invitee_search_results" */
+export type InviteeSearchResultsOnConflict = {
+  constraint: InviteeSearchResultsConstraint;
+  update_columns?: Array<InviteeSearchResultsUpdateColumn>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
+};
+
+/** Ordering options when selecting data from "invitee_search_results". */
+export type InviteeSearchResultsOrderBy = {
+  avatar_url?: InputMaybe<OrderBy>;
+  email?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  name?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: invitee_search_results */
+export type InviteeSearchResultsPkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "invitee_search_results" */
+export enum InviteeSearchResultsSelectColumn {
+  /** column name */
+  AvatarUrl = 'avatar_url',
+  /** column name */
+  Email = 'email',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name'
+}
+
+/** input type for updating data in table "invitee_search_results" */
+export type InviteeSearchResultsSetInput = {
+  avatar_url?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "invitee_search_results" */
+export type InviteeSearchResultsStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: InviteeSearchResultsStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type InviteeSearchResultsStreamCursorValueInput = {
+  avatar_url?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "invitee_search_results" */
+export enum InviteeSearchResultsUpdateColumn {
+  /** column name */
+  AvatarUrl = 'avatar_url',
+  /** column name */
+  Email = 'email',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name'
+}
+
+export type InviteeSearchResultsUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<InviteeSearchResultsSetInput>;
+  /** filter the rows which have to be updated */
+  where: InviteeSearchResultsBoolExp;
+};
+
 export type JsonbCastExp = {
   String?: InputMaybe<StringComparisonExp>;
 };
@@ -3231,6 +3389,10 @@ export type MutationRoot = {
   delete_folders?: Maybe<FoldersMutationResponse>;
   /** delete single row from the table: "folders" */
   delete_folders_by_pk?: Maybe<Folders>;
+  /** delete data from the table: "invitee_search_results" */
+  delete_invitee_search_results?: Maybe<InviteeSearchResultsMutationResponse>;
+  /** delete single row from the table: "invitee_search_results" */
+  delete_invitee_search_results_by_pk?: Maybe<InviteeSearchResults>;
   /** delete data from the table: "notifications" */
   delete_notifications?: Maybe<NotificationsMutationResponse>;
   /** delete single row from the table: "notifications" */
@@ -3295,6 +3457,10 @@ export type MutationRoot = {
   insert_folders?: Maybe<FoldersMutationResponse>;
   /** insert a single row into the table: "folders" */
   insert_folders_one?: Maybe<Folders>;
+  /** insert data into the table: "invitee_search_results" */
+  insert_invitee_search_results?: Maybe<InviteeSearchResultsMutationResponse>;
+  /** insert a single row into the table: "invitee_search_results" */
+  insert_invitee_search_results_one?: Maybe<InviteeSearchResults>;
   /** insert data into the table: "notifications" */
   insert_notifications?: Maybe<NotificationsMutationResponse>;
   /** insert a single row into the table: "notifications" */
@@ -3315,6 +3481,8 @@ export type MutationRoot = {
   insert_workspaces?: Maybe<WorkspacesMutationResponse>;
   /** insert a single row into the table: "workspaces" */
   insert_workspaces_one?: Maybe<Workspaces>;
+  /** execute VOLATILE function "search_invitee" which returns "invitee_search_results" */
+  search_invitee: Array<InviteeSearchResults>;
   /** update data of the table: "access_requests" */
   update_access_requests?: Maybe<AccessRequestsMutationResponse>;
   /** update single row of the table: "access_requests" */
@@ -3381,6 +3549,12 @@ export type MutationRoot = {
   update_folders_by_pk?: Maybe<Folders>;
   /** update multiples rows of table: "folders" */
   update_folders_many?: Maybe<Array<Maybe<FoldersMutationResponse>>>;
+  /** update data of the table: "invitee_search_results" */
+  update_invitee_search_results?: Maybe<InviteeSearchResultsMutationResponse>;
+  /** update single row of the table: "invitee_search_results" */
+  update_invitee_search_results_by_pk?: Maybe<InviteeSearchResults>;
+  /** update multiples rows of table: "invitee_search_results" */
+  update_invitee_search_results_many?: Maybe<Array<Maybe<InviteeSearchResultsMutationResponse>>>;
   /** update data of the table: "notifications" */
   update_notifications?: Maybe<NotificationsMutationResponse>;
   /** update single row of the table: "notifications" */
@@ -3545,6 +3719,18 @@ export type MutationRootDeleteFoldersArgs = {
 
 /** mutation root */
 export type MutationRootDeleteFoldersByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type MutationRootDeleteInviteeSearchResultsArgs = {
+  where: InviteeSearchResultsBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootDeleteInviteeSearchResultsByPkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -3764,6 +3950,20 @@ export type MutationRootInsertFoldersOneArgs = {
 
 
 /** mutation root */
+export type MutationRootInsertInviteeSearchResultsArgs = {
+  objects: Array<InviteeSearchResultsInsertInput>;
+  on_conflict?: InputMaybe<InviteeSearchResultsOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertInviteeSearchResultsOneArgs = {
+  object: InviteeSearchResultsInsertInput;
+  on_conflict?: InputMaybe<InviteeSearchResultsOnConflict>;
+};
+
+
+/** mutation root */
 export type MutationRootInsertNotificationsArgs = {
   objects: Array<NotificationsInsertInput>;
   on_conflict?: InputMaybe<NotificationsOnConflict>;
@@ -3830,6 +4030,17 @@ export type MutationRootInsertWorkspacesArgs = {
 export type MutationRootInsertWorkspacesOneArgs = {
   object: WorkspacesInsertInput;
   on_conflict?: InputMaybe<WorkspacesOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootSearchInviteeArgs = {
+  args: SearchInviteeArgs;
+  distinct_on?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<InviteeSearchResultsOrderBy>>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
 };
 
 
@@ -4062,6 +4273,26 @@ export type MutationRootUpdateFoldersByPkArgs = {
 /** mutation root */
 export type MutationRootUpdateFoldersManyArgs = {
   updates: Array<FoldersUpdates>;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateInviteeSearchResultsArgs = {
+  _set?: InputMaybe<InviteeSearchResultsSetInput>;
+  where: InviteeSearchResultsBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateInviteeSearchResultsByPkArgs = {
+  _set?: InputMaybe<InviteeSearchResultsSetInput>;
+  pk_columns: InviteeSearchResultsPkColumnsInput;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateInviteeSearchResultsManyArgs = {
+  updates: Array<InviteeSearchResultsUpdates>;
 };
 
 
@@ -4532,6 +4763,12 @@ export type QueryRoot = {
   folders_aggregate: FoldersAggregate;
   /** fetch data from the table: "folders" using primary key columns */
   folders_by_pk?: Maybe<Folders>;
+  /** fetch data from the table: "invitee_search_results" */
+  invitee_search_results: Array<InviteeSearchResults>;
+  /** fetch aggregated fields from the table: "invitee_search_results" */
+  invitee_search_results_aggregate: InviteeSearchResultsAggregate;
+  /** fetch data from the table: "invitee_search_results" using primary key columns */
+  invitee_search_results_by_pk?: Maybe<InviteeSearchResults>;
   /** fetch data from the table: "notifications" */
   notifications: Array<Notifications>;
   /** fetch aggregated fields from the table: "notifications" */
@@ -4821,6 +5058,29 @@ export type QueryRootFoldersByPkArgs = {
 };
 
 
+export type QueryRootInviteeSearchResultsArgs = {
+  distinct_on?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<InviteeSearchResultsOrderBy>>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
+};
+
+
+export type QueryRootInviteeSearchResultsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<InviteeSearchResultsOrderBy>>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
+};
+
+
+export type QueryRootInviteeSearchResultsByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
 export type QueryRootNotificationsArgs = {
   distinct_on?: InputMaybe<Array<NotificationsSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -4935,6 +5195,11 @@ export type QueryRootWorkspacesByPkArgs = {
   id: Scalars['uuid']['input'];
 };
 
+export type SearchInviteeArgs = {
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+  search_email?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type SubscriptionRoot = {
   __typename?: 'subscription_root';
   /** An array relationship */
@@ -5025,6 +5290,14 @@ export type SubscriptionRoot = {
   folders_by_pk?: Maybe<Folders>;
   /** fetch data from the table in a streaming manner: "folders" */
   folders_stream: Array<Folders>;
+  /** fetch data from the table: "invitee_search_results" */
+  invitee_search_results: Array<InviteeSearchResults>;
+  /** fetch aggregated fields from the table: "invitee_search_results" */
+  invitee_search_results_aggregate: InviteeSearchResultsAggregate;
+  /** fetch data from the table: "invitee_search_results" using primary key columns */
+  invitee_search_results_by_pk?: Maybe<InviteeSearchResults>;
+  /** fetch data from the table in a streaming manner: "invitee_search_results" */
+  invitee_search_results_stream: Array<InviteeSearchResults>;
   /** fetch data from the table: "notifications" */
   notifications: Array<Notifications>;
   /** fetch aggregated fields from the table: "notifications" */
@@ -5398,6 +5671,36 @@ export type SubscriptionRootFoldersStreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<FoldersStreamCursorInput>>;
   where?: InputMaybe<FoldersBoolExp>;
+};
+
+
+export type SubscriptionRootInviteeSearchResultsArgs = {
+  distinct_on?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<InviteeSearchResultsOrderBy>>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
+};
+
+
+export type SubscriptionRootInviteeSearchResultsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<InviteeSearchResultsOrderBy>>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
+};
+
+
+export type SubscriptionRootInviteeSearchResultsByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type SubscriptionRootInviteeSearchResultsStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<InviteeSearchResultsStreamCursorInput>>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
 };
 
 

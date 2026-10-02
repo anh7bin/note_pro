@@ -551,7 +551,44 @@ export type folders_mutation_responseFieldPolicy = {
 	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
 	returning?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type mutation_rootKeySpecifier = ('delete_access_requests' | 'delete_access_requests_by_pk' | 'delete_block_comments' | 'delete_block_comments_by_pk' | 'delete_block_links' | 'delete_block_links_by_pk' | 'delete_block_reactions' | 'delete_block_reactions_by_pk' | 'delete_block_tags' | 'delete_block_tags_by_pk' | 'delete_blocks' | 'delete_blocks_by_pk' | 'delete_document_link_access' | 'delete_document_link_access_by_pk' | 'delete_document_presence' | 'delete_document_presence_by_pk' | 'delete_document_stars' | 'delete_document_stars_by_pk' | 'delete_files' | 'delete_files_by_pk' | 'delete_folders' | 'delete_folders_by_pk' | 'delete_notifications' | 'delete_notifications_by_pk' | 'delete_tags' | 'delete_tags_by_pk' | 'delete_tasks' | 'delete_tasks_by_pk' | 'delete_users' | 'delete_users_by_pk' | 'delete_workspaces' | 'delete_workspaces_by_pk' | 'insert_access_requests' | 'insert_access_requests_one' | 'insert_block_comments' | 'insert_block_comments_one' | 'insert_block_links' | 'insert_block_links_one' | 'insert_block_reactions' | 'insert_block_reactions_one' | 'insert_block_tags' | 'insert_block_tags_one' | 'insert_blocks' | 'insert_blocks_one' | 'insert_document_link_access' | 'insert_document_link_access_one' | 'insert_document_presence' | 'insert_document_presence_one' | 'insert_document_stars' | 'insert_document_stars_one' | 'insert_files' | 'insert_files_one' | 'insert_folders' | 'insert_folders_one' | 'insert_notifications' | 'insert_notifications_one' | 'insert_tags' | 'insert_tags_one' | 'insert_tasks' | 'insert_tasks_one' | 'insert_users' | 'insert_users_one' | 'insert_workspaces' | 'insert_workspaces_one' | 'update_access_requests' | 'update_access_requests_by_pk' | 'update_access_requests_many' | 'update_block_comments' | 'update_block_comments_by_pk' | 'update_block_comments_many' | 'update_block_links' | 'update_block_links_by_pk' | 'update_block_links_many' | 'update_block_reactions' | 'update_block_reactions_by_pk' | 'update_block_reactions_many' | 'update_block_tags' | 'update_block_tags_by_pk' | 'update_block_tags_many' | 'update_blocks' | 'update_blocks_by_pk' | 'update_blocks_many' | 'update_document_link_access' | 'update_document_link_access_by_pk' | 'update_document_link_access_many' | 'update_document_presence' | 'update_document_presence_by_pk' | 'update_document_presence_many' | 'update_document_stars' | 'update_document_stars_by_pk' | 'update_document_stars_many' | 'update_files' | 'update_files_by_pk' | 'update_files_many' | 'update_folders' | 'update_folders_by_pk' | 'update_folders_many' | 'update_notifications' | 'update_notifications_by_pk' | 'update_notifications_many' | 'update_tags' | 'update_tags_by_pk' | 'update_tags_many' | 'update_tasks' | 'update_tasks_by_pk' | 'update_tasks_many' | 'update_users' | 'update_users_by_pk' | 'update_users_many' | 'update_workspaces' | 'update_workspaces_by_pk' | 'update_workspaces_many' | mutation_rootKeySpecifier)[];
+export type invitee_search_resultsKeySpecifier = ('avatar_url' | 'email' | 'id' | 'name' | invitee_search_resultsKeySpecifier)[];
+export type invitee_search_resultsFieldPolicy = {
+	avatar_url?: FieldPolicy<any> | FieldReadFunction<any>,
+	email?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	name?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type invitee_search_results_aggregateKeySpecifier = ('aggregate' | 'nodes' | invitee_search_results_aggregateKeySpecifier)[];
+export type invitee_search_results_aggregateFieldPolicy = {
+	aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	nodes?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type invitee_search_results_aggregate_fieldsKeySpecifier = ('count' | 'max' | 'min' | invitee_search_results_aggregate_fieldsKeySpecifier)[];
+export type invitee_search_results_aggregate_fieldsFieldPolicy = {
+	count?: FieldPolicy<any> | FieldReadFunction<any>,
+	max?: FieldPolicy<any> | FieldReadFunction<any>,
+	min?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type invitee_search_results_max_fieldsKeySpecifier = ('avatar_url' | 'email' | 'id' | 'name' | invitee_search_results_max_fieldsKeySpecifier)[];
+export type invitee_search_results_max_fieldsFieldPolicy = {
+	avatar_url?: FieldPolicy<any> | FieldReadFunction<any>,
+	email?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	name?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type invitee_search_results_min_fieldsKeySpecifier = ('avatar_url' | 'email' | 'id' | 'name' | invitee_search_results_min_fieldsKeySpecifier)[];
+export type invitee_search_results_min_fieldsFieldPolicy = {
+	avatar_url?: FieldPolicy<any> | FieldReadFunction<any>,
+	email?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	name?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type invitee_search_results_mutation_responseKeySpecifier = ('affected_rows' | 'returning' | invitee_search_results_mutation_responseKeySpecifier)[];
+export type invitee_search_results_mutation_responseFieldPolicy = {
+	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
+	returning?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type mutation_rootKeySpecifier = ('delete_access_requests' | 'delete_access_requests_by_pk' | 'delete_block_comments' | 'delete_block_comments_by_pk' | 'delete_block_links' | 'delete_block_links_by_pk' | 'delete_block_reactions' | 'delete_block_reactions_by_pk' | 'delete_block_tags' | 'delete_block_tags_by_pk' | 'delete_blocks' | 'delete_blocks_by_pk' | 'delete_document_link_access' | 'delete_document_link_access_by_pk' | 'delete_document_presence' | 'delete_document_presence_by_pk' | 'delete_document_stars' | 'delete_document_stars_by_pk' | 'delete_files' | 'delete_files_by_pk' | 'delete_folders' | 'delete_folders_by_pk' | 'delete_invitee_search_results' | 'delete_invitee_search_results_by_pk' | 'delete_notifications' | 'delete_notifications_by_pk' | 'delete_tags' | 'delete_tags_by_pk' | 'delete_tasks' | 'delete_tasks_by_pk' | 'delete_users' | 'delete_users_by_pk' | 'delete_workspaces' | 'delete_workspaces_by_pk' | 'insert_access_requests' | 'insert_access_requests_one' | 'insert_block_comments' | 'insert_block_comments_one' | 'insert_block_links' | 'insert_block_links_one' | 'insert_block_reactions' | 'insert_block_reactions_one' | 'insert_block_tags' | 'insert_block_tags_one' | 'insert_blocks' | 'insert_blocks_one' | 'insert_document_link_access' | 'insert_document_link_access_one' | 'insert_document_presence' | 'insert_document_presence_one' | 'insert_document_stars' | 'insert_document_stars_one' | 'insert_files' | 'insert_files_one' | 'insert_folders' | 'insert_folders_one' | 'insert_invitee_search_results' | 'insert_invitee_search_results_one' | 'insert_notifications' | 'insert_notifications_one' | 'insert_tags' | 'insert_tags_one' | 'insert_tasks' | 'insert_tasks_one' | 'insert_users' | 'insert_users_one' | 'insert_workspaces' | 'insert_workspaces_one' | 'search_invitee' | 'update_access_requests' | 'update_access_requests_by_pk' | 'update_access_requests_many' | 'update_block_comments' | 'update_block_comments_by_pk' | 'update_block_comments_many' | 'update_block_links' | 'update_block_links_by_pk' | 'update_block_links_many' | 'update_block_reactions' | 'update_block_reactions_by_pk' | 'update_block_reactions_many' | 'update_block_tags' | 'update_block_tags_by_pk' | 'update_block_tags_many' | 'update_blocks' | 'update_blocks_by_pk' | 'update_blocks_many' | 'update_document_link_access' | 'update_document_link_access_by_pk' | 'update_document_link_access_many' | 'update_document_presence' | 'update_document_presence_by_pk' | 'update_document_presence_many' | 'update_document_stars' | 'update_document_stars_by_pk' | 'update_document_stars_many' | 'update_files' | 'update_files_by_pk' | 'update_files_many' | 'update_folders' | 'update_folders_by_pk' | 'update_folders_many' | 'update_invitee_search_results' | 'update_invitee_search_results_by_pk' | 'update_invitee_search_results_many' | 'update_notifications' | 'update_notifications_by_pk' | 'update_notifications_many' | 'update_tags' | 'update_tags_by_pk' | 'update_tags_many' | 'update_tasks' | 'update_tasks_by_pk' | 'update_tasks_many' | 'update_users' | 'update_users_by_pk' | 'update_users_many' | 'update_workspaces' | 'update_workspaces_by_pk' | 'update_workspaces_many' | mutation_rootKeySpecifier)[];
 export type mutation_rootFieldPolicy = {
 	delete_access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_access_requests_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -575,6 +612,8 @@ export type mutation_rootFieldPolicy = {
 	delete_files_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_folders?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_folders_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	delete_invitee_search_results?: FieldPolicy<any> | FieldReadFunction<any>,
+	delete_invitee_search_results_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_notifications?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_notifications_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	delete_tags?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -607,6 +646,8 @@ export type mutation_rootFieldPolicy = {
 	insert_files_one?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_folders?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_folders_one?: FieldPolicy<any> | FieldReadFunction<any>,
+	insert_invitee_search_results?: FieldPolicy<any> | FieldReadFunction<any>,
+	insert_invitee_search_results_one?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_notifications?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_notifications_one?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_tags?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -617,6 +658,7 @@ export type mutation_rootFieldPolicy = {
 	insert_users_one?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_workspaces?: FieldPolicy<any> | FieldReadFunction<any>,
 	insert_workspaces_one?: FieldPolicy<any> | FieldReadFunction<any>,
+	search_invitee?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_access_requests_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_access_requests_many?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -650,6 +692,9 @@ export type mutation_rootFieldPolicy = {
 	update_folders?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_folders_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_folders_many?: FieldPolicy<any> | FieldReadFunction<any>,
+	update_invitee_search_results?: FieldPolicy<any> | FieldReadFunction<any>,
+	update_invitee_search_results_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	update_invitee_search_results_many?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_notifications?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_notifications_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	update_notifications_many?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -718,7 +763,7 @@ export type notifications_mutation_responseFieldPolicy = {
 	affected_rows?: FieldPolicy<any> | FieldReadFunction<any>,
 	returning?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type query_rootKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'access_requests_by_pk' | 'block_comments' | 'block_comments_aggregate' | 'block_comments_by_pk' | 'block_links' | 'block_links_aggregate' | 'block_links_by_pk' | 'block_reactions' | 'block_reactions_aggregate' | 'block_reactions_by_pk' | 'block_tags' | 'block_tags_aggregate' | 'block_tags_by_pk' | 'blocks' | 'blocks_aggregate' | 'blocks_by_pk' | 'document_link_access' | 'document_link_access_aggregate' | 'document_link_access_by_pk' | 'document_presence' | 'document_presence_aggregate' | 'document_presence_by_pk' | 'document_stars' | 'document_stars_aggregate' | 'document_stars_by_pk' | 'files' | 'files_aggregate' | 'files_by_pk' | 'folders' | 'folders_aggregate' | 'folders_by_pk' | 'notifications' | 'notifications_aggregate' | 'notifications_by_pk' | 'tags' | 'tags_aggregate' | 'tags_by_pk' | 'tasks' | 'tasks_aggregate' | 'tasks_by_pk' | 'users' | 'users_aggregate' | 'users_by_pk' | 'workspaces' | 'workspaces_aggregate' | 'workspaces_by_pk' | query_rootKeySpecifier)[];
+export type query_rootKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'access_requests_by_pk' | 'block_comments' | 'block_comments_aggregate' | 'block_comments_by_pk' | 'block_links' | 'block_links_aggregate' | 'block_links_by_pk' | 'block_reactions' | 'block_reactions_aggregate' | 'block_reactions_by_pk' | 'block_tags' | 'block_tags_aggregate' | 'block_tags_by_pk' | 'blocks' | 'blocks_aggregate' | 'blocks_by_pk' | 'document_link_access' | 'document_link_access_aggregate' | 'document_link_access_by_pk' | 'document_presence' | 'document_presence_aggregate' | 'document_presence_by_pk' | 'document_stars' | 'document_stars_aggregate' | 'document_stars_by_pk' | 'files' | 'files_aggregate' | 'files_by_pk' | 'folders' | 'folders_aggregate' | 'folders_by_pk' | 'invitee_search_results' | 'invitee_search_results_aggregate' | 'invitee_search_results_by_pk' | 'notifications' | 'notifications_aggregate' | 'notifications_by_pk' | 'tags' | 'tags_aggregate' | 'tags_by_pk' | 'tasks' | 'tasks_aggregate' | 'tasks_by_pk' | 'users' | 'users_aggregate' | 'users_by_pk' | 'workspaces' | 'workspaces_aggregate' | 'workspaces_by_pk' | query_rootKeySpecifier)[];
 export type query_rootFieldPolicy = {
 	access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
 	access_requests_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -753,6 +798,9 @@ export type query_rootFieldPolicy = {
 	folders?: FieldPolicy<any> | FieldReadFunction<any>,
 	folders_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	folders_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	invitee_search_results?: FieldPolicy<any> | FieldReadFunction<any>,
+	invitee_search_results_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	invitee_search_results_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	notifications?: FieldPolicy<any> | FieldReadFunction<any>,
 	notifications_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	notifications_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -769,7 +817,7 @@ export type query_rootFieldPolicy = {
 	workspaces_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	workspaces_by_pk?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type subscription_rootKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'access_requests_by_pk' | 'access_requests_stream' | 'block_comments' | 'block_comments_aggregate' | 'block_comments_by_pk' | 'block_comments_stream' | 'block_links' | 'block_links_aggregate' | 'block_links_by_pk' | 'block_links_stream' | 'block_reactions' | 'block_reactions_aggregate' | 'block_reactions_by_pk' | 'block_reactions_stream' | 'block_tags' | 'block_tags_aggregate' | 'block_tags_by_pk' | 'block_tags_stream' | 'blocks' | 'blocks_aggregate' | 'blocks_by_pk' | 'blocks_stream' | 'document_link_access' | 'document_link_access_aggregate' | 'document_link_access_by_pk' | 'document_link_access_stream' | 'document_presence' | 'document_presence_aggregate' | 'document_presence_by_pk' | 'document_presence_stream' | 'document_stars' | 'document_stars_aggregate' | 'document_stars_by_pk' | 'document_stars_stream' | 'files' | 'files_aggregate' | 'files_by_pk' | 'files_stream' | 'folders' | 'folders_aggregate' | 'folders_by_pk' | 'folders_stream' | 'notifications' | 'notifications_aggregate' | 'notifications_by_pk' | 'notifications_stream' | 'tags' | 'tags_aggregate' | 'tags_by_pk' | 'tags_stream' | 'tasks' | 'tasks_aggregate' | 'tasks_by_pk' | 'tasks_stream' | 'users' | 'users_aggregate' | 'users_by_pk' | 'users_stream' | 'workspaces' | 'workspaces_aggregate' | 'workspaces_by_pk' | 'workspaces_stream' | subscription_rootKeySpecifier)[];
+export type subscription_rootKeySpecifier = ('access_requests' | 'access_requests_aggregate' | 'access_requests_by_pk' | 'access_requests_stream' | 'block_comments' | 'block_comments_aggregate' | 'block_comments_by_pk' | 'block_comments_stream' | 'block_links' | 'block_links_aggregate' | 'block_links_by_pk' | 'block_links_stream' | 'block_reactions' | 'block_reactions_aggregate' | 'block_reactions_by_pk' | 'block_reactions_stream' | 'block_tags' | 'block_tags_aggregate' | 'block_tags_by_pk' | 'block_tags_stream' | 'blocks' | 'blocks_aggregate' | 'blocks_by_pk' | 'blocks_stream' | 'document_link_access' | 'document_link_access_aggregate' | 'document_link_access_by_pk' | 'document_link_access_stream' | 'document_presence' | 'document_presence_aggregate' | 'document_presence_by_pk' | 'document_presence_stream' | 'document_stars' | 'document_stars_aggregate' | 'document_stars_by_pk' | 'document_stars_stream' | 'files' | 'files_aggregate' | 'files_by_pk' | 'files_stream' | 'folders' | 'folders_aggregate' | 'folders_by_pk' | 'folders_stream' | 'invitee_search_results' | 'invitee_search_results_aggregate' | 'invitee_search_results_by_pk' | 'invitee_search_results_stream' | 'notifications' | 'notifications_aggregate' | 'notifications_by_pk' | 'notifications_stream' | 'tags' | 'tags_aggregate' | 'tags_by_pk' | 'tags_stream' | 'tasks' | 'tasks_aggregate' | 'tasks_by_pk' | 'tasks_stream' | 'users' | 'users_aggregate' | 'users_by_pk' | 'users_stream' | 'workspaces' | 'workspaces_aggregate' | 'workspaces_by_pk' | 'workspaces_stream' | subscription_rootKeySpecifier)[];
 export type subscription_rootFieldPolicy = {
 	access_requests?: FieldPolicy<any> | FieldReadFunction<any>,
 	access_requests_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -815,6 +863,10 @@ export type subscription_rootFieldPolicy = {
 	folders_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	folders_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
 	folders_stream?: FieldPolicy<any> | FieldReadFunction<any>,
+	invitee_search_results?: FieldPolicy<any> | FieldReadFunction<any>,
+	invitee_search_results_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
+	invitee_search_results_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
+	invitee_search_results_stream?: FieldPolicy<any> | FieldReadFunction<any>,
 	notifications?: FieldPolicy<any> | FieldReadFunction<any>,
 	notifications_aggregate?: FieldPolicy<any> | FieldReadFunction<any>,
 	notifications_by_pk?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -1330,6 +1382,30 @@ export type StrictTypedTypePolicies = {
 	folders_mutation_response?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | folders_mutation_responseKeySpecifier | (() => undefined | folders_mutation_responseKeySpecifier),
 		fields?: folders_mutation_responseFieldPolicy,
+	},
+	invitee_search_results?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | invitee_search_resultsKeySpecifier | (() => undefined | invitee_search_resultsKeySpecifier),
+		fields?: invitee_search_resultsFieldPolicy,
+	},
+	invitee_search_results_aggregate?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | invitee_search_results_aggregateKeySpecifier | (() => undefined | invitee_search_results_aggregateKeySpecifier),
+		fields?: invitee_search_results_aggregateFieldPolicy,
+	},
+	invitee_search_results_aggregate_fields?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | invitee_search_results_aggregate_fieldsKeySpecifier | (() => undefined | invitee_search_results_aggregate_fieldsKeySpecifier),
+		fields?: invitee_search_results_aggregate_fieldsFieldPolicy,
+	},
+	invitee_search_results_max_fields?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | invitee_search_results_max_fieldsKeySpecifier | (() => undefined | invitee_search_results_max_fieldsKeySpecifier),
+		fields?: invitee_search_results_max_fieldsFieldPolicy,
+	},
+	invitee_search_results_min_fields?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | invitee_search_results_min_fieldsKeySpecifier | (() => undefined | invitee_search_results_min_fieldsKeySpecifier),
+		fields?: invitee_search_results_min_fieldsFieldPolicy,
+	},
+	invitee_search_results_mutation_response?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | invitee_search_results_mutation_responseKeySpecifier | (() => undefined | invitee_search_results_mutation_responseKeySpecifier),
+		fields?: invitee_search_results_mutation_responseFieldPolicy,
 	},
 	mutation_root?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | mutation_rootKeySpecifier | (() => undefined | mutation_rootKeySpecifier),

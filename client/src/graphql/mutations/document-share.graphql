@@ -118,3 +118,12 @@ mutation DeclineAccessRequest($requestId: uuid!, $status: String!) {
         id
     }
 }
+
+mutation SearchInvitee($documentId: uuid!, $email: String!) {
+    search_invitee(args: { document_id: $documentId, search_email: $email }) {
+        id
+        email
+        name
+        avatar_url
+    }
+}

@@ -57,6 +57,14 @@ export type DeclineAccessRequestMutationVariables = Types.Exact<{
 
 export type DeclineAccessRequestMutation = { __typename?: 'mutation_root', update_access_requests_by_pk?: { __typename?: 'access_requests', id: string } | null };
 
+export type SearchInviteeMutationVariables = Types.Exact<{
+  documentId: Types.Scalars['uuid']['input'];
+  email: Types.Scalars['String']['input'];
+}>;
+
+
+export type SearchInviteeMutation = { __typename?: 'mutation_root', search_invitee: Array<{ __typename?: 'invitee_search_results', id: string, email: string, name?: string | null, avatar_url?: string | null }> };
+
 
 export const ShareDocumentWithUsersDocument = gql`
     mutation ShareDocumentWithUsers($objects: [access_requests_insert_input!]!) {
@@ -353,3 +361,40 @@ export function useDeclineAccessRequestMutation(baseOptions?: Apollo.MutationHoo
 export type DeclineAccessRequestMutationHookResult = ReturnType<typeof useDeclineAccessRequestMutation>;
 export type DeclineAccessRequestMutationResult = Apollo.MutationResult<DeclineAccessRequestMutation>;
 export type DeclineAccessRequestMutationOptions = Apollo.BaseMutationOptions<DeclineAccessRequestMutation, DeclineAccessRequestMutationVariables>;
+export const SearchInviteeDocument = gql`
+    mutation SearchInvitee($documentId: uuid!, $email: String!) {
+  search_invitee(args: {document_id: $documentId, search_email: $email}) {
+    id
+    email
+    name
+    avatar_url
+  }
+}
+    `;
+export type SearchInviteeMutationFn = Apollo.MutationFunction<SearchInviteeMutation, SearchInviteeMutationVariables>;
+
+/**
+ * __useSearchInviteeMutation__
+ *
+ * To run a mutation, you first call `useSearchInviteeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSearchInviteeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [searchInviteeMutation, { data, loading, error }] = useSearchInviteeMutation({
+ *   variables: {
+ *      documentId: // value for 'documentId'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSearchInviteeMutation(baseOptions?: Apollo.MutationHookOptions<SearchInviteeMutation, SearchInviteeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SearchInviteeMutation, SearchInviteeMutationVariables>(SearchInviteeDocument, options);
+      }
+export type SearchInviteeMutationHookResult = ReturnType<typeof useSearchInviteeMutation>;
+export type SearchInviteeMutationResult = Apollo.MutationResult<SearchInviteeMutation>;
+export type SearchInviteeMutationOptions = Apollo.BaseMutationOptions<SearchInviteeMutation, SearchInviteeMutationVariables>;
