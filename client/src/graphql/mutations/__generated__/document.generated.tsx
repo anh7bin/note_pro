@@ -30,7 +30,7 @@ export type MaterializeDocumentMutationVariables = Types.Exact<{
 }>;
 
 
-export type MaterializeDocumentMutation = { __typename?: 'mutation_root', insert_blocks_one?: { __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }>, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string } | null } | null, insert_blocks?: { __typename?: 'blocks_mutation_response', returning: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> } | null };
+export type MaterializeDocumentMutation = { __typename?: 'mutation_root', insert_blocks_one?: { __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, deleted_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }>, document_stars: Array<{ __typename?: 'document_stars', document_id: string }>, folder?: { __typename?: 'folders', id: string, name: string } | null } | null, insert_blocks?: { __typename?: 'blocks_mutation_response', returning: Array<{ __typename?: 'blocks', id: string, content?: any | null, cover_image?: string | null, position?: number | null, parent_id?: string | null, page_id?: string | null, type: string, workspace_id?: string | null, user_id?: string | null, created_at?: string | null, updated_at?: string | null, deleted_at?: string | null, link_access?: { __typename?: 'document_link_access', permission_type: string } | null, tasks: Array<{ __typename?: 'tasks', id: string, status?: string | null, deadline_date?: string | null, schedule_date?: string | null, priority?: string | null, user_id?: string | null }> }> } | null };
 
 export type UpdateBlockMutationVariables = Types.Exact<{
   id: Types.Scalars['uuid']['input'];
@@ -210,6 +210,7 @@ export const MaterializeDocumentDocument = gql`
     user_id
     created_at
     updated_at
+    deleted_at
     link_access {
       permission_type
     }
@@ -242,6 +243,7 @@ export const MaterializeDocumentDocument = gql`
       user_id
       created_at
       updated_at
+      deleted_at
       link_access {
         permission_type
       }

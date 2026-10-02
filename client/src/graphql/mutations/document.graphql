@@ -40,6 +40,7 @@ mutation MaterializeDocument(
         user_id
         created_at
         updated_at
+        deleted_at
         link_access {
             permission_type
         }
@@ -73,6 +74,7 @@ mutation MaterializeDocument(
             user_id
             created_at
             updated_at
+            deleted_at
             link_access {
                 permission_type
             }
