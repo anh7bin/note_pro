@@ -72,7 +72,7 @@ export default function Header({ workspaceSlug }: Props) {
                         </Button>
                         <SidebarToggleButton />
                     </div>
-                    <div className="min-w-0 justify-self-end lg:w-full lg:max-w-xl lg:justify-self-center">
+                    <div className="min-w-0 justify-self-end lg:w-full lg:max-w-[480px] lg:justify-self-center">
                         <div data-tour="mobile-search" className="lg:hidden">
                             <MobileSearch />
                         </div>

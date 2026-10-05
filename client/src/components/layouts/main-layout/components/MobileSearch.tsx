@@ -15,9 +15,11 @@ export const MobileSearch = () => {
             open={open}
             onOpenChange={setOpen}
             contentProps={{
-                align: 'end',
+                align: 'start',
                 sideOffset: 8,
-                className: 'w-[calc(100vw-1rem)] overflow-hidden p-0 lg:hidden',
+                collisionPadding: 12,
+                className:
+                    'w-80 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl p-0 shadow-md sm:w-96 lg:hidden',
             }}
             trigger={
                 <SimpleTooltip title={t('search')}>

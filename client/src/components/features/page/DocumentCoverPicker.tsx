@@ -28,6 +28,24 @@ const TEXTURE_COVERS = [
     '/images/covers/celestial-slate.webp',
 ] as const;
 
+const NATURE_COVERS = [
+    '/images/covers/nature-alpine-dawn.webp',
+    '/images/covers/nature-ocean-shore.webp',
+    '/images/covers/nature-botanical-light.webp',
+] as const;
+
+const ARCHITECTURE_COVERS = [
+    '/images/covers/architecture-concrete-arches.webp',
+    '/images/covers/architecture-city-blue-hour.webp',
+    '/images/covers/architecture-terracotta.webp',
+] as const;
+
+const ART_COVERS = [
+    '/images/covers/art-paper-waves.webp',
+    '/images/covers/art-aurora-ribbons.webp',
+    '/images/covers/art-topographic-relief.webp',
+] as const;
+
 interface DocumentCoverPickerProps {
     currentCover?: string;
     triggerLabel: string;
@@ -144,7 +162,7 @@ export function DocumentCoverPicker({
                     'w-[min(26rem,calc(100vw-2rem))] overflow-hidden p-0',
             }}>
             <Tabs defaultValue="library" className="w-full">
-                <div className="border-b border-border px-3 pt-3">
+                <div className="border-b border-border px-2 pt-2">
                     <TabsList className="grid w-full grid-cols-2 bg-transparent p-0">
                         <TabsTrigger
                             value="library"
@@ -186,6 +204,69 @@ export function DocumentCoverPicker({
                                 renderCoverOption(
                                     cover,
                                     COLOR_COVERS.length + index
+                                )
+                            )}
+                        </div>
+                    </section>
+
+                    <section
+                        aria-labelledby="cover-nature-heading"
+                        className="mt-4">
+                        <h3
+                            id="cover-nature-heading"
+                            className="mb-2 text-xs font-medium text-muted-foreground">
+                            {t('coverNature')}
+                        </h3>
+                        <div className="grid grid-cols-3 gap-2">
+                            {NATURE_COVERS.map((cover, index) =>
+                                renderCoverOption(
+                                    cover,
+                                    COLOR_COVERS.length +
+                                        TEXTURE_COVERS.length +
+                                        index
+                                )
+                            )}
+                        </div>
+                    </section>
+
+                    <section
+                        aria-labelledby="cover-architecture-heading"
+                        className="mt-4">
+                        <h3
+                            id="cover-architecture-heading"
+                            className="mb-2 text-xs font-medium text-muted-foreground">
+                            {t('coverArchitectureCity')}
+                        </h3>
+                        <div className="grid grid-cols-3 gap-2">
+                            {ARCHITECTURE_COVERS.map((cover, index) =>
+                                renderCoverOption(
+                                    cover,
+                                    COLOR_COVERS.length +
+                                        TEXTURE_COVERS.length +
+                                        NATURE_COVERS.length +
+                                        index
+                                )
+                            )}
+                        </div>
+                    </section>
+
+                    <section
+                        aria-labelledby="cover-art-heading"
+                        className="mt-4">
+                        <h3
+                            id="cover-art-heading"
+                            className="mb-2 text-xs font-medium text-muted-foreground">
+                            {t('coverArtPatterns')}
+                        </h3>
+                        <div className="grid grid-cols-3 gap-2">
+                            {ART_COVERS.map((cover, index) =>
+                                renderCoverOption(
+                                    cover,
+                                    COLOR_COVERS.length +
+                                        TEXTURE_COVERS.length +
+                                        NATURE_COVERS.length +
+                                        ARCHITECTURE_COVERS.length +
+                                        index
                                 )
                             )}
                         </div>

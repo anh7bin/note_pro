@@ -244,6 +244,7 @@ export function useBlocks(): BlockRepository {
                                 ...block,
                                 workspace_id: documentWorkspaceId,
                                 user_id: userId,
+                                deleted_at: null,
                                 link_access: null,
                                 tasks: [],
                             })
