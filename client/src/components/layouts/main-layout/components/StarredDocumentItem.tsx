@@ -2,7 +2,7 @@
 
 import { DocumentMoreMenu } from '@/components/features/page/DocumentMoreMenu';
 import { SidebarButton } from '@/components/layouts/main-layout/components/SidebarButton';
-import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
+import { DocumentListIcon } from '@/components/shared/DocumentListIcon';
 import { useI18n } from '@/contexts/I18nContext';
 import type { GetStarredDocumentsQuery } from '@/graphql/__generated__/document-star.generated';
 import { useUserId } from '@/hooks/useAuth';
@@ -51,13 +51,7 @@ export function StarredDocumentItem({ document }: StarredDocumentItemProps) {
             onToggleStar={() => void toggleStar()}>
             <div className="min-w-0">
                 <SidebarButton
-                    icon={
-                        typeof icon === 'string' && icon.trim() ? (
-                            <span className="text-sm">{icon}</span>
-                        ) : (
-                            <NewDocumentIcon />
-                        )
-                    }
+                    icon={<DocumentListIcon icon={icon} className="size-4" />}
                     label={title}
                     href={href}
                     isActive={pathname === href}

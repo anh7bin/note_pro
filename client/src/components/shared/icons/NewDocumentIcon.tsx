@@ -1,14 +1,16 @@
 interface Props {
     size?: number;
+    className?: string;
 }
 
-export const NewDocumentIcon = ({ size = 32 }: Props) => {
+export const NewDocumentIcon = ({ size = 32, className }: Props) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             width={size}
             height={size}
+            className={className}
             viewBox="0 0 48 48"
             version="1.1">
             <title>new-doc</title>

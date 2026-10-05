@@ -1,5 +1,6 @@
 'use client';
 
+import { DocumentListIcon } from '@/components/shared/DocumentListIcon';
 import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
@@ -191,7 +192,7 @@ export function TaskForm({
                                     <Inbox className="size-4" />
                                 </span>
                             ) : (
-                                <DocIcon
+                                <DocumentListIcon
                                     icon={selectedDocument?.content?.icon}
                                 />
                             )}
@@ -266,7 +267,9 @@ export function TaskForm({
                                         onClick={() =>
                                             selectDestination(doc.id)
                                         }>
-                                        <DocIcon icon={doc.content?.icon} />
+                                        <DocumentListIcon
+                                            icon={doc.content?.icon}
+                                        />
                                         <span className="block truncate">
                                             {getPlainText(doc.content?.title) ||
                                                 t('untitledPage')}
@@ -294,16 +297,3 @@ const ICON_SLOT = 'flex size-5 shrink-0 items-center justify-center';
 
 const OPTION_CLASS =
     'flex w-full min-w-0 items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm outline-none transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring';
-
-function DocIcon({ icon }: { icon: unknown }) {
-    const emoji = typeof icon === 'string' ? icon.trim() : '';
-    return (
-        <span className={ICON_SLOT}>
-            {emoji ? (
-                <span className="text-sm leading-none">{emoji}</span>
-            ) : (
-                <NewDocumentIcon size={18} />
-            )}
-        </span>
-    );
-}

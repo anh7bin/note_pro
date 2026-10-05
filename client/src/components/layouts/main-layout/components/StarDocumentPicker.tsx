@@ -1,7 +1,7 @@
 'use client';
 
 import { SimpleTooltip } from '@/components/features/page/SimpleTooltip';
-import { NewDocumentIcon } from '@/components/shared/icons/NewDocumentIcon';
+import { DocumentListIcon } from '@/components/shared/DocumentListIcon';
 import { Button, type ButtonProps } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
 import { PopoverPanel } from '@/components/ui/popover-panel';
@@ -163,13 +163,7 @@ export function StarDocumentPicker({
                                 onClick={() =>
                                     void handleStarDocument(document.id)
                                 }>
-                                {typeof icon === 'string' && icon.trim() ? (
-                                    <span className="flex h-5 w-5 shrink-0 items-center justify-center text-sm">
-                                        {icon}
-                                    </span>
-                                ) : (
-                                    <NewDocumentIcon size={20} />
-                                )}
+                                <DocumentListIcon icon={icon} />
                                 <span className="min-w-0 flex-1">
                                     <span className="block truncate text-sm font-medium">
                                         {title}
