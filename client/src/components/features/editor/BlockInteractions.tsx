@@ -189,7 +189,11 @@ export const BlockInteractions = memo(function BlockInteractions({
                     className: 'flex w-auto gap-1 p-1.5',
                 }}
                 trigger={
-                    <Button variant="ghost" size="icon-xs">
+                    <Button
+                        data-reaction-trigger
+                        variant="ghost"
+                        size="icon-xs"
+                        aria-label={t('addReaction')}>
                         <SmilePlus />
                     </Button>
                 }>
@@ -230,9 +234,11 @@ export const BlockInteractions = memo(function BlockInteractions({
                 }}
                 trigger={
                     <Button
+                        data-comment-trigger
                         variant="ghost"
                         size="icon-xs"
-                        className="relative ">
+                        className="relative"
+                        aria-label={t('addComment')}>
                         <MessageCirclePlus />
                         {comments.length > 0 && (
                             <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary-button px-1 text-[10px] font-semibold text-primary-foreground">
@@ -350,6 +356,7 @@ export const BlockInteractions = memo(function BlockInteractions({
 
     return (
         <div
+            data-block-interactions={blockId}
             className={cn(
                 hasInteractions &&
                     'flex flex-wrap items-center gap-1.5 pb-0.5 pt-1'

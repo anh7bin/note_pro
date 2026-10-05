@@ -59,20 +59,15 @@ export function TaskListToolbar({
             <div className="min-w-0 flex-1 sm:max-w-sm">
                 <InputField
                     type="search"
-                    aria-label={t('searchTasks')}
                     placeholder={t('searchTasks')}
                     value={search}
                     onChange={(event) => onSearchChange(event.target.value)}
-                    icon={<Search />}
-                    className="h-8 w-full"
+                    icon={<Search className="w-4 h-4" />}
                 />
             </div>
             <PopoverPanel
                 trigger={
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        aria-label={t('taskFilters')}>
+                    <Button size="sm" variant="outline">
                         <SlidersHorizontal />
                         <span className="hidden sm:inline">
                             {t('taskFilters')}
@@ -105,9 +100,7 @@ export function TaskListToolbar({
                 <div className="space-y-1.5">
                     <Label>{t('filterPriority')}</Label>
                     <Select value={priority} onValueChange={onPriorityChange}>
-                        <SelectTrigger
-                            className="w-full"
-                            aria-label={t('filterPriority')}>
+                        <SelectTrigger className="w-full">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -132,9 +125,7 @@ export function TaskListToolbar({
                 <div className="space-y-1.5">
                     <Label>{t('filterSource')}</Label>
                     <Select value={source} onValueChange={onSourceChange}>
-                        <SelectTrigger
-                            className="w-full"
-                            aria-label={t('filterSource')}>
+                        <SelectTrigger className="w-full">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -153,9 +144,7 @@ export function TaskListToolbar({
                     <Select
                         value={dateFilter}
                         onValueChange={onDateFilterChange}>
-                        <SelectTrigger
-                            className="w-full"
-                            aria-label={t('filterDate')}>
+                        <SelectTrigger className="w-full">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -178,10 +167,7 @@ export function TaskListToolbar({
             </PopoverPanel>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        aria-label={t('sortTasks')}>
+                    <Button size="sm" variant="outline">
                         <ArrowDownUp />
                         <span className="hidden sm:inline">
                             {t('sortTasks')}

@@ -18,7 +18,6 @@ export function RequestEditButton({ documentId }: { documentId: string }) {
             <Button
                 variant="outline"
                 size="xs"
-                aria-label={label}
                 className="max-md:size-7 max-md:p-0"
                 onClick={requestEdit}
                 disabled={isRequesting}>

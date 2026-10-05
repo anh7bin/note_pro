@@ -5,17 +5,27 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { highlightBlock } from '@/lib/blockHighlight';
 import { createBlockLink } from '@/lib/blockLink';
 import showToast from '@/lib/toast';
-import { Download, Link2, MoreVertical, Trash2 } from 'lucide-react';
+import {
+    Download,
+    Link2,
+    MessageCirclePlus,
+    MoreVertical,
+    SmilePlus,
+    Trash2,
+} from 'lucide-react';
 import { useCallback, useRef } from 'react';
 import { InsertBlockAboveIcon } from '@/components/shared/icons/InsertBlockAboveIcon';
 import { InsertBlockBelowIcon } from '@/components/shared/icons/InsertBlockBelowIcon';
 import type { InsertBlockAction } from '@/types/editor';
 import { useI18n } from '@/contexts/I18nContext';
+
+type BlockInteractionAction = 'reaction' | 'comment';
 
 interface BlockActionMenuProps {
     blockId?: string;
@@ -36,6 +46,7 @@ export function BlockActionMenu({
 }: BlockActionMenuProps) {
     const cleanupHighlightRef = useRef<(() => void) | null>(null);
     const insertedBlockIdRef = useRef<string | null>(null);
+    const pendingInteractionRef = useRef<BlockInteractionAction | null>(null);
     const { t } = useI18n();
 
     const hasActions =
@@ -118,28 +129,53 @@ export function BlockActionMenu({
             typeof blockId === 'string' ? blockId : null;
     }, [onInsertBelow]);
 
-    const handleCloseAutoFocus = useCallback((event: Event) => {
-        const insertedBlockId = insertedBlockIdRef.current;
-        if (!insertedBlockId) return;
+    const handleOpenInteraction = useCallback(
+        (interaction: BlockInteractionAction) => {
+            pendingInteractionRef.current = interaction;
+        },
+        []
+    );
 
-        event.preventDefault();
-        insertedBlockIdRef.current = null;
+    const handleCloseAutoFocus = useCallback(
+        (event: Event) => {
+            const pendingInteraction = pendingInteractionRef.current;
+            if (pendingInteraction && blockId) {
+                event.preventDefault();
+                pendingInteractionRef.current = null;
 
-        // Radix keeps focus inside the dropdown until it has closed, so the
-        // editor's mount-time autofocus can be ignored. Restore focus only
-        // after the portal has been removed and the new block is in the DOM.
-        requestAnimationFrame(() => {
-            const insertedBlock = document.querySelector<HTMLElement>(
-                `[data-block-id="${CSS.escape(insertedBlockId)}"]`
-            );
-            const focusTarget =
-                insertedBlock?.querySelector<HTMLElement>(
-                    '.ProseMirror[contenteditable="true"]'
-                ) ?? insertedBlock;
+                requestAnimationFrame(() => {
+                    document
+                        .querySelector<HTMLButtonElement>(
+                            `[data-block-interactions="${CSS.escape(blockId)}"] [data-${pendingInteraction}-trigger]`
+                        )
+                        ?.click();
+                });
+                return;
+            }
 
-            focusTarget?.focus({ preventScroll: true });
-        });
-    }, []);
+            const insertedBlockId = insertedBlockIdRef.current;
+            if (!insertedBlockId) return;
+
+            event.preventDefault();
+            insertedBlockIdRef.current = null;
+
+            // Radix keeps focus inside the dropdown until it has closed, so the
+            // editor's mount-time autofocus can be ignored. Restore focus only
+            // after the portal has been removed and the new block is in the DOM.
+            requestAnimationFrame(() => {
+                const insertedBlock = document.querySelector<HTMLElement>(
+                    `[data-block-id="${CSS.escape(insertedBlockId)}"]`
+                );
+                const focusTarget =
+                    insertedBlock?.querySelector<HTMLElement>(
+                        '.ProseMirror[contenteditable="true"]'
+                    ) ?? insertedBlock;
+
+                focusTarget?.focus({ preventScroll: true });
+            });
+        },
+        [blockId]
+    );
 
     if (!hasActions) return null;
 
@@ -158,6 +194,21 @@ export function BlockActionMenu({
                 className="w-56"
                 align="start"
                 onCloseAutoFocus={handleCloseAutoFocus}>
+                {blockId && (
+                    <>
+                        <DropdownMenuItem
+                            onSelect={() => handleOpenInteraction('reaction')}>
+                            <SmilePlus />
+                            {t('addReaction')}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onSelect={() => handleOpenInteraction('comment')}>
+                            <MessageCirclePlus />
+                            {t('addComment')}
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                    </>
+                )}
                 {onInsertAbove && (
                     <DropdownMenuItem onSelect={handleInsertAbove}>
                         <InsertBlockAboveIcon />

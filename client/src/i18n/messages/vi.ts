@@ -524,6 +524,8 @@ export const vi: Messages = {
     light: 'Mảnh',
     extraLight: 'Rất mảnh',
     comments: 'Bình luận',
+    addReaction: 'Thả cảm xúc',
+    addComment: 'Thêm bình luận',
     startConversation: 'Bắt đầu trao đổi về khối này.',
     commentPlaceholder: 'Nhập bình luận',
     commentKeyboardHint: 'Enter để gửi · Shift + Enter để xuống dòng',

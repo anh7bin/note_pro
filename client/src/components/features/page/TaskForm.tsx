@@ -217,7 +217,6 @@ export function TaskForm({
                     </div>
                     <div
                         role="listbox"
-                        aria-label={t('destination')}
                         className="max-h-56 overflow-y-auto overscroll-contain p-1 [scrollbar-width:thin]"
                         onWheel={(event) => event.stopPropagation()}
                         onTouchMove={(event) => event.stopPropagation()}>

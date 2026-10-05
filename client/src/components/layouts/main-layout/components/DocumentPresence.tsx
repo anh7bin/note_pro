@@ -27,7 +27,6 @@ export function DocumentPresence({ documentId }: { documentId: string }) {
                 <SimpleTooltip title={statusText}>
                     <button
                         type="button"
-                        aria-label={statusText}
                         className="flex h-6 cursor-pointer items-center rounded-md px-1 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                         <span className="flex -space-x-2">
                             {visibleUsers.map((user) => (

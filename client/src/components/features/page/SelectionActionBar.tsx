@@ -172,8 +172,6 @@ export function SelectionActionBar({
                         variant="ghost"
                         size="icon-xs"
                         role="checkbox"
-                        aria-label={selectionLabel}
-                        aria-checked={allSelected}
                         onClick={handleSelectAllChange}>
                         <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary-button text-primary-foreground">
                             {allSelected ? <Check /> : <Minus />}
@@ -184,7 +182,6 @@ export function SelectionActionBar({
                     <Button
                         variant="ghost"
                         size="icon-xs"
-                        aria-label={starLabel}
                         disabled={isUpdatingStars}
                         onClick={() => void toggleDocumentsStar()}>
                         <Star
@@ -201,7 +198,6 @@ export function SelectionActionBar({
                         <Button
                             variant="ghost"
                             size="icon-xs"
-                            aria-label={moveLabel}
                             onClick={() => setIsMoveDialogOpen(true)}>
                             <FolderInput />
                         </Button>
@@ -211,7 +207,6 @@ export function SelectionActionBar({
                     <Button
                         variant="ghost"
                         size="icon-xs"
-                        aria-label={deleteLabel}
                         className="hover:bg-accent-foreground/10 hover:text-destructive"
                         onClick={handleDeleteClick}>
                         <Trash2 />

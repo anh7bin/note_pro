@@ -19,10 +19,7 @@ export const FolderMenu = () => {
     return (
         <div className="space-y-1">
             {loading ? (
-                <div
-                    className="space-y-2 px-1 py-1.5"
-                    role="status"
-                    aria-label={t('loadingFolders')}>
+                <div className="space-y-2 px-1 py-1.5" role="status">
                     <Skeleton className="h-6 w-5/6" />
                     <Skeleton className="h-6 w-3/4" />
                     <Skeleton className="h-6 w-2/3" />

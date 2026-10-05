@@ -94,15 +94,13 @@ export function DocumentCoverPicker({
         }
     };
 
-    const renderCoverOption = (cover: string, index: number) => {
+    const renderCoverOption = (cover: string) => {
         const isSelected = currentCover === cover;
 
         return (
             <button
                 key={cover}
                 type="button"
-                aria-label={t('selectCoverOption', { index: index + 1 })}
-                aria-pressed={isSelected}
                 disabled={isBusy}
                 onClick={() => void applyCover(cover)}
                 className={cn(
@@ -121,7 +119,7 @@ export function DocumentCoverPicker({
                 />
                 {isSelected && (
                     <span className="absolute right-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-primary-button text-primary-foreground shadow-sm">
-                        <Check aria-hidden="true" className="size-3.5" />
+                        <Check className="size-3.5" />
                     </span>
                 )}
             </button>
@@ -133,11 +131,7 @@ export function DocumentCoverPicker({
             open={isOpen}
             onOpenChange={setIsOpen}
             trigger={
-                <Button
-                    variant={triggerVariant}
-                    size="xs"
-                    disabled={isBusy}
-                    aria-label={triggerLabel}>
+                <Button variant={triggerVariant} size="xs" disabled={isBusy}>
                     {isBusy ? (
                         <LoaderCircle
                             aria-hidden="true"
@@ -180,7 +174,7 @@ export function DocumentCoverPicker({
                 <TabsContent
                     value="library"
                     className="m-0 max-h-[min(28rem,60vh)] overflow-y-auto p-3">
-                    <section aria-labelledby="cover-colors-heading">
+                    <section>
                         <h3
                             id="cover-colors-heading"
                             className="mb-2 text-xs font-medium text-muted-foreground">
@@ -191,83 +185,54 @@ export function DocumentCoverPicker({
                         </div>
                     </section>
 
-                    <section
-                        aria-labelledby="cover-textures-heading"
-                        className="mt-4">
+                    <section className="mt-4">
                         <h3
                             id="cover-textures-heading"
                             className="mb-2 text-xs font-medium text-muted-foreground">
                             {t('coverTextures')}
                         </h3>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                            {TEXTURE_COVERS.map((cover, index) =>
-                                renderCoverOption(
-                                    cover,
-                                    COLOR_COVERS.length + index
-                                )
+                            {TEXTURE_COVERS.map((cover) =>
+                                renderCoverOption(cover)
                             )}
                         </div>
                     </section>
 
-                    <section
-                        aria-labelledby="cover-nature-heading"
-                        className="mt-4">
+                    <section className="mt-4">
                         <h3
                             id="cover-nature-heading"
                             className="mb-2 text-xs font-medium text-muted-foreground">
                             {t('coverNature')}
                         </h3>
                         <div className="grid grid-cols-3 gap-2">
-                            {NATURE_COVERS.map((cover, index) =>
-                                renderCoverOption(
-                                    cover,
-                                    COLOR_COVERS.length +
-                                        TEXTURE_COVERS.length +
-                                        index
-                                )
+                            {NATURE_COVERS.map((cover) =>
+                                renderCoverOption(cover)
                             )}
                         </div>
                     </section>
 
-                    <section
-                        aria-labelledby="cover-architecture-heading"
-                        className="mt-4">
+                    <section className="mt-4">
                         <h3
                             id="cover-architecture-heading"
                             className="mb-2 text-xs font-medium text-muted-foreground">
                             {t('coverArchitectureCity')}
                         </h3>
                         <div className="grid grid-cols-3 gap-2">
-                            {ARCHITECTURE_COVERS.map((cover, index) =>
-                                renderCoverOption(
-                                    cover,
-                                    COLOR_COVERS.length +
-                                        TEXTURE_COVERS.length +
-                                        NATURE_COVERS.length +
-                                        index
-                                )
+                            {ARCHITECTURE_COVERS.map((cover) =>
+                                renderCoverOption(cover)
                             )}
                         </div>
                     </section>
 
-                    <section
-                        aria-labelledby="cover-art-heading"
-                        className="mt-4">
+                    <section className="mt-4">
                         <h3
                             id="cover-art-heading"
                             className="mb-2 text-xs font-medium text-muted-foreground">
                             {t('coverArtPatterns')}
                         </h3>
                         <div className="grid grid-cols-3 gap-2">
-                            {ART_COVERS.map((cover, index) =>
-                                renderCoverOption(
-                                    cover,
-                                    COLOR_COVERS.length +
-                                        TEXTURE_COVERS.length +
-                                        NATURE_COVERS.length +
-                                        ARCHITECTURE_COVERS.length +
-                                        index
-                                )
+                            {ART_COVERS.map((cover) =>
+                                renderCoverOption(cover)
                             )}
                         </div>
                     </section>
@@ -277,7 +242,6 @@ export function DocumentCoverPicker({
                     <button
                         type="button"
                         disabled={isBusy}
-                        aria-busy={isUploading}
                         onClick={() => fileInputRef.current?.click()}
                         className={cn(
                             'flex min-h-48 w-full touch-manipulation flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 px-6 py-8 text-center',
@@ -286,15 +250,9 @@ export function DocumentCoverPicker({
                         )}>
                         <span className="mb-3 flex size-11 items-center justify-center rounded-full bg-background text-muted-foreground shadow-sm ring-1 ring-border">
                             {isUploading ? (
-                                <LoaderCircle
-                                    aria-hidden="true"
-                                    className="size-5 animate-spin motion-reduce:animate-none"
-                                />
+                                <LoaderCircle className="size-5 animate-spin motion-reduce:animate-none" />
                             ) : (
-                                <UploadCloud
-                                    aria-hidden="true"
-                                    className="size-5"
-                                />
+                                <UploadCloud className="size-5" />
                             )}
                         </span>
                         <span className="text-sm font-medium text-foreground">

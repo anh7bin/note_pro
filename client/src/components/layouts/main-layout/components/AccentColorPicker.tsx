@@ -8,15 +8,6 @@ interface AccentColorPickerProps {
     onChange: (color: AccentColor) => void;
 }
 
-const COLOR_LABEL_KEYS = {
-    blue: 'accentBlue',
-    pink: 'accentPink',
-    teal: 'accentTeal',
-    purple: 'accentPurple',
-    yellow: 'accentYellow',
-    gray: 'accentGray',
-} as const;
-
 export function AccentColorPicker({ value, onChange }: AccentColorPickerProps) {
     const { t } = useI18n();
 
@@ -37,8 +28,6 @@ export function AccentColorPicker({ value, onChange }: AccentColorPickerProps) {
                         <button
                             key={color}
                             type="button"
-                            aria-label={t(COLOR_LABEL_KEYS[color])}
-                            aria-pressed={selected}
                             onClick={() => onChange(color)}
                             className={cn(
                                 'flex size-8 items-center justify-center rounded-full transition-[box-shadow,transform] duration-150',

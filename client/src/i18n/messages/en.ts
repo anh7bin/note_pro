@@ -533,6 +533,8 @@ export const en = {
     light: 'Light',
     extraLight: 'Extra light',
     comments: 'Comments',
+    addReaction: 'Add reaction',
+    addComment: 'Add comment',
     startConversation: 'Start a conversation about this block.',
     commentPlaceholder: 'Type your comment',
     commentKeyboardHint: 'Enter to send · Shift + Enter for a new line',
