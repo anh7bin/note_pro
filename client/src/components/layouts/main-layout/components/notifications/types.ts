@@ -11,6 +11,12 @@ export type NotificationData = {
     owner_email?: string;
     owner_name?: string;
     owner_avatar?: string;
+    actor_name?: string;
+    actor_email?: string;
+    actor_avatar?: string;
+    block_id?: string;
+    comment_id?: string;
+    source_type?: 'block' | 'comment';
 };
 
 export type NotificationMenuProps = {

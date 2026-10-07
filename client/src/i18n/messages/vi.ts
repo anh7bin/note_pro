@@ -392,7 +392,11 @@ export const vi: Messages = {
     unreadCount: '{{count}} chưa đọc',
     noNotifications: 'Không có thông báo',
     notificationsDescription:
-        'Yêu cầu truy cập và cập nhật chia sẻ sẽ xuất hiện ở đây.',
+        'Lượt nhắc, yêu cầu truy cập và cập nhật chia sẻ sẽ xuất hiện ở đây.',
+    notificationMentionedInComment:
+        '{{name}} đã nhắc đến bạn trong một bình luận',
+    notificationMentionedInDocument:
+        '{{name}} đã nhắc đến bạn trong tài liệu này',
     notificationAccessRequestEdit: '{{name}} muốn chỉnh sửa tài liệu này',
     notificationAccessRequestView: '{{name}} muốn xem tài liệu này',
     notificationAccessGrantedEditor:
@@ -529,6 +533,7 @@ export const vi: Messages = {
     startConversation: 'Bắt đầu trao đổi về khối này.',
     commentPlaceholder: 'Nhập bình luận',
     commentKeyboardHint: 'Enter để gửi · Shift + Enter để xuống dòng',
+    noMentionUsersFound: 'Không tìm thấy cộng tác viên',
     reactionCount: '{{count}} cảm xúc',
     reactionCountPlural: '{{count}} cảm xúc',
     emptyTable: 'Bảng trống',

@@ -24,6 +24,7 @@ import { useSlashCommand } from '../hooks/useSlashCommand';
 import { EditorContainer } from '../EditorContainer';
 import { FileUploadPreview } from '../../blocks/FileBlock/FileUploadPreview';
 import type { FileUploadState } from '../slash/types';
+import { useBlockInteractions } from '@/contexts/BlockInteractionsContext';
 
 const EditorBubbleMenu = lazy(() =>
     import('../EditorBubbleMenu').then((mod) => ({
@@ -177,11 +178,15 @@ export const TiptapEditor = memo(
         focusPosition = 'end',
         placeholder,
     }: TiptapEditorProps) {
+        const { mentionUsers } = useBlockInteractions();
         const [isUpdating, setIsUpdating] = useState(false);
         const [fileUpload, setFileUpload] = useState<FileUploadState | null>(
             null
         );
         const prevValueRef = useRef(value);
+        const mentionUsersRef = useRef(mentionUsers);
+        mentionUsersRef.current = mentionUsers;
+        const getMentionUsersRef = useRef(() => mentionUsersRef.current);
         const keyboardHandlerRef = useRef<
             (
                 view: NonNullable<ReturnType<typeof useEditor>>['view'],
@@ -201,6 +206,8 @@ export const TiptapEditor = memo(
 
         const editorConfig = useEditorConfig({
             editable,
+            enableMentions: !isTitle,
+            getMentionUsers: getMentionUsersRef.current,
             placeholder,
             positionRef: refs.positionRef,
             onChangeRef: refs.onChangeRef,

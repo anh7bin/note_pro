@@ -16,6 +16,7 @@ import {
 } from '@/graphql/__generated__/block-interactions.generated';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { showToast } from '@/lib/toast';
+import type { MentionUser } from '@/types/mentions';
 import {
     createContext,
     useCallback,
@@ -32,8 +33,13 @@ export type BlockReaction =
 interface BlockInteractionsContextValue {
     commentsByBlock: Map<string, BlockComment[]>;
     reactionsByBlock: Map<string, BlockReaction[]>;
+    mentionUsers: MentionUser[];
     loading: boolean;
-    addComment: (blockId: string, content: string) => Promise<boolean>;
+    addComment: (
+        blockId: string,
+        content: string,
+        mentionedUserIds?: string[]
+    ) => Promise<boolean>;
     deleteComment: (commentId: string) => Promise<void>;
     toggleReaction: (blockId: string, emoji: string) => Promise<void>;
 }
@@ -129,8 +135,20 @@ export function BlockInteractionsProvider({
         return grouped;
     }, [data?.block_reactions]);
 
+    const mentionUsers = useMemo(
+        () =>
+            (data?.mention_users ?? []).filter(
+                (user) => user.id !== currentUser.id
+            ),
+        [currentUser.id, data?.mention_users]
+    );
+
     const addComment = useCallback(
-        async (blockId: string, rawContent: string) => {
+        async (
+            blockId: string,
+            rawContent: string,
+            mentionedUserIds: string[] = []
+        ) => {
             const content = rawContent.trim();
             if (!currentUser.id || !content) {
                 return false;
@@ -145,6 +163,7 @@ export function BlockInteractionsProvider({
                         blockId,
                         userId: currentUser.id,
                         content,
+                        mentionedUserIds,
                     },
                     optimisticResponse: {
                         __typename: 'mutation_root',
@@ -154,6 +173,7 @@ export function BlockInteractionsProvider({
                             block_id: blockId,
                             user_id: currentUser.id,
                             content,
+                            mentioned_user_ids: mentionedUserIds,
                             created_at: createdAt,
                             user: {
                                 __typename: 'users',
@@ -375,6 +395,7 @@ export function BlockInteractionsProvider({
     const value = useMemo<BlockInteractionsContextValue>(
         () => ({
             commentsByBlock,
+            mentionUsers,
             reactionsByBlock,
             loading: enabled ? loading : false,
             addComment,
@@ -387,6 +408,7 @@ export function BlockInteractionsProvider({
             deleteComment,
             enabled,
             loading,
+            mentionUsers,
             reactionsByBlock,
             toggleReaction,
         ]

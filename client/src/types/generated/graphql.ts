@@ -372,6 +372,7 @@ export type BlockComments = {
   content: Scalars['String']['output'];
   created_at: Scalars['timestamptz']['output'];
   id: Scalars['uuid']['output'];
+  mentioned_user_ids: Array<Scalars['uuid']['output']>;
   /** An object relationship */
   user: Users;
   user_id: Scalars['uuid']['output'];
@@ -434,6 +435,7 @@ export type BlockCommentsBoolExp = {
   content?: InputMaybe<StringComparisonExp>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
+  mentioned_user_ids?: InputMaybe<UuidArrayComparisonExp>;
   user?: InputMaybe<UsersBoolExp>;
   user_id?: InputMaybe<UuidComparisonExp>;
 };
@@ -451,6 +453,7 @@ export type BlockCommentsInsertInput = {
   content?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  mentioned_user_ids?: InputMaybe<Array<Scalars['uuid']['input']>>;
   user?: InputMaybe<UsersObjRelInsertInput>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -462,6 +465,7 @@ export type BlockCommentsMaxFields = {
   content?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  mentioned_user_ids?: Maybe<Array<Scalars['uuid']['output']>>;
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
@@ -471,6 +475,7 @@ export type BlockCommentsMaxOrderBy = {
   content?: InputMaybe<OrderBy>;
   created_at?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
+  mentioned_user_ids?: InputMaybe<OrderBy>;
   user_id?: InputMaybe<OrderBy>;
 };
 
@@ -481,6 +486,7 @@ export type BlockCommentsMinFields = {
   content?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  mentioned_user_ids?: Maybe<Array<Scalars['uuid']['output']>>;
   user_id?: Maybe<Scalars['uuid']['output']>;
 };
 
@@ -490,6 +496,7 @@ export type BlockCommentsMinOrderBy = {
   content?: InputMaybe<OrderBy>;
   created_at?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
+  mentioned_user_ids?: InputMaybe<OrderBy>;
   user_id?: InputMaybe<OrderBy>;
 };
 
@@ -516,6 +523,7 @@ export type BlockCommentsOrderBy = {
   content?: InputMaybe<OrderBy>;
   created_at?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
+  mentioned_user_ids?: InputMaybe<OrderBy>;
   user?: InputMaybe<UsersOrderBy>;
   user_id?: InputMaybe<OrderBy>;
 };
@@ -536,6 +544,8 @@ export enum BlockCommentsSelectColumn {
   /** column name */
   Id = 'id',
   /** column name */
+  MentionedUserIds = 'mentioned_user_ids',
+  /** column name */
   UserId = 'user_id'
 }
 
@@ -545,6 +555,7 @@ export type BlockCommentsSetInput = {
   content?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  mentioned_user_ids?: InputMaybe<Array<Scalars['uuid']['input']>>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -562,6 +573,7 @@ export type BlockCommentsStreamCursorValueInput = {
   content?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  mentioned_user_ids?: InputMaybe<Array<Scalars['uuid']['input']>>;
   user_id?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -575,6 +587,8 @@ export enum BlockCommentsUpdateColumn {
   CreatedAt = 'created_at',
   /** column name */
   Id = 'id',
+  /** column name */
+  MentionedUserIds = 'mentioned_user_ids',
   /** column name */
   UserId = 'user_id'
 }
@@ -3156,6 +3170,10 @@ export type FoldersUpdates = {
   where: FoldersBoolExp;
 };
 
+export type GetDocumentMentionUsersArgs = {
+  document_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
 /** Empty return type for the search_invitee GraphQL function. */
 export type InviteeSearchResults = {
   __typename?: 'invitee_search_results';
@@ -3165,7 +3183,6 @@ export type InviteeSearchResults = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
-/** aggregated selection of "invitee_search_results" */
 export type InviteeSearchResultsAggregate = {
   __typename?: 'invitee_search_results_aggregate';
   aggregate?: Maybe<InviteeSearchResultsAggregateFields>;
@@ -4763,6 +4780,10 @@ export type QueryRoot = {
   folders_aggregate: FoldersAggregate;
   /** fetch data from the table: "folders" using primary key columns */
   folders_by_pk?: Maybe<Folders>;
+  /** execute function "get_document_mention_users" which returns "invitee_search_results" */
+  get_document_mention_users: Array<InviteeSearchResults>;
+  /** execute function "get_document_mention_users" and query aggregates on result of table type "invitee_search_results" */
+  get_document_mention_users_aggregate: InviteeSearchResultsAggregate;
   /** fetch data from the table: "invitee_search_results" */
   invitee_search_results: Array<InviteeSearchResults>;
   /** fetch aggregated fields from the table: "invitee_search_results" */
@@ -5058,6 +5079,26 @@ export type QueryRootFoldersByPkArgs = {
 };
 
 
+export type QueryRootGetDocumentMentionUsersArgs = {
+  args: GetDocumentMentionUsersArgs;
+  distinct_on?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<InviteeSearchResultsOrderBy>>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
+};
+
+
+export type QueryRootGetDocumentMentionUsersAggregateArgs = {
+  args: GetDocumentMentionUsersArgs;
+  distinct_on?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<InviteeSearchResultsOrderBy>>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
+};
+
+
 export type QueryRootInviteeSearchResultsArgs = {
   distinct_on?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -5290,6 +5331,10 @@ export type SubscriptionRoot = {
   folders_by_pk?: Maybe<Folders>;
   /** fetch data from the table in a streaming manner: "folders" */
   folders_stream: Array<Folders>;
+  /** execute function "get_document_mention_users" which returns "invitee_search_results" */
+  get_document_mention_users: Array<InviteeSearchResults>;
+  /** execute function "get_document_mention_users" and query aggregates on result of table type "invitee_search_results" */
+  get_document_mention_users_aggregate: InviteeSearchResultsAggregate;
   /** fetch data from the table: "invitee_search_results" */
   invitee_search_results: Array<InviteeSearchResults>;
   /** fetch aggregated fields from the table: "invitee_search_results" */
@@ -5671,6 +5716,26 @@ export type SubscriptionRootFoldersStreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<FoldersStreamCursorInput>>;
   where?: InputMaybe<FoldersBoolExp>;
+};
+
+
+export type SubscriptionRootGetDocumentMentionUsersArgs = {
+  args: GetDocumentMentionUsersArgs;
+  distinct_on?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<InviteeSearchResultsOrderBy>>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
+};
+
+
+export type SubscriptionRootGetDocumentMentionUsersAggregateArgs = {
+  args: GetDocumentMentionUsersArgs;
+  distinct_on?: InputMaybe<Array<InviteeSearchResultsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<InviteeSearchResultsOrderBy>>;
+  where?: InputMaybe<InviteeSearchResultsBoolExp>;
 };
 
 
@@ -6797,6 +6862,23 @@ export type UsersUpdates = {
   _set?: InputMaybe<UsersSetInput>;
   /** filter the rows which have to be updated */
   where: UsersBoolExp;
+};
+
+/** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
+export type UuidArrayComparisonExp = {
+  /** is the array contained in the given array value */
+  _contained_in?: InputMaybe<Array<Scalars['uuid']['input']>>;
+  /** does the array contain the given value */
+  _contains?: InputMaybe<Array<Scalars['uuid']['input']>>;
+  _eq?: InputMaybe<Array<Scalars['uuid']['input']>>;
+  _gt?: InputMaybe<Array<Scalars['uuid']['input']>>;
+  _gte?: InputMaybe<Array<Scalars['uuid']['input']>>;
+  _in?: InputMaybe<Array<Array<Scalars['uuid']['input']>>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Array<Scalars['uuid']['input']>>;
+  _lte?: InputMaybe<Array<Scalars['uuid']['input']>>;
+  _neq?: InputMaybe<Array<Scalars['uuid']['input']>>;
+  _nin?: InputMaybe<Array<Array<Scalars['uuid']['input']>>>;
 };
 
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */

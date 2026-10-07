@@ -8,14 +8,14 @@ export type GetBlockInteractionsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetBlockInteractionsQuery = { __typename?: 'query_root', block_comments: Array<{ __typename?: 'block_comments', id: string, block_id: string, user_id: string, content: string, created_at: string, user: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } }>, block_reactions: Array<{ __typename?: 'block_reactions', id: string, block_id: string, user_id: string, emoji: string, created_at: string, user: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } }> };
+export type GetBlockInteractionsQuery = { __typename?: 'query_root', mention_users: Array<{ __typename?: 'invitee_search_results', id: string, email: string, name?: string | null, avatar_url?: string | null }>, block_comments: Array<{ __typename?: 'block_comments', id: string, block_id: string, user_id: string, content: string, mentioned_user_ids: Array<string>, created_at: string, user: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } }>, block_reactions: Array<{ __typename?: 'block_reactions', id: string, block_id: string, user_id: string, emoji: string, created_at: string, user: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } }> };
 
 export type SubscribeToBlockCommentsSubscriptionVariables = Types.Exact<{
   pageId: Types.Scalars['uuid']['input'];
 }>;
 
 
-export type SubscribeToBlockCommentsSubscription = { __typename?: 'subscription_root', block_comments: Array<{ __typename?: 'block_comments', id: string, block_id: string, user_id: string, content: string, created_at: string, user: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } }> };
+export type SubscribeToBlockCommentsSubscription = { __typename?: 'subscription_root', block_comments: Array<{ __typename?: 'block_comments', id: string, block_id: string, user_id: string, content: string, mentioned_user_ids: Array<string>, created_at: string, user: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } }> };
 
 export type SubscribeToBlockReactionsSubscriptionVariables = Types.Exact<{
   pageId: Types.Scalars['uuid']['input'];
@@ -28,10 +28,11 @@ export type AddBlockCommentMutationVariables = Types.Exact<{
   blockId: Types.Scalars['uuid']['input'];
   userId: Types.Scalars['uuid']['input'];
   content: Types.Scalars['String']['input'];
+  mentionedUserIds: Array<Types.Scalars['uuid']['input']> | Types.Scalars['uuid']['input'];
 }>;
 
 
-export type AddBlockCommentMutation = { __typename?: 'mutation_root', insert_block_comments_one?: { __typename?: 'block_comments', id: string, block_id: string, user_id: string, content: string, created_at: string, user: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } } | null };
+export type AddBlockCommentMutation = { __typename?: 'mutation_root', insert_block_comments_one?: { __typename?: 'block_comments', id: string, block_id: string, user_id: string, content: string, mentioned_user_ids: Array<string>, created_at: string, user: { __typename?: 'users', id: string, name?: string | null, avatar_url?: string | null } } | null };
 
 export type DeleteBlockCommentMutationVariables = Types.Exact<{
   id: Types.Scalars['uuid']['input'];
@@ -59,6 +60,12 @@ export type DeleteBlockReactionMutation = { __typename?: 'mutation_root', delete
 
 export const GetBlockInteractionsDocument = gql`
     query GetBlockInteractions($pageId: uuid!) {
+  mention_users: get_document_mention_users(args: {document_id: $pageId}) {
+    id
+    email
+    name
+    avatar_url
+  }
   block_comments(
     where: {block: {_or: [{id: {_eq: $pageId}}, {page_id: {_eq: $pageId}}]}}
     order_by: {created_at: asc}
@@ -67,6 +74,7 @@ export const GetBlockInteractionsDocument = gql`
     block_id
     user_id
     content
+    mentioned_user_ids
     created_at
     user {
       id
@@ -134,6 +142,7 @@ export const SubscribeToBlockCommentsDocument = gql`
     block_id
     user_id
     content
+    mentioned_user_ids
     created_at
     user {
       id
@@ -209,14 +218,15 @@ export function useSubscribeToBlockReactionsSubscription(baseOptions: Apollo.Sub
 export type SubscribeToBlockReactionsSubscriptionHookResult = ReturnType<typeof useSubscribeToBlockReactionsSubscription>;
 export type SubscribeToBlockReactionsSubscriptionResult = Apollo.SubscriptionResult<SubscribeToBlockReactionsSubscription>;
 export const AddBlockCommentDocument = gql`
-    mutation AddBlockComment($blockId: uuid!, $userId: uuid!, $content: String!) {
+    mutation AddBlockComment($blockId: uuid!, $userId: uuid!, $content: String!, $mentionedUserIds: [uuid!]!) {
   insert_block_comments_one(
-    object: {block_id: $blockId, user_id: $userId, content: $content}
+    object: {block_id: $blockId, user_id: $userId, content: $content, mentioned_user_ids: $mentionedUserIds}
   ) {
     id
     block_id
     user_id
     content
+    mentioned_user_ids
     created_at
     user {
       id
@@ -244,6 +254,7 @@ export type AddBlockCommentMutationFn = Apollo.MutationFunction<AddBlockCommentM
  *      blockId: // value for 'blockId'
  *      userId: // value for 'userId'
  *      content: // value for 'content'
+ *      mentionedUserIds: // value for 'mentionedUserIds'
  *   },
  * });
  */

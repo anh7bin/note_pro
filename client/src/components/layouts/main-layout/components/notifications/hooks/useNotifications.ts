@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 import { NotificationMenuProps } from '../types';
 import { getNotificationData, getUnreadCount } from '../utils';
+import { getBlockElementId } from '@/lib/blockLink';
 
 export function useNotifications(): NotificationMenuProps {
     const { t } = useI18n();
@@ -75,10 +76,14 @@ export function useNotifications(): NotificationMenuProps {
 
             if (!data.document_id || !workspaceId) return;
 
-            const documentUrl = ROUTES.WORKSPACE_DOCUMENT(
+            let documentUrl = ROUTES.WORKSPACE_DOCUMENT(
                 workspaceId,
                 data.document_id
             );
+
+            if (notification.type === 'mention' && data.block_id) {
+                documentUrl += `#${getBlockElementId(data.block_id)}`;
+            }
 
             router.push(
                 notification.type === 'access_request'

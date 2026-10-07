@@ -65,6 +65,7 @@ insert_permissions:
       columns:
         - block_id
         - content
+        - mentioned_user_ids
         - user_id
 select_permissions:
   - role: user
@@ -74,6 +75,7 @@ select_permissions:
         - content
         - created_at
         - id
+        - mentioned_user_ids
         - user_id
       filter:
         block:

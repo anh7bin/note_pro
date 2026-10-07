@@ -6,6 +6,8 @@ import type { UseEditorConfigProps } from '../config/types';
 
 export function useEditorConfig({
     editable,
+    enableMentions,
+    getMentionUsers,
     placeholder,
     positionRef,
     onChangeRef,
@@ -29,8 +31,17 @@ export function useEditorConfig({
                 onAddBlock: (...args) => onAddBlockRef.current?.(...args),
                 onBackspaceAtStart: (content) =>
                     onBackspaceAtStartRef.current?.(content) ?? false,
+                enableMentions,
+                getMentionUsers,
             }),
-        [getPosition, onAddBlockRef, onBackspaceAtStartRef, placeholder]
+        [
+            enableMentions,
+            getMentionUsers,
+            getPosition,
+            onAddBlockRef,
+            onBackspaceAtStartRef,
+            placeholder,
+        ]
     );
 
     const eventHandlers = useMemo(

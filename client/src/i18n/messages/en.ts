@@ -401,7 +401,9 @@ export const en = {
     unreadCount: '{{count}} unread',
     noNotifications: 'No notifications',
     notificationsDescription:
-        'Access requests and sharing updates appear here.',
+        'Mentions, access requests, and sharing updates appear here.',
+    notificationMentionedInComment: '{{name}} mentioned you in a comment',
+    notificationMentionedInDocument: '{{name}} mentioned you in this document',
     notificationAccessRequestEdit: '{{name}} wants to edit this document',
     notificationAccessRequestView: '{{name}} wants to view this document',
     notificationAccessGrantedEditor:
@@ -538,6 +540,7 @@ export const en = {
     startConversation: 'Start a conversation about this block.',
     commentPlaceholder: 'Type your comment',
     commentKeyboardHint: 'Enter to send · Shift + Enter for a new line',
+    noMentionUsersFound: 'No collaborators found',
     reactionCount: '{{count}} reaction',
     reactionCountPlural: '{{count}} reactions',
     emptyTable: 'Empty table',

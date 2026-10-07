@@ -8,12 +8,27 @@ import { Textarea } from '@/components/ui/textarea';
 import { useBlockInteractions } from '@/contexts/BlockInteractionsContext';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { cn } from '@/lib/utils';
+import {
+    filterMentionUsers,
+    findMentionQuery,
+    getMentionUserLabel,
+    type MentionQuery,
+    type MentionUser,
+} from '@/types/mentions';
 import { formatDistanceToNow } from 'date-fns';
 import { enUS, vi } from 'date-fns/locale';
-import { MessageCirclePlus, Send, SmilePlus, Trash2, X } from 'lucide-react';
+import {
+    MessageCircle,
+    MessageCirclePlus,
+    Send,
+    SmilePlus,
+    Trash2,
+    X,
+} from 'lucide-react';
 import {
     FormEvent,
     memo,
+    ReactNode,
     useLayoutEffect,
     useMemo,
     useRef,
@@ -51,6 +66,42 @@ function getRelativeTime(value: string, locale: Locale) {
     }
 }
 
+function escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function renderCommentContent(
+    content: string,
+    mentionedUserIds: string[],
+    mentionUsers: MentionUser[]
+): ReactNode {
+    const labels = mentionedUserIds
+        .map((userId) => mentionUsers.find((user) => user.id === userId))
+        .filter((user): user is MentionUser => Boolean(user))
+        .map(getMentionUserLabel)
+        .sort((first, second) => second.length - first.length);
+
+    if (!labels.length) return content;
+
+    const labelSet = new Set(labels);
+    const mentionPattern = new RegExp(
+        `(@(?:${labels.map(escapeRegExp).join('|')}))`,
+        'g'
+    );
+
+    return content.split(mentionPattern).map((part, index) =>
+        part.startsWith('@') && labelSet.has(part.slice(1)) ? (
+            <span
+                key={`${part}-${index}`}
+                className="rounded-md bg-primary/10 px-1 py-0.5 font-medium text-primary">
+                {part}
+            </span>
+        ) : (
+            part
+        )
+    );
+}
+
 export const BlockInteractions = memo(function BlockInteractions({
     blockId,
     variant = 'block',
@@ -58,6 +109,7 @@ export const BlockInteractions = memo(function BlockInteractions({
     const { locale, t } = useI18n();
     const {
         commentsByBlock,
+        mentionUsers,
         reactionsByBlock,
         addComment,
         deleteComment,
@@ -75,6 +127,9 @@ export const BlockInteractions = memo(function BlockInteractions({
     const [commentOpen, setCommentOpen] = useState(false);
     const [reactionOpen, setReactionOpen] = useState(false);
     const [commentText, setCommentText] = useState('');
+    const [commentMentionIds, setCommentMentionIds] = useState<string[]>([]);
+    const [mentionQuery, setMentionQuery] = useState<MentionQuery | null>(null);
+    const [selectedMentionIndex, setSelectedMentionIndex] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const commentsScrollRef = useRef<HTMLDivElement>(null);
     const pendingOwnCommentRef = useRef<{
@@ -82,6 +137,41 @@ export const BlockInteractions = memo(function BlockInteractions({
         content: string;
     } | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const filteredMentionUsers = useMemo(
+        () =>
+            mentionQuery
+                ? filterMentionUsers(mentionUsers, mentionQuery.query)
+                : [],
+        [mentionQuery, mentionUsers]
+    );
+
+    const syncMentionQuery = (value: string, cursor: number | null) => {
+        const nextQuery = findMentionQuery(value, cursor ?? value.length);
+        setMentionQuery(nextQuery);
+        setSelectedMentionIndex(0);
+    };
+
+    const selectMention = (user: MentionUser) => {
+        if (!mentionQuery) return;
+
+        const label = getMentionUserLabel(user);
+        const insertedText = `@${label} `;
+        const nextValue =
+            commentText.slice(0, mentionQuery.from) +
+            insertedText +
+            commentText.slice(mentionQuery.to);
+        const nextCursor = mentionQuery.from + insertedText.length;
+
+        setCommentText(nextValue);
+        setCommentMentionIds((current) =>
+            current.includes(user.id) ? current : [...current, user.id]
+        );
+        setMentionQuery(null);
+        requestAnimationFrame(() => {
+            textareaRef.current?.focus({ preventScroll: true });
+            textareaRef.current?.setSelectionRange(nextCursor, nextCursor);
+        });
+    };
 
     useLayoutEffect(() => {
         const pendingComment = pendingOwnCommentRef.current;
@@ -143,10 +233,23 @@ export const BlockInteractions = memo(function BlockInteractions({
             existingIds: new Set(comments.map((comment) => comment.id)),
             content: submittedComment,
         };
+        const submittedMentionIds = commentMentionIds.filter((userId) => {
+            const user = mentionUsers.find((item) => item.id === userId);
+            return Boolean(
+                user &&
+                    submittedComment.includes(`@${getMentionUserLabel(user)}`)
+            );
+        });
         pendingOwnCommentRef.current = pendingComment;
         setCommentText('');
+        setCommentMentionIds([]);
+        setMentionQuery(null);
         setIsSubmitting(true);
-        const wasAdded = await addComment(blockId, submittedComment);
+        const wasAdded = await addComment(
+            blockId,
+            submittedComment,
+            submittedMentionIds
+        );
         if (!wasAdded) {
             if (pendingOwnCommentRef.current === pendingComment) {
                 pendingOwnCommentRef.current = null;
@@ -154,6 +257,7 @@ export const BlockInteractions = memo(function BlockInteractions({
             setCommentText((currentValue) =>
                 currentValue ? currentValue : submittedComment
             );
+            setCommentMentionIds(submittedMentionIds);
         }
         setIsSubmitting(false);
         requestAnimationFrame(() =>
@@ -213,13 +317,16 @@ export const BlockInteractions = memo(function BlockInteractions({
 
             <PopoverPanel
                 open={commentOpen}
-                onOpenChange={setCommentOpen}
+                onOpenChange={(open) => {
+                    setCommentOpen(open);
+                    if (!open) setMentionQuery(null);
+                }}
                 contentProps={{
                     side: 'bottom',
                     align: 'end',
                     collisionPadding: 12,
                     className:
-                        'w-[min(22rem,calc(100vw-1.5rem))] overflow-hidden p-0',
+                        'w-[min(23rem,calc(100vw-1.5rem))] overflow-hidden rounded-xl border-border/60 p-0 shadow-xl',
                     onOpenAutoFocus: (event) => {
                         event.preventDefault();
                         requestAnimationFrame(() => {
@@ -247,11 +354,26 @@ export const BlockInteractions = memo(function BlockInteractions({
                         )}
                     </Button>
                 }>
-                <div className="flex h-10 items-center justify-between border-b border-border px-3">
-                    <h3 className="text-sm font-semibold">{t('comments')}</h3>
+                <div className="flex min-h-12 items-center justify-between border-b border-border/70 px-3.5 py-2.5">
+                    <div className="flex min-w-0 items-center gap-2.5">
+                        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                            <MessageCircle className="size-4" />
+                        </span>
+                        <div className="flex min-w-0 items-baseline gap-2">
+                            <h3 className="truncate text-sm font-semibold">
+                                {t('comments')}
+                            </h3>
+                            {comments.length > 0 && (
+                                <span className="text-xs tabular-nums text-muted-foreground">
+                                    {comments.length}
+                                </span>
+                            )}
+                        </div>
+                    </div>
                     <Button
                         variant="ghost"
                         size="icon-xs"
+                        className="rounded-full text-muted-foreground hover:text-foreground"
                         onClick={() => setCommentOpen(false)}>
                         <X />
                     </Button>
@@ -259,18 +381,23 @@ export const BlockInteractions = memo(function BlockInteractions({
 
                 <div
                     ref={commentsScrollRef}
-                    className="max-h-72 min-h-24 overflow-y-auto p-3">
+                    className="max-h-72 min-h-36 overflow-y-auto px-3.5 py-4">
                     {comments.length === 0 ? (
-                        <div className="flex min-h-20 items-center justify-center text-center text-sm text-muted-foreground">
-                            {t('startConversation')}
+                        <div className="flex min-h-28 flex-col items-center justify-center gap-3 px-6 text-center">
+                            <span className="flex size-11 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                                <MessageCircle className="size-5" />
+                            </span>
+                            <p className="text-sm leading-5 text-muted-foreground">
+                                {t('startConversation')}
+                            </p>
                         </div>
                     ) : (
-                        <div className="space-y-4">
+                        <div className="space-y-5">
                             {comments.map((comment) => (
                                 <article
                                     key={comment.id}
-                                    className="group/comment flex gap-2.5">
-                                    <Avatar className="h-7 w-7">
+                                    className="group/comment flex gap-3">
+                                    <Avatar className="size-8 shrink-0 ring-2 ring-background">
                                         <AvatarImage
                                             src={comment.user.avatar_url || ''}
                                         />
@@ -278,13 +405,13 @@ export const BlockInteractions = memo(function BlockInteractions({
                                             {getInitials(comment.user.name)}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div className="min-w-0 flex-1">
-                                        <div className="flex items-center gap-1.5">
-                                            <span className="truncate text-sm font-medium">
+                                    <div className="min-w-0 flex-1 pt-0.5">
+                                        <div className="flex min-h-5 items-center gap-1.5">
+                                            <span className="truncate text-sm font-semibold">
                                                 {comment.user.name}
                                             </span>
                                             <time
-                                                className="shrink-0 text-xs text-muted-foreground"
+                                                className="shrink-0 text-[11px] text-muted-foreground"
                                                 dateTime={comment.created_at}>
                                                 {getRelativeTime(
                                                     comment.created_at,
@@ -299,7 +426,7 @@ export const BlockInteractions = memo(function BlockInteractions({
                                                     <Button
                                                         variant="ghost"
                                                         size="icon-xs"
-                                                        className="ml-auto h-6 w-6 opacity-0 group-hover/comment:opacity-100 focus-visible:opacity-100"
+                                                        className="ml-auto size-6 rounded-full text-muted-foreground opacity-0 hover:text-destructive group-hover/comment:opacity-100 focus-visible:opacity-100"
                                                         onClick={() =>
                                                             void deleteComment(
                                                                 comment.id
@@ -309,8 +436,12 @@ export const BlockInteractions = memo(function BlockInteractions({
                                                     </Button>
                                                 )}
                                         </div>
-                                        <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">
-                                            {comment.content}
+                                        <p className="mt-0.5 whitespace-pre-wrap break-words text-sm leading-5 text-foreground/90">
+                                            {renderCommentContent(
+                                                comment.content,
+                                                comment.mentioned_user_ids,
+                                                mentionUsers
+                                            )}
                                         </p>
                                     </div>
                                 </article>
@@ -320,16 +451,138 @@ export const BlockInteractions = memo(function BlockInteractions({
                 </div>
 
                 <form
-                    className="border-t border-border p-2"
+                    className="relative border-t border-border/70 bg-muted/30 p-3"
                     onSubmit={handleSubmitComment}>
-                    <div className="flex items-end gap-2 rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring/30">
+                    {mentionQuery && (
+                        <div
+                            className="absolute bottom-[calc(100%-0.25rem)] left-3 right-3 z-10 max-h-56 overflow-y-auto rounded-xl border border-border/70 bg-popover p-1.5 text-popover-foreground shadow-xl"
+                            role={
+                                filteredMentionUsers.length
+                                    ? 'listbox'
+                                    : 'status'
+                            }>
+                            {filteredMentionUsers.length === 0 ? (
+                                <p className="px-3 py-4 text-center text-sm text-muted-foreground">
+                                    {t('noMentionUsersFound')}
+                                </p>
+                            ) : (
+                                filteredMentionUsers.map((user, index) => (
+                                    <button
+                                        key={user.id}
+                                        type="button"
+                                        role="option"
+                                        aria-selected={
+                                            index === selectedMentionIndex
+                                        }
+                                        data-active={
+                                            index === selectedMentionIndex
+                                        }
+                                        className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/40 data-[active=true]:bg-accent"
+                                        onMouseEnter={() =>
+                                            setSelectedMentionIndex(index)
+                                        }
+                                        onMouseDown={(event) =>
+                                            event.preventDefault()
+                                        }
+                                        onClick={() => selectMention(user)}>
+                                        <Avatar className="size-8 shrink-0">
+                                            <AvatarImage
+                                                src={user.avatar_url || ''}
+                                                alt=""
+                                            />
+                                            <AvatarFallback className="text-[10px]">
+                                                {getInitials(
+                                                    user.name || user.email
+                                                )}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <span className="min-w-0 flex-1">
+                                            <span className="block truncate text-sm font-medium">
+                                                {getMentionUserLabel(user)}
+                                            </span>
+                                            {user.name && (
+                                                <span className="block truncate text-xs text-muted-foreground">
+                                                    {user.email}
+                                                </span>
+                                            )}
+                                        </span>
+                                    </button>
+                                ))
+                            )}
+                        </div>
+                    )}
+                    <div className="flex items-end gap-2 rounded-xl border border-input bg-background p-1.5 shadow-sm transition-[border-color,box-shadow] focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-ring/20">
                         <Textarea
                             ref={textareaRef}
                             value={commentText}
-                            onChange={(event) =>
-                                setCommentText(event.target.value)
+                            onChange={(event) => {
+                                const value = event.target.value;
+                                setCommentText(value);
+                                setCommentMentionIds((current) =>
+                                    current.filter((userId) => {
+                                        const user = mentionUsers.find(
+                                            (item) => item.id === userId
+                                        );
+                                        return Boolean(
+                                            user &&
+                                                value.includes(
+                                                    `@${getMentionUserLabel(user)}`
+                                                )
+                                        );
+                                    })
+                                );
+                                syncMentionQuery(
+                                    value,
+                                    event.target.selectionStart
+                                );
+                            }}
+                            onSelect={(event) =>
+                                syncMentionQuery(
+                                    event.currentTarget.value,
+                                    event.currentTarget.selectionStart
+                                )
                             }
                             onKeyDown={(event) => {
+                                if (event.nativeEvent.isComposing) return;
+                                if (mentionQuery) {
+                                    if (
+                                        event.key === 'ArrowUp' ||
+                                        event.key === 'ArrowDown'
+                                    ) {
+                                        event.preventDefault();
+                                        const direction =
+                                            event.key === 'ArrowDown' ? 1 : -1;
+                                        setSelectedMentionIndex((current) =>
+                                            filteredMentionUsers.length
+                                                ? (current +
+                                                      direction +
+                                                      filteredMentionUsers.length) %
+                                                  filteredMentionUsers.length
+                                                : 0
+                                        );
+                                        return;
+                                    }
+                                    if (
+                                        (event.key === 'Enter' ||
+                                            event.key === 'Tab') &&
+                                        filteredMentionUsers.length
+                                    ) {
+                                        event.preventDefault();
+                                        const selectedUser =
+                                            filteredMentionUsers[
+                                                selectedMentionIndex
+                                            ] ?? filteredMentionUsers[0];
+                                        if (selectedUser) {
+                                            selectMention(selectedUser);
+                                        }
+                                        return;
+                                    }
+                                    if (event.key === 'Escape') {
+                                        event.preventDefault();
+                                        setMentionQuery(null);
+                                        return;
+                                    }
+                                }
                                 if (event.key === 'Enter' && !event.shiftKey) {
                                     event.preventDefault();
                                     void handleSubmitComment();
@@ -338,15 +591,17 @@ export const BlockInteractions = memo(function BlockInteractions({
                             rows={1}
                             maxLength={2000}
                             placeholder={t('commentPlaceholder')}
-                            className="min-h-8 max-h-28 resize-none border-0 shadow-none focus-visible:ring-0"
+                            aria-label={t('commentPlaceholder')}
+                            className="min-h-9 max-h-28 resize-none border-0 bg-transparent px-2 py-2 shadow-none focus-visible:border-transparent focus-visible:ring-0"
                         />
                         <Button
-                            size="icon-lg"
+                            size="icon-sm"
+                            className="mb-0.5 shrink-0 rounded-lg"
                             disabled={!commentText.trim() || isSubmitting}>
                             <Send />
                         </Button>
                     </div>
-                    <p className="px-1 pt-1 text-[11px] text-muted-foreground">
+                    <p className="px-1 pt-1.5 text-[10px] leading-4 text-muted-foreground">
                         {t('commentKeyboardHint')}
                     </p>
                 </form>

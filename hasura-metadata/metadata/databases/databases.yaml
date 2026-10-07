@@ -14,6 +14,13 @@
   tables: "!include default/tables/tables.yaml"
   functions:
     - function:
+        name: get_document_mention_users
+        schema: public
+      configuration:
+        session_argument: hasura_session
+      permissions:
+        - role: user
+    - function:
         name: search_invitee
         schema: public
       configuration:

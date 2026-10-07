@@ -1,4 +1,10 @@
 query GetBlockInteractions($pageId: uuid!) {
+    mention_users: get_document_mention_users(args: { document_id: $pageId }) {
+        id
+        email
+        name
+        avatar_url
+    }
     block_comments(
         where: {
             block: {
@@ -11,6 +17,7 @@ query GetBlockInteractions($pageId: uuid!) {
         block_id
         user_id
         content
+        mentioned_user_ids
         created_at
         user {
             id
@@ -52,6 +59,7 @@ subscription SubscribeToBlockComments($pageId: uuid!) {
         block_id
         user_id
         content
+        mentioned_user_ids
         created_at
         user {
             id
@@ -83,14 +91,25 @@ subscription SubscribeToBlockReactions($pageId: uuid!) {
     }
 }
 
-mutation AddBlockComment($blockId: uuid!, $userId: uuid!, $content: String!) {
+mutation AddBlockComment(
+    $blockId: uuid!
+    $userId: uuid!
+    $content: String!
+    $mentionedUserIds: [uuid!]!
+) {
     insert_block_comments_one(
-        object: { block_id: $blockId, user_id: $userId, content: $content }
+        object: {
+            block_id: $blockId
+            user_id: $userId
+            content: $content
+            mentioned_user_ids: $mentionedUserIds
+        }
     ) {
         id
         block_id
         user_id
         content
+        mentioned_user_ids
         created_at
         user {
             id

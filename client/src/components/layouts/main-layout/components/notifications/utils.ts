@@ -4,7 +4,14 @@ import { getPlainText } from '@/lib/text';
 import { Notification } from '@/types/app';
 import { formatDistanceToNow } from 'date-fns';
 import { enUS, vi } from 'date-fns/locale';
-import { Bell, CheckCircle2, CircleAlert, Clock3, Pencil } from 'lucide-react';
+import {
+    AtSign,
+    Bell,
+    CheckCircle2,
+    CircleAlert,
+    Clock3,
+    Pencil,
+} from 'lucide-react';
 import { NotificationData } from './types';
 
 export const NOTIFICATION_LIMIT = 20;
@@ -48,6 +55,13 @@ export function getNotificationPresentation(notification: Notification) {
     const data = getNotificationData(notification.data);
 
     switch (notification.type) {
+        case 'mention':
+            return {
+                icon: AtSign,
+                avatar: data.actor_avatar,
+                actor: data.actor_name || data.actor_email,
+                accentClass: 'text-primary bg-primary/10',
+            };
         case 'access_request':
             return {
                 icon: Clock3,
@@ -96,6 +110,15 @@ export function getNotificationMessage(
     const isEditorPermission = data.permission_type === 'write';
 
     switch (notification.type) {
+        case 'mention':
+            return t(
+                data.source_type === 'comment'
+                    ? 'notificationMentionedInComment'
+                    : 'notificationMentionedInDocument',
+                {
+                    name: data.actor_name || data.actor_email || t('user'),
+                }
+            );
         case 'access_request':
             return t(
                 isEditorPermission
