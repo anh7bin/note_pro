@@ -125,6 +125,19 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
             open={isOpen}
             onOpenChange={handleOpenChange}
             trigger={children}
+            contentProps={{
+                onKeyDown: (event) => {
+                    if (
+                        event.key !== 'Enter' ||
+                        event.nativeEvent.isComposing
+                    ) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    void handleCreate();
+                },
+            }}
             title={t('createTaskTitle')}
             footer={
                 <Button
@@ -139,7 +152,6 @@ export const NewTaskModal = ({ children }: NewTaskModalProps) => {
                 onChange={(field, value) =>
                     setTaskData((current) => ({ ...current, [field]: value }))
                 }
-                onSubmit={() => void handleCreate()}
             />
         </Modal>
     );

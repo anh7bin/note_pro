@@ -43,7 +43,6 @@ interface TaskFormProps {
         field: K,
         value: TaskFormValues[K]
     ) => void;
-    onSubmit: () => void;
     destinationFallbackTitle?: string;
     destinationFooter?: ReactNode;
 }
@@ -51,7 +50,6 @@ interface TaskFormProps {
 export function TaskForm({
     values,
     onChange,
-    onSubmit,
     destinationFallbackTitle,
     destinationFooter,
 }: TaskFormProps) {
@@ -110,15 +108,6 @@ export function TaskForm({
                     placeholder={t('taskTitlePlaceholder')}
                     value={values.title}
                     onChange={(event) => onChange('title', event.target.value)}
-                    onKeyDown={(event) => {
-                        if (
-                            event.key === 'Enter' &&
-                            !event.nativeEvent.isComposing
-                        ) {
-                            event.preventDefault();
-                            onSubmit();
-                        }
-                    }}
                     autoFocus
                     autoComplete="off"
                     maxLength={500}

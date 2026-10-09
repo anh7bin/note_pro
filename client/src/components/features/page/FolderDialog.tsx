@@ -64,6 +64,10 @@ export const FolderDialog = ({
     };
 
     const handleSubmit = async () => {
+        if (!folderData.name.trim() || isSubmitting) {
+            return;
+        }
+
         setIsSubmitting(true);
         try {
             await onSubmit(folderData);
@@ -83,6 +87,19 @@ export const FolderDialog = ({
         <Modal
             open={open}
             onOpenChange={onOpenChange}
+            contentProps={{
+                onKeyDown: (event) => {
+                    if (
+                        event.key !== 'Enter' ||
+                        event.nativeEvent.isComposing
+                    ) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    void handleSubmit();
+                },
+            }}
             title={
                 mode === FolderMode.CREATE ? t('createFolderTitle') : t('edit')
             }

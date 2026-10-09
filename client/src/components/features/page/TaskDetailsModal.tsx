@@ -153,6 +153,19 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
             onOpenChange={(open) => {
                 if (!open && !saving) onClose();
             }}
+            contentProps={{
+                onKeyDown: (event) => {
+                    if (
+                        event.key !== 'Enter' ||
+                        event.nativeEvent.isComposing
+                    ) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    void handleSave();
+                },
+            }}
             title={t('taskDetails')}
             footerClassName="justify-between"
             footer={
@@ -190,7 +203,6 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
                 onChange={(field, value) =>
                     setTaskData((current) => ({ ...current, [field]: value }))
                 }
-                onSubmit={() => void handleSave()}
                 destinationFallbackTitle={getPlainText(
                     task?.block?.page?.content?.title
                 )}
